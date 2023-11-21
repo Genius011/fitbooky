@@ -263,9 +263,6 @@
     </style>
 </head>
 <body>
-
-
-
 <div class="login-button">
     <button id="loginButton">Login</button>
 	
@@ -287,28 +284,7 @@
         </div>
         <div id="calendar" class="calendar-grid"></div>
     </div>
-		
-	
    <script>
-   
-   <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-            authDomain: "genius-f6a78.firebaseapp.com",
-            projectId: "genius-f6a78",
-            storageBucket: "genius-f6a78.appspot.com",
-            messagingSenderId: "4413237203",
-            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-   
     document.addEventListener('DOMContentLoaded', function() {
         const calendar = document.getElementById('calendar');
         const prevMonth = document.getElementById('prevMonth');
@@ -405,20 +381,6 @@
                 }
             }
         }
-		
-		function bookTraining(selectedDay, selectedTime, trainingType) {
-                const booking = {
-                    userId: auth.currentUser.uid,
-                    date: selectedDay.toDateString(),
-                    time: selectedTime,
-                    type: trainingType
-                };
-                const docRef = doc(db, "bookings", `${selectedDay.toDateString()}_${selectedTime}`);
-                setDoc(docRef, booking)
-                    .then(() => console.log("Booking saved!"))
-                    .catch(error => console.error("Error saving booking: ", error));
-            }
-
 
         function enableAllTimeSlots(popup) {
             const timeSlots = popup.querySelectorAll('.time-slot');
@@ -478,16 +440,6 @@
 
         generateCalendar(); // Initial call to display the calendar
     });
-	
-	 onAuthStateChanged(auth, user => {
-            if (!user) {
-                window.location.href = 'login.html';
-            } else {
-                // ... kod wykonywany po zalogowaniu ...
-            }
-        });
-	
-	
 </script>
 
 
