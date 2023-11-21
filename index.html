@@ -294,12 +294,6 @@
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
 
- firebase.auth().onAuthStateChanged(function(user) {
-                if (!user) {
-                    // Jeœli u¿ytkownik nie jest zalogowany, przekieruj na stronê logowania
-                    window.location.href = 'login.html';
-                }
-
         function generateCalendar() {
             calendar.innerHTML = '';
             let today = new Date();
