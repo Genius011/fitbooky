@@ -94,7 +94,7 @@
             </form>
         </div>
         <div class="form-footer">
-            <p>Already have account? <a href="#" id="toggleRegistration">Login</a></p>
+            <p>Don't have an account? <a href="#" id="toggleRegistration">Register here</a></p>
         </div>
     </div>
 
@@ -108,8 +108,10 @@
             toggleRegistration.addEventListener('click', function(e) {
                 e.preventDefault();
                 loginForm.reset(); // Reset the login form when switching to registration
-                loginForm.style.display = 'none';
-                registrationForm.style.display = 'block';
+                loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
+                registrationForm.style.display = registrationForm.style.display === 'none' ? 'block' : 'none';
+                document.querySelector('.login-header h1').textContent = loginForm.style.display === 'none' ? 'Register' : 'Login';
+                toggleRegistration.textContent = loginForm.style.display === 'none' ? 'Login here' : 'Register here';
             });
         });
     </script>
