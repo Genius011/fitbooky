@@ -205,7 +205,13 @@
     overflow-y: auto; /* Dodaj przewijanie pionowe */
     max-height: 80vh; /* Ogranicz maksymaln¹ wysokoœæ na urz¹dzeniach mobilnych */
     -webkit-overflow-scrolling: touch; /* Dodaj p³ynne przewijanie na urz¹dzeniach iOS */
-}	.separator {
+}
+
+body.popup-open {
+    overflow: hidden;
+}
+
+	.separator {
     border: 0;
     height: 1px;
     background-image: linear-gradient(to right, transparent, #6e8efb, #a777e3, transparent); /* Gradient line */
