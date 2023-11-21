@@ -94,7 +94,7 @@
             </form>
         </div>
         <div class="form-footer">
-            <p>Don't have an account? <a href="#" id="toggleRegistration">Register here</a></p>
+            <p>Already have an account? <a href="#" id="toggleRegistration">Login here</a></p>
         </div>
     </div>
 
@@ -110,6 +110,9 @@
                 loginForm.reset(); // Reset the login form when switching to registration
                 loginForm.style.display = 'none';
                 registrationForm.style.display = 'block';
+                document.querySelector('.login-header h1').textContent = 'Register';
+                document.querySelector('.form-footer p').textContent = 'Already have an account?';
+                toggleRegistration.textContent = 'Login here';
             });
         });
     </script>
