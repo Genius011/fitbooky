@@ -137,9 +137,8 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Adjust based on your layout */
     gap: 10px;
-    overflow-y: auto; /* Dodaj przewijanie pionowe */
-    max-height: 200px; /* Dostosuj maksymaln¹ wysokoœæ do swoich potrzeb */
 }
+
 .time-slot, .book-btn {
     background-color: #ffffff;
     padding: 12px;
@@ -195,22 +194,13 @@
 }
 
 .popup-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    position: relative;
-    width: 80%;
-    max-width: 400px;
-    overflow-y: auto; /* Dodaj przewijanie pionowe */
-    max-height: 80vh; /* Ogranicz maksymaln¹ wysokoœæ na urz¹dzeniach mobilnych */
-    -webkit-overflow-scrolling: touch; /* Dodaj p³ynne przewijanie na urz¹dzeniach iOS */
+    display: flex;
+    flex-direction: column;
+    max-width: 300px; /* Adjust the max width as necessary */
+    margin: auto; /* Center the popup content */
+    overflow-y: auto; /* Enable scroll if content overflows */
+    padding-bottom: 20px; /* Extra padding at the bottom */
 }
-
-body.popup-open {
-    overflow: hidden;
-}
-
 	.separator {
     border: 0;
     height: 1px;
