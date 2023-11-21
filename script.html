@@ -1,0 +1,62 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const calendar = document.getElementById('calendar');
+    const prevMonth = document.getElementById('prevMonth');
+    const nextMonth = document.getElementById('nextMonth');
+    const monthName = document.getElementById('monthName');
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+
+    function generateCalendar() {
+        calendar.innerHTML = ''; // Clear the calendar
+        let startDate = new Date(currentYear, currentMonth, currentDate.getDate());
+        let dayOfWeek = startDate.getDay(); // Get the starting day of the week (0-6)
+
+        // Set the month name
+        monthName.textContent = `${startDate.toLocaleString('default', { month: 'long' })} ${currentYear}`;
+
+        // Adjust the start date back to the first day shown in the calendar view
+        startDate.setDate(startDate.getDate() - dayOfWeek);
+
+        for (let i = 0; i < 35; i++) { // Create enough cells to cover 5 weeks (5 rows of 7 days each)
+            let day = new Date(startDate);
+            day.setDate(day.getDate() + i);
+            
+            let dayElement = document.createElement('div');
+            dayElement.className = 'day';
+            // Only show the date number and month if it's within the current month
+            if (day.getMonth() === currentMonth) {
+                dayElement.textContent = day.getDate();
+                dayElement.onclick = function() {
+                    // Placeholder for click event, you can customize this
+                    alert(`You clicked on ${day.toDateString()}`);
+                };
+            } else {
+                dayElement.classList.add('inactive'); // Style differently days that are not from the current month
+            }
+            calendar.appendChild(dayElement);
+        }
+    }
+
+    prevMonth.addEventListener('click', function() {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        currentDate = new Date(currentYear, currentMonth, 1);
+        generateCalendar();
+    });
+
+    nextMonth.addEventListener('click', function() {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        currentDate = new Date(currentYear, currentMonth, 1);
+        generateCalendar();
+    });
+
+    generateCalendar(); // Initial call to display the calendar
+});
