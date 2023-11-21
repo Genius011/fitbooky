@@ -263,6 +263,9 @@
     </style>
 </head>
 <body>
+
+
+
 <div class="login-button">
     <button id="loginButton">Login</button>
 	
@@ -440,6 +443,44 @@
 
         generateCalendar(); // Initial call to display the calendar
     });
+	
+	
+	   <script type="module">
+        // Import funkcji Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+        
+        // Konfiguracja Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+            authDomain: "genius-f6a78.firebaseapp.com",
+            projectId: "genius-f6a78",
+            storageBucket: "genius-f6a78.appspot.com",
+            messagingSenderId: "4413237203",
+            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+        };
+
+        // Inicjalizacja Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Funkcja sprawdzaj¹ca, czy u¿ytkownik jest zalogowany
+        onAuthStateChanged(auth, user => {
+            if (!user) {
+                // Przekierowanie do strony logowania, jeœli u¿ytkownik nie jest zalogowany
+                window.location.href = 'login.html';
+            } else {
+                // Logika wyœwietlania kalendarza dla zalogowanych u¿ytkowników
+                initializeCalendar();
+            }
+        });
+
+        function initializeCalendar() {
+            document.addEventListener('DOMContentLoaded', function() {
+                // ... istniej¹ca logika kalendarza ...
+            });
+        }
+	
 </script>
 
 
