@@ -5,25 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login/Registration</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-    authDomain: "genius-f6a78.firebaseapp.com",
-    projectId: "genius-f6a78",
-    storageBucket: "genius-f6a78.appspot.com",
-    messagingSenderId: "4413237203",
-    appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-    </script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -117,12 +98,30 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+            authDomain: "genius-f6a78.firebaseapp.com",
+            projectId: "genius-f6a78",
+            storageBucket: "genius-f6a78.appspot.com",
+            messagingSenderId: "4413237203",
+            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app); // Get authentication instance
+        
         document.addEventListener('DOMContentLoaded', function() {
             const loginForm = document.getElementById('loginForm');
             const registrationForm = document.getElementById('registrationForm');
             const toggleRegistration = document.getElementById('toggleRegistration');
-
+        
             // Toggle between login and registration forms
             toggleRegistration.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -132,49 +131,20 @@
                 document.querySelector('.login-header h1').textContent = loginForm.style.display === 'none' ? 'Register' : 'Login';
                 toggleRegistration.textContent = loginForm.style.display === 'none' ? 'Login here' : 'Register here';
             });
-
-            // Obsługa logowania
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const email = loginForm.querySelector('[type="email"]').value;
-                const password = loginForm.querySelector('[type="password"]').value;
-                signInWithEmailAndPassword(auth, email, password)
-                    .then((userCredential) => {
-                        // Zalogowano pomyślnie
-                        const user = userCredential.user;
-                        console.log('Zalogowano jako:', user.email);
-                    })
-                    .catch((error) => {
-                        // Błąd logowania
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        console.error('Błąd logowania:', errorCode, errorMessage);
-                    });
-            });
-
-            // Obsługa rejestracji
+        
+            // Handle registration form submission
             registrationForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                const email = registrationForm.querySelector('[type="email"]').value;
-                const password = registrationForm.querySelector('[type="password"]').value;
-                const confirmPassword = registrationForm.querySelectorAll('[type="password"]')[1].value;
-                
-                if (password !== confirmPassword) {
-                    console.error('Hasła nie pasują do siebie.');
-                    return;
-                }
-
+                const email = registrationForm.querySelector('input[type="email"]').value;
+                const password = registrationForm.querySelector('input[type="password"]').value;
                 createUserWithEmailAndPassword(auth, email, password)
                     .then((userCredential) => {
-                        // Zarejestrowano pomyślnie
-                        const user = userCredential.user;
-                        console.log('Zarejestrowano jako:', user.email);
+                        // Registered successfully, you can redirect or show a success message here
+                        console.log('Registration successful', userCredential);
                     })
                     .catch((error) => {
-                        // Błąd rejestracji
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        console.error('Błąd rejestracji:', errorCode, errorMessage);
+                        // Handle errors here, you can display an error message to the user
+                        console.error('Registration error', error);
                     });
             });
         });
