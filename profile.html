@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .profile-container {
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: #fff;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-image {
+            margin: 20px;
+            position: relative;
+        }
+
+        .profile-image img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .profile-image input[type="file"] {
+            display: none;
+        }
+
+        .profile-info {
+            text-align: left;
+            padding: 10px;
+        }
+
+        .profile-info h1 {
+            margin: 0;
+        }
+
+        .profile-info p {
+            margin: 0;
+        }
+
+        .profile-details {
+            text-align: left;
+            padding: 20px;
+        }
+
+        .profile-details h2 {
+            margin-top: 0;
+        }
+
+        .profile-fields {
+            margin-top: 10px;
+        }
+
+        .profile-fields label {
+            font-weight: bold;
+        }
+
+        .profile-fields input {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .profile-actions {
+            margin-top: 20px;
+        }
+
+        /* Updated style for the Back button */
+        .profile-back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .profile-back-button a {
+            text-decoration: none;
+        }
+
+        .profile-back-button button {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            border: none;
+            font-weight: bold;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        /* Hover effect for profile buttons */
+        .profile-actions button:hover,
+        .profile-back-button button:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .profile-fields #favoriteExercise {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* Added style for Next Training */
+        .next-training {
+            margin-top: 20px;
+        }
+
+        .profile-rank {
+            text-align: left;
+            padding: 20px;
+        }
+
+        .profile-rank h2 {
+            margin-top: 0;
+        }
+
+        .profile-rank p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="profile-container">
+<div class="profile-rank">
+        
+    </div>
+    <!-- Updated Back button with gradient style -->
+    <div class="profile-back-button">
+        <a href="booking.html">
+            <button>Back</button>
+        </a>
+    </div>
+    <div class="profile-header">
+        <div class="profile-image">
+            <!-- Dodany link do zdjêcia profilowego -->
+            <img src="profile.jpg" alt="Profile Picture">
+            <input type="file" id="avatarInput" accept="image/*">
+        </div>
+        <div class="profile-info">
+            <h1>Your Name</h1>
+            <p>Total Training Sessions: <span id="total-sessions">0</span></p>
+<p>Current Rank: <span id="current-rank">Ant</span></p>
+        <p>Next Rank: <span id="next-rank">Mouse</span></p>
+        </div>
+    </div>
+    <div class="profile-details">
+        <h2>Edit Profile</h2>
+        <div class="profile-fields">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" value="John">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" value="Doe">
+            <label for="nickname">Nickname:</label>
+            <input type="text" id="nickname" value="JohnD">
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="tel" id="phoneNumber" value="123-456-7890">
+            <label for="email">Email:</label>
+            <input type="email" id="email" value="johndoe@example.com">
+            <!-- Added Favorite Exercise field -->
+            <label for="favoriteExercise">Favorite Exercise:</label>
+            <input type="text" id="favoriteExercise" value="Running">
+        </div>
+        <!-- Removed Change Email and Change Password buttons -->
+        <!-- Added Next Training information -->
+        <div class="next-training">
+            <h3>Next Training:</h3>
+            <p>Date: January 15, 2024</p>
+            <p>Time: 10:00 AM</p>
+            <p>Location: Gym XYZ</p>
+        </div>
+    </div>
+</div>
+<script>
+    // Dodajmy zmienn¹ do œledzenia liczby treningów u¿ytkownika
+    let trainingCount = 0;
+
+    function updateRank() {
+        // Lista dostêpnych rang
+        const ranks = [
+            "Ant", "Mouse", "Rabbit", "Guinea Pig", "Hedgehog", "Squirrel",
+            "Koala", "Fox", "Lynx", "Wolf", "Leopard", "Tiger", "Lion",
+            "Crocodile", "Bear", "Elephant", "Rhinoceros", "Hippopotamus",
+            "Gorilla", "Genius"
+        ];
+
+        // Obecna ranga u¿ytkownika
+        const currentRank = document.getElementById('current-rank');
+        // Nastêpna ranga u¿ytkownika
+        const nextRank = document.getElementById('next-rank');
+
+        // Obliczmy indeks obecnej rangi u¿ytkownika
+        const currentRankIndex = ranks.indexOf(currentRank.textContent);
+        
+        if (currentRankIndex !== -1) {
+            // SprawdŸmy, czy u¿ytkownik osi¹gn¹³ kolejn¹ rangê (co 10 treningów)
+            if (trainingCount >= 10 && currentRankIndex < ranks.length - 1) {
+                trainingCount = 0;
+                currentRank.textContent = ranks[currentRankIndex + 1];
+                if (currentRankIndex < ranks.length - 2) {
+                    nextRank.textContent = ranks[currentRankIndex + 2];
+                } else {
+                    nextRank.textContent = "Max Rank";
+                }
+            }
+        }
+    }
+
+    // Wywo³ajmy funkcjê aktualizuj¹c¹ rangê
+    updateRank();
+</script>
+</body>
+</html>
