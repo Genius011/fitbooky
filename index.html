@@ -309,6 +309,13 @@ body.popup-open {
             let today = new Date();
             let startDate = new Date(currentYear, currentMonth, 1);
             let dayOfWeek = startDate.getDay();
+			document.body.classList.add('popup-open'); // Dodaj klasê przy otwieraniu pop-upa
+    }
+	 const closeBtn = popup.querySelector('.close-btn');
+    closeBtn.onclick = function() {
+        popup.remove();
+        document.body.classList.remove('popup-open'); // Usuñ klasê przy zamykaniu pop-upa
+    };
 
             monthName.textContent = `${startDate.toLocaleString('default', { month: 'long' })} ${currentYear}`;
             startDate.setDate(startDate.getDate() - dayOfWeek);
