@@ -195,14 +195,17 @@
 }
 
 .popup-content {
-    display: flex;
-    flex-direction: column;
-    max-width: 300px; /* Adjust the max width as necessary */
-    margin: auto; /* Center the popup content */
-    overflow-y: auto; /* Enable scroll if content overflows */
-    padding-bottom: 20px; /* Extra padding at the bottom */
-}
-	.separator {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    width: 80%;
+    max-width: 400px;
+    overflow-y: auto; /* Dodaj przewijanie pionowe */
+    max-height: 80vh; /* Ogranicz maksymaln¹ wysokoœæ na urz¹dzeniach mobilnych */
+    -webkit-overflow-scrolling: touch; /* Dodaj p³ynne przewijanie na urz¹dzeniach iOS */
+}	.separator {
     border: 0;
     height: 1px;
     background-image: linear-gradient(to right, transparent, #6e8efb, #a777e3, transparent); /* Gradient line */
