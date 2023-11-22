@@ -268,6 +268,8 @@
 	 <button id="logoutButton" style="display: none;">Logout</button>
 	 
 </div>
+<div class="login-button">
+        <a href="login.html"><button id="loginButton">Login</button></a>
 
 	<a href="profile.html"><button id="profileButton">Profile</button></a>
 </div>
@@ -307,33 +309,23 @@
   // Listen for authentication state changes
   onAuthStateChanged(auth, (user) => {
     const loginButton = document.getElementById('loginButton');
-    const logoutButton = document.getElementById('logoutButton');
     if (user) {
-      // User is signed in, hide the login button and show the logout button
-      loginButton.style.display = 'none';
-      logoutButton.style.display = 'block';
+      // User is signed in, change the login button to logout
+      loginButton.textContent = 'Logout';
+      loginButton.onclick = () => {
+        signOut(auth).then(() => {
+          // Sign-out successful, redirect to login page
+          window.location.href = 'login.html';
+        }).catch((error) => {
+          // An error happened during sign out
+          console.error('Sign out error', error);
+        });
+      };
     } else {
-      // No user is signed in, show the login button and hide the logout button
-      loginButton.style.display = 'block';
-      logoutButton.style.display = 'none';
+      // If no user is signed in, redirect to the login page
+      window.location.href = 'login.html';
     }
   });
-
-  // Logout function
-  const logout = () => {
-    signOut(auth).then(() => {
-      // Sign-out successful.
-      // Redirect to login page or do something else
-      window.location.href = 'login.html';
-    }).catch((error) => {
-      // An error happened.
-      console.error('Logout failed', error);
-    });
-  };
-
-  // Attach the logout function to the logout button
-  document.getElementById('logoutButton').addEventListener('click', logout);
-
    
     document.addEventListener('DOMContentLoaded', function() {
         const calendar = document.getElementById('calendar');
