@@ -307,12 +307,22 @@
 
   // Listen for authentication state changes
   onAuthStateChanged(auth, (user) => {
-    if (!user) {
+    const loginButton = document.getElementById('loginButton');
+    if (user) {
+      // User is signed in, change the login button to logout
+      loginButton.textContent = 'Logout';
+      loginButton.onclick = () => {
+        signOut(auth).then(() => {
+          // Sign-out successful, redirect to login page
+          window.location.href = 'login.html';
+        }).catch((error) => {
+          // An error happened during sign out
+          console.error('Sign out error', error);
+        });
+      };
+    } else {
       // If no user is signed in, redirect to the login page
       window.location.href = 'login.html';
-    } else {
-      // User is signed in, initialize the calendar
-      initCalendar();
     }
   });
    
