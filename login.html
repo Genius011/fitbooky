@@ -99,12 +99,15 @@
     </div>
 
     <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
-        
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
+  // Firebase App (the core Firebase SDK) is always required and must be listed first
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+
+  // Add Firebase products that you want to use
+  import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+
+  // TODO: Replace the following with your app's Firebase project configuration
+  // See: https://firebase.google.com/docs/web/setup#config-object
+  const firebaseConfig = {
             apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
             authDomain: "genius-f6a78.firebaseapp.com",
             projectId: "genius-f6a78",
@@ -114,38 +117,33 @@
         };
         
          // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app); // Get authentication instance
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('loginForm');
-            const registrationForm = document.getElementById('registrationForm');
-            const toggleRegistration = document.getElementById('toggleRegistration');
-        
-            toggleRegistration.addEventListener('click', function(e) {
-                e.preventDefault();
-                loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
-                registrationForm.style.display = registrationForm.style.display === 'none' ? 'block' : 'none';
-                document.querySelector('.login-header h1').textContent = loginForm.style.display === 'none' ? 'Register' : 'Login';
-                toggleRegistration.textContent = loginForm.style.display === 'none' ? 'Login here' : 'Register here';
-            });
-        
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const email = loginForm.querySelector('input[type="email"]').value;
-                const password = loginForm.querySelector('input[type="password"]').value;
-                signInWithEmailAndPassword(auth, email, password)
-                    .then((userCredential) => {
-                        alert('Login successful!');
-                        window.location.href = 'index.html'; // Redirect to index.html
-                    })
-                    .catch((error) => {
-                        console.error('Login error', error);
-                        alert('Login failed: ' + error.message);
-                    });
-            });
+  const app = initializeApp(firebaseConfig);
+  
+  // Get a reference to the auth service
+  const auth = getAuth(app);
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('loginForm');
+
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = loginForm.querySelector('input[type="email"]').value;
+      const password = loginForm.querySelector('input[type="password"]').value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in 
+          alert('Login successful!');
+          window.location.href = 'index.html'; // Redirect to index.html
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          alert('Error: ' + errorMessage);
         });
-    </script>
+    });
+  });
+</script>
 
 </body>
 </html>
