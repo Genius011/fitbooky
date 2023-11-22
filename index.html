@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern HTML5 Calendar</title>
+    <title>Book your training</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <style>
         body {
@@ -284,7 +284,30 @@
         </div>
         <div id="calendar" class="calendar-grid"></div>
     </div>
-   <script>
+   <script type="module">
+  // Import the required Firebase modules
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+  import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+
+  // Your Firebase configuration
+  const firebaseConfig = {
+    // Your Firebase config values here
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Listen for authentication state changes
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      // If no user is signed in, redirect to the login page
+      window.location.href = 'login.html';
+    }
+  });
+
+   
+   
     document.addEventListener('DOMContentLoaded', function() {
         const calendar = document.getElementById('calendar');
         const prevMonth = document.getElementById('prevMonth');
