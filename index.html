@@ -264,13 +264,12 @@
 </head>
 <body>
 <div class="login-button">
-    <button id="loginButton" style="display: none;">Login</button>
-    <button id="logoutButton" style="display: none;">Logout</button>
-    <!-- Removed the second login button to avoid duplicate IDs -->
+    <button id="loginButton">Login</button>
+	 <button id="logoutButton" style="display: none;">Logout</button>
+	 
 </div>
 
-<a href="profile.html"><button id="profileButton">Profile</button></a>
-	
+	<a href="profile.html"><button id="profileButton">Profile</button></a>
 </div>
     <div class="calendar-container">
         <div class="calendar-header">
@@ -287,9 +286,9 @@
    
    
   <script type="module">
+  // Import the required Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
-
+  import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -301,32 +300,37 @@
             appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
         };
 
-   // Initialize Firebase
+  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  // Authentication state changes
+  // Listen for authentication state changes
   onAuthStateChanged(auth, (user) => {
     const loginButton = document.getElementById('loginButton');
     const logoutButton = document.getElementById('logoutButton');
     if (user) {
+      // User is signed in, hide the login button and show the logout button
       loginButton.style.display = 'none';
       logoutButton.style.display = 'block';
     } else {
+      // No user is signed in, show the login button and hide the logout button
       loginButton.style.display = 'block';
       logoutButton.style.display = 'none';
     }
   });
 
   // Logout function
-  document.getElementById('logoutButton').addEventListener('click', () => {
+  const logout = () => {
     signOut(auth).then(() => {
+      // Sign-out successful.
+      // Redirect to login page or do something else
       window.location.href = 'login.html';
     }).catch((error) => {
+      // An error happened.
       console.error('Logout failed', error);
     });
-  });
-  
+  };
+
   // Attach the logout function to the logout button
   document.getElementById('logoutButton').addEventListener('click', logout);
 
