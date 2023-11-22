@@ -285,6 +285,7 @@
         <div id="calendar" class="calendar-grid"></div>
     </div>
    <script>
+   
    <script type="module">
   // Import the required Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
@@ -292,8 +293,13 @@
 
   // Your Firebase configuration
   const firebaseConfig = {
-    // Your Firebase config values here
-  };
+            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+            authDomain: "genius-f6a78.firebaseapp.com",
+            projectId: "genius-f6a78",
+            storageBucket: "genius-f6a78.appspot.com",
+            messagingSenderId: "4413237203",
+            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+        };
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
@@ -307,6 +313,12 @@
     }
   });
 
+  // All of your existing code for the calendar functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Existing code remains the same
+    // ...
+  });
+</script>
    
     document.addEventListener('DOMContentLoaded', function() {
         const calendar = document.getElementById('calendar');
