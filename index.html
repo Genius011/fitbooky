@@ -259,14 +259,40 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
 }
+/* Updated CSS */
+.button-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex; /* This will align the buttons next to each other */
+    gap: 10px; /* This adds some space between your buttons */
+}
+
+.button-container button,
+.button-container a button {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    text-decoration: none; /* This removes the underline from the anchor tag */
+}
+
+.button-container button:hover,
+.button-container a button:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
 
     </style>
 </head>
 <body>
-<div class="login-button">
-    <button id="loginButton">Login</button>
-	 <button id="logoutButton" style="display: none;">Logout</button>
-	 <a href="profile.html"><button id="profileButton">Profile</button></a>
+<div class="button-container">
+    
+	  <button id="logoutButton">Logout</button>
+    <a href="profile.html"><button id="profileButton">Profile</button></a>
 </div>
 
 
