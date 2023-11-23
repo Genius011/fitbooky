@@ -133,6 +133,29 @@
         .cancel-button {
             background-color: #e74c3c;
         }
+		
+		.back-to-calendar {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.back-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.back-button:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
     </style>
 </head>
 <body>
@@ -143,9 +166,7 @@
 
 <div class="profile-container">
     <div class="profile-header">
-<div class="back-button">
-            <a href="index.html">Back to Calendar</a>
-        </div>
+
         <h1>User Profile</h1>
     </div>
     <div class="profile-image" id="profileImage">
