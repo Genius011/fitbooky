@@ -169,6 +169,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then((userCredential) => {
                         // Registered successfully, you can redirect or show a success message here
                         console.log('Registration successful', userCredential);
+						alert('Registration successful! You can now log in.');
+          // Redirect to login page
+          window.location.href = 'login.html';
                     })
                     .catch((error) => {
                         // Handle errors here, you can display an error message to the user
