@@ -265,6 +265,11 @@
 </div>
 </div>
 <script>
+
+import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+const db = getFirestore(app);
+
+
     const profileImage = document.getElementById('profileImage');
     const avatarInput = document.getElementById('avatarInput');
 
@@ -277,6 +282,41 @@
         }
         lastClickTime = currentTime;
     });
+	
+	document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Assuming the user is already logged in and you have their UID
+    // You can get the UID from the Firebase Auth user object
+    const user = auth.currentUser;
+
+    // Get form values
+    const firstName = document.getElementById('firstName').value;
+    const lastName = document.getElementById('lastName').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+
+    // Reference to the user's document in Firestore
+    const userDocRef = doc(db, 'users', user.uid);
+
+    // Update Firestore document
+    updateDoc(userDocRef, {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phone: phone
+    })
+    .then(() => {
+        console.log('Profile updated successfully');
+        alert('Profile updated successfully!');
+    })
+    .catch((error) => {
+        console.error('Error updating profile:', error);
+        alert('Error updating profile');
+    });
+});
+
+	
 </script>
 </body>
 </html>
