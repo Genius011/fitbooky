@@ -156,6 +156,51 @@
     transform: translateY(-2px);
     transition: transform 0.2s, box-shadow 0.2s;
 }
+/* Add this to your existing CSS */
+.profile-edit-form {
+    padding: 20px;
+    border-top: 1px solid #e0e0e0; /* Adds a line to separate the section */
+}
+
+.profile-edit-form h2 {
+    color: #333;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.form-field {
+    margin-bottom: 10px;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-field input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-button {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.form-button:hover {
+    background: linear-gradient(135deg, #a777e3, #6e8efb);
+}
+
     </style>
 </head>
 <body>
@@ -196,6 +241,28 @@
             <!-- More training entries go here -->
         </div>
     </div>
+	<div class="profile-edit-form">
+    <h2>Edit Profile</h2>
+    <form id="editProfileForm">
+        <div class="form-field">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required>
+        </div>
+        <div class="form-field">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required>
+        </div>
+        <div class="form-field">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-field">
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" required>
+        </div>
+        <button type="submit" class="form-button">Update Profile</button>
+    </form>
+</div>
 </div>
 <script>
     const profileImage = document.getElementById('profileImage');
