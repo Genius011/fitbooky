@@ -100,16 +100,20 @@
 
     <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-  import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+  import { 
+    getAuth, 
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword 
+  } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 
   const firebaseConfig = {
-            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-            authDomain: "genius-f6a78.firebaseapp.com",
-            projectId: "genius-f6a78",
-            storageBucket: "genius-f6a78.appspot.com",
-            messagingSenderId: "4413237203",
-            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
-        };
+    apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+    authDomain: "genius-f6a78.firebaseapp.com",
+    projectId: "genius-f6a78",
+    storageBucket: "genius-f6a78.appspot.com",
+    messagingSenderId: "4413237203",
+    appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+  };
   
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -119,39 +123,45 @@
     const registrationForm = document.getElementById('registrationForm');
     const toggleRegistration = document.getElementById('toggleRegistration');
 
-    // Toggle between Login and Registration forms
     toggleRegistration.addEventListener('click', function(e) {
       e.preventDefault();
-      if (loginForm.style.display === 'none') {
-        loginForm.style.display = 'block';
-        registrationForm.style.display = 'none';
-        toggleRegistration.textContent = 'Register here';
-      } else {
-        loginForm.style.display = 'none';
-        registrationForm.style.display = 'block';
-        toggleRegistration.textContent = 'Login here';
-      }
+      // Toggle visibility between forms
     });
 
     loginForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      const email = loginForm.querySelector('input[type="email"]').value;
-      const password = loginForm.querySelector('input[type="password"]').value;
+      // Login functionality
+    });
 
-      signInWithEmailAndPassword(auth, email, password)
+    registrationForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = registrationForm.querySelector('input[type="email"]').value;
+      const password = registrationForm.querySelector('input[type="password"]').value;
+      const confirmPassword = registrationForm.querySelector('input[name="confirmPassword"]').value;
+
+      // Check if passwords match
+      if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          // Signed in 
-          alert('Login successful!');
-          window.location.href = 'index.html'; // Redirect to index.html
+          // User registration successful
+          console.log('User registered:', userCredential.user);
+          alert('Registration successful!');
+          // Redirect to login page or dashboard as needed
+          window.location.href = 'login.html'; // Redirect to login page after registration
         })
         .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          alert('Error: ' + errorMessage);
+          // User registration failed
+          console.error('User registration failed', error.message);
+          alert('Error: ' + error.message);
         });
     });
   });
 </script>
+
 
 
 </body>
