@@ -142,9 +142,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Handle Login
   loginForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    const email = loginForm.querySelector('input[type="email"]').value;
-    const password = loginForm.querySelector('input[type="password"]').value;
-
+    const emailInput = loginForm.querySelector('input[type="email"]');
+    const passwordInput = loginForm.querySelector('input[type="password"]');
+    if (emailInput && passwordInput) {
+      const email = emailInput.value;
+      const password = passwordInput.value;
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in 
