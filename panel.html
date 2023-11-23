@@ -365,13 +365,57 @@ h2 {
 </div>
 
 <script>
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 
+// Konfiguracja Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+            authDomain: "genius-f6a78.firebaseapp.com",
+            projectId: "genius-f6a78",
+            storageBucket: "genius-f6a78.appspot.com",
+            messagingSenderId: "4413237203",
+            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+        
+};
+
+// Inicjalizacja Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
     document.addEventListener('DOMContentLoaded', function() {
     const dailyAvailabilityContainer = document.getElementById('dailyAvailability');
     const daysOfWeek = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
     const hours = Array.from({ length: 16 }, (_, i) => `${i + 6}:00`); // Generates hours from 6:00 to 21:00
-    
+    const updateAvailabilityBtn = document.getElementById('updateAvailability');
+  updateAvailabilityBtn.addEventListener('click', function() {
+    const availability = {};
+    document.querySelectorAll('.day-column').forEach(dayColumn => {
+      const day = dayColumn.dataset.date; // zakładając, że masz atrybut data-date
+      const checkboxes = dayColumn.querySelectorAll('input[type=checkbox]');
+      const availableHours = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+      
+      // Przypisz dostępne godziny do danego dnia
+      availability[day] = availableHours;
+    });
+
+    // Zapisz dostępność w Firestore
+    const userDocRef = doc(db, 'availability', auth.currentUser.uid); // Użyj identyfikatora użytkownika jako ID dokumentu
+    setDoc(userDocRef, availability, { merge: true })
+    .then(() => {
+      console.log('Availability updated successfully');
+      alert('Dostępność zaktualizowana!');
+    })
+    .catch((error) => {
+      console.error('Error updating availability:', error);
+      alert('Błąd podczas aktualizacji dostępności');
+    });
+  });
+
+  // Przykład odczytu dostępności i aktualizacji kalendarza...
+});
     // Define a function to calculate the start of the week
     const calculateStartOfWeek = (date) => {
         const day = date.getDay();
@@ -421,30 +465,24 @@ h2 {
 
     // Update availability button functionality
     const updateAvailabilityBtn = document.getElementById('updateAvailability');
-updateAvailabilityBtn.addEventListener('click', function() {
-    const availability = {};
-    document.querySelectorAll('.day-column').forEach(dayColumn => {
-        const day = dayColumn.dataset.date; // zakładając, że masz atrybut data-date
-        const checkboxes = dayColumn.querySelectorAll('input[type=checkbox]');
-        const availableHours = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+    updateAvailabilityBtn.addEventListener('click', function() {
+        const availability = {};
+        daysOfWeek.forEach(day => {
+            const checkboxes = document.querySelectorAll(`input[name="availability-${day}"]:checked`);
+            const availableHours = Array.from(checkboxes).map(cb => cb.value);
+            availability[day] = availableHours;
+        });
+
+        // Here you can send the data to the server or Firebase database
+        console.log('Updated availability:', availability);
         
-        // Przypisz dostępne godziny do danego dnia
-        availability[day] = availableHours;
-    });
-
-    // Zapisz dostępność w Firestore
-    const userDocRef = doc(db, 'availability', auth.currentUser.uid); // Użyj identyfikatora użytkownika jako ID dokumentu
-    setDoc(userDocRef, availability, { merge: true })
-    .then(() => {
-        console.log('Availability updated successfully');
+        // Show a success message or perform another action
         alert('Dostępność zaktualizowana!');
-    })
-    .catch((error) => {
-        console.error('Error updating availability:', error);
-        alert('Błąd podczas aktualizacji dostępności');
     });
-});
 
+    // Call to update the dates on initial load
+    updateWeekDays();
+});
 
 
 
