@@ -387,7 +387,7 @@ const db = getFirestore(app);
             let startDate = new Date(currentYear, currentMonth, 1);
             let dayOfWeek = startDate.getDay();
 
-            monthName.textContent = `${startDate.toLocaleString('default', { month: 'long' })} ${currentYear}`;
+            monthName.textContent = `${startDate.toLocaleString('en-US', { month: 'long' })} ${currentYear}`;
             startDate.setDate(startDate.getDate() - dayOfWeek);
 
             for (let i = 0; i < 35; i++) {
