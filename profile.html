@@ -264,59 +264,64 @@
     </form>
 </div>
 </div>
-<script>
 
-import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
-const db = getFirestore(app);
+ <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+            authDomain: "genius-f6a78.firebaseapp.com",
+            projectId: "genius-f6a78",
+            storageBucket: "genius-f6a78.appspot.com",
+            messagingSenderId: "4413237203",
+            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+        };
 
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
 
-    const profileImage = document.getElementById('profileImage');
-    const avatarInput = document.getElementById('avatarInput');
+        document.addEventListener('DOMContentLoaded', function() {
+            const editProfileForm = document.getElementById('editProfileForm');
 
-    // Obs³uga dwukrotnego klikniêcia do zmiany zdjêcia profilowego
-    let lastClickTime = 0;
-    profileImage.addEventListener('click', () => {
-        const currentTime = new Date().getTime();
-        if (currentTime - lastClickTime < 300) {
-            avatarInput.click();
-        }
-        lastClickTime = currentTime;
-    });
-	
-	document.getElementById('editProfileForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+            // Get the current user's ID and update their Firestore document
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    editProfileForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const firstName = document.getElementById('firstName').value;
+                        const lastName = document.getElementById('lastName').value;
+                        const email = document.getElementById('email').value;
+                        const phone = document.getElementById('phone').value;
 
-    // Assuming the user is already logged in and you have their UID
-    // You can get the UID from the Firebase Auth user object
-    const user = auth.currentUser;
+                        const userDocRef = doc(db, 'users', user.uid);
 
-    // Get form values
-    const firstName = document.getElementById('firstName').value;
-    const lastName = document.getElementById('lastName').value;
-    const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone').value;
-
-    // Reference to the user's document in Firestore
-    const userDocRef = doc(db, 'users', user.uid);
-
-    // Update Firestore document
-    updateDoc(userDocRef, {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        phone: phone
-    })
-    .then(() => {
-        console.log('Profile updated successfully');
-        alert('Profile updated successfully!');
-    })
-    .catch((error) => {
-        console.error('Error updating profile:', error);
-        alert('Error updating profile');
-    });
-});
-
-	
-</script>
+                        updateDoc(userDocRef, {
+                            firstName: firstName,
+                            lastName: lastName,
+                            email: email,
+                            phone: phone
+                        })
+                        .then(() => {
+                            console.log('Profile updated successfully');
+                            alert('Profile updated successfully!');
+                        })
+                        .catch((error) => {
+                            console.error('Error updating profile:', error);
+                            alert('Error updating profile');
+                        });
+                    });
+                } else {
+                    // User is signed out
+                    // Handle user state when not logged in if necessary
+                }
+            });
+        });
+    </script>
 </body>
 </html>
