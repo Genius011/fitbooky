@@ -87,6 +87,7 @@
     z-index: 1000;
 }
 
+@media (max-width: 600px) {
 .popup-content {
     background-color: #fff;
     padding: 20px;
@@ -94,7 +95,9 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     position: relative;
     width: 80%;
-    max-width: 200px;
+    max-width: 400px;
+	max-height: 80%; /* Ustaw maksymalną wysokość na 80% ekranu */
+        overflow-y: auto;
 }
 
 .close-btn {
@@ -102,7 +105,7 @@
     top: 10px;
     right: 10px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 25px;
 }
 .training-type-container {
     display: flex;
