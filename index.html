@@ -334,32 +334,7 @@ import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.
   const auth = getAuth(app);
 const db = getFirestore(app);
 
-    // Listen for authentication state changes
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const userDocRef = doc(db, 'users', user.uid);
-      getDoc(userDocRef).then((docSnapshot) => {
-        if (docSnapshot.exists()) {
-          const userData = docSnapshot.data();
-          // Jeśli użytkownik ma rolę trenera, dodaj przycisk panelu trenera
-          if (userData.role === 'trener') {
-            const trainerPanelBtn = document.createElement('button');
-            trainerPanelBtn.textContent = 'Panel Trenera';
-            trainerPanelBtn.addEventListener('click', () => {
-              // Tutaj umieść logikę przejścia do panelu trenera
-              window.location.href = 'panel.html';
-            });
-            document.body.appendChild(trainerPanelBtn);
-          }
-        }
-      }).catch((error) => {
-        console.error("Error getting user document:", error);
-      });
-    } else {
-      window.location.href = 'login.html'; // Przekierowanie do strony logowania, jeśli użytkownik nie jest zalogowany
-    }
-  });
-
+   
   // Logout function
   logoutButton.addEventListener('click', () => {
     signOut(auth).then(() => {
@@ -409,6 +384,31 @@ const db = getFirestore(app);
                 calendar.appendChild(dayElement);
             }
         }
+		 // Listen for authentication state changes
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const userDocRef = doc(db, 'users', user.uid);
+      getDoc(userDocRef).then((docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const userData = docSnapshot.data();
+          // Jeśli użytkownik ma rolę trenera, dodaj przycisk panelu trenera
+          if (userData.role === 'trener') {
+            const trainerPanelBtn = document.createElement('button');
+            trainerPanelBtn.textContent = 'Panel Trenera';
+            trainerPanelBtn.addEventListener('click', () => {
+              // Tutaj umieść logikę przejścia do panelu trenera
+              window.location.href = 'panel.html';
+            });
+            document.body.appendChild(trainerPanelBtn);
+          }
+        }
+      }).catch((error) => {
+        console.error("Error getting user document:", error);
+      });
+    } else {
+      window.location.href = 'login.html'; // Przekierowanie do strony logowania, jeśli użytkownik nie jest zalogowany
+    }
+  });
 
         function openPopup(selectedDay) {
             const popup = document.createElement('div');
