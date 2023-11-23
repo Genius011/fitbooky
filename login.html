@@ -121,6 +121,7 @@
   const auth = getAuth(app);
 
 document.addEventListener('DOMContentLoaded', function() {
+
   const loginForm = document.getElementById('loginForm');
   const registrationForm = document.getElementById('registrationForm');
   const toggleRegistration = document.getElementById('toggleRegistration');
@@ -159,32 +160,23 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   });
 
-  // Handle Registration
-  registrationForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const email = registrationForm.querySelector('input[type="email"]').value;
-    const password = registrationForm.querySelector('input[type="password"]').value;
-    const confirmPassword = registrationForm.querySelector('input[name="confirmPassword"]').value;
+  // Handle registration form submission
+            registrationForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = registrationForm.querySelector('input[type="email"]').value;
+                const password = registrationForm.querySelector('input[type="password"]').value;
+                createUserWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        // Registered successfully, you can redirect or show a success message here
+                        console.log('Registration successful', userCredential);
+                    })
+                    .catch((error) => {
+                        // Handle errors here, you can display an error message to the user
+                        console.error('Registration error', error);
+                    });
+            });
+        });
 
-    if (password !== confirmPassword) {
-      alert("Passwords do not match.");
-      return;
-    }
-
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // User registration successful
-        console.log('User registered:', userCredential.user);
-        alert('Registration successful!');
-        window.location.href = 'login.html'; // Redirect to login page after registration
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert('Error: ' + errorMessage);
-      });
-  });
-});
 
 </script>
 
