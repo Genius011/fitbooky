@@ -266,13 +266,13 @@
 </div>
 
  <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-        import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
-        
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+    
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
             apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
             authDomain: "genius-f6a78.firebaseapp.com",
             projectId: "genius-f6a78",
@@ -281,47 +281,48 @@
             appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
         };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const editProfileForm = document.getElementById('editProfileForm');
+    document.addEventListener('DOMContentLoaded', function() {
+        const editProfileForm = document.getElementById('editProfileForm');
 
-            // Get the current user's ID and update their Firestore document
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    editProfileForm.addEventListener('submit', (e) => {
-                        e.preventDefault();
-                        const firstName = document.getElementById('firstName').value;
-                        const lastName = document.getElementById('lastName').value;
-                        const email = document.getElementById('email').value;
-                        const phone = document.getElementById('phone').value;
+        // Get the current user's ID and update their Firestore document
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                editProfileForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const firstName = document.getElementById('firstName').value;
+                    const lastName = document.getElementById('lastName').value;
+                    const email = document.getElementById('email').value;
+                    const phone = document.getElementById('phone').value;
 
-                        const userDocRef = doc(db, 'users', user.uid);
+                    const userDocRef = doc(db, 'users', user.uid);
 
-                        updateDoc(userDocRef, {
-                            firstName: firstName,
-                            lastName: lastName,
-                            email: email,
-                            phone: phone
-                        })
-                        .then(() => {
-                            console.log('Profile updated successfully');
-                            alert('Profile updated successfully!');
-                        })
-                        .catch((error) => {
-                            console.error('Error updating profile:', error);
-                            alert('Error updating profile');
-                        });
+                    setDoc(userDocRef, {
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        phone: phone
+                    }, { merge: true }) // Use merge to avoid overwriting entire document
+                    .then(() => {
+                        console.log('Profile updated successfully');
+                        alert('Profile updated successfully!');
+                    })
+                    .catch((error) => {
+                        console.error('Error updating profile:', error);
+                        alert('Error updating profile');
                     });
-                } else {
-                    // User is signed out
-                    // Handle user state when not logged in if necessary
-                }
-            });
+                });
+            } else {
+                // User is signed out
+                // Handle user state when not logged in if necessary
+            }
         });
-    </script>
+    });
+</script>
+
 </body>
 </html>
