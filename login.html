@@ -69,13 +69,22 @@
             margin-top: 20px;
         }
 
-        /* Rest of your CSS styles here */
+        .logo-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    opacity: 0.9;
+    margin: 0 auto 20px;
+    transform: scale(0.4); /* Skaluje logo do 40% jego pierwotnego rozmiaru */
+    transform-origin: center; /* Zapewnia, że skalowanie odbywa się względem środka obrazka */
+}
 
     </style>
 </head>
 <body>
 
     <div class="login-container">
+	<img src="genius.png" alt="Genius" class="logo-image">
         <div class="login-header">
             <h1>Login/Register</h1>
         </div>
