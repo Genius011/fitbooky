@@ -141,9 +141,20 @@
           const errorMessage = error.message;
           alert('Error: ' + errorMessage);
         });
-		
-		
-		
+		const toggleRegistration = document.getElementById('toggleRegistration');
+  const loginForm = document.getElementById('loginForm');
+  const registrationForm = document.getElementById('registrationForm');
+
+  toggleRegistration.addEventListener('click', function(e) {
+    e.preventDefault();
+    if (loginForm.style.display === 'none') {
+      loginForm.style.display = 'block';
+      registrationForm.style.display = 'none';
+    } else {
+      loginForm.style.display = 'none';
+      registrationForm.style.display = 'block';
+    }
+  });		
     });
   });
 </script>
