@@ -313,29 +313,27 @@
    
    
   <script type="module">
-  
-  
-  
   // Import the required Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-  
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+  import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
-            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-            authDomain: "genius-f6a78.firebaseapp.com",
-            projectId: "genius-f6a78",
-            storageBucket: "genius-f6a78.appspot.com",
-            messagingSenderId: "4413237203",
-            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
-        };
+    apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+    authDomain: "genius-f6a78.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "genius-f6a78.appspot.com",
+    messagingSenderId: "4413237203",
+    appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+  };
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    // Listen for authentication state changes
+  // Listen for authentication state changes
   onAuthStateChanged(auth, (user) => {
     if (!user) {
       // If no user is signed in, redirect to the login page
@@ -343,6 +341,7 @@
     }
   });
 
+  const logoutButton = document.getElementById('logoutButton'); // Make sure you have this element in your HTML
   // Logout function
   logoutButton.addEventListener('click', () => {
     signOut(auth).then(() => {
@@ -392,6 +391,28 @@
                 calendar.appendChild(dayElement);
             }
         }
+		
+		 function handleBooking(selectedDay, selectedTime, selectedTrainingType) {
+      const user = auth.currentUser;
+      if (user) {
+        const bookingRef = collection(db, 'bookings');
+        addDoc(bookingRef, {
+          userId: user.uid,
+          date: selectedDay.toDateString(),
+          time: selectedTime,
+          trainingType: selectedTrainingType
+        })
+        .then(() => {
+          alert('Booking successful!');
+        })
+        .catch((error) => {
+          console.error('Error making booking: ', error);
+          alert('Failed to make booking.');
+        });
+      } else {
+        alert('You must be logged in to make a booking.');
+      }
+    }
 
         function openPopup(selectedDay) {
             const popup = document.createElement('div');
@@ -508,6 +529,20 @@
 
         generateCalendar(); // Initial call to display the calendar
     });
+	// Add this inside your openPopup function, just after the popup content is created
+    const bookButton = document.getElementById('bookButton');
+    bookButton.addEventListener('click', () => {
+      const selectedTimeSlot = document.querySelector('.time-slot.selected');
+      const selectedTrainingType = document.querySelector('.training-type.selected').getAttribute('data-type');
+      if (selectedTimeSlot && selectedTrainingType) {
+        const selectedTime = selectedTimeSlot.textContent;
+        handleBooking(selectedDay, selectedTime, selectedTrainingType);
+      } else {
+        alert('Please select a time slot and a training type.');
+      }
+    });
+  });
+	
 </script>
 
 
