@@ -268,30 +268,50 @@
  <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
     
     // Your web app's Firebase configuration
     const firebaseConfig = {
-            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-            authDomain: "genius-f6a78.firebaseapp.com",
-            projectId: "genius-f6a78",
-            storageBucket: "genius-f6a78.appspot.com",
-            messagingSenderId: "4413237203",
-            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
-        };
+        apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+        authDomain: "genius-f6a78.firebaseapp.com",
+        projectId: "genius-f6a78",
+        storageBucket: "genius-f6a78.appspot.com",
+        messagingSenderId: "4413237203",
+        appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+    };
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const editProfileForm = document.getElementById('editProfileForm');
+    // Function to fetch and display user data
+    const fetchAndDisplayUserData = (userId) => {
+        const userDocRef = doc(db, 'users', userId);
+        
+        getDoc(userDocRef).then((doc) => {
+            if (doc.exists()) {
+                const userData = doc.data();
+                // Replace 'displayName', 'displayEmail', 'displayPhone' with your actual element IDs
+                document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
+                document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
+                document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
+            } else {
+                console.log("No such document!");
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+    };
 
+    document.addEventListener('DOMContentLoaded', function() {
         // Get the current user's ID and update their Firestore document
         onAuthStateChanged(auth, (user) => {
             if (user) {
+                fetchAndDisplayUserData(user.uid); // Fetch and display user data
+                const editProfileForm = document.getElementById('editProfileForm');
+
                 editProfileForm.addEventListener('submit', (e) => {
                     e.preventDefault();
                     const firstName = document.getElementById('firstName').value;
@@ -323,6 +343,7 @@
         });
     });
 </script>
+
 
 </body>
 </html>
