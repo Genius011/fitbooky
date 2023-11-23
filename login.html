@@ -99,6 +99,8 @@
     </div>
 
     <script type="module">
+  document.addEventListener('DOMContentLoaded', function() {
+  // Since modules are already deferred, we don't need to wrap the imports in the DOMContentLoaded listener
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
   import {
     getAuth,
@@ -107,13 +109,13 @@
   } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 
   const firebaseConfig = {
-            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-            authDomain: "genius-f6a78.firebaseapp.com",
-            projectId: "genius-f6a78",
-            storageBucket: "genius-f6a78.appspot.com",
-            messagingSenderId: "4413237203",
-            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
-        };
+    apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+    authDomain: "genius-f6a78.firebaseapp.com",
+    projectId: "genius-f6a78",
+    storageBucket: "genius-f6a78.appspot.com",
+    messagingSenderId: "4413237203",
+    appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+  };
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -181,6 +183,8 @@
         alert('Error: ' + errorMessage);
       });
   });
+});
+
 </script>
 
 
