@@ -313,45 +313,32 @@
    
    
   <script type="module">
-  
-  
-  
   // Import the required Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-  
-  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+  import { getFirestore, doc, setDoc, collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+  import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
-            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-            authDomain: "genius-f6a78.firebaseapp.com",
-            projectId: "genius-f6a78",
-            storageBucket: "genius-f6a78.appspot.com",
-            messagingSenderId: "4413237203",
-            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
-        };
+    apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+    authDomain: "genius-f6a78.firebaseapp.com",
+    projectId: "genius-f6a78",
+    storageBucket: "genius-f6a78.appspot.com",
+    messagingSenderId: "4413237203",
+    appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+  };
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
   const auth = getAuth(app);
 
-    // Listen for authentication state changes
+  // Listen for authentication state changes
   onAuthStateChanged(auth, (user) => {
     if (!user) {
       // If no user is signed in, redirect to the login page
       window.location.href = 'login.html';
     }
-  });
-
-  // Logout function
-  logoutButton.addEventListener('click', () => {
-    signOut(auth).then(() => {
-      // Sign-out successful, redirect to login page
-      window.location.href = 'login.html';
-    }).catch((error) => {
-      // An error happened during sign out
-      console.error('Logout failed', error);
-    });
   });
    
     document.addEventListener('DOMContentLoaded', function() {
@@ -393,6 +380,30 @@
             }
         }
 
+ // Function to handle booking
+    function handleBooking(selectedDay, selectedTime) {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (user) {
+        const bookingsRef = collection(db, 'bookings');
+        addDoc(bookingsRef, {
+          uid: user.uid,
+          date: selectedDay.toDateString(),
+          time: selectedTime,
+        })
+        .then(() => {
+          alert('Training session booked successfully');
+        })
+        .catch((error) => {
+          console.error('Error booking training session:', error);
+          alert('Error booking training session');
+        });
+      } else {
+        alert('You must be logged in to book a training session');
+      }
+    }
+
         function openPopup(selectedDay) {
             const popup = document.createElement('div');
             popup.className = 'popup';
@@ -407,6 +418,17 @@
                     <hr class="separator">
                     <div class="time-slots"></div>
                     <button id="bookButton" class="book-btn">Rezerwuj</button>
+					// Find the booking button and attach an event listener
+      const bookButton = document.getElementById('bookButton');
+      bookButton.addEventListener('click', () => {
+        const selectedTimeSlot = document.querySelector('.time-slot.selected');
+        if (selectedTimeSlot) {
+          handleBooking(selectedDay, selectedTimeSlot.textContent);
+        } else {
+          alert('Please select a time slot');
+        }
+      });
+    }
                 </div>
             `;
 			
