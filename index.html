@@ -334,33 +334,32 @@ import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.
   const auth = getAuth(app);
 const db = getFirestore(app);
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    const userProfileRef = doc(db, 'users', user.uid);
-    getDoc(userProfileRef).then((docSnap) => {
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        if (userData.role === 'trainer') {
-          const trainerPanelButton = document.createElement('button');
-          trainerPanelButton.innerText = 'Panel Trenera';
-          trainerPanelButton.className = 'profileButton'; // Assign the same class as your profile button
-          trainerPanelButton.onclick = function() {
-            // Redirect to the trainer panel page or display the panel
-            window.location.href = 'trainer-panel.html'; // Change this to your trainer panel page URL
-          };
-          document.querySelector('.button-container').appendChild(trainerPanelButton);
+    // Listen for authentication state changes
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const userDocRef = doc(db, 'users', user.uid);
+      getDoc(userDocRef).then((docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const userData = docSnapshot.data();
+          // Jeśli użytkownik ma rolę trenera, dodaj przycisk panelu trenera
+          if (userData.role === 'trener') {
+            const trainerPanelBtn = document.createElement('button');
+            trainerPanelBtn.textContent = 'Panel Trenera';
+            trainerPanelBtn.addEventListener('click', () => {
+              // Tutaj umieść logikę przejścia do panelu trenera
+              window.location.href = 'panel.html';
+            });
+            document.body.appendChild(trainerPanelBtn);
+          }
         }
-      }
-    }).catch((error) => {
-      console.error("Error fetching user profile:", error);
-    });
-  } else {
-    // User is signed out
-    window.location.href = 'login.html';
-  }
-});
+      }).catch((error) => {
+        console.error("Error getting user document:", error);
+      });
+    } else {
+      window.location.href = 'login.html'; // Przekierowanie do strony logowania, jeśli użytkownik nie jest zalogowany
+    }
+  });
 
-   
   // Logout function
   logoutButton.addEventListener('click', () => {
     signOut(auth).then(() => {
@@ -410,7 +409,6 @@ onAuthStateChanged(auth, (user) => {
                 calendar.appendChild(dayElement);
             }
         }
-		
 
         function openPopup(selectedDay) {
             const popup = document.createElement('div');
