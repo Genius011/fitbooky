@@ -416,6 +416,18 @@
 
         function openPopup(selectedDay) {
             const popup = document.createElement('div');
+			const bookButton = popup.querySelector('#bookButton'); // Changed to querySelector to find the button inside the popup
+    bookButton.addEventListener('click', () => {
+        const selectedTimeSlot = popup.querySelector('.time-slot.selected'); // Changed to querySelector to find within popup
+        const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type'); // Used optional chaining
+        if (selectedTimeSlot && selectedTrainingType) {
+            const selectedTime = selectedTimeSlot.textContent;
+            handleBooking(selectedDay, selectedTime, selectedTrainingType);
+        } else {
+            alert('Please select a time slot and a training type.');
+        }
+    });
+}
             popup.className = 'popup';
             popup.innerHTML = `
                 <div class="popup-content">
@@ -429,18 +441,7 @@
                     <div class="time-slots"></div>
                     <button id="bookButton" class="book-btn">Rezerwuj</button>
 					
-					const bookButton = popup.querySelector('#bookButton'); // Changed to querySelector to find the button inside the popup
-    bookButton.addEventListener('click', () => {
-        const selectedTimeSlot = popup.querySelector('.time-slot.selected'); // Changed to querySelector to find within popup
-        const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type'); // Used optional chaining
-        if (selectedTimeSlot && selectedTrainingType) {
-            const selectedTime = selectedTimeSlot.textContent;
-            handleBooking(selectedDay, selectedTime, selectedTrainingType);
-        } else {
-            alert('Please select a time slot and a training type.');
-        }
-    });
-}
+					
                 </div>
             `;
 			
