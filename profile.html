@@ -211,9 +211,9 @@
 
 <div class="profile-container">
     <div class="profile-header">
+    <h1 id="welcomeMessage">Welcome, <span id="displayName">Name Surname</span></h1>
+</div>
 
-        <h1>User Profile</h1>
-    </div>
     <div class="profile-image" id="profileImage">
         <img src="profile-image.jpg" alt="Profile Picture">
         <input type="file" id="avatarInput" accept="image/*">
@@ -342,6 +342,23 @@
             }
         });
     });
+	// Function to fetch and display user data
+const fetchAndDisplayUserData = (userId) => {
+    const userDocRef = doc(db, 'users', userId);
+    
+    getDoc(userDocRef).then((doc) => {
+        if (doc.exists()) {
+            const userData = doc.data();
+            document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
+            document.getElementById('welcomeMessage').textContent = 'Welcome, ' + userData.firstName + ' ' + userData.lastName;
+        } else {
+            console.log("No such document!");
+        }
+    }).catch((error) => {
+        console.log("Error getting document:", error);
+    });
+};
+
 </script>
 
 
