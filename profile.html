@@ -297,6 +297,8 @@
                 document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
                 document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
                 document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
+				document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
+            document.getElementById('welcomeMessage').textContent = 'Welcome, ' + userData.firstName + ' ' + userData.lastName;
             } else {
                 console.log("No such document!");
             }
@@ -342,23 +344,7 @@
             }
         });
     });
-	// Function to fetch and display user data
-const fetchAndDisplayUserData = (userId) => {
-    const userDocRef = doc(db, 'users', userId);
-    
-    getDoc(userDocRef).then((doc) => {
-        if (doc.exists()) {
-            const userData = doc.data();
-            document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
-            document.getElementById('welcomeMessage').textContent = 'Welcome, ' + userData.firstName + ' ' + userData.lastName;
-        } else {
-            console.log("No such document!");
-        }
-    }).catch((error) => {
-        console.log("Error getting document:", error);
-    });
-};
-
+	
 </script>
 
 
