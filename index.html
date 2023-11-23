@@ -290,6 +290,16 @@
     transform: translateY(-2px);
 }
 
+.logo-image {
+    /* ... pozostałe style ... */
+    position: fixed;
+    top: 20px; /* Odległość od górnej krawędzi okna przeglądarki */
+    left: 50%; /* Pozycjonowanie od lewej krawędzi okna przeglądarki */
+    transform: translateX(-50%); /* Centrowanie logo */
+    z-index: 100; /* Upewnij się, że logo jest na wierzchu */
+}
+
+
     </style>
 </head>
 <body>
@@ -304,6 +314,7 @@
 	
 </div>
     <div class="calendar-container">
+	<img src="genius.png" alt="Genius" class="logo-image">
         <div class="calendar-header">
     <div id="prevMonth" class="nav-button">&#8592;</div> <!-- Left arrow -->
     <h1 id="monthName"></h1>
