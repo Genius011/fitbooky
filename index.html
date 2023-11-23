@@ -427,29 +427,28 @@
                 enableGroupTrainingSlots(popup, selectedDay);
             };
 
-            generateTimeSlots(popup.querySelector('.time-slots'), 6, 21, 30);
+            generateTimeSlots(popup.querySelector('.time-slots'), 6, 21);
 			
 			
         }
 
-        function generateTimeSlots(container, startHour, endHour, interval) {
-            container.innerHTML = '';
-            for (let hour = startHour; hour <= endHour; hour++) {
-                for (let minutes = 0; minutes < 60; minutes += interval) {
-                    let timeString = `${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-                    let timeSlot = document.createElement('div');
-                    timeSlot.className = 'time-slot';
-                    timeSlot.textContent = timeString;
+        function generateTimeSlots(container, startHour, endHour) {
+    container.innerHTML = '';
+    for (let hour = startHour; hour <= endHour; hour++) {
+        let timeString = `${hour.toString().padStart(2, '0')}:00`;
+        let timeSlot = document.createElement('div');
+        timeSlot.className = 'time-slot';
+        timeSlot.textContent = timeString;
 
-                    timeSlot.onclick = function() {
-                        container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
-                        timeSlot.classList.add('selected');
-                    };
+        timeSlot.onclick = function() {
+            container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+            timeSlot.classList.add('selected');
+        };
 
-                    container.appendChild(timeSlot);
-                }
-            }
-        }
+        container.appendChild(timeSlot);
+    }
+}
+
 
         function enableAllTimeSlots(popup) {
             const timeSlots = popup.querySelectorAll('.time-slot');
