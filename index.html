@@ -523,27 +523,6 @@ const db = getFirestore(app);
 
         generateCalendar(); // Initial call to display the calendar
     });
-	
-	document.addEventListener('DOMContentLoaded', function() {
-    // Załóżmy, że masz funkcję `generateCalendar`, która tworzy kalendarz
-    generateCalendar();
-
-    // Odczytaj dostępność z Firestore
-    const userDocRef = doc(db, 'availability', 'nq9vunFZwTWwuSUjazfKg39KsAa2'); // Zmień na odpowiednie ID trenera
-    getDoc(userDocRef).then((docSnapshot) => {
-        if (docSnapshot.exists()) {
-            const availability = docSnapshot.data();
-            // Przejdź przez każdy dzień w kalendarzu i zaktualizuj dostępność
-            for (const [day, hours] of Object.entries(availability)) {
-                const dayElement = document.querySelector(`[data-date="${day}"]`); // Znajdź element dnia w kalendarzu
-                if (dayElement) {
-                    dayElement.classList.toggle('available', hours.length > 0); // Zakładamy klasę CSS 'available'
-                    // Możesz tutaj dodać dodatkową logikę, aby pokazać godziny dostępne do rezerwacji
-                }
-            }
-        }
-    });
-});
 </script>
 
 
