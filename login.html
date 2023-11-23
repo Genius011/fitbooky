@@ -99,7 +99,7 @@
     </div>
 
     <script type="module">
-  document.addEventListener('DOMContentLoaded', function() {
+  
   // Since modules are already deferred, we don't need to wrap the imports in the DOMContentLoaded listener
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
   import {
@@ -120,6 +120,7 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
+document.addEventListener('DOMContentLoaded', function() {
   const loginForm = document.getElementById('loginForm');
   const registrationForm = document.getElementById('registrationForm');
   const toggleRegistration = document.getElementById('toggleRegistration');
