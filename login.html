@@ -99,31 +99,34 @@
     </div>
 
     <script type="module">
-  // Firebase App (the core Firebase SDK) is always required and must be listed first
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-
-  // Add Firebase products that you want to use
   import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 
-  // TODO: Replace the following with your app's Firebase project configuration
-  // See: https://firebase.google.com/docs/web/setup#config-object
   const firebaseConfig = {
-            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-            authDomain: "genius-f6a78.firebaseapp.com",
-            projectId: "genius-f6a78",
-            storageBucket: "genius-f6a78.appspot.com",
-            messagingSenderId: "4413237203",
-            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
-        };
-        
-         // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
+    // Your Firebase configuration
+  };
   
-  // Get a reference to the auth service
+  const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
   document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
+    const registrationForm = document.getElementById('registrationForm');
+    const toggleRegistration = document.getElementById('toggleRegistration');
+
+    // Toggle between Login and Registration forms
+    toggleRegistration.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (loginForm.style.display === 'none') {
+        loginForm.style.display = 'block';
+        registrationForm.style.display = 'none';
+        toggleRegistration.textContent = 'Register here';
+      } else {
+        loginForm.style.display = 'none';
+        registrationForm.style.display = 'block';
+        toggleRegistration.textContent = 'Login here';
+      }
+    });
 
     loginForm.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -141,23 +144,10 @@
           const errorMessage = error.message;
           alert('Error: ' + errorMessage);
         });
-		const toggleRegistration = document.getElementById('toggleRegistration');
-  const loginForm = document.getElementById('loginForm');
-  const registrationForm = document.getElementById('registrationForm');
-
-  toggleRegistration.addEventListener('click', function(e) {
-    e.preventDefault();
-    if (loginForm.style.display === 'none') {
-      loginForm.style.display = 'block';
-      registrationForm.style.display = 'none';
-    } else {
-      loginForm.style.display = 'none';
-      registrationForm.style.display = 'block';
-    }
-  });		
     });
   });
 </script>
+
 
 </body>
 </html>
