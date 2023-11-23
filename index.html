@@ -313,13 +313,11 @@
    
    
   <script type="module">
-  
-  
-  
-  // Import the required Firebase modules
+    // Import the required Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
   
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -334,12 +332,31 @@
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+const db = getFirestore(app);
 
     // Listen for authentication state changes
   onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      // If no user is signed in, redirect to the login page
-      window.location.href = 'login.html';
+    if (user) {
+      const userDocRef = doc(db, 'users', user.uid);
+      getDoc(userDocRef).then((docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const userData = docSnapshot.data();
+          // Jeśli użytkownik ma rolę trenera, dodaj przycisk panelu trenera
+          if (userData.role === 'trener') {
+            const trainerPanelBtn = document.createElement('button');
+            trainerPanelBtn.textContent = 'Panel Trenera';
+            trainerPanelBtn.addEventListener('click', () => {
+              // Tutaj umieść logikę przejścia do panelu trenera
+              window.location.href = 'panel.html';
+            });
+            document.body.appendChild(trainerPanelBtn);
+          }
+        }
+      }).catch((error) => {
+        console.error("Error getting user document:", error);
+      });
+    } else {
+      window.location.href = 'login.html'; // Przekierowanie do strony logowania, jeśli użytkownik nie jest zalogowany
     }
   });
 
