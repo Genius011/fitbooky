@@ -425,7 +425,8 @@ h2 {
       return new Date(date.setDate(diff));
   }
 
-  let currentStartDate = calculateStartOfWeek(new Date());
+  // This should be declared in the outermost scope so that it is shared across function calls
+let currentStartDate = calculateStartOfWeek(new Date());
 
 function updateWeekDays() {
     Array.from(document.querySelectorAll('.day-column')).forEach((column, index) => {
@@ -439,34 +440,20 @@ function updateWeekDays() {
 }
 
 document.getElementById('prevWeek').addEventListener('click', () => {
-    const currentStartDate = calculateStartOfWeek(new Date());
+    // Here we are changing the global currentStartDate, not declaring a new one
     currentStartDate.setDate(currentStartDate.getDate() - 7);
     updateWeekDays();
 });
 
 document.getElementById('nextWeek').addEventListener('click', () => {
-    const currentStartDate = calculateStartOfWeek(new Date());
+    // And here as well
     currentStartDate.setDate(currentStartDate.getDate() + 7);
     updateWeekDays();
 });
 
-
 // Initial call to set up the dates
 updateWeekDays();
 
-  document.querySelectorAll('.toggle-day').forEach(button => {
-      button.addEventListener('click', function() {
-          const day = this.getAttribute('data-day');
-          const checkboxes = document.querySelectorAll(`input[name="${day.toLowerCase()}-hours"]`);
-          const areAllChecked = Array.from(checkboxes).every(cb => cb.checked);
-
-          checkboxes.forEach(checkbox => {
-              checkbox.checked = !areAllChecked;
-          });
-      });
-  });
-
-  updateWeekDays(); // Call to update the dates on initial load
   });
   
 </script>
