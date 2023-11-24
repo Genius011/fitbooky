@@ -338,6 +338,7 @@
   
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+import { initializeFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -482,14 +483,14 @@ import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.
         };
 
         setDoc(reservationRef, reservationData)
-            .then(() => {
-                alert('Reservation successfully saved in Firestore!');
-                popup.remove();
-            })
-            .catch((error) => {
-                console.error('Error saving reservation:', error);
-                alert('Failed to save reservation. Please try again.');
-            });
+    .then(() => {
+        alert('Reservation successfully saved in Firestore!');
+        popup.remove();
+    })
+    .catch((error) => {
+        console.error('Error saving reservation:', error);
+        alert('Failed to save reservation. Please try again.');
+    });
     });
 }
 			
