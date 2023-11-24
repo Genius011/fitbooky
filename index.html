@@ -426,11 +426,6 @@ const db = getFirestore(app);
                 calendar.appendChild(dayElement);
             }
         }
-		let days = calendar.querySelectorAll('.day');
-        days.forEach(day => {
-            day.addEventListener('click', () => toggleDayAvailability(day));
-        });
-    }
 
         function openPopup(selectedDay) {
             const popup = document.createElement('div');
@@ -448,14 +443,6 @@ const db = getFirestore(app);
                     <button id="bookButton" class="book-btn">Rezerwuj</button>
                 </div>
             `;
-			function toggleDayAvailability(dayElement) {
-        // Sprawdź, czy trener jest aktualnie zalogowany
-        const user = auth.currentUser;
-        if (user && user.role === 'trener') {
-            dayElement.classList.toggle('unavailable');
-            // Tutaj możesz również zaktualizować stan w Firebase
-        }
-    }
 			
 			
             document.body.appendChild(popup);
