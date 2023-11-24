@@ -342,8 +342,6 @@
   } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
   import { 
     getFirestore, 
-    doc, 
-    getDoc, 
     collection, 
     addDoc 
   } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
@@ -363,54 +361,231 @@
   const db = getFirestore(app);
   const auth = getAuth(app);
 
-  // Add your event listeners and other script logic here
-  document.addEventListener('DOMContentLoaded', function() {
-    // Event listener for logout button
-    const logoutButton = document.getElementById('logoutButton');
-    logoutButton.addEventListener('click', () => {
-      signOut(auth).then(() => {
-        window.location.href = 'login.html';
-      }).catch((error) => {
-        console.error('Logout failed', error);
-      });
+     // Logout function
+  logoutButton.addEventListener('click', () => {
+    signOut(auth).then(() => {
+      // Sign-out successful, redirect to login page
+      window.location.href = 'login.html';
+    }).catch((error) => {
+      // An error happened during sign out
+      console.error('Logout failed', error);
     });
-
-    // Event listener for booking button
-    const bookButton = document.getElementById('bookButton');
-    bookButton.addEventListener('click', async () => {
-      // Get selected date, time, and training type from the form
-      const selectedDate = document.getElementById('selectedDate').value;
-      const selectedTime = document.getElementById('selectedTime').value;
-      const selectedTrainingType = document.querySelector('input[name="trainingType"]:checked').value;
-
-      // Verify if the user is logged in
-      const user = auth.currentUser;
-      if (user) {
-        try {
-          // Add a new document with a generated id to the "bookings" collection
-          const docRef = await addDoc(collection(db, "bookings"), {
-            userId: user.uid,
-            date: selectedDate,
-            time: selectedTime,
-            trainingType: selectedTrainingType
-          });
-
-          // Inform the user that the booking was successful
-          console.log("Document written with ID: ", docRef.id);
-          alert('Trening zarezerwowany pomyślnie!');
-        } catch (e) {
-          console.error("Error adding document: ", e);
-          alert('Nie udało się zarezerwować treningu: ' + e.message);
+  });
+   
+    document.addEventListener('DOMContentLoaded', function() {
+	const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // Jeśli użytkownik jest zalogowany, sprawdź, czy ma rolę 'trener'
+            const userRef = doc(getFirestore(), 'users', user.uid);
+            getDoc(userRef).then((docSnap) => {
+                if (docSnap.exists() && docSnap.data().role === 'trener') {
+                    // Utwórz i dodaj przycisk Panelu Trenera
+                    const buttonContainer = document.querySelector('.button-container');
+                    const trainerPanelButton = document.createElement('button');
+                    trainerPanelButton.textContent = 'Panel Trenera';
+                    trainerPanelButton.className = 'profileButton'; // Klasa dla stylizacji
+                    trainerPanelButton.onclick = function() {
+                        window.location.href = 'panel.html'; // Zmień URL na odpowiedni dla panelu trenera
+                    };
+                    buttonContainer.appendChild(trainerPanelButton);
+                }
+            });
+        } else {
+            // Przekieruj na stronę logowania, jeśli użytkownik nie jest zalogowany
+            window.location.href = 'login.html';
         }
-      } else {
-        alert('Musisz być zalogowany, aby zarezerwować trening.');
+    });
+        const calendar = document.getElementById('calendar');
+        const prevMonth = document.getElementById('prevMonth');
+        const nextMonth = document.getElementById('nextMonth');
+        const monthName = document.getElementById('monthName');
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+
+        function generateCalendar() {
+            calendar.innerHTML = '';
+            let today = new Date();
+            let startDate = new Date(currentYear, currentMonth, 1);
+            let dayOfWeek = startDate.getDay();
+
+            monthName.textContent = `${startDate.toLocaleString('en-US', { month: 'long' })} ${currentYear}`;
+            startDate.setDate(startDate.getDate() - dayOfWeek);
+
+            for (let i = 0; i < 35; i++) {
+                let day = new Date(startDate);
+                day.setDate(day.getDate() + i);
+
+                let dayElement = document.createElement('div');
+                dayElement.className = 'day';
+                if (day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear()) {
+                    dayElement.classList.add('current-day');
+                }
+                if (day.getMonth() === currentMonth) {
+                    dayElement.textContent = day.getDate();
+                    dayElement.onclick = function() {
+                        openPopup(day);
+                    };
+                } else {
+                    dayElement.classList.add('inactive');
+                }
+                calendar.appendChild(dayElement);
+            }
+        }
+
+        function openPopup(selectedDay) {
+            const popup = document.createElement('div');
+            popup.className = 'popup';
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <span class="close-btn">&times;</span>
+                    <h2>Book your time</h2>
+                    <div class="training-type-container">
+                        <div class="training-type" data-type="personal">Personal</div>
+                        <div class="training-type" data-type="group">Group</div>
+                    </div>
+                    <hr class="separator">
+                    <div class="time-slots"></div>
+                    <button id="bookButton" class="book-btn">Rezerwuj</button>
+                </div>
+            `;
+			
+			
+            document.body.appendChild(popup);
+
+            const closeBtn = popup.querySelector('.close-btn');
+            const personalTraining = popup.querySelector('.training-type[data-type="personal"]');
+            const groupTraining = popup.querySelector('.training-type[data-type="group"]');
+            closeBtn.onclick = () => popup.remove();
+
+            personalTraining.onclick = function() {
+                selectTrainingType(personalTraining, groupTraining);
+                enableAllTimeSlots(popup);
+            };
+            groupTraining.onclick = function() {
+                selectTrainingType(groupTraining, personalTraining);
+                enableGroupTrainingSlots(popup, selectedDay);
+            };
+
+            generateTimeSlots(popup.querySelector('.time-slots'), 6, 21);
+			
+			
+        }
+
+        function generateTimeSlots(container, startHour, endHour) {
+    container.innerHTML = '';
+    for (let hour = startHour; hour <= endHour; hour++) {
+        let timeString = `${hour.toString().padStart(2, '0')}:00`;
+        let timeSlot = document.createElement('div');
+        timeSlot.className = 'time-slot';
+        timeSlot.textContent = timeString;
+
+        timeSlot.onclick = function() {
+            container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+            timeSlot.classList.add('selected');
+        };
+
+        container.appendChild(timeSlot);
+    }
+}
+
+
+        function enableAllTimeSlots(popup) {
+            const timeSlots = popup.querySelectorAll('.time-slot');
+            timeSlots.forEach(slot => {
+                slot.classList.remove('disabled');
+                slot.onclick = function() {
+                    timeSlots.forEach(s => s.classList.remove('selected'));
+                    slot.classList.add('selected');
+                };
+            });
+        }
+
+        function enableGroupTrainingSlots(popup, selectedDay) {
+            const timeSlots = popup.querySelectorAll('.time-slot');
+            timeSlots.forEach(slot => {
+                const slotTime = slot.textContent.trim();
+                const dayOfWeek = selectedDay.getDay();
+
+                slot.classList.add('disabled');
+                slot.onclick = null;
+
+                if ((dayOfWeek === 2 || dayOfWeek === 4) && slotTime === '19:00' || 
+                    (dayOfWeek === 6 && slotTime === '10:00')) {
+                    slot.classList.remove('disabled');
+                    slot.onclick = function() {
+                        timeSlots.forEach(s => s.classList.remove('selected'));
+                        slot.classList.add('selected');
+                    };
+                }
+            });
+        }
+
+        function selectTrainingType(selected, other) {
+            selected.classList.add('selected');
+            other.classList.remove('selected');
+        }
+
+        prevMonth.addEventListener('click', function() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            currentDate = new Date(currentYear, currentMonth, 1);
+            generateCalendar();
+        });
+
+        nextMonth.addEventListener('click', function() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            currentDate = new Date(currentYear, currentMonth, 1);
+            generateCalendar();
+        });
+
+        generateCalendar(); // Initial call to display the calendar
+    });
+	// Event listener for the book button inside the popup
+    document.body.addEventListener('click', async (event) => {
+      if (event.target.id === 'bookButton') {
+        const selectedDay = document.querySelector('.day.selected');
+        const selectedTimeSlot = document.querySelector('.time-slot.selected');
+        const selectedTrainingType = document.querySelector('.training-type.selected');
+
+        if (selectedDay && selectedTimeSlot && selectedTrainingType) {
+          const date = selectedDay.getAttribute('data-date'); // Ensure you set this attribute when generating calendar days
+          const time = selectedTimeSlot.textContent;
+          const trainingType = selectedTrainingType.getAttribute('data-type');
+
+          const user = auth.currentUser;
+          if (user) {
+            try {
+              await addDoc(collection(db, "bookings"), {
+                userId: user.uid,
+                date: date,
+                time: time,
+                trainingType: trainingType
+              });
+              alert('Booking successful!');
+            } catch (e) {
+              console.error('Error making a booking: ', e);
+              alert('Booking failed: ' + e.message);
+            }
+          } else {
+            alert('You must be logged in to make a booking.');
+          }
+        }
       }
     });
   });
 </script>
 	
 	
-
+</script>
 
 
 </body>
