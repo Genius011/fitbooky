@@ -466,12 +466,13 @@ let user = null;
 
             generateTimeSlots(popup.querySelector('.time-slots'), 6, 21);
 
-            // Pozostała część Twojego kodu
+            // Reszta Twojego kodu
 
 const bookButton = popup.querySelector('#bookButton');
 bookButton.onclick = function() {
     // Sprawdź, czy użytkownik jest zalogowany
-    if (auth.currentUser) {
+    const user = auth.currentUser;
+    if (user) {
         const selectedTimeSlot = popup.querySelector('.time-slot.selected');
         if (!selectedTimeSlot) {
             alert('Please select a time slot.');
@@ -490,10 +491,11 @@ bookButton.onclick = function() {
             timeSlot: selectedTimeSlot.textContent.trim()
         };
 
-        // Define the Firestore collection and document to store the reservation
-        const reservationsRef = doc(db, 'reservations', auth.currentUser.uid); // Update 'reservations' as needed
+        // Zdefiniuj kolekcję Firestore i dokument do przechowywania rezerwacji
+        const userUid = user.uid; // Pobierz UID użytkownika
+        const reservationsRef = doc(db, 'reservations', userUid); // Zaktualizuj 'reservations' i 'userUid' według potrzeb
 
-        // Set the reservation data in Firestore
+        // Ustaw dane rezerwacji w Firestore
         setDoc(reservationsRef, reservationData)
             .then(() => {
                 alert('Reservation saved successfully.');
@@ -508,6 +510,7 @@ bookButton.onclick = function() {
         alert('You need to be logged in to make a reservation.');
     }
 };
+
 
 
 
