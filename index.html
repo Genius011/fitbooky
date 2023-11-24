@@ -400,11 +400,10 @@ const db = getFirestore(app);
       function generateCalendar() {
 	  dayElement.dataset.date = day.toISOString().split('T')[0]; // Add this line
 
-    calendar.innerHTML = '';
+    alendar.innerHTML = '';
     let today = new Date();
     let startDate = new Date(currentYear, currentMonth, 1);
     let dayOfWeek = startDate.getDay();
-
     monthName.textContent = `${startDate.toLocaleString('en-US', { month: 'long' })} ${currentYear}`;
     startDate.setDate(startDate.getDate() - dayOfWeek);
 
@@ -412,17 +411,18 @@ const db = getFirestore(app);
         let day = new Date(startDate);
         day.setDate(day.getDate() + i);
 
-        let dayElement = document.createElement('div');
+        let dayElement = document.createElement('div'); // Make sure dayElement is declared here
         dayElement.className = 'day';
         if (day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear()) {
             dayElement.classList.add('current-day');
         }
         if (day.getMonth() === currentMonth) {
             dayElement.textContent = day.getDate();
-            dayElement.dataset.date = day.toISOString().split('T')[0]; // This line sets the data-date attribute
+            dayElement.dataset.date = day.toISOString().split('T')[0]; // Ensure this attribute is set correctly
             dayElement.addEventListener('click', function() {
                 document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
                 dayElement.classList.add('selected');
+                // The rest of your click event logic
             });
         } else {
             dayElement.classList.add('inactive');
