@@ -393,6 +393,13 @@ h2 {
     const daysOfWeek = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
     const hours = Array.from({ length: 16 }, (_, i) => `${i + 6}:00`); // Generates hours from 6:00 to 21:00
     
+	const updateAvailabilityBtn = document.getElementById('updateAvailability');
+  updateAvailabilityBtn.addEventListener('click', async function() {
+    const availability = {};
+    daysOfWeek.forEach(day => {
+	
+	
+	
     // Define a function to calculate the start of the week
     const calculateStartOfWeek = (date) => {
         const day = date.getDay();
