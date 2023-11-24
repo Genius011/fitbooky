@@ -388,35 +388,53 @@ h2 {
 
   const daysOfWeek = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
 
+  // This should be declared in the outermost scope so that it is shared across function calls
+  let currentStartDate = calculateStartOfWeek(new Date());
+
   document.addEventListener('DOMContentLoaded', function() {
       const updateAvailabilityBtn = document.getElementById('updateAvailability');
       updateAvailabilityBtn.addEventListener('click', async function() {
           const availability = {};
-    daysOfWeek.forEach(day => {
-        // Zmieniamy pierwszą literę dnia tygodnia na małą
-        const dayLowerCase = day.charAt(0).toLowerCase() + day.slice(1);
-        const checkboxes = document.querySelectorAll(`input[name="${dayLowerCase}-hours"]:checked`);
-        const availableHours = Array.from(checkboxes).map(cb => cb.value);
-        // Zapisujemy dostępność z kluczami jako małe litery
-        availability[dayLowerCase] = availableHours;
-    });
+          daysOfWeek.forEach(day => {
+              const dayLowerCase = day.charAt(0).toLowerCase() + day.slice(1);
+              const checkboxes = document.querySelectorAll(`input[name="${dayLowerCase}-hours"]:checked`);
+              const availableHours = Array.from(checkboxes).map(cb => cb.value);
+              availability[dayLowerCase] = availableHours;
+          });
 
           console.log('Updated availability:', availability);
 
           try {
-      const user = auth.currentUser;
-      if (user) {
-        const userAvailabilityRef = doc(db, 'trainerAvailability', user.uid);
-        // Nadpisujemy dokument z nowymi wartościami
-        await setDoc(userAvailabilityRef, { availability }, { merge: true });
-        alert('Dostępność zaktualizowana!');
-      } else {
-        alert('Nie zalogowano użytkownika!');
+              const user = auth.currentUser;
+              if (user) {
+                  const userAvailabilityRef = doc(db, 'trainerAvailability', user.uid);
+                  await setDoc(userAvailabilityRef, { availability }, { merge: true });
+                  alert('Dostępność zaktualizowana!');
+              } else {
+                  alert('Nie zalogowano użytkownika!');
+              }
+          } catch (error) {
+              console.error("Error updating availability: ", error);
+              alert('Błąd podczas aktualizacji dostępności: ' + error.message);
+          }
+      });
+
+      // Function to toggle the availability of a day
+      function toggleDay(day) {
+          const checkboxes = document.querySelectorAll(`input[name="${day}-hours"]`);
+          const areAllChecked = Array.from(checkboxes).every(cb => cb.checked);
+          checkboxes.forEach(checkbox => checkbox.checked = !areAllChecked);
       }
-    } catch (error) {
-      console.error("Error updating availability: ", error);
-      alert('Błąd podczas aktualizacji dostępności: ' + error.message);
-    }
+
+      // Assign click event to each "Z/O" button
+      document.querySelectorAll('.toggle-day').forEach(button => {
+          button.addEventListener('click', function() {
+              const day = this.dataset.day;
+              toggleDay(day);
+          });
+      });
+
+      updateWeekDays(); // Initial call to set up the dates
   });
 
   function calculateStartOfWeek(date) {
@@ -425,38 +443,28 @@ h2 {
       return new Date(date.setDate(diff));
   }
 
-  // This should be declared in the outermost scope so that it is shared across function calls
-let currentStartDate = calculateStartOfWeek(new Date());
+  function updateWeekDays() {
+      Array.from(document.querySelectorAll('.day-column')).forEach((column, index) => {
+          const dateElement = column.querySelector('.date-display');
+          const date = new Date(currentStartDate.getTime());
+          date.setDate(date.getDate() + index);
+          dateElement.textContent = date.toLocaleDateString();
+          column.dataset.date = date.toISOString().split('T')[0];
+      });
+  }
 
-function updateWeekDays() {
-    Array.from(document.querySelectorAll('.day-column')).forEach((column, index) => {
-        const dateElement = column.querySelector('.date-display');
-        const date = new Date(currentStartDate.getTime());
-        date.setDate(date.getDate() + index);
-
-        dateElement.textContent = date.toLocaleDateString();
-        column.dataset.date = date.toISOString().split('T')[0];
-    });
-}
-
-document.getElementById('prevWeek').addEventListener('click', () => {
-    // Here we are changing the global currentStartDate, not declaring a new one
-    currentStartDate.setDate(currentStartDate.getDate() - 7);
-    updateWeekDays();
-});
-
-document.getElementById('nextWeek').addEventListener('click', () => {
-    // And here as well
-    currentStartDate.setDate(currentStartDate.getDate() + 7);
-    updateWeekDays();
-});
-
-// Initial call to set up the dates
-updateWeekDays();
-
+  document.getElementById('prevWeek').addEventListener('click', () => {
+      currentStartDate.setDate(currentStartDate.getDate() - 7);
+      updateWeekDays();
   });
-  
+
+  document.getElementById('nextWeek').addEventListener('click', () => {
+      currentStartDate.setDate(currentStartDate.getDate() + 7);
+      updateWeekDays();
+  });
+
 </script>
+
 
 
 </body>
