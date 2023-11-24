@@ -476,6 +476,42 @@ h2 {
 
       updateWeekDays();
   });
+  
+  document.querySelectorAll('.hour-checkbox').forEach(checkbox => {
+  checkbox.addEventListener('click', async (event) => {
+    const day = event.target.name.split('-')[0]; // np. "poniedziałek"
+    const hour = event.target.value; // np. "9:00"
+    const checked = event.target.checked; // true lub false
+
+    const userAvailabilityRef = doc(db, 'trainerAvailability', userId);
+    const docSnap = await getDoc(userAvailabilityRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const availability = data.availability[day] || [];
+
+      if (checked && !availability.includes(hour)) {
+        // Dodaj godzinę
+        availability.push(hour);
+      } else if (!checked && availability.includes(hour)) {
+        // Usuń godzinę
+        const hourIndex = availability.indexOf(hour);
+        if (hourIndex > -1) {
+          availability.splice(hourIndex, 1);
+        }
+      }
+
+      // Aktualizuj dokument
+      await setDoc(userAvailabilityRef, {
+        availability: {
+          ...data.availability,
+          [day]: availability
+        }
+      }, { merge: true });
+    }
+  });
+});
+
 </script>
 
 
