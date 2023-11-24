@@ -152,6 +152,9 @@ h2 {
     color: #555;
     margin-bottom: 5px;
 }
+.hour-list label.unavailable {
+    background-color: #ffcccc; /* Czerwone tło dla niedostępnych godzin */
+}
 
 
     </style>
@@ -365,7 +368,26 @@ h2 {
     </section>
 </div>
 
-<script>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+    
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+        authDomain: "genius-f6a78.firebaseapp.com",
+        projectId: "genius-f6a78",
+        storageBucket: "genius-f6a78.appspot.com",
+        messagingSenderId: "4413237203",
+        appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
 
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -379,6 +401,21 @@ h2 {
         const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
         return new Date(date.setDate(diff));
     };
+	
+	// Logika dla przycisku aktualizacji dostępności
+    const updateAvailabilityBtn = document.getElementById('updateAvailability');
+    updateAvailabilityBtn.addEventListener('click', function() {
+        const availability = {};
+        daysOfWeek.forEach(day => {
+            // ...
+            // Twoja logika aktualizacji dostępności
+        });
+        // Dodatkowa logika dla zaznaczania godzin jako niedostępnych
+        document.querySelectorAll('.hour-list input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('click', function() {
+                this.parentNode.classList.toggle('unavailable', this.checked);
+            });
+        });
     
     // Define a function to update the days of the week with the correct dates
     const updateWeekDays = () => {
@@ -441,7 +478,10 @@ h2 {
     updateWeekDays();
 });
 
-
+ function initializeAvailability() {
+ }
+ initializeAvailability();
+});
 
 </script>
 
