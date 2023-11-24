@@ -432,43 +432,69 @@ import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.
         }
 
         function openPopup(selectedDay) {
-            const popup = document.createElement('div');
-            popup.className = 'popup';
-            popup.innerHTML = `
-                <div class="popup-content">
-                    <span class="close-btn">&times;</span>
-                    <h2>Book your time</h2>
-                    <div class="training-type-container">
-                        <div class="training-type" data-type="personal">Personal</div>
-                        <div class="training-type" data-type="group">Group</div>
-                    </div>
-                    <hr class="separator">
-                    <div class="time-slots"></div>
-                    <button id="bookButton" class="book-btn">Rezerwuj</button>
-                </div>
-            `;
-			
-			
-            document.body.appendChild(popup);
+    const popup = document.createElement('div');
+    popup.className = 'popup';
+    popup.innerHTML = `
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <h2>Book your time</h2>
+            <div class="training-type-container">
+                <div class="training-type" data-type="personal">Personal</div>
+                <div class="training-type" data-type="group">Group</div>
+            </div>
+            <hr class="separator">
+            <div class="time-slots"></div>
+            <button id="bookButton" class="book-btn">Rezerwuj</button>
+        </div>
+    `;
 
-            const closeBtn = popup.querySelector('.close-btn');
-            const personalTraining = popup.querySelector('.training-type[data-type="personal"]');
-            const groupTraining = popup.querySelector('.training-type[data-type="group"]');
-            closeBtn.onclick = () => popup.remove();
+    document.body.appendChild(popup);
 
-            personalTraining.onclick = function() {
-                selectTrainingType(personalTraining, groupTraining);
-                enableAllTimeSlots(popup);
-            };
-            groupTraining.onclick = function() {
-                selectTrainingType(groupTraining, personalTraining);
-                enableGroupTrainingSlots(popup, selectedDay);
-            };
+    const closeBtn = popup.querySelector('.close-btn');
+    const personalTraining = popup.querySelector('.training-type[data-type="personal"]');
+    const groupTraining = popup.querySelector('.training-type[data-type="group"]');
+    
+    closeBtn.addEventListener('click', () => popup.remove()); // Add event listener to close button
 
-            generateTimeSlots(popup.querySelector('.time-slots'), 6, 21);
+    personalTraining.onclick = function() {
+        selectTrainingType(personalTraining, groupTraining);
+        enableAllTimeSlots(popup);
+    };
+
+    groupTraining.onclick = function() {
+        selectTrainingType(groupTraining, personalTraining);
+        enableGroupTrainingSlots(popup, selectedDay);
+    };
+
+    generateTimeSlots(popup.querySelector('.time-slots'), 6, 21);
+	
+	const bookButton = popup.querySelector('#bookButton');
+    bookButton.addEventListener('click', () => {
+        const selectedDate = currentDate;
+        const selectedTimeSlot = popup.querySelector('.time-slot.selected').textContent.trim();
+        const selectedTrainingType = popup.querySelector('.training-type.selected').getAttribute('data-type');
+        
+        const reservationRef = doc(db, 'reservations', `${selectedDate.getTime()}_${selectedTimeSlot}`);
+        const reservationData = {
+            date: selectedDate.toISOString(),
+            time: selectedTimeSlot,
+            trainingType: selectedTrainingType,
+        };
+
+        setDoc(reservationRef, reservationData)
+            .then(() => {
+                alert('Reservation successfully saved in Firestore!');
+                popup.remove();
+            })
+            .catch((error) => {
+                console.error('Error saving reservation:', error);
+                alert('Failed to save reservation. Please try again.');
+            });
+    });
+}
 			
 			
-        }
+        
 
         function generateTimeSlots(container, startHour, endHour) {
     container.innerHTML = '';
