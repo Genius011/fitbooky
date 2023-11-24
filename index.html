@@ -334,10 +334,9 @@
    
   <script type="module">
     // Import the required Firebase modules
-   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
-import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
-import { getFirestore, setDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js'; // Removed duplicate import
-
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -468,13 +467,16 @@ import { getFirestore, setDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/
 
     generateTimeSlots(popup.querySelector('.time-slots'), 6, 21);
 	
-	 const bookButton = popup.querySelector('#bookButton');
+	document.addEventListener('DOMContentLoaded', function () {
+    const auth = getAuth();
+	
+	  const bookButton = popup.querySelector('#bookButton');
     bookButton.addEventListener('click', () => {
         const selectedDate = currentDate;
         const selectedTimeSlot = popup.querySelector('.time-slot.selected').textContent.trim();
         const selectedTrainingType = popup.querySelector('.training-type.selected').getAttribute('data-type');
 
-        // Create a document reference for the reservation (inside the click event handler)
+        // Create a document reference for the reservation
         const reservationRef = doc(db, 'reservations', `${selectedDate.getTime()}_${selectedTimeSlot}`);
 
         // Define data to be saved in Firestore
@@ -494,6 +496,8 @@ import { getFirestore, setDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/
                 console.error('Error saving reservation:', error);
                 alert('Failed to save reservation. Please try again.');
             });
+    });
+
     });
 
 }
