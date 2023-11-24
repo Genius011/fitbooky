@@ -371,6 +371,7 @@ h2 {
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
 
+
   // Your web app's Firebase configuration
   const firebaseConfig = {
       apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
@@ -389,7 +390,7 @@ h2 {
   let currentStartDate = calculateStartOfWeek(new Date());
 
   document.addEventListener('DOMContentLoaded', async function() {
-    
+    const auth = getAuth();
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userAvailabilityRef = doc(db, 'trainerAvailability', user.uid);
