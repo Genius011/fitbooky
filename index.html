@@ -466,41 +466,48 @@ let user = null;
 
             generateTimeSlots(popup.querySelector('.time-slots'), 6, 21);
 
-            const bookButton = popup.querySelector('#bookButton');
-            bookButton.onclick = function() {
-                const selectedTimeSlot = popup.querySelector('.time-slot.selected');
-                if (!selectedTimeSlot) {
-                    alert('Please select a time slot.');
-                    return;
-                }
+            // Pozostała część Twojego kodu
 
-                const selectedTrainingType = popup.querySelector('.training-type.selected');
-                if (!selectedTrainingType) {
-                    alert('Please select a training type.');
-                    return;
-                }
-
-                const reservationData = {
-                    date: selectedDay.toISOString(),
-                    trainingType: selectedTrainingType.getAttribute('data-type'),
-                    timeSlot: selectedTimeSlot.textContent.trim()
-                };
-
-                // Define the Firestore collection and document to store the reservation
-                const reservationsRef = doc(db, 'reservations', user.uid); // Update 'reservations' and 'user.uid' as needed
-
-                // Set the reservation data in Firestore
-                setDoc(reservationsRef, reservationData)
-                    .then(() => {
-                        alert('Reservation saved successfully.');
-                        popup.remove();
-                    })
-                    .catch(error => {
-                        console.error('Error saving reservation:', error);
-                        alert('An error occurred while saving the reservation.');
-                    });
-            };
+const bookButton = popup.querySelector('#bookButton');
+bookButton.onclick = function() {
+    if (user) { // Sprawdź, czy użytkownik jest zalogowany
+        const selectedTimeSlot = popup.querySelector('.time-slot.selected');
+        if (!selectedTimeSlot) {
+            alert('Please select a time slot.');
+            return;
         }
+
+        const selectedTrainingType = popup.querySelector('.training-type.selected');
+        if (!selectedTrainingType) {
+            alert('Please select a training type.');
+            return;
+        }
+
+        const reservationData = {
+            date: selectedDay.toISOString(),
+            trainingType: selectedTrainingType.getAttribute('data-type'),
+            timeSlot: selectedTimeSlot.textContent.trim()
+        };
+
+        // Define the Firestore collection and document to store the reservation
+        const reservationsRef = doc(db, 'reservations', user.uid); // Update 'reservations' and 'user.uid' as needed
+
+        // Set the reservation data in Firestore
+        setDoc(reservationsRef, reservationData)
+            .then(() => {
+                alert('Reservation saved successfully.');
+                popup.remove();
+            })
+            .catch(error => {
+                console.error('Error saving reservation:', error);
+                alert('An error occurred while saving the reservation.');
+            });
+    } else {
+        // Użytkownik nie jest zalogowany, możesz obsłużyć to odpowiednim komunikatem lub działaniem
+        alert('You need to be logged in to make a reservation.');
+    }
+};
+
 
         function generateTimeSlots(container, startHour, endHour) {
             container.innerHTML = '';
