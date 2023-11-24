@@ -333,12 +333,20 @@
    
    
   <script type="module">
-    // Import the required Firebase modules
+  // Import the required Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-  
-  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
-import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
-import { collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+  import { 
+    getAuth, 
+    onAuthStateChanged, 
+    signOut 
+  } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+  import { 
+    getFirestore, 
+    doc, 
+    getDoc, 
+    collection, 
+    addDoc 
+  } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -350,10 +358,56 @@ import { collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/fir
             appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
         };
 
-  // Initialize Firebase
+ // Initialize Firebase
   const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
   const auth = getAuth(app);
-const db = getFirestore(app);
+
+  // Add your event listeners and other script logic here
+  document.addEventListener('DOMContentLoaded', function() {
+    // Event listener for logout button
+    const logoutButton = document.getElementById('logoutButton');
+    logoutButton.addEventListener('click', () => {
+      signOut(auth).then(() => {
+        window.location.href = 'login.html';
+      }).catch((error) => {
+        console.error('Logout failed', error);
+      });
+    });
+
+    // Event listener for booking button
+    const bookButton = document.getElementById('bookButton');
+    bookButton.addEventListener('click', async () => {
+      // Get selected date, time, and training type from the form
+      const selectedDate = document.getElementById('selectedDate').value;
+      const selectedTime = document.getElementById('selectedTime').value;
+      const selectedTrainingType = document.querySelector('input[name="trainingType"]:checked').value;
+
+      // Verify if the user is logged in
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          // Add a new document with a generated id to the "bookings" collection
+          const docRef = await addDoc(collection(db, "bookings"), {
+            userId: user.uid,
+            date: selectedDate,
+            time: selectedTime,
+            trainingType: selectedTrainingType
+          });
+
+          // Inform the user that the booking was successful
+          console.log("Document written with ID: ", docRef.id);
+          alert('Trening zarezerwowany pomyślnie!');
+        } catch (e) {
+          console.error("Error adding document: ", e);
+          alert('Nie udało się zarezerwować treningu: ' + e.message);
+        }
+      } else {
+        alert('Musisz być zalogowany, aby zarezerwować trening.');
+      }
+    });
+  });
+</script>
 
      // Logout function
   logoutButton.addEventListener('click', () => {
@@ -544,39 +598,7 @@ const db = getFirestore(app);
         generateCalendar(); // Initial call to display the calendar
     });
 	
-	 const bookButton = popup.querySelector('#bookButton');
-    bookButton.onclick = async function() {
-        // Pobierz wybrane informacje
-        const selectedTrainingTypeElement = popup.querySelector('.training-type.selected');
-        const selectedTimeSlotElement = popup.querySelector('.time-slot.selected');
-
-        if (selectedTrainingTypeElement && selectedTimeSlotElement) {
-            const selectedTrainingType = selectedTrainingTypeElement.getAttribute('data-type');
-            const selectedTimeSlot = selectedTimeSlotElement.textContent;
-
-            // Stwórz obiekt rezerwacji
-            const booking = {
-                userId: auth.currentUser.uid, // ID zalogowanego użytkownika
-                date: selectedDay.toISOString().split('T')[0], // Wybrana data w formacie YYYY-MM-DD
-                time: selectedTimeSlot, // Wybrana godzina
-                type: selectedTrainingType, // Rodzaj treningu
-                created: new Date() // Aktualna data i godzina jako timestamp
-            };
-
-            try {
-                // Dodaj rezerwację do kolekcji 'bookings' w Firestore
-                await addDoc(collection(db, 'bookings'), booking);
-                alert('Trening zarezerwowany pomyślnie!');
-                popup.remove(); // Zamknij popup po pomyślnej rezerwacji
-            } catch (error) {
-                console.error('Error booking training: ', error);
-                alert('Błąd przy rezerwacji treningu: ' + error.message);
-            }
-        } else {
-            alert('Proszę wybrać typ treningu i godzinę.');
-        }
-    };
-}
+	
 	
 </script>
 
