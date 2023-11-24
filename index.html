@@ -334,10 +334,10 @@
    
   <script type="module">
     // Import the required Firebase modules
- import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
-import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
-
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+  
+  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -441,7 +441,6 @@ const db = getFirestore(app);
                     <hr class="separator">
                     <div class="time-slots"></div>
                     <button id="bookButton" class="book-btn">Rezerwuj</button>
-
                 </div>
             `;
 			
@@ -545,40 +544,39 @@ const db = getFirestore(app);
     });
 	
 	document.body.addEventListener('click', async (event) => {
-      if (event.target.matches('#bookButton')) {
-        const selectedDayElement = document.querySelector('.current-day');
-        const selectedTimeSlotElement = document.querySelector('.time-slot.selected');
-        const selectedTrainingTypeElement = document.querySelector('.training-type.selected');
+  if (event.target.id === 'bookButton') {
+    const selectedDayElement = document.querySelector('.current-day');
+    const selectedTimeSlotElement = document.querySelector('.time-slot.selected');
+    const selectedTrainingTypeElement = document.querySelector('.training-type.selected');
 
-        if (selectedDayElement && selectedTimeSlotElement && selectedTrainingTypeElement) {
-          const date = selectedDayElement.textContent; // or selectedDayElement.dataset.date if you have a date attribute
-          const time = selectedTimeSlotElement.textContent;
-          const trainingType = selectedTrainingTypeElement.getAttribute('data-type');
+    if (selectedDayElement && selectedTimeSlotElement && selectedTrainingTypeElement) {
+      const date = selectedDayElement.dataset.date;
+      const time = selectedTimeSlotElement.textContent;
+      const trainingType = selectedTrainingTypeElement.dataset.type;
 
-          const user = auth.currentUser;
-          if (user) {
-            try {
-              await addDoc(collection(db, "bookings"), {
-                userId: user.uid,
-                date: date,
-                time: time,
-                trainingType: trainingType
-              });
-              alert('Booking successful!');
-              document.querySelector('.popup').remove(); // Close the popup after successful booking
-            } catch (e) {
-              console.error('Error making a booking: ', e);
-              alert('Booking failed: ' + e.message);
-            }
-          } else {
-            alert('You must be logged in to make a booking.');
-          }
-        } else {
-          alert('Please select a day, time, and training type.');
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          await addDoc(collection(db, "bookings"), {
+            userId: user.uid,
+            date: date,
+            time: time,
+            trainingType: trainingType
+          });
+          alert('Booking successful!');
+          document.querySelector('.popup').remove(); // Close the popup after successful booking
+        } catch (e) {
+          console.error('Error making a booking: ', e);
+          alert('Booking failed: ' + e.message);
         }
+      } else {
+        alert('You must be logged in to make a booking.');
       }
-    });
-  });
+    } else {
+      alert('Please select a day, time, and training type.');
+    }
+  }
+});
 </script>
 
 
