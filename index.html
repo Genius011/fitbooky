@@ -334,13 +334,10 @@
    
   <script type="module">
     // Import the required Firebase modules
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
-import { 
-  getFirestore, 
-  collection, 
-  addDoc 
-} from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
+  
+  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, addDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
