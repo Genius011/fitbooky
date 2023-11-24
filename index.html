@@ -334,10 +334,10 @@
    
   <script type="module">
     // Import the required Firebase modules
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
   
-  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
-import { getFirestore, collection, doc, getDoc, addDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -397,39 +397,35 @@ const db = getFirestore(app);
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
 
-      function generateCalendar() {
-	  
+        function generateCalendar() {
+            calendar.innerHTML = '';
+            let today = new Date();
+            let startDate = new Date(currentYear, currentMonth, 1);
+            let dayOfWeek = startDate.getDay();
 
-    calendar.innerHTML = '';
-    let today = new Date();
-    let startDate = new Date(currentYear, currentMonth, 1);
-    let dayOfWeek = startDate.getDay();
-    monthName.textContent = `${startDate.toLocaleString('en-US', { month: 'long' })} ${currentYear}`;
-    startDate.setDate(startDate.getDate() - dayOfWeek);
+            monthName.textContent = `${startDate.toLocaleString('en-US', { month: 'long' })} ${currentYear}`;
+            startDate.setDate(startDate.getDate() - dayOfWeek);
 
-    for (let i = 0; i < 35; i++) {
-        let day = new Date(startDate);
-        day.setDate(day.getDate() + i);
+            for (let i = 0; i < 35; i++) {
+                let day = new Date(startDate);
+                day.setDate(day.getDate() + i);
 
-        let dayElement = document.createElement('div'); // Make sure dayElement is declared here
-        dayElement.className = 'day';
-        if (day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear()) {
-            dayElement.classList.add('current-day');
+                let dayElement = document.createElement('div');
+                dayElement.className = 'day';
+                if (day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear()) {
+                    dayElement.classList.add('current-day');
+                }
+                if (day.getMonth() === currentMonth) {
+                    dayElement.textContent = day.getDate();
+                    dayElement.onclick = function() {
+                        openPopup(day);
+                    };
+                } else {
+                    dayElement.classList.add('inactive');
+                }
+                calendar.appendChild(dayElement);
+            }
         }
-        if (day.getMonth() === currentMonth) {
-            dayElement.textContent = day.getDate();
-            dayElement.dataset.date = day.toISOString().split('T')[0]; // Ensure this attribute is set correctly
-            dayElement.addEventListener('click', function() {
-                document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
-                dayElement.classList.add('selected');
-                // The rest of your click event logic
-            });
-        } else {
-            dayElement.classList.add('inactive');
-        }
-        calendar.appendChild(dayElement);
-    }
-}
 
         function openPopup(selectedDay) {
             const popup = document.createElement('div');
@@ -546,41 +542,6 @@ const db = getFirestore(app);
 
         generateCalendar(); // Initial call to display the calendar
     });
-	
-	document.body.addEventListener('click', async (event) => {
-  if (event.target.id === 'bookButton') {
-const selectedDayElement = document.querySelector('.day.selected'); // Update this selector
-    const selectedTimeSlotElement = document.querySelector('.time-slot.selected');
-    const selectedTrainingTypeElement = document.querySelector('.training-type.selected');
-
-    if (selectedDayElement && selectedTimeSlotElement && selectedTrainingTypeElement) {
-      const date = selectedDayElement.dataset.date;
-      const time = selectedTimeSlotElement.textContent;
-      const trainingType = selectedTrainingTypeElement.dataset.type;
-
-      const user = auth.currentUser;
-      if (user) {
-        try {
-          await addDoc(collection(db, "bookings"), {
-            userId: user.uid,
-            date: date,
-            time: time,
-            trainingType: trainingType
-          });
-          alert('Booking successful!');
-          document.querySelector('.popup').remove(); // Close the popup after successful booking
-        } catch (e) {
-          console.error('Error making a booking: ', e);
-          alert('Booking failed: ' + e.message);
-        }
-      } else {
-        alert('You must be logged in to make a booking.');
-      }
-    } else {
-      alert('Please select a day, time, and training type.');
-    }
-  }
-});
 </script>
 
 
