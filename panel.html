@@ -399,32 +399,38 @@ h2 {
 
   document.addEventListener('DOMContentLoaded', function() {
   const updateAvailabilityBtn = document.getElementById('updateAvailability');
-  updateAvailabilityBtn.addEventListener('click', async function() {
-      const availability = {};
-      daysOfWeek.forEach(day => {
-          const dayLowerCase = day.toLowerCase();
-          const checkboxes = document.querySelectorAll(`input[name="${dayLowerCase}-hours"]:checked`);
-          const availableHours = Array.from(checkboxes)
-              .filter(cb => cb.checked)
-              .map(cb => cb.value);
-          availability[dayLowerCase] = availableHours;
-      });
+updateAvailabilityBtn.addEventListener('click', async function() {
+    const availability = {};
+    daysOfWeek.forEach(day => {
+        // Używaj polskich nazw dni tygodnia zgodnych z Firestore
+        const dayLowerCase = day.charAt(0).toLowerCase() + day.slice(1);
+        const checkboxes = document.querySelectorAll(`input[name="${dayLowerCase}-hours"]`);
+        const availableHours = Array.from(checkboxes)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+        if (availableHours.length > 0) {
+            availability[dayLowerCase] = availableHours;
+        } else {
+            // Jeśli nie ma zaznaczonych godzin, usuń klucz z obiektu
+            delete availability[dayLowerCase];
+        }
+    });
 
-      try {
-          const user = auth.currentUser;
-          if (user) {
-              const userAvailabilityRef = doc(db, 'trainerAvailability', user.uid);
-              // Zapisz dostępne godziny do Firestore
-              await setDoc(userAvailabilityRef, { availability }, { merge: true });
-              alert('Dostępność zaktualizowana!');
-          } else {
-              alert('Nie zalogowano użytkownika!');
-          }
-      } catch (error) {
-          console.error("Error updating availability: ", error);
-          alert('Błąd podczas aktualizacji dostępności: ' + error.message);
-      }
-  });
+    try {
+        const user = auth.currentUser;
+        if (user) {
+            const userAvailabilityRef = doc(db, 'trainerAvailability', user.uid);
+            // Zapisz dostępne godziny do Firestore
+            await setDoc(userAvailabilityRef, { availability }, { merge: true });
+            alert('Dostępność zaktualizowana!');
+        } else {
+            alert('Nie zalogowano użytkownika!');
+        }
+    } catch (error) {
+        console.error("Error updating availability: ", error);
+        alert('Błąd podczas aktualizacji dostępności: ' + error.message);
+    }
+});
 
       function updateWeekDays() {
           const currentStartDate = calculateStartOfWeek(new Date());
@@ -477,41 +483,7 @@ h2 {
       updateWeekDays();
   });
   
-  document.querySelectorAll('.hour-checkbox').forEach(checkbox => {
-  checkbox.addEventListener('click', async (event) => {
-    const day = event.target.name.split('-')[0]; // np. "poniedziałek"
-    const hour = event.target.value; // np. "9:00"
-    const checked = event.target.checked; // true lub false
-
-    const userAvailabilityRef = doc(db, 'trainerAvailability', userId);
-    const docSnap = await getDoc(userAvailabilityRef);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      const availability = data.availability[day] || [];
-
-      if (checked && !availability.includes(hour)) {
-        // Dodaj godzinę
-        availability.push(hour);
-      } else if (!checked && availability.includes(hour)) {
-        // Usuń godzinę
-        const hourIndex = availability.indexOf(hour);
-        if (hourIndex > -1) {
-          availability.splice(hourIndex, 1);
-        }
-      }
-
-      // Aktualizuj dokument
-      await setDoc(userAvailabilityRef, {
-        availability: {
-          ...data.availability,
-          [day]: availability
-        }
-      }, { merge: true });
-    }
-  });
-});
-
+  
 </script>
 
 
