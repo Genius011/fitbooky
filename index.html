@@ -410,7 +410,7 @@ const db = getFirestore(app);
     for (let i = 0; i < 35; i++) {
         let day = new Date(startDate);
         day.setDate(day.getDate() + i);
-dayElement.dataset.date = day.toISOString().split('T')[0]; // Add this line
+
         let dayElement = document.createElement('div'); // Make sure dayElement is declared here
         dayElement.className = 'day';
         if (day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear()) {
