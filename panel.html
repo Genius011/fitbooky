@@ -404,20 +404,20 @@ h2 {
           console.log('Updated availability:', availability);
 
           try {
-        const user = auth.currentUser;
-        if (user) {
-            const userAvailabilityRef = doc(db, 'trainerAvailability', user.uid);
-            // Nadpisujemy dokument z nowymi wartościami
-            await setDoc(userAvailabilityRef, { availability }, { merge: true });
-            alert('Dostępność zaktualizowana!');
-        } else {
-            alert('Nie zalogowano użytkownika!');
-        }
+      const user = auth.currentUser;
+      if (user) {
+        const userAvailabilityRef = doc(db, 'trainerAvailability', user.uid);
+        // Nadpisujemy dokument z nowymi wartościami
+        await setDoc(userAvailabilityRef, { availability }, { merge: true });
+        alert('Dostępność zaktualizowana!');
+      } else {
+        alert('Nie zalogowano użytkownika!');
+      }
     } catch (error) {
-        console.error("Error updating availability: ", error);
-        alert('Błąd podczas aktualizacji dostępności: ' + error.message);
+      console.error("Error updating availability: ", error);
+      alert('Błąd podczas aktualizacji dostępności: ' + error.message);
     }
-});
+  });
 
   function calculateStartOfWeek(date) {
       const day = date.getDay();
