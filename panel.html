@@ -408,7 +408,7 @@ h2 {
       if (user) {
         const userAvailabilityRef = doc(db, 'trainerAvailability', user.uid);
         // Nadpisujemy dokument z nowymi wartościami
-        await setDoc(userAvailabilityRef, { availability });
+        await setDoc(userAvailabilityRef, { availability }, { merge: true });
         alert('Dostępność zaktualizowana!');
       } else {
         alert('Nie zalogowano użytkownika!');
