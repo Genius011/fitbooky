@@ -468,29 +468,34 @@ import { getFirestore, setDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/f
 
     generateTimeSlots(popup.querySelector('.time-slots'), 6, 21);
 	
-	const bookButton = popup.querySelector('#bookButton');
+	 const bookButton = popup.querySelector('#bookButton');
     bookButton.addEventListener('click', () => {
         const selectedDate = currentDate;
         const selectedTimeSlot = popup.querySelector('.time-slot.selected').textContent.trim();
         const selectedTrainingType = popup.querySelector('.training-type.selected').getAttribute('data-type');
-        
+
+        // Create a document reference for the reservation (inside the click event handler)
         const reservationRef = doc(db, 'reservations', `${selectedDate.getTime()}_${selectedTimeSlot}`);
+
+        // Define data to be saved in Firestore
         const reservationData = {
             date: selectedDate.toISOString(),
             time: selectedTimeSlot,
             trainingType: selectedTrainingType,
         };
 
+        // Save the reservation in Firestore
         setDoc(reservationRef, reservationData)
-    .then(() => {
-        alert('Reservation successfully saved in Firestore!');
-        popup.remove();
-    })
-    .catch((error) => {
-        console.error('Error saving reservation:', error);
-        alert('Failed to save reservation. Please try again.');
+            .then(() => {
+                alert('Reservation successfully saved in Firestore!');
+                popup.remove();
+            })
+            .catch((error) => {
+                console.error('Error saving reservation:', error);
+                alert('Failed to save reservation. Please try again.');
+            });
     });
-    });
+});
 }
 			
 			
