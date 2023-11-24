@@ -308,90 +308,93 @@
 </head>
 <body>
 <div class="button-container">
-    <button id="logoutButton">Logout</button>
+    
+	  <button id="logoutButton">Logout</button>
     <a href="profile.html"><button id="profileButton">Profile</button></a>
+	
 </div>
-<div class="calendar-container">
-    <img src="genius.png" alt="Genius" class="logo-image">
-    <div class="calendar-header">
-        <div id="prevMonth" class="nav-button">&#8592;</div>
-        <h1 id="monthName"></h1>
-        <div id="nextMonth" class="nav-button">&#8594;</div>
-    </div>
-    <div class="day-names">
-        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-    </div>
-    <div id="calendar" class="calendar-grid"></div>
+
+
+	
 </div>
-<script type="module">
+    <div class="calendar-container">
+	<img src="genius.png" alt="Genius" class="logo-image">
+        <div class="calendar-header">
+    <div id="prevMonth" class="nav-button">&#8592;</div> <!-- Left arrow -->
+    <h1 id="monthName"></h1>
+    <div id="nextMonth" class="nav-button">&#8594;</div> <!-- Right arrow -->
+</div>
+
+        <div class="day-names">
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        </div>
+        <div id="calendar" class="calendar-grid"></div>
+    </div>
+   
+   
+  <script type="module">
     // Import the required Firebase modules
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+    import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
-    // Your Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-        authDomain: "genius-f6a78.firebaseapp.com",
-        projectId: "genius-f6a78",
-        storageBucket: "genius-f6a78.appspot.com",
-        messagingSenderId: "4413237203",
-        appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
-    };
+  // Your Firebase configuration
+  const firebaseConfig = {
+            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+            authDomain: "genius-f6a78.firebaseapp.com",
+            projectId: "genius-f6a78",
+            storageBucket: "genius-f6a78.appspot.com",
+            messagingSenderId: "4413237203",
+            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+        };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+const db = getFirestore(app);
 
-    // Logout function
-    const logoutButton = document.getElementById('logoutButton'); // Ensure you have this element in your HTML
-    logoutButton.addEventListener('click', () => {
-        signOut(auth).then(() => {
-            // Sign-out successful, redirect to login page
-            window.location.href = 'login.html';
-        }).catch((error) => {
-            // An error happened during sign out
-            console.error('Logout failed', error);
-        });
+     // Logout function
+  logoutButton.addEventListener('click', () => {
+    signOut(auth).then(() => {
+      // Sign-out successful, redirect to login page
+      window.location.href = 'login.html';
+    }).catch((error) => {
+      // An error happened during sign out
+      console.error('Logout failed', error);
     });
-
-
-
-
+  });
+   
     document.addEventListener('DOMContentLoaded', function() {
-    const auth = getAuth();
+	const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            // If the user is logged in, check if they have the role 'trener'
+            // Jeśli użytkownik jest zalogowany, sprawdź, czy ma rolę 'trener'
             const userRef = doc(getFirestore(), 'users', user.uid);
             getDoc(userRef).then((docSnap) => {
                 if (docSnap.exists() && docSnap.data().role === 'trener') {
-                    // Create and add the Trainer Panel button
+                    // Utwórz i dodaj przycisk Panelu Trenera
                     const buttonContainer = document.querySelector('.button-container');
                     const trainerPanelButton = document.createElement('button');
                     trainerPanelButton.textContent = 'Panel Trenera';
-                    trainerPanelButton.className = 'profileButton'; // Add a class for styling
+                    trainerPanelButton.className = 'profileButton'; // Klasa dla stylizacji
                     trainerPanelButton.onclick = function() {
-                        window.location.href = 'panel.html'; // Change the URL to the trainer panel as needed
+                        window.location.href = 'panel.html'; // Zmień URL na odpowiedni dla panelu trenera
                     };
                     buttonContainer.appendChild(trainerPanelButton);
                 }
             });
         } else {
-            // Redirect to the login page if the user is not logged in
+            // Przekieruj na stronę logowania, jeśli użytkownik nie jest zalogowany
             window.location.href = 'login.html';
         }
     });
-
-    const calendar = document.getElementById('calendar');
-    const prevMonth = document.getElementById('prevMonth');
-    const nextMonth = document.getElementById('nextMonth');
-    const monthName = document.getElementById('monthName');
-    let currentDate = new Date();
-    let currentMonth = currentDate.getMonth();
-    let currentYear = currentDate.getFullYear();
-
+        const calendar = document.getElementById('calendar');
+        const prevMonth = document.getElementById('prevMonth');
+        const nextMonth = document.getElementById('nextMonth');
+        const monthName = document.getElementById('monthName');
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
 
         function generateCalendar() {
             calendar.innerHTML = '';
@@ -439,7 +442,8 @@ import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/fireb
                     <button id="bookButton" class="book-btn">Rezerwuj</button>
                 </div>
             `;
-
+			
+			
             document.body.appendChild(popup);
 
             const closeBtn = popup.querySelector('.close-btn');
@@ -457,79 +461,27 @@ import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/fireb
             };
 
             generateTimeSlots(popup.querySelector('.time-slots'), 6, 21);
-
-            let user = null;
-
-const bookButton = popup.querySelector('#bookButton');
-    bookButton.onclick = function() {
-        // Sprawdź, czy użytkownik jest zalogowany
-        const user = auth.currentUser;
-        if (user) {
-            const selectedTimeSlot = popup.querySelector('.time-slot.selected');
-            if (!selectedTimeSlot) {
-                alert('Please select a time slot.');
-                return;
-            }
-
-            const selectedTrainingType = popup.querySelector('.training-type.selected');
-            if (!selectedTrainingType) {
-                alert('Please select a training type.');
-                return;
-            }
-
-            const reservationData = {
-                date: selectedDay.toISOString(),
-                trainingType: selectedTrainingType.getAttribute('data-type'),
-                timeSlot: selectedTimeSlot.textContent.trim()
-            };
-
-            // Zdefiniuj kolekcję Firestore i dokument do przechowywania rezerwacji
-            const userUid = user.uid; // Pobierz UID użytkownika
-            const reservationsRef = doc(db, 'reservations', userUid); // Zaktualizuj 'reservations' i 'userUid' według potrzeb
-
-            // Ustaw dane rezerwacji w Firestore
-            setDoc(reservationsRef, reservationData)
-                .then(() => {
-                    alert('Reservation saved successfully.');
-                    popup.remove();
-                })
-                .catch(error => {
-                    console.error('Error saving reservation:', error);
-                    alert('An error occurred while saving the reservation.');
-                });
-        } else {
-            // Użytkownik nie jest zalogowany, możesz obsłużyć to odpowiednim komunikatem lub działaniem
-            alert('You need to be logged in to make a reservation.');
+			
+			
         }
-    };
-
-    // ...
-
-    generateCalendar(); // Initial call to display the calendar
-});
-
-
-
-
-
-
 
         function generateTimeSlots(container, startHour, endHour) {
-            container.innerHTML = '';
-            for (let hour = startHour; hour <= endHour; hour++) {
-                let timeString = `${hour.toString().padStart(2, '0')}:00`;
-                let timeSlot = document.createElement('div');
-                timeSlot.className = 'time-slot';
-                timeSlot.textContent = timeString;
+    container.innerHTML = '';
+    for (let hour = startHour; hour <= endHour; hour++) {
+        let timeString = `${hour.toString().padStart(2, '0')}:00`;
+        let timeSlot = document.createElement('div');
+        timeSlot.className = 'time-slot';
+        timeSlot.textContent = timeString;
 
-                timeSlot.onclick = function() {
-                    container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
-                    timeSlot.classList.add('selected');
-                };
+        timeSlot.onclick = function() {
+            container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+            timeSlot.classList.add('selected');
+        };
 
-                container.appendChild(timeSlot);
-            }
-        }
+        container.appendChild(timeSlot);
+    }
+}
+
 
         function enableAllTimeSlots(popup) {
             const timeSlots = popup.querySelectorAll('.time-slot');
@@ -589,6 +541,37 @@ const bookButton = popup.querySelector('#bookButton');
 
         generateCalendar(); // Initial call to display the calendar
     });
+	
+	// Handle booking button click
+        const bookButton = document.getElementById('bookButton');
+        bookButton.addEventListener('click', () => {
+            const selectedDate = currentDate; // Selected date
+            const selectedTimeSlot = popup.querySelector('.time-slot.selected').textContent.trim(); // Selected time slot
+            const selectedTrainingType = popup.querySelector('.training-type.selected').getAttribute('data-type'); // Selected training type
+
+            // Create a document reference for the reservation
+            const reservationRef = doc(db, 'reservations', `${selectedDate.getTime()}_${selectedTimeSlot}`);
+
+            // Define data to be saved in Firestore
+            const reservationData = {
+                date: selectedDate.toISOString(),
+                time: selectedTimeSlot,
+                trainingType: selectedTrainingType,
+            };
+
+            // Save the reservation in Firestore
+            setDoc(reservationRef, reservationData)
+                .then(() => {
+                    alert('Reservation successfully saved in Firestore!');
+                    popup.remove();
+                })
+                .catch((error) => {
+                    console.error('Error saving reservation:', error);
+                    alert('Failed to save reservation. Please try again.');
+                });
+        });
+    });
+</script>
 </script>
 
 
