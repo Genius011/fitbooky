@@ -391,6 +391,33 @@ h2 {
 
 
     document.addEventListener('DOMContentLoaded', function() {
+	const updateAvailabilityBtn = document.getElementById('updateAvailability');
+    updateAvailabilityBtn.addEventListener('click', async function() {
+        const availability = {};
+        daysOfWeek.forEach(day => {
+            const dayLowerCase = day.toLowerCase();
+            const checkboxes = document.querySelectorAll(`input[name="${dayLowerCase}-hours"]`);
+            const availableHours = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+            availability[dayLowerCase] = availableHours;
+        });
+
+        try {
+            const user = auth.currentUser;
+            if (user) {
+                const userAvailabilityRef = doc(db, 'trainerAvailability', user.uid);
+                // Zapisz dostępne godziny do Firestore
+                await setDoc(userAvailabilityRef, { availability }, { merge: true });
+                alert('Dostępność zaktualizowana!');
+            } else {
+                alert('Nie zalogowano użytkownika!');
+            }
+        } catch (error) {
+            console.error("Error updating availability: ", error);
+            alert('Błąd podczas aktualizacji dostępności: ' + error.message);
+        }
+    });
     const dailyAvailabilityContainer = document.getElementById('dailyAvailability');
     const daysOfWeek = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
     const hours = Array.from({ length: 16 }, (_, i) => `${i + 6}:00`); // Generates hours from 6:00 to 21:00
