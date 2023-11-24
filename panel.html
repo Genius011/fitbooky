@@ -389,7 +389,7 @@ h2 {
   let currentStartDate = calculateStartOfWeek(new Date());
 
   document.addEventListener('DOMContentLoaded', async function() {
-    const auth = getAuth();
+    
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userAvailabilityRef = doc(db, 'trainerAvailability', user.uid);
