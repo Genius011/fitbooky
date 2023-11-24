@@ -333,18 +333,11 @@
    
    
   <script type="module">
-  // Import the required Firebase modules
+    // Import the required Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-  import { 
-    getAuth, 
-    onAuthStateChanged, 
-    signOut 
-  } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
-  import { 
-    getFirestore, 
-    collection, 
-    addDoc 
-  } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+  
+  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -358,8 +351,8 @@
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
   const auth = getAuth(app);
+const db = getFirestore(app);
 
      // Logout function
   logoutButton.addEventListener('click', () => {
@@ -549,42 +542,6 @@
 
         generateCalendar(); // Initial call to display the calendar
     });
-	// Event listener for the book button inside the popup
-    document.body.addEventListener('click', async (event) => {
-      if (event.target.id === 'bookButton') {
-        const selectedDay = document.querySelector('.day.selected');
-        const selectedTimeSlot = document.querySelector('.time-slot.selected');
-        const selectedTrainingType = document.querySelector('.training-type.selected');
-
-        if (selectedDay && selectedTimeSlot && selectedTrainingType) {
-          const date = selectedDay.getAttribute('data-date'); // Ensure you set this attribute when generating calendar days
-          const time = selectedTimeSlot.textContent;
-          const trainingType = selectedTrainingType.getAttribute('data-type');
-
-          const user = auth.currentUser;
-          if (user) {
-            try {
-              await addDoc(collection(db, "bookings"), {
-                userId: user.uid,
-                date: date,
-                time: time,
-                trainingType: trainingType
-              });
-              alert('Booking successful!');
-            } catch (e) {
-              console.error('Error making a booking: ', e);
-              alert('Booking failed: ' + e.message);
-            }
-          } else {
-            alert('You must be logged in to make a booking.');
-          }
-        }
-      }
-    });
-  });
-</script>
-	
-	
 </script>
 
 
