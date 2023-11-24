@@ -365,7 +365,22 @@ h2 {
     </section>
 </div>
 
-<script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+  import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+            apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+            authDomain: "genius-f6a78.firebaseapp.com",
+            projectId: "genius-f6a78",
+            storageBucket: "genius-f6a78.appspot.com",
+            messagingSenderId: "4413237203",
+            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+        };
 
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -441,7 +456,33 @@ h2 {
     updateWeekDays();
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    const updateAvailabilityBtn = document.getElementById('updateAvailability');
+    updateAvailabilityBtn.addEventListener('click', function() {
+        const availability = {};
+        document.querySelectorAll('.day-column').forEach(dayColumn => {
+            const dayDate = dayColumn.dataset.date; // Użyj atrybutu data-date dla każdej kolumny dnia
+            const checkboxes = dayColumn.querySelectorAll('input[type="checkbox"]:checked');
+            const times = Array.from(checkboxes).map(cb => cb.value);
+            
+            availability[dayDate] = times;
+        });
 
+        // Reference to Firestore collection
+        const db = getFirestore();
+        const availabilityRef = doc(db, 'availability', 'slot'); // Zmień 'your-document-id' na właściwy identyfikator dokumentu
+
+        // Send the data to Firestore
+        setDoc(availabilityRef, availability, { merge: true })
+        .then(() => {
+            console.log('Availability updated successfully');
+            alert('Dostępność zaktualizowana!');
+        })
+        .catch(error => {
+            console.error('Error updating availability:', error);
+            alert('Błąd podczas aktualizacji dostępności: ' + error.message);
+        });
+    });
 
 </script>
 
