@@ -7,153 +7,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <style>
         body {
-    font-family: 'Roboto', sans-serif;
-    background-image: url('dall.png');
-	 background-size: cover;
-    margin: 0;
-    padding: 20px;
-}
-
-.admin-panel {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin: auto;
-    width: 90%;
-    max-width: 800px;
-}
-
-.section {
-    margin-bottom: 30px;
-}
-
-h1 {
-    text-align: center;
-    color: #333;
-}
-
-h2 {
-    border-bottom: 2px solid #6e8efb;
-    color: #555;
-    padding-bottom: 5px;
-    margin-bottom: 20px;
-}
-
-.day-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.day-container label {
-    margin-right: 5px;
-}
-
-.hour-label {
-    margin: 0 5px;
-}
-
-.hour-checkbox {
-    margin-right: 2px;
-}
-
-.submit-btn {
-    display: block;
-    width: 100%;
-    margin-top: 20px;
-}
-.day-availability {
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-}
-
-.hours-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.toggle-day {
-    background-color: #6e8efb;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 10px;
-}
-
-.toggle-day:hover {
-    background-color: #5d7ce2;
-}
-#availability-wrapper {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-.day-column {
-    flex-basis: calc(100% / 11); /* dzieli na 7 równych kolumn */
-    padding: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    margin: 10px;
-    background: #f9f9f9;
-}
-
-.day-column h3 {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.day-column button {
-    background-color: #6e8efb;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.day-column button:hover {
-    background-color: #5d7ce2;
-}
-
-.hour-list {
-    text-align: center;
-}
-
-.hour-list label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.week-navigation {
-    text-align: center;
-    margin: 20px;
-}
-
-.week-navigation button {
-    padding: 5px 15px;
-    margin: 0 10px;
-    /* Add more styles for buttons */
-}
-
-.date-display {
-    font-size: 0.9em;
-    color: #555;
-    margin-bottom: 5px;
-}
-
-
+            font-family: 'Roboto', sans-serif;
+            background: url('dall.png') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 20px;
+        }
+        .admin-panel {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: auto;
+            max-width: 800px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            border-bottom: 2px solid #6e8efb;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+        /* Reszta stylów... */
     </style>
 </head>
 <body>
@@ -161,9 +41,16 @@ h2 {
 <div id="adminPanel" class="admin-panel">
     <h1>Panel Administracyjny Trenera</h1>
     <section id="availabilityManager" class="section">
-        
-        <section id="availabilityManager" class="section">
-    <h2>Zarządzanie Dostępnością</h2>
+        <h2>Zarządzanie Dostępnością</h2>
+        <div class="week-navigation">
+            <button id="prevWeek">Poprzedni Tydzień</button>
+            <button id="nextWeek">Następny Tydzień</button>
+        </div>
+        <div id="dailyAvailability">
+            <!-- Tutaj programowo wygenerujemy dni tygodnia z godzinami -->
+        </div>
+        <button id="updateAvailability" class="submit-btn">Aktualizuj Dostępność</button>
+    </section>
    
 
     <section id="bookingManager" class="section">
@@ -182,12 +69,49 @@ h2 {
     </section>
 </div>
 
-<script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
 
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+      // Twoje ustawienia konfiguracji Firebase
+  };
 
-   
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
 
-</script>
+  // Listen for auth state changes
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      // User is signed in
+      loadAvailability(user.uid);
+    } else {
+      // User is signed out
+      // Handle unauthenticated state or redirect to login
+    }
+  });
+
+  function loadAvailability(userId) {
+    const userAvailabilityRef = doc(db, 'trainerAvailability', userId);
+    getDoc(userAvailabilityRef).then(docSnap => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        for (const [day, hours] of Object.entries(data.availability)) {
+          hours.forEach(hour => {
+            const checkbox = document.querySelector(`input[name="${day}-hours"][value="${hour}"]`);
+            if (checkbox) checkbox.checked = true;
+          });
+        }
+      }
+    });
+  }
+  </script>
+
 
 </body>
 </html>
