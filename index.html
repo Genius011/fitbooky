@@ -400,7 +400,7 @@ const db = getFirestore(app);
       function generateCalendar() {
 	  dayElement.dataset.date = day.toISOString().split('T')[0]; // Add this line
 
-    alendar.innerHTML = '';
+    calendar.innerHTML = '';
     let today = new Date();
     let startDate = new Date(currentYear, currentMonth, 1);
     let dayOfWeek = startDate.getDay();
