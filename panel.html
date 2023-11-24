@@ -399,7 +399,6 @@ h2 {
     daysOfWeek.forEach(day => {
 	
 	
-	
     // Define a function to calculate the start of the week
     const calculateStartOfWeek = (date) => {
         const day = date.getDay();
@@ -497,10 +496,17 @@ updateAvailabilityBtn.addEventListener('click', async function() {
         console.error("Error updating availability: ", error);
         alert('Błąd podczas aktualizacji dostępności: ' + error.message);
     }
+	
+	const updateAvailabilityBtn = document.getElementById('updateAvailability');
+  updateAvailabilityBtn.addEventListener('click', async function() {
+    const availability = {};
+    daysOfWeek.forEach(day => {
+	
 });
 
 // Call to update the dates on initial load
 updateWeekDays();
+
 
 
 </script>
