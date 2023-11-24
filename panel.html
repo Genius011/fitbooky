@@ -366,151 +366,101 @@ h2 {
 </div>
 
 <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
 
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
-    
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-        authDomain: "genius-f6a78.firebaseapp.com",
-        projectId: "genius-f6a78",
-        storageBucket: "genius-f6a78.appspot.com",
-        messagingSenderId: "4413237203",
-        appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
-    };
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+      apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+      authDomain: "genius-f6a78.firebaseapp.com",
+      projectId: "genius-f6a78",
+      storageBucket: "genius-f6a78.appspot.com",
+      messagingSenderId: "4413237203",
+      appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+  };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
 
+  const daysOfWeek = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
 
-    document.addEventListener('DOMContentLoaded', function() {
-    const dailyAvailabilityContainer = document.getElementById('dailyAvailability');
-    const daysOfWeek = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
-    const hours = Array.from({ length: 16 }, (_, i) => `${i + 6}:00`); // Generates hours from 6:00 to 21:00
-    
-	const updateAvailabilityBtn = document.getElementById('updateAvailability');
-  updateAvailabilityBtn.addEventListener('click', async function() {
-    const availability = {};
-    daysOfWeek.forEach(day => {
-	
-	
-    // Define a function to calculate the start of the week
-    const calculateStartOfWeek = (date) => {
-        const day = date.getDay();
-        const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
-        return new Date(date.setDate(diff));
-    };
-    
-    // Define a function to update the days of the week with the correct dates
-    const updateWeekDays = () => {
-        const weekStartDate = calculateStartOfWeek(new Date(currentStartDate));
-        Array.from(document.querySelectorAll('.day-column')).forEach((column, index) => {
-            const dateElement = column.querySelector('.date-display');
-            const date = new Date(weekStartDate.getTime());
-            date.setDate(date.getDate() + index);
-            
-            dateElement.textContent = date.toLocaleDateString(); // e.g., "1/1/2020"
-            column.dataset.date = date.toISOString().split('T')[0]; // e.g., "2020-01-01"
-        });
-    };
+  document.addEventListener('DOMContentLoaded', function() {
+      const updateAvailabilityBtn = document.getElementById('updateAvailability');
+      updateAvailabilityBtn.addEventListener('click', async function() {
+          const availability = {};
+          daysOfWeek.forEach(day => {
+              const checkboxes = document.querySelectorAll(`input[name="${day.toLowerCase()}-hours"]:checked`);
+              const availableHours = Array.from(checkboxes).map(cb => cb.value);
+              availability[day] = availableHours;
+          });
 
-    // Initialize the current start date to the beginning of this week
-    let currentStartDate = calculateStartOfWeek(new Date());
-    
-    // Button event listeners for previous and next week navigation
-    document.getElementById('prevWeek').addEventListener('click', () => {
-        currentStartDate.setDate(currentStartDate.getDate() - 7);
-        updateWeekDays();
-    });
+          console.log('Updated availability:', availability);
 
-    document.getElementById('nextWeek').addEventListener('click', () => {
-        currentStartDate.setDate(currentStartDate.getDate() + 7);
-        updateWeekDays();
-    });
+          try {
+              const user = auth.currentUser;
+              if (user) {
+                  const userAvailabilityRef = doc(db, 'trainerAvailability', user.uid);
+                  await setDoc(userAvailabilityRef, { availability }, { merge: true });
+                  alert('Dostępność zaktualizowana!');
+              } else {
+                  alert('Nie zalogowano użytkownika!');
+              }
+          } catch (error) {
+              console.error("Error updating availability: ", error);
+              alert('Błąd podczas aktualizacji dostępności: ' + error.message);
+          }
+      });
+  });
 
-    // Toggle the availability of each day
-    document.querySelectorAll('.toggle-day').forEach(button => {
-        button.addEventListener('click', function() {
-            const day = this.getAttribute('data-day');
-            const checkboxes = document.querySelectorAll(`input[name="${day.toLowerCase()}-hours"]`);
-            const areAllChecked = Array.from(checkboxes).every(cb => cb.checked);
+  function calculateStartOfWeek(date) {
+      const day = date.getDay();
+      const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+      return new Date(date.setDate(diff));
+  }
 
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = !areAllChecked;
-            });
-        });
-    });
+  function updateWeekDays() {
+      const currentStartDate = calculateStartOfWeek(new Date());
+      Array.from(document.querySelectorAll('.day-column')).forEach((column, index) => {
+          const dateElement = column.querySelector('.date-display');
+          const date = new Date(currentStartDate.getTime());
+          date.setDate(date.getDate() + index);
 
-    // Update availability button functionality
-    const updateAvailabilityBtn = document.getElementById('updateAvailability');
-    updateAvailabilityBtn.addEventListener('click', function() {
-        const availability = {};
-        daysOfWeek.forEach(day => {
-            const checkboxes = document.querySelectorAll(`input[name="availability-${day}"]:checked`);
-            const availableHours = Array.from(checkboxes).map(cb => cb.value);
-            availability[day] = availableHours;
-        });
+          dateElement.textContent = date.toLocaleDateString();
+          column.dataset.date = date.toISOString().split('T')[0];
+      });
+  }
 
-        // Here you can send the data to the server or Firebase database
-        console.log('Updated availability:', availability);
-        
-        // Show a success message or perform another action
-        alert('Dostępność zaktualizowana!');
-    });
+  document.getElementById('prevWeek').addEventListener('click', () => {
+      const currentStartDate = calculateStartOfWeek(new Date());
+      currentStartDate.setDate(currentStartDate.getDate() - 7);
+      updateWeekDays();
+  });
 
-    // Call to update the dates on initial load
-    updateWeekDays();
-});
+  document.getElementById('nextWeek').addEventListener('click', () => {
+      const currentStartDate = calculateStartOfWeek(new Date());
+      currentStartDate.setDate(currentStartDate.getDate() + 7);
+      updateWeekDays();
+  });
 
-// Update availability button functionality
-const updateAvailabilityBtn = document.getElementById('updateAvailability');
-updateAvailabilityBtn.addEventListener('click', async function() {
-    const availability = {};
-    daysOfWeek.forEach(day => {
-        const checkboxes = document.querySelectorAll(`input[name="availability-${day}"]:checked`);
-        const availableHours = Array.from(checkboxes).map(cb => cb.value);
-        availability[day] = availableHours;
-    });
+  document.querySelectorAll('.toggle-day').forEach(button => {
+      button.addEventListener('click', function() {
+          const day = this.getAttribute('data-day');
+          const checkboxes = document.querySelectorAll(`input[name="${day.toLowerCase()}-hours"]`);
+          const areAllChecked = Array.from(checkboxes).every(cb => cb.checked);
 
-    // Here you would send the data to the server or Firebase database
-    console.log('Updated availability:', availability);
-    
-    try {
-        // Assuming you want to update the availability for the logged in trainer
-        const user = auth.currentUser;
-        if(user) {
-            // Use the user's UID as the document ID in your Firestore collection
-            const userAvailabilityRef = doc(db, 'trainerAvailability', user.uid);
-            await setDoc(userAvailabilityRef, { availability }, { merge: true });
-            alert('Dostępność zaktualizowana!');
-        } else {
-            // No user logged in
-            alert('Nie zalogowano użytkownika!');
-        }
-    } catch(error) {
-        console.error("Error updating availability: ", error);
-        alert('Błąd podczas aktualizacji dostępności: ' + error.message);
-    }
-	
-	const updateAvailabilityBtn = document.getElementById('updateAvailability');
-  updateAvailabilityBtn.addEventListener('click', async function() {
-    const availability = {};
-    daysOfWeek.forEach(day => {
-	
-	
-});
+          checkboxes.forEach(checkbox => {
+              checkbox.checked = !areAllChecked;
+          });
+      });
+  });
 
-// Call to update the dates on initial load
-updateWeekDays();
-
-
-
+  updateWeekDays(); // Call to update the dates on initial load
 </script>
+
 
 </body>
 </html>
