@@ -338,6 +338,7 @@
   
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+import { collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -542,6 +543,41 @@ const db = getFirestore(app);
 
         generateCalendar(); // Initial call to display the calendar
     });
+	
+	 const bookButton = popup.querySelector('#bookButton');
+    bookButton.onclick = async function() {
+        // Pobierz wybrane informacje
+        const selectedTrainingTypeElement = popup.querySelector('.training-type.selected');
+        const selectedTimeSlotElement = popup.querySelector('.time-slot.selected');
+
+        if (selectedTrainingTypeElement && selectedTimeSlotElement) {
+            const selectedTrainingType = selectedTrainingTypeElement.getAttribute('data-type');
+            const selectedTimeSlot = selectedTimeSlotElement.textContent;
+
+            // Stwórz obiekt rezerwacji
+            const booking = {
+                userId: auth.currentUser.uid, // ID zalogowanego użytkownika
+                date: selectedDay.toISOString().split('T')[0], // Wybrana data w formacie YYYY-MM-DD
+                time: selectedTimeSlot, // Wybrana godzina
+                type: selectedTrainingType, // Rodzaj treningu
+                created: new Date() // Aktualna data i godzina jako timestamp
+            };
+
+            try {
+                // Dodaj rezerwację do kolekcji 'bookings' w Firestore
+                await addDoc(collection(db, 'bookings'), booking);
+                alert('Trening zarezerwowany pomyślnie!');
+                popup.remove(); // Zamknij popup po pomyślnej rezerwacji
+            } catch (error) {
+                console.error('Error booking training: ', error);
+                alert('Błąd przy rezerwacji treningu: ' + error.message);
+            }
+        } else {
+            alert('Proszę wybrać typ treningu i godzinę.');
+        }
+    };
+}
+	
 </script>
 
 
