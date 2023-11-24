@@ -335,8 +335,9 @@
   <script type="module">
     // Import the required Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
-    import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+  
+  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -540,9 +541,7 @@ const db = getFirestore(app);
         });
 
         generateCalendar(); // Initial call to display the calendar
-    });
-	
-	// Handle booking button click
+		// Handle booking button click
         const bookButton = document.getElementById('bookButton');
         bookButton.addEventListener('click', () => {
             const selectedDate = currentDate; // Selected date
@@ -571,7 +570,7 @@ const db = getFirestore(app);
                 });
         });
     });
-</script>
+   
 </script>
 
 
