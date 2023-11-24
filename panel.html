@@ -464,6 +464,36 @@ h2 {
     currentStartDate.setDate(currentStartDate.getDate() + 7);
     updateWeekDays();
   });
+  
+  async function loadAvailability() {
+  const user = auth.currentUser;
+  if (user) {
+    const userAvailabilityRef = doc(db, 'trainerAvailability', user.uid);
+    const docSnap = await getDoc(userAvailabilityRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      if (data.availability) {
+        Object.entries(data.availability).forEach(([day, hours]) => {
+          hours.forEach(hour => {
+            const checkbox = document.querySelector(`input[name="${day}-hours"][value="${hour}"]`);
+            if (checkbox) {
+              checkbox.checked = true;
+            }
+          });
+        });
+      }
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // ... (reszta twojego kodu)
+
+  // Load availability after the DOM is ready
+  loadAvailability();
+});
+
 </script>
 
 
