@@ -425,29 +425,34 @@ h2 {
       return new Date(date.setDate(diff));
   }
 
-  function updateWeekDays() {
-      const currentStartDate = calculateStartOfWeek(new Date());
-      Array.from(document.querySelectorAll('.day-column')).forEach((column, index) => {
-          const dateElement = column.querySelector('.date-display');
-          const date = new Date(currentStartDate.getTime());
-          date.setDate(date.getDate() + index);
+  let currentStartDate = calculateStartOfWeek(new Date());
 
-          dateElement.textContent = date.toLocaleDateString();
-          column.dataset.date = date.toISOString().split('T')[0];
-      });
-  }
+function updateWeekDays() {
+    Array.from(document.querySelectorAll('.day-column')).forEach((column, index) => {
+        const dateElement = column.querySelector('.date-display');
+        const date = new Date(currentStartDate.getTime());
+        date.setDate(date.getDate() + index);
 
-  document.getElementById('prevWeek').addEventListener('click', () => {
-      const currentStartDate = calculateStartOfWeek(new Date());
-      currentStartDate.setDate(currentStartDate.getDate() - 7);
-      updateWeekDays();
-  });
+        dateElement.textContent = date.toLocaleDateString();
+        column.dataset.date = date.toISOString().split('T')[0];
+    });
+}
 
-  document.getElementById('nextWeek').addEventListener('click', () => {
-      const currentStartDate = calculateStartOfWeek(new Date());
-      currentStartDate.setDate(currentStartDate.getDate() + 7);
-      updateWeekDays();
-  });
+document.getElementById('prevWeek').addEventListener('click', () => {
+    const currentStartDate = calculateStartOfWeek(new Date());
+    currentStartDate.setDate(currentStartDate.getDate() - 7);
+    updateWeekDays();
+});
+
+document.getElementById('nextWeek').addEventListener('click', () => {
+    const currentStartDate = calculateStartOfWeek(new Date());
+    currentStartDate.setDate(currentStartDate.getDate() + 7);
+    updateWeekDays();
+});
+
+
+// Initial call to set up the dates
+updateWeekDays();
 
   document.querySelectorAll('.toggle-day').forEach(button => {
       button.addEventListener('click', function() {
