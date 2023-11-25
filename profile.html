@@ -296,22 +296,17 @@
   };
 
   const fetchAndDisplayTrainings = async (userId) => {
-    // Pobieranie rezerwacji z subkolekcji 'bookings' użytkownika
-    const userBookingsRef = collection(db, 'users', userId, 'bookings');
-    try {
-      const querySnapshot = await getDocs(userBookingsRef);
-      if (querySnapshot.docs.length === 0) {
-        console.log('No trainings found for user:', userId);
-      } else {
-        querySnapshot.forEach((doc) => {
-          const bookingData = doc.data();
-          displayTraining(bookingData);
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching trainings:", error);
-    }
-  };
+  const userBookingsRef = collection(db, 'users', userId, 'bookings');
+  try {
+    const querySnapshot = await getDocs(userBookingsRef);
+    querySnapshot.forEach((doc) => {
+      const bookingData = doc.data();
+      displayTraining(bookingData, userId);
+    });
+  } catch (error) {
+    console.error("Error fetching user's trainings:", error);
+  }
+};
 
   // Function to fetch and display user data
   const fetchAndDisplayUserData = async (userId) => {
@@ -332,15 +327,14 @@
   };
 
   const createBookingForUser = async (userId, bookingData) => {
-    // Dodajemy dokument rezerwacji do subkolekcji 'bookings' użytkownika
-    const userBookingsRef = collection(db, 'users', userId, 'bookings');
-    try {
-      const bookingRef = await addDoc(userBookingsRef, bookingData);
-      console.log(`New booking created for user ${userId} with booking ID:`, bookingRef.id);
-    } catch (error) {
-      console.error('Error creating booking:', error);
-    }
-  };
+  const userBookingsRef = collection(db, 'users', userId, 'bookings');
+  try {
+    await addDoc(userBookingsRef, bookingData);
+    console.log('Booking added to user:', userId);
+  } catch (error) {
+    console.error('Error creating booking for user:', userId, error);
+  }
+};
 
 
 
