@@ -332,19 +332,17 @@
   };
 
   const createBookingForUser = async (userId, bookingData) => {
-    const userBookingsRef = collection(db, 'users', userId, 'bookings');
-    try {
-      // Dodajemy identyfikator użytkownika do danych rezerwacji
-      const bookingDataWithUser = {
-        ...bookingData,
-        userId: userId // Dodajemy userId do danych rezerwacji
-      };
-      const bookingRef = await addDoc(userBookingsRef, bookingDataWithUser);
-      console.log('New booking created with ID:', bookingRef.id);
-    } catch (error) {
-      console.error('Error creating booking:', error);
-    }
-  };
+  const userBookingsRef = collection(db, 'bookings'); // Zmieniono ścieżkę na kolekcję 'bookings'
+  try {
+    // Dodajemy 'userId' do obiektu bookingData przed zapisaniem
+    const fullBookingData = { ...bookingData, userId };
+    const bookingRef = await addDoc(userBookingsRef, fullBookingData);
+    console.log('New booking created with ID:', bookingRef.id, 'for user:', userId);
+  } catch (error) {
+    console.error('Error creating booking:', error);
+  }
+};
+
 
 
   document.addEventListener('DOMContentLoaded', () => {
