@@ -399,11 +399,6 @@ apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const someDocumentRef = doc(db, 'someCollection', 'someDocId');
-getDoc(someDocumentRef).then((docSnap) => {
-
-export { db };
-
     document.addEventListener('DOMContentLoaded', function() {
 	displayFutureBookings();
     const dailyAvailabilityContainer = document.getElementById('dailyAvailability');
@@ -486,11 +481,11 @@ async function displayFutureBookings() {
         const bookingSnapshot = await getDocs(bookingsRef);
         for (const bookingDoc of bookingSnapshot.docs) {
             const booking = bookingDoc.data();
+            // Upewnij się, że w dokumentach rezerwacji istnieje pole 'userId'
             const userRef = doc(db, 'users', booking.userId);
             const userSnap = await getDoc(userRef);
             if (userSnap.exists()) {
                 const user = userSnap.data();
-                // Tylko przyszłe rezerwacje
                 const bookingDate = new Date(booking.date);
                 if(bookingDate >= new Date()) {
                     const bookingRow = document.createElement('tr');
