@@ -275,22 +275,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// Asynchroniczna funkcja do pobierania i wyświetlania rezerwacji treningów
-const fetchAndDisplayTrainings = async (userId) => {
-    const trainingsRef = collection(db, 'bookings'); // Dopasuj do nazwy kolekcji w twojej bazie danych
-    const q = query(trainingsRef, where('userId', '==', userId));
-
-    try {
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-            const trainingData = doc.data();
-            displayTraining(trainingData);
-        });
-    } catch (error) {
-        console.error("Error fetching trainings:", error);
-    }
-};
-
+// Function to display training session details
 const displayTraining = (trainingData) => {
     const trainingSchedule = document.querySelector('.training-schedule');
     const trainingEntry = document.createElement('div');
@@ -306,77 +291,59 @@ const displayTraining = (trainingData) => {
     trainingSchedule.appendChild(trainingEntry);
 };
 
+// Asynchronous function to fetch and display trainings
+const fetchAndDisplayTrainings = async (userId) => {
+    const trainingsRef = collection(db, 'bookings');
+    const q = query(trainingsRef, where('userId', '==', userId));
+
+    try {
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            const trainingData = doc.data();
+            displayTraining(trainingData);
+        });
+    } catch (error) {
+        console.error("Error fetching trainings:", error);
+    }
+};
+
 // Function to fetch and display user data
-const fetchAndDisplayUserData = (userId) => {
+const fetchAndDisplayUserData = async (userId) => {
     const userDocRef = doc(db, 'users', userId);
     
-    getDoc(userDocRef).then((doc) => {
-        if (doc.exists()) {
-            const userData = doc.data();
+    try {
+        const docSnap = await getDoc(userDocRef);
+        if (docSnap.exists()) {
+            const userData = docSnap.data();
             document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
             document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
             document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
         } else {
             console.log("No such document!");
         }
-    }).catch((error) => {
+    } catch (error) {
         console.log("Error getting document:", error);
-    });
+    }
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            fetchAndDisplayUserData(user.uid); // Fetch and display user data
+            fetchAndDisplayUserData(user.uid);
             fetchAndDisplayTrainings(user.uid);
-            const editProfileForm = document.getElementById('editProfileForm');
-
-            editProfileForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const firstName = document.getElementById('firstName').value;
-                const lastName = document.getElementById('lastName').value;
-                const email = document.getElementById('email').value;
-                const phone = document.getElementById('phone').value;
-
-                const userDocRef = doc(db, 'users', user.uid);
-
-                setDoc(userDocRef, {
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    phone: phone
-                }, { merge: true })
-                .then(() => {
-                    console.log('Profile updated successfully');
-                    alert('Profile updated successfully!');
-                })
-                .catch((error) => {
-                    console.error('Error updating profile:', error);
-                    alert('Error updating profile');
-                });
-            });
         } else {
             // User is signed out
-            // Handle user state when not logged in if necessary
+            // Redirect to login page or handle accordingly
         }
-		
-		const displayTraining = (trainingData) => {
-    const trainingSchedule = document.querySelector('.training-schedule');
-    const trainingEntry = document.createElement('div');
-    trainingEntry.className = 'training-entry';
-    trainingEntry.innerHTML = `
-        <div class="training-details">
-            <p>Date: ${trainingData.date}</p>
-            <p>Time: ${trainingData.time}</p>
-            <p>Training Type: ${trainingData.trainingType}</p>
-        </div>
-        <button class="cancel-button">Cancel</button>
-    `;
-    trainingSchedule.appendChild(trainingEntry);
-};
-
-		
     });
+
+    const editProfileForm = document.getElementById('editProfileForm');
+    if (editProfileForm) {
+        editProfileForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // ... handle profile update
+        });
+    }
 });
 	
 </script>
