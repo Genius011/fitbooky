@@ -465,8 +465,8 @@ async function displayFutureBookings() {
         let bookings = [];
         for (const bookingDoc of bookingSnapshot.docs) {
             const booking = bookingDoc.data();
-            // Przekształć Timestamp na Date
-            const bookingDate = booking.date.toDate();
+            // Przekształć string daty na obiekt Date
+            const bookingDate = new Date(booking.date);
             const currentDate = new Date();
             currentDate.setHours(0, 0, 0, 0); // Reset czasu do północy
 
@@ -475,22 +475,21 @@ async function displayFutureBookings() {
                 const userSnap = await getDoc(userRef);
                 if (userSnap.exists()) {
                     const user = userSnap.data();
-                    bookings.push({ user, booking });
+                    bookings.push({ user, booking: {...booking, date: bookingDate} });
                 }
             }
         }
         // Sortowanie rezerwacji po dacie
-        bookings.sort((a, b) => a.booking.date.toDate() - b.booking.date.toDate());
+        bookings.sort((a, b) => a.booking.date - b.booking.date);
 
         // Tworzenie wierszy tabeli
         bookings.forEach(({ user, booking }) => {
             const bookingRow = document.createElement('tr');
-            const bookingDate = booking.date.toDate();
             bookingRow.innerHTML = `
                 <td>${user.firstName}</td>
                 <td>${user.lastName}</td>
-                <td>${bookingDate.toLocaleTimeString()}</td>
-                <td>${bookingDate.toLocaleDateString()}</td>
+                <td>${booking.date.toLocaleTimeString()}</td>
+                <td>${booking.date.toLocaleDateString()}</td>
                 <td>${booking.trainingType}</td>
             `;
             bookingsTableBody.appendChild(bookingRow);
@@ -499,6 +498,7 @@ async function displayFutureBookings() {
         console.error("Error fetching bookings:", error);
     }
 }
+
 
 
 
