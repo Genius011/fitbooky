@@ -295,8 +295,8 @@
     trainingSchedule.appendChild(trainingEntry);
   };
 
-  // Asynchronous function to fetch and display trainings
   const fetchAndDisplayTrainings = async (userId) => {
+    // Pobieranie rezerwacji z subkolekcji 'bookings' użytkownika
     const userBookingsRef = collection(db, 'users', userId, 'bookings');
     try {
       const querySnapshot = await getDocs(userBookingsRef);
@@ -332,16 +332,15 @@
   };
 
   const createBookingForUser = async (userId, bookingData) => {
-  const userBookingsRef = collection(db, 'bookings'); // Zmieniono ścieżkę na kolekcję 'bookings'
-  try {
-    // Dodajemy 'userId' do obiektu bookingData przed zapisaniem
-    const fullBookingData = { ...bookingData, userId };
-    const bookingRef = await addDoc(userBookingsRef, fullBookingData);
-    console.log('New booking created with ID:', bookingRef.id, 'for user:', userId);
-  } catch (error) {
-    console.error('Error creating booking:', error);
-  }
-};
+    // Dodajemy dokument rezerwacji do subkolekcji 'bookings' użytkownika
+    const userBookingsRef = collection(db, 'users', userId, 'bookings');
+    try {
+      const bookingRef = await addDoc(userBookingsRef, bookingData);
+      console.log(`New booking created for user ${userId} with booking ID:`, bookingRef.id);
+    } catch (error) {
+      console.error('Error creating booking:', error);
+    }
+  };
 
 
 
