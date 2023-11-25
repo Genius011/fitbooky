@@ -213,7 +213,45 @@ h2 {
     font-weight: bold;
     text-transform: uppercase;
   }
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 
 
     </style>
@@ -441,6 +479,19 @@ h2 {
     </section>
 </div>
 
+<!-- Modal / Pop-up structure -->
+<div id="userProfileModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>Profil Użytkownika</h3>
+    <p>Imię: <span id="modalFirstName"></span></p>
+    <p>Nazwisko: <span id="modalLastName"></span></p>
+    <p>Email: <span id="modalEmail"></span></p>
+    <p>Telefon: <span id="modalPhone"></span></p>
+  </div>
+</div>
+
+
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
 import { getFirestore, collection, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
@@ -497,6 +548,42 @@ for (const { user, booking } of bookings) {
 }
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
+
+function viewUserProfile(userId) {
+  // Pobranie danych użytkownika z Firestore
+  const userRef = doc(db, 'users', userId);
+  getDoc(userRef).then((doc) => {
+    if (doc.exists) {
+      const userData = doc.data();
+      // Wypełnienie modalu danymi użytkownika
+      document.getElementById('modalFirstName').textContent = userData.firstName;
+      document.getElementById('modalLastName').textContent = userData.lastName;
+      document.getElementById('modalEmail').textContent = userData.email;
+      document.getElementById('modalPhone').textContent = userData.phone;
+      // Wyświetlenie modalu
+      document.getElementById('userProfileModal').style.display = "block";
+    } else {
+      console.log("No such document!");
+    }
+  }).catch((error) => {
+    console.log("Error getting document:", error);
+  });
+}
+
+// Kod do obsługi zamknięcia modalu
+const modal = document.getElementById('userProfileModal');
+const span = document.getElementsByClassName("close")[0];
+
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
 </script>
 
 
