@@ -350,48 +350,137 @@ h2 {
     </section>
 
     <section id="bookingManager" class="section">
-        <h2>Zarządzanie Rezerwacjami</h2>
-        <!-- Tu będzie interfejs do zarządzania rezerwacjami -->
-    </section>
+    <h2>Future bookings</h2>
+    <table id="futureBookingsTable">
+        <thead>
+            <tr>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Godzina treningu</th>
+                <th>Data</th>
+                <th>Typ treningu</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Tu będą wstawiane rezerwacje -->
+        </tbody>
+    </table>
+</section>
 
     <section id="trainingHistory" class="section">
-        <h2>Historia Treningów</h2>
+        <h2>Booking history</h2>
         <!-- Tu będzie wyświetlana historia treningów -->
     </section>
 
     <section id="userManager" class="section">
-        <h2>Zarządzanie Profilami Użytkowników</h2>
+        <h2>Profiles management</h2>
         <!-- Tu będzie interfejs do zarządzania profilami użytkowników -->
     </section>
 </div>
 
-<script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+<script>
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const dailyAvailabilityContainer = document.getElementById('dailyAvailability');
+    const daysOfWeek = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
+    const hours = Array.from({ length: 16 }, (_, i) => `${i + 6}:00`); // Generates hours from 6:00 to 21:00
     
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-        authDomain: "genius-f6a78.firebaseapp.com",
-        projectId: "genius-f6a78",
-        storageBucket: "genius-f6a78.appspot.com",
-        messagingSenderId: "4413237203",
-        appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+    // Define a function to calculate the start of the week
+    const calculateStartOfWeek = (date) => {
+        const day = date.getDay();
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+        return new Date(date.setDate(diff));
+    };
+    
+    // Define a function to update the days of the week with the correct dates
+    const updateWeekDays = () => {
+        const weekStartDate = calculateStartOfWeek(new Date(currentStartDate));
+        Array.from(document.querySelectorAll('.day-column')).forEach((column, index) => {
+            const dateElement = column.querySelector('.date-display');
+            const date = new Date(weekStartDate.getTime());
+            date.setDate(date.getDate() + index);
+            
+            dateElement.textContent = date.toLocaleDateString(); // e.g., "1/1/2020"
+            column.dataset.date = date.toISOString().split('T')[0]; // e.g., "2020-01-01"
+        });
     };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-	
-	
-
-
+    // Initialize the current start date to the beginning of this week
+    let currentStartDate = calculateStartOfWeek(new Date());
     
+    // Button event listeners for previous and next week navigation
+    document.getElementById('prevWeek').addEventListener('click', () => {
+        currentStartDate.setDate(currentStartDate.getDate() - 7);
+        updateWeekDays();
+    });
 
+    document.getElementById('nextWeek').addEventListener('click', () => {
+        currentStartDate.setDate(currentStartDate.getDate() + 7);
+        updateWeekDays();
+    });
 
+    // Toggle the availability of each day
+    document.querySelectorAll('.toggle-day').forEach(button => {
+        button.addEventListener('click', function() {
+            const day = this.getAttribute('data-day');
+            const checkboxes = document.querySelectorAll(`input[name="${day.toLowerCase()}-hours"]`);
+            const areAllChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = !areAllChecked;
+            });
+        });
+    });
+
+    // Update availability button functionality
+    const updateAvailabilityBtn = document.getElementById('updateAvailability');
+    updateAvailabilityBtn.addEventListener('click', function() {
+        const availability = {};
+        daysOfWeek.forEach(day => {
+            const checkboxes = document.querySelectorAll(`input[name="availability-${day}"]:checked`);
+            const availableHours = Array.from(checkboxes).map(cb => cb.value);
+            availability[day] = availableHours;
+        });
+
+        // Here you can send the data to the server or Firebase database
+        console.log('Updated availability:', availability);
+        
+        // Show a success message or perform another action
+        alert('Dostępność zaktualizowana!');
+    });
+
+    // Call to update the dates on initial load
+    updateWeekDays();
+});
+
+function displayFutureBookings() {
+    const bookingsRef = collection(db, 'bookings');
+    const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
+
+    getDocs(bookingsRef).then(snapshot => {
+        snapshot.forEach(doc => {
+            const booking = doc.data();
+            const bookingRow = document.createElement('tr');
+            bookingRow.innerHTML = `
+                <td>${booking.firstName}</td>
+                <td>${booking.lastName}</td>
+                <td>${booking.time}</td>
+                <td>${booking.date}</td>
+                <td>${booking.trainingType}</td>
+            `;
+            bookingsTableBody.appendChild(bookingRow);
+        });
+    }).catch(error => {
+        console.error("Error fetching bookings:", error);
+    });
+}
+
+// Wywołaj funkcję po załadowaniu dokumentu
+document.addEventListener('DOMContentLoaded', function() {
+    displayFutureBookings();
+    // ... (inne części skryptu)
+});
 
 </script>
 
