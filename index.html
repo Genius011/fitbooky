@@ -401,34 +401,34 @@
         let currentYear = currentDate.getFullYear();
 
         function generateCalendar() {
-            calendar.innerHTML = '';
-            let today = new Date();
-            let startDate = new Date(currentYear, currentMonth, 1);
-            let dayOfWeek = startDate.getDay();
+    calendar.innerHTML = '';
+    let today = new Date();
+    let startDate = new Date(currentYear, currentMonth, 1);
+    let dayOfWeek = startDate.getDay();
 
-            monthName.textContent = `${startDate.toLocaleString('en-US', { month: 'long' })} ${currentYear}`;
-            startDate.setDate(startDate.getDate() - dayOfWeek);
+    monthName.textContent = `${startDate.toLocaleString('en-US', { month: 'long' })} ${currentYear}`;
+    startDate.setDate(startDate.getDate() - dayOfWeek);
 
-            for (let i = 0; i < 35; i++) {
-                let day = new Date(startDate);
-                day.setDate(day.getDate() + i);
+    for (let i = 0; i < 35; i++) {
+        let day = new Date(startDate);
+        day.setDate(day.getDate() + i);
 
-                let dayElement = document.createElement('div');
-                dayElement.className = 'day';
-                if (day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear()) {
-                    dayElement.classList.add('current-day');
-                }
-                if (day.getMonth() === currentMonth) {
-                    dayElement.textContent = day.getDate();
-                    dayElement.onclick = function() {
-                        openPopup(day);
-                    };
-                } else {
-                    dayElement.classList.add('inactive');
-                }
-                calendar.appendChild(dayElement);
-            }
+        let dayElement = document.createElement('div');
+        dayElement.className = 'day';
+        if (day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear()) {
+            dayElement.classList.add('current-day');
         }
+        if (day.getMonth() === currentMonth) {
+            dayElement.textContent = day.getDate();
+            dayElement.onclick = function() {
+                openPopup(day);
+            };
+        } else {
+            dayElement.classList.add('inactive');
+        }
+        calendar.appendChild(dayElement);
+    }
+}
 
         function openPopup(selectedDay) {
     const popup = document.createElement('div');
@@ -452,8 +452,8 @@
     const closeBtn = popup.querySelector('.close-btn');
     const personalTraining = popup.querySelector('.training-type[data-type="personal"]');
     const groupTraining = popup.querySelector('.training-type[data-type="group"]');
-    
-    closeBtn.addEventListener('click', () => popup.remove()); // Add event listener to close button
+
+    closeBtn.addEventListener('click', () => popup.remove());
 
     personalTraining.onclick = function() {
         selectTrainingType(personalTraining, groupTraining);
@@ -466,6 +466,18 @@
     };
 
     generateTimeSlots(popup.querySelector('.time-slots'), 6, 21);
+
+    // Add the following code to highlight the selected day
+    const selectedDayElement = calendar.querySelector('.day.selected');
+    if (selectedDayElement) {
+        selectedDayElement.classList.remove('selected');
+    }
+    selectedDayElement = calendar.querySelector('.day');
+    selectedDayElement.classList.add('selected');
+
+    // Rest of your openPopup function code...
+}
+
 	
 	document.addEventListener('DOMContentLoaded', function () {
     const auth = getAuth();
