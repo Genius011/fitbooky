@@ -278,6 +278,10 @@ const auth = getAuth(app);
 // Function to display training session details
 const displayTraining = (trainingData) => {
     const trainingSchedule = document.querySelector('.training-schedule');
+    if (!trainingSchedule) {
+        console.error('The .training-schedule element was not found in your DOM.');
+        return;
+    }
     const trainingEntry = document.createElement('div');
     trainingEntry.className = 'training-entry';
     trainingEntry.innerHTML = `
@@ -291,14 +295,21 @@ const displayTraining = (trainingData) => {
     trainingSchedule.appendChild(trainingEntry);
 };
 
+
 // Asynchronous function to fetch and display trainings
 const fetchAndDisplayTrainings = async (userId) => {
+    console.log(`Fetching trainings for user ID: ${userId}`);  // Log to verify the function is called
     const trainingsRef = collection(db, 'bookings');
-    const q = query(trainingsRef, where('userId', '==', userId)); // Zakładając, że masz pole userId w dokumentach
+    const q = query(trainingsRef, where('userId', '==', userId));
 
     try {
         const querySnapshot = await getDocs(q);
+        console.log(`Found ${querySnapshot.docs.length} trainings for user ID: ${userId}`); // Log to check how many trainings are found
+        if (querySnapshot.docs.length === 0) {
+            console.log('No trainings found in Firestore for this user.');
+        }
         querySnapshot.forEach((doc) => {
+            console.log(doc.data());  // Log actual data for each training
             const trainingData = doc.data();
             displayTraining(trainingData);
         });
@@ -306,6 +317,7 @@ const fetchAndDisplayTrainings = async (userId) => {
         console.error("Error fetching trainings:", error);
     }
 };
+
 
 
 
