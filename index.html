@@ -470,37 +470,35 @@
 	document.addEventListener('DOMContentLoaded', function () {
     const auth = getAuth();
 	
-	  const bookButton = popup.querySelector('#bookButton');
-    bookButton.addEventListener('click', () => {
-        const selectedDate = currentDate;
-        const selectedTimeSlot = popup.querySelector('.time-slot.selected').textContent.trim();
-        const selectedTrainingType = popup.querySelector('.training-type.selected').getAttribute('data-type');
+	 const bookButton = popup.querySelector('#bookButton');
+bookButton.addEventListener('click', () => {
+    const selectedDate = currentDate; // Selected date
+    const selectedTimeSlot = popup.querySelector('.time-slot.selected').textContent.trim(); // Selected time slot
+    const selectedTrainingType = popup.querySelector('.training-type.selected').getAttribute('data-type'); // Selected training type
 
-        // Create a document reference for the reservation
-        const reservationRef = doc(db, 'reservations', `${selectedDate.getTime()}_${selectedTimeSlot}`);
+    // Create a document reference for the reservation
+    const reservationRef = doc(db, 'reservations', `${selectedDate.getTime()}_${selectedTimeSlot}`);
 
-        // Define data to be saved in Firestore
-        const reservationData = {
-            date: selectedDate.toISOString(),
-            time: selectedTimeSlot,
-            trainingType: selectedTrainingType,
-        };
+    // Define data to be saved in Firestore
+    const reservationData = {
+        date: selectedDate.toISOString(),
+        time: selectedTimeSlot,
+        trainingType: selectedTrainingType,
+        // You can add more fields like user information here
+    };
 
-        // Save the reservation in Firestore
-        setDoc(reservationRef, reservationData)
-            .then(() => {
-                alert('Reservation successfully saved in Firestore!');
-                popup.remove();
-            })
-            .catch((error) => {
-                console.error('Error saving reservation:', error);
-                alert('Failed to save reservation. Please try again.');
-            });
-    });
+    // Save the reservation in Firestore
+    setDoc(reservationRef, reservationData)
+        .then(() => {
+            alert('Reservation successfully saved in Firestore!');
+            popup.remove();
+        })
+        .catch((error) => {
+            console.error('Error saving reservation:', error);
+            alert('Failed to save reservation. Please try again.');
+        });
+});
 
-    });
-
-}
 			
 			
         
