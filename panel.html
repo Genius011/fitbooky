@@ -465,36 +465,41 @@ async function displayFutureBookings() {
         let bookings = [];
         for (const bookingDoc of bookingSnapshot.docs) {
             const booking = bookingDoc.data();
-            const userRef = doc(db, 'users', booking.userId);
-            const userSnap = await getDoc(userRef);
-            if (userSnap.exists()) {
-                const user = userSnap.data();
-                // Dodaj 'T00:00:00Z' do daty, aby stworzyć obiekt daty w UTC
-                const bookingDate = new Date(booking.date + 'T00:00:00Z');
-                if (bookingDate >= new Date()) {
+            // Przekształć Timestamp na Date
+            const bookingDate = booking.date.toDate();
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0); // Reset czasu do północy
+
+            if (bookingDate >= currentDate) {
+                const userRef = doc(db, 'users', booking.userId);
+                const userSnap = await getDoc(userRef);
+                if (userSnap.exists()) {
+                    const user = userSnap.data();
                     bookings.push({ user, booking });
                 }
             }
         }
-        // Sort bookings by date
-        bookings.sort((a, b) => new Date(a.booking.date + 'T00:00:00Z') - new Date(b.booking.date + 'T00:00:00Z'));
-        // Create table rows
-        for (const { user, booking } of bookings) {
+        // Sortowanie rezerwacji po dacie
+        bookings.sort((a, b) => a.booking.date.toDate() - b.booking.date.toDate());
+
+        // Tworzenie wierszy tabeli
+        bookings.forEach(({ user, booking }) => {
             const bookingRow = document.createElement('tr');
-            // Użyj toLocaleDateString(), aby wyświetlić datę w lokalnej strefie czasowej
+            const bookingDate = booking.date.toDate();
             bookingRow.innerHTML = `
                 <td>${user.firstName}</td>
                 <td>${user.lastName}</td>
-                <td>${booking.time}</td>
-                <td>${new Date(booking.date + 'T00:00:00Z').toLocaleDateString()}</td>
+                <td>${bookingDate.toLocaleTimeString()}</td>
+                <td>${bookingDate.toLocaleDateString()}</td>
                 <td>${booking.trainingType}</td>
             `;
             bookingsTableBody.appendChild(bookingRow);
-        }
+        });
     } catch (error) {
         console.error("Error fetching bookings:", error);
     }
 }
+
 
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
