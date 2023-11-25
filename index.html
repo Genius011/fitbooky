@@ -470,7 +470,8 @@
 	document.addEventListener('DOMContentLoaded', function () {
     const auth = getAuth();
 	
-	 const bookButton = popup.querySelector('#bookButton');
+	   const bookButton = popup.querySelector('#bookButton');
+
     bookButton.addEventListener('click', () => {
     const selectedDate = currentDate; // Selected date
     const selectedTimeSlot = popup.querySelector('.time-slot.selected').textContent.trim(); // Selected time slot
