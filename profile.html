@@ -268,7 +268,8 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
-    
+    import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+
     // Your web app's Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
@@ -283,6 +284,21 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
+
+const fetchAndDisplayTrainings = async (userId) => {
+    const trainingsRef = collection(db, 'bookings'); // Dopasuj do nazwy kolekcji w twojej bazie danych
+    const q = query(trainingsRef, where('userId', '==', userId));
+
+    try {
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            const trainingData = doc.data();
+            displayTraining(trainingData);
+        });
+    } catch (error) {
+        console.error("Error fetching trainings:", error);
+    }
+};
 
     // Function to fetch and display user data
     const fetchAndDisplayUserData = (userId) => {
