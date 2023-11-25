@@ -381,8 +381,23 @@ h2 {
 <script type="module">
 
 
-import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
+import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
+const firebaseConfig = {
+apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+            authDomain: "genius-f6a78.firebaseapp.com",
+            projectId: "genius-f6a78",
+            storageBucket: "genius-f6a78.appspot.com",
+            messagingSenderId: "4413237203",
+            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+export { db };
 
     document.addEventListener('DOMContentLoaded', function() {
     const dailyAvailabilityContainer = document.getElementById('dailyAvailability');
