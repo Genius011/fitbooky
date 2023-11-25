@@ -394,14 +394,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// reszta twojego kodu...
-
 async function displayFutureBookings() {
     const bookingsRef = collection(db, 'bookings');
     const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
 
     try {
         const bookingSnapshot = await getDocs(bookingsRef);
+        let bookings = [];
         for (const bookingDoc of bookingSnapshot.docs) {
             const booking = bookingDoc.data();
             const userRef = doc(db, 'users', booking.userId);
@@ -409,28 +408,31 @@ async function displayFutureBookings() {
             if (userSnap.exists()) {
                 const user = userSnap.data();
                 const bookingDate = new Date(booking.date);
-                if(bookingDate >= new Date()) {
-                    const bookingRow = document.createElement('tr');
-                    bookingRow.innerHTML = `
-                        <td>${user.firstName}</td>
-                        <td>${user.lastName}</td>
-                        <td>${booking.time}</td>
-                        <td>${booking.date}</td>
-                        <td>${booking.trainingType}</td>
-                    `;
-                    bookingsTableBody.appendChild(bookingRow);
+                if (bookingDate >= new Date()) {
+                    bookings.push({ user, booking });
                 }
             }
+        }
+        // Sort bookings by date
+        bookings.sort((a, b) => new Date(a.booking.date) - new Date(b.booking.date));
+        // Create table rows
+        for (const { user, booking } of bookings) {
+            const bookingRow = document.createElement('tr');
+            bookingRow.innerHTML = `
+                <td>${user.firstName}</td>
+                <td>${user.lastName}</td>
+                <td>${booking.time}</td>
+                <td>${booking.date}</td>
+                <td>${booking.trainingType}</td>
+            `;
+            bookingsTableBody.appendChild(bookingRow);
         }
     } catch (error) {
         console.error("Error fetching bookings:", error);
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    displayFutureBookings();
-    // reszta twojego kodu...
-});
+document.addEventListener('DOMContentLoaded', displayFutureBookings);
 </script>
 
 
