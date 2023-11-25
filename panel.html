@@ -213,45 +213,7 @@ h2 {
     font-weight: bold;
     text-transform: uppercase;
   }
-
-/* The Modal (background) */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
-
-/* Modal Content */
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
-}
-
-/* The Close Button */
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
 
 
     </style>
@@ -453,15 +415,14 @@ h2 {
     <h2>Future bookings</h2>
     <table id="futureBookingsTable">
         <thead>
-  <tr>
-    <th>Name</th>
-    <th>Surname</th>
-    <th>Time</th>
-    <th>Date</th>
-    <th>Training Type</th>
-    <th>Action</th>
-  </tr>
-</thead>
+            <tr>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Godzina treningu</th>
+                <th>Data</th>
+                <th>Typ treningu</th>
+            </tr>
+        </thead>
         <tbody>
             <!-- Wiersze z rezerwacjami będą wstawiane tutaj przez skrypt JavaScript -->
         </tbody>
@@ -479,30 +440,17 @@ h2 {
     </section>
 </div>
 
-<!-- Modal / Pop-up structure -->
-<div id="userProfileModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h3>Profil Użytkownika</h3>
-    <p>Imię: <span id="modalFirstName"></span></p>
-    <p>Nazwisko: <span id="modalLastName"></span></p>
-    <p>Email: <span id="modalEmail"></span></p>
-    <p>Telefon: <span id="modalPhone"></span></p>
-  </div>
-</div>
-
-
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
 import { getFirestore, collection, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
 const firebaseConfig = {
     apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-    authDomain: "genius-f6a78.firebaseapp.com",
-    projectId: "genius-f6a78",
-    storageBucket: "genius-f6a78.appspot.com",
-    messagingSenderId: "4413237203",
-    appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+            authDomain: "genius-f6a78.firebaseapp.com",
+            projectId: "genius-f6a78",
+            storageBucket: "genius-f6a78.appspot.com",
+            messagingSenderId: "4413237203",
+            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -515,65 +463,39 @@ async function displayFutureBookings() {
     try {
         const bookingSnapshot = await getDocs(bookingsRef);
         let bookings = [];
-        bookingSnapshot.docs.forEach((doc) => {
-            const booking = doc.data();
-            const bookingDate = new Date(booking.date);
-            if (bookingDate >= new Date()) {
-                bookings.push({ ...booking, id: doc.id });
-            }
-        });
-
-        bookings.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        bookings.forEach((booking) => {
+        for (const bookingDoc of bookingSnapshot.docs) {
+            const booking = bookingDoc.data();
             const userRef = doc(db, 'users', booking.userId);
-            getDoc(userRef).then((userDoc) => {
-                if (userDoc.exists()) {
-                    const user = userDoc.data();
-                    const row = `<tr>
-                        <td>${user.firstName}</td>
-                        <td>${user.lastName}</td>
-                        <td>${booking.time}</td>
-                        <td>${booking.date}</td>
-                        <td>${booking.trainingType}</td>
-                        <td><button onclick="viewUserProfile('${booking.userId}')">View profile</button></td>
-                    </tr>`;
-                    bookingsTableBody.innerHTML += row;
+            const userSnap = await getDoc(userRef);
+            if (userSnap.exists()) {
+                const user = userSnap.data();
+                const bookingDate = new Date(booking.date);
+                if (bookingDate >= new Date()) {
+                    bookings.push({ user, booking });
                 }
-            });
-        });
+            }
+        }
+        // Sort bookings by date
+        bookings.sort((a, b) => new Date(a.booking.date) - new Date(b.booking.date));
+        // Create table rows
+        for (const { user, booking } of bookings) {
+            const bookingRow = document.createElement('tr');
+            bookingRow.innerHTML = `
+                <td>${user.firstName}</td>
+                <td>${user.lastName}</td>
+                <td>${booking.time}</td>
+                <td>${booking.date}</td>
+                <td>${booking.trainingType}</td>
+            `;
+            bookingsTableBody.appendChild(bookingRow);
+        }
     } catch (error) {
         console.error("Error fetching bookings:", error);
     }
 }
 
-function viewUserProfile(userId) {
-    // Pobranie danych użytkownika z Firestore
-    const userRef = doc(db, 'users', userId);
-    getDoc(userRef).then((docSnap) => {
-        if (docSnap.exists()) {
-            const user = docSnap.data();
-            // Wypełnienie modalu danymi użytkownika
-            document.getElementById('modalFirstName').textContent = user.firstName;
-            document.getElementById('modalLastName').textContent = user.lastName;
-            document.getElementById('modalEmail').textContent = user.email;
-            document.getElementById('modalPhone').textContent = user.phone;
-            // Wyświetlenie modalu
-            document.getElementById('userProfileModal').style.display = 'block';
-        } else {
-            console.error("No such document!");
-        }
-    }).catch((error) => {
-        console.error("Error getting document:", error);
-    });
-}
-
-// Przypisanie funkcji do globalnego zakresu
-window.viewUserProfile = viewUserProfile;
-
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
 </script>
-
 
 
 </body>
