@@ -293,20 +293,20 @@ const displayTraining = (trainingData) => {
 
 // Asynchronous function to fetch and display trainings
 const fetchAndDisplayTrainings = async (userId) => {
-    const trainingDocRef = doc(db, 'bookings', userId); // Używamy ID użytkownika bezpośrednio jako ID dokumentu
+    const trainingsRef = collection(db, 'bookings');
+    const q = query(trainingsRef, where('userId', '==', userId)); // Zakładając, że masz pole userId w dokumentach
 
     try {
-        const docSnap = await getDoc(trainingDocRef);
-        if (docSnap.exists()) {
-            const trainingData = docSnap.data();
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            const trainingData = doc.data();
             displayTraining(trainingData);
-        } else {
-            console.log("No training found for user ID:", userId);
-        }
+        });
     } catch (error) {
-        console.error("Error fetching training:", error);
+        console.error("Error fetching trainings:", error);
     }
 };
+
 
 
 // ... rest of the script
