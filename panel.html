@@ -469,22 +469,24 @@ async function displayFutureBookings() {
             const userSnap = await getDoc(userRef);
             if (userSnap.exists()) {
                 const user = userSnap.data();
-                const bookingDate = new Date(booking.date);
+                // Dodaj 'T00:00:00Z' do daty, aby stworzyć obiekt daty w UTC
+                const bookingDate = new Date(booking.date + 'T00:00:00Z');
                 if (bookingDate >= new Date()) {
                     bookings.push({ user, booking });
                 }
             }
         }
         // Sort bookings by date
-        bookings.sort((a, b) => new Date(a.booking.date) - new Date(b.booking.date));
+        bookings.sort((a, b) => new Date(a.booking.date + 'T00:00:00Z') - new Date(b.booking.date + 'T00:00:00Z'));
         // Create table rows
         for (const { user, booking } of bookings) {
             const bookingRow = document.createElement('tr');
+            // Użyj toLocaleDateString(), aby wyświetlić datę w lokalnej strefie czasowej
             bookingRow.innerHTML = `
                 <td>${user.firstName}</td>
                 <td>${user.lastName}</td>
                 <td>${booking.time}</td>
-                <td>${booking.date}</td>
+                <td>${new Date(booking.date + 'T00:00:00Z').toLocaleDateString()}</td>
                 <td>${booking.trainingType}</td>
             `;
             bookingsTableBody.appendChild(bookingRow);
@@ -493,6 +495,7 @@ async function displayFutureBookings() {
         console.error("Error fetching bookings:", error);
     }
 }
+
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
 </script>
