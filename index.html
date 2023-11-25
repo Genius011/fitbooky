@@ -475,33 +475,26 @@
     selectedDayElement = calendar.querySelector('.day');
     selectedDayElement.classList.add('selected');
 
-    // Rest of your openPopup function code...
-}
-
-	
-	document.addEventListener('DOMContentLoaded', function () {
-    const auth = getAuth();
-	
-	   const bookButton = popup.querySelector('#bookButton');
-
+    // Event listener for the "Book" button inside the popup
+    const bookButton = popup.querySelector('#bookButton');
     bookButton.addEventListener('click', () => {
-    const selectedDate = currentDate; // Selected date
-    const selectedTimeSlot = popup.querySelector('.time-slot.selected').textContent.trim(); // Selected time slot
-    const selectedTrainingType = popup.querySelector('.training-type.selected').getAttribute('data-type'); // Selected training type
+        const selectedDate = currentDate; // Selected date
+        const selectedTimeSlot = popup.querySelector('.time-slot.selected').textContent.trim(); // Selected time slot
+        const selectedTrainingType = popup.querySelector('.training-type.selected').getAttribute('data-type'); // Selected training type
 
-    // Create a document reference for the reservation
-    const reservationRef = doc(db, 'reservations', `${selectedDate.getTime()}_${selectedTimeSlot}`);
+        // Create a document reference for the reservation
+        const reservationRef = doc(db, 'reservations', `${selectedDate.getTime()}_${selectedTimeSlot}`);
 
-    // Define data to be saved in Firestore
-    const reservationData = {
-        date: selectedDate.toISOString(),
-        time: selectedTimeSlot,
-        trainingType: selectedTrainingType,
-        // You can add more fields like user information here
-    };
+        // Define data to be saved in Firestore
+        const reservationData = {
+            date: selectedDate.toISOString(),
+            time: selectedTimeSlot,
+            trainingType: selectedTrainingType,
+            // You can add more fields like user information here
+        };
 
-    // Save the reservation in Firestore
-    setDoc(reservationRef, reservationData)
+        // Save the reservation in Firestore
+        setDoc(reservationRef, reservationData)
             .then(() => {
                 alert('Reservation successfully saved in Firestore!');
                 popup.remove();
@@ -510,116 +503,6 @@
                 console.error('Error saving reservation:', error);
                 alert('Failed to save reservation. Please try again.');
             });
-    });
-			
-			
-        
-
-        function generateTimeSlots(container, startHour, endHour) {
-    container.innerHTML = '';
-    for (let hour = startHour; hour <= endHour; hour++) {
-        let timeString = `${hour.toString().padStart(2, '0')}:00`;
-        let timeSlot = document.createElement('div');
-        timeSlot.className = 'time-slot';
-        timeSlot.textContent = timeString;
-
-        timeSlot.onclick = function() {
-            container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
-            timeSlot.classList.add('selected');
-        };
-
-        container.appendChild(timeSlot);
-    }
-}
-
-
-        function enableAllTimeSlots(popup) {
-            const timeSlots = popup.querySelectorAll('.time-slot');
-            timeSlots.forEach(slot => {
-                slot.classList.remove('disabled');
-                slot.onclick = function() {
-                    timeSlots.forEach(s => s.classList.remove('selected'));
-                    slot.classList.add('selected');
-                };
-            });
-        }
-
-        function enableGroupTrainingSlots(popup, selectedDay) {
-            const timeSlots = popup.querySelectorAll('.time-slot');
-            timeSlots.forEach(slot => {
-                const slotTime = slot.textContent.trim();
-                const dayOfWeek = selectedDay.getDay();
-
-                slot.classList.add('disabled');
-                slot.onclick = null;
-
-                if ((dayOfWeek === 2 || dayOfWeek === 4) && slotTime === '19:00' || 
-                    (dayOfWeek === 6 && slotTime === '10:00')) {
-                    slot.classList.remove('disabled');
-                    slot.onclick = function() {
-                        timeSlots.forEach(s => s.classList.remove('selected'));
-                        slot.classList.add('selected');
-                    };
-                }
-            });
-        }
-
-        function selectTrainingType(selected, other) {
-            selected.classList.add('selected');
-            other.classList.remove('selected');
-        }
-
-        prevMonth.addEventListener('click', function() {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            currentDate = new Date(currentYear, currentMonth, 1);
-            generateCalendar();
-        });
-
-        nextMonth.addEventListener('click', function() {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            currentDate = new Date(currentYear, currentMonth, 1);
-            generateCalendar();
-        });
-
-        generateCalendar(); // Initial call to display the calendar
-		// Handle booking button click
-        const bookButton = document.getElementById('bookButton');
-        if (bookButton) {
-            bookButton.addEventListener('click', () => {
-                const selectedDate = currentDate; // Selected date
-                const selectedTimeSlot = popup.querySelector('.time-slot.selected').textContent.trim(); // Selected time slot
-                const selectedTrainingType = popup.querySelector('.training-type.selected').getAttribute('data-type'); // Selected training type
-
-                // Create a document reference for the reservation
-                const reservationRef = doc(db, 'reservations', `${selectedDate.getTime()}_${selectedTimeSlot}`);
-
-                // Define data to be saved in Firestore
-                const reservationData = {
-                    date: selectedDate.toISOString(),
-                    time: selectedTimeSlot,
-                    trainingType: selectedTrainingType,
-                };
-
-                // Save the reservation in Firestore
-                setDoc(reservationRef, reservationData)
-                    .then(() => {
-                        alert('Reservation successfully saved in Firestore!');
-                        popup.remove();
-                    })
-                    .catch((error) => {
-                        console.error('Error saving reservation:', error);
-                        alert('Failed to save reservation. Please try again.');
-                    });
-            });
-        }
     });
 </script>
 
