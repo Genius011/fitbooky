@@ -338,6 +338,7 @@
   
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -426,23 +427,54 @@ const db = getFirestore(app);
                 calendar.appendChild(dayElement);
             }
         }
+		async function saveBooking(date, trainingType, time) {
+        try {
+            await addDoc(collection(db, "bookings"), {
+                date: date,
+                trainingType: trainingType,
+                time: time
+            });
+            alert("Rezerwacja została zapisana");
+        } catch (e) {
+            console.error("Błąd podczas zapisu: ", e);
+            alert("Wystąpił błąd podczas zapisu rezerwacji");
+        }
+    }
 
         function openPopup(selectedDay) {
-            const popup = document.createElement('div');
-            popup.className = 'popup';
-            popup.innerHTML = `
-                <div class="popup-content">
-                    <span class="close-btn">&times;</span>
-                    <h2>Book your time</h2>
-                    <div class="training-type-container">
-                        <div class="training-type" data-type="personal">Personal</div>
-                        <div class="training-type" data-type="group">Group</div>
-                    </div>
-                    <hr class="separator">
-                    <div class="time-slots"></div>
-                    <button id="bookButton" class="book-btn">Rezerwuj</button>
-                </div>
-            `;
+    const popup = document.createElement('div');
+    popup.className = 'popup';
+    popup.innerHTML = `
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <h2>Book your time</h2>
+            <div class="training-type-container">
+                <div class="training-type" data-type="personal">Personal</div>
+                <div class="training-type" data-type="group">Group</div>
+            </div>
+            <hr class="separator">
+            <div class="time-slots"></div>
+            <button id="bookButton" class="book-btn">Rezerwuj</button>
+        </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    // Dodanie obsługi kliknięcia dla przycisku Rezerwuj
+    document.getElementById('bookButton').addEventListener('click', () => {
+        const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type');
+        const selectedTimeSlot = popup.querySelector('.time-slot.selected')?.textContent;
+
+        if (selectedTrainingType && selectedTimeSlot) {
+            saveBooking(selectedDay.toISOString().split('T')[0], selectedTrainingType, selectedTimeSlot);
+            popup.remove();
+        } else {
+            alert("Proszę wybrać rodzaj treningu i godzinę");
+        }
+    });
+
+    
+			
 			
 			
             document.body.appendChild(popup);
