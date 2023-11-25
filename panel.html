@@ -453,66 +453,50 @@ const firebaseConfig = {
             appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
 };
 
-// Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-        async function displayFutureBookings() {
-            const bookingsRef = collection(db, 'bookings');
-            const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
+async function displayFutureBookings() {
+    const bookingsRef = collection(db, 'bookings');
+    const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
 
-            try {
-                const bookingSnapshot = await getDocs(bookingsRef);
-                // Sort bookings by date
-                const bookings = bookingSnapshot.docs
-                    .map(doc => ({ id: doc.id, ...doc.data() }))
-                    .sort((a, b) => new Date(a.date) - new Date(b.date));
-                
-                bookings.forEach(booking => {
-                    const bookingDate = new Date(booking.date + 'T00:00:00Z');
-                    const bookingRow = document.createElement('tr');
-                    bookingRow.innerHTML = `
-                        <td>${booking.firstName}</td>
-                        <td>${booking.lastName}</td>
-                        <td>${booking.time}</td>
-                        <td>${bookingDate.toLocaleDateString()}</td>
-                        <td>${booking.trainingType}</td>
-                        <td><button onclick="viewUserProfile('${booking.userId}')">View Profile</button></td>
-                    `;
-                    bookingsTableBody.appendChild(bookingRow);
-                });
-            } catch (error) {
-                console.error("Error fetching bookings:", error);
-            }
-        }
-
-        function viewUserProfile(userId) {
-            const userRef = doc(db, 'users', userId);
-            getDoc(userRef).then(docSnap => {
-                if (docSnap.exists()) {
-                    const user = docSnap.data();
-                    document.getElementById('modalFirstName').textContent = user.firstName;
-                    document.getElementById('modalLastName').textContent = user.lastName;
-                    document.getElementById('modalEmail').textContent = user.email;
-                    document.getElementById('modalPhone').textContent = user.phone;
-                    document.getElementById('userProfileModal').style.display = 'block';
-                } else {
-                    console.log("No such document!");
+    try {
+        const bookingSnapshot = await getDocs(bookingsRef);
+        let bookings = [];
+        for (const bookingDoc of bookingSnapshot.docs) {
+            const booking = bookingDoc.data();
+            const userRef = doc(db, 'users', booking.userId);
+            const userSnap = await getDoc(userRef);
+            if (userSnap.exists()) {
+                const user = userSnap.data();
+                const bookingDate = new Date(booking.date);
+                if (bookingDate >= new Date()) {
+                    bookings.push({ user, booking });
                 }
-            }).catch(error => {
-                console.log("Error getting document:", error);
-            });
-        }
-
-        // Close the modal when the user clicks on <span> (x) or outside of the modal
-        window.onclick = function(event) {
-            const modal = document.getElementById('userProfileModal');
-            if (event.target == modal || event.target.className == 'close') {
-                modal.style.display = "none";
             }
         }
+        // Sort bookings by date
+        bookings.sort((a, b) => new Date(a.booking.date) - new Date(b.booking.date));
+        // Create table rows
+        for (const { user, booking } of bookings) {
+            const bookingRow = document.createElement('tr');
+            bookingRow.innerHTML = `
+                <td>${user.firstName}</td>
+                <td>${user.lastName}</td>
+                <td>${booking.time}</td>
+                <td>${booking.date}</td>
+                <td>${booking.trainingType}</td>
+            `;
+            bookingsTableBody.appendChild(bookingRow);
+        }
+    } catch (error) {
+        console.error("Error fetching bookings:", error);
+    }
+}
 
-        document.addEventListener('DOMContentLoaded', displayFutureBookings);
-    </script>
+document.addEventListener('DOMContentLoaded', displayFutureBookings);
+</script>
+
+
 </body>
 </html>
