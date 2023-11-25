@@ -498,11 +498,11 @@ import { getFirestore, collection, getDocs, doc, getDoc } from 'https://www.gsta
 
 const firebaseConfig = {
     apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-            authDomain: "genius-f6a78.firebaseapp.com",
-            projectId: "genius-f6a78",
-            storageBucket: "genius-f6a78.appspot.com",
-            messagingSenderId: "4413237203",
-            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+    authDomain: "genius-f6a78.firebaseapp.com",
+    projectId: "genius-f6a78",
+    storageBucket: "genius-f6a78.appspot.com",
+    messagingSenderId: "4413237203",
+    appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -515,76 +515,65 @@ async function displayFutureBookings() {
     try {
         const bookingSnapshot = await getDocs(bookingsRef);
         let bookings = [];
-        for (const bookingDoc of bookingSnapshot.docs) {
-            const booking = bookingDoc.data();
-            const userRef = doc(db, 'users', booking.userId);
-            const userSnap = await getDoc(userRef);
-            if (userSnap.exists()) {
-                const user = userSnap.data();
-                const bookingDate = new Date(booking.date);
-                if (bookingDate >= new Date()) {
-                    bookings.push({ user, booking });
-                }
+        bookingSnapshot.docs.forEach((doc) => {
+            const booking = doc.data();
+            const bookingDate = new Date(booking.date);
+            if (bookingDate >= new Date()) {
+                bookings.push({ ...booking, id: doc.id });
             }
-        }
-        // Sort bookings by date
-        bookings.sort((a, b) => new Date(a.booking.date) - new Date(b.booking.date));
-// Create table rows
-for (const { user, booking } of bookings) {
-    const bookingRow = document.createElement('tr');
-    bookingRow.innerHTML = `
-        <td>${user.firstName}</td>
-        <td>${user.lastName}</td>
-        <td>${booking.time}</td>
-        <td>${booking.date}</td>
-        <td>${booking.trainingType}</td>
-        <td><button onclick="viewUserProfile('${booking.userId}')">View profile</button></td>
-    `;
-    bookingsTableBody.appendChild(bookingRow);
-}
+        });
+
+        bookings.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        bookings.forEach((booking) => {
+            const userRef = doc(db, 'users', booking.userId);
+            getDoc(userRef).then((userDoc) => {
+                if (userDoc.exists()) {
+                    const user = userDoc.data();
+                    const row = `<tr>
+                        <td>${user.firstName}</td>
+                        <td>${user.lastName}</td>
+                        <td>${booking.time}</td>
+                        <td>${booking.date}</td>
+                        <td>${booking.trainingType}</td>
+                        <td><button onclick="viewUserProfile('${booking.userId}')">View profile</button></td>
+                    </tr>`;
+                    bookingsTableBody.innerHTML += row;
+                }
+            });
+        });
     } catch (error) {
         console.error("Error fetching bookings:", error);
     }
 }
 
-document.addEventListener('DOMContentLoaded', displayFutureBookings);
-
 function viewUserProfile(userId) {
-  // Pobranie danych użytkownika z Firestore
-  const userRef = doc(db, 'users', userId);
-  getDoc(userRef).then((doc) => {
-    if (doc.exists) {
-      const userData = doc.data();
-      // Wypełnienie modalu danymi użytkownika
-      document.getElementById('modalFirstName').textContent = userData.firstName;
-      document.getElementById('modalLastName').textContent = userData.lastName;
-      document.getElementById('modalEmail').textContent = userData.email;
-      document.getElementById('modalPhone').textContent = userData.phone;
-      // Wyświetlenie modalu
-      document.getElementById('userProfileModal').style.display = "block";
-    } else {
-      console.log("No such document!");
-    }
-  }).catch((error) => {
-    console.log("Error getting document:", error);
-  });
+    // Pobranie danych użytkownika z Firestore
+    const userRef = doc(db, 'users', userId);
+    getDoc(userRef).then((docSnap) => {
+        if (docSnap.exists()) {
+            const user = docSnap.data();
+            // Wypełnienie modalu danymi użytkownika
+            document.getElementById('modalFirstName').textContent = user.firstName;
+            document.getElementById('modalLastName').textContent = user.lastName;
+            document.getElementById('modalEmail').textContent = user.email;
+            document.getElementById('modalPhone').textContent = user.phone;
+            // Wyświetlenie modalu
+            document.getElementById('userProfileModal').style.display = 'block';
+        } else {
+            console.error("No such document!");
+        }
+    }).catch((error) => {
+        console.error("Error getting document:", error);
+    });
 }
 
-// Kod do obsługi zamknięcia modalu
-const modal = document.getElementById('userProfileModal');
-const span = document.getElementsByClassName("close")[0];
+// Przypisanie funkcji do globalnego zakresu
+window.viewUserProfile = viewUserProfile;
 
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-
+document.addEventListener('DOMContentLoaded', displayFutureBookings);
 </script>
+
 
 
 </body>
