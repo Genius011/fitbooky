@@ -292,23 +292,21 @@ const displayTraining = (trainingData) => {
 };
 
 // Asynchronous function to fetch and display trainings
-const fetchAndDisplayTrainings = async (userId) => {
-    console.log("Fetching trainings for user ID:", userId); // Diagnostic log
+cconst fetchAndDisplayTrainings = async (userId) => {
     const trainingsRef = collection(db, 'bookings');
-    const q = query(trainingsRef, where('userId', '==', userId));
+    const q = query(trainingsRef, where('userId', '==', userId)); // Zakładając, że masz pole userId w dokumentach
 
     try {
         const querySnapshot = await getDocs(q);
-        console.log(`Found ${querySnapshot.docs.length} trainings`); // Diagnostic log
         querySnapshot.forEach((doc) => {
             const trainingData = doc.data();
-            console.log("Training data:", trainingData); // Diagnostic log
             displayTraining(trainingData);
         });
     } catch (error) {
         console.error("Error fetching trainings:", error);
     }
 };
+
 
 // ... rest of the script
 
