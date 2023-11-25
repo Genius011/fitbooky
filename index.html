@@ -364,11 +364,18 @@ const db = getFirestore(app);
       console.error('Logout failed', error);
     });
   });
+  
+  
+  
    
     document.addEventListener('DOMContentLoaded', function() {
-	const auth = getAuth();
+    const auth = getAuth();
+    let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
+
     onAuthStateChanged(auth, (user) => {
         if (user) {
+            currentUserId = user.uid;
+			
             // Jeśli użytkownik jest zalogowany, sprawdź, czy ma rolę 'trener'
             const userRef = doc(getFirestore(), 'users', user.uid);
             getDoc(userRef).then((docSnap) => {
@@ -426,9 +433,15 @@ const db = getFirestore(app);
                 calendar.appendChild(dayElement);
             }
         }
-		async function saveBooking(date, trainingType, time) {
+		async function saveBooking(userId, date, trainingType, time) {
+        if (!userId) {
+            alert('Nie jesteś zalogowany!');
+            return;
+        }
+
         try {
             await addDoc(collection(db, "bookings"), {
+                userId: userId,  // Dodaj ID użytkownika do dokumentu rezerwacji
                 date: date,
                 trainingType: trainingType,
                 time: time
@@ -465,7 +478,7 @@ const db = getFirestore(app);
         const selectedTimeSlot = popup.querySelector('.time-slot.selected')?.textContent;
 
         if (selectedTrainingType && selectedTimeSlot) {
-            saveBooking(selectedDay.toISOString().split('T')[0], selectedTrainingType, selectedTimeSlot);
+        saveBooking(currentUserId, selectedDay.toISOString().split('T')[0], selectedTrainingType, selectedTimeSlot);
             popup.remove();
         } else {
             alert("Proszę wybrać rodzaj treningu i godzinę");
