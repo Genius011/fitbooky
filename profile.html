@@ -331,12 +331,15 @@
     }
   };
 
-  // Function to create a new booking for a user
-  // This function would be called when a new booking is made, with the relevant booking data
   const createBookingForUser = async (userId, bookingData) => {
     const userBookingsRef = collection(db, 'users', userId, 'bookings');
     try {
-      const bookingRef = await addDoc(userBookingsRef, bookingData);
+      // Dodajemy identyfikator użytkownika do danych rezerwacji
+      const bookingDataWithUser = {
+        ...bookingData,
+        userId: userId // Dodajemy userId do danych rezerwacji
+      };
+      const bookingRef = await addDoc(userBookingsRef, bookingDataWithUser);
       console.log('New booking created with ID:', bookingRef.id);
     } catch (error) {
       console.error('Error creating booking:', error);
