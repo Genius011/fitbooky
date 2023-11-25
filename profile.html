@@ -256,114 +256,122 @@
 </div>
 
  <script type="module">
-   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-    authDomain: "genius-f6a78.firebaseapp.com",
-    projectId: "genius-f6a78",
-    storageBucket: "genius-f6a78.appspot.com",
-    messagingSenderId: "4413237203",
-    appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
-};
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+      apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+      authDomain: "genius-f6a78.firebaseapp.com",
+      projectId: "genius-f6a78",
+      storageBucket: "genius-f6a78.appspot.com",
+      messagingSenderId: "4413237203",
+      appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+  };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
 
-// Function to display training session details
-const displayTraining = (trainingData) => {
-    const trainingSchedule = document.querySelector('.training-schedule');
-    if (!trainingSchedule) {
-        console.error('The .training-schedule element was not found in your DOM.');
-        return;
-    }
-    const trainingEntry = document.createElement('div');
-    trainingEntry.className = 'training-entry';
-    trainingEntry.innerHTML = `
-        <div class="training-details">
-            <p>Date: ${trainingData.date}</p>
-            <p>Time: ${trainingData.time}</p>
-            <p>Training Type: ${trainingData.trainingType}</p>
-        </div>
-        <button class="cancel-button">Cancel</button>
-    `;
-    trainingSchedule.appendChild(trainingEntry);
-};
+  // Function to display training session details
+  const displayTraining = (trainingData) => {
+      const trainingSchedule = document.querySelector('.training-schedule');
+      if (!trainingSchedule) {
+          console.error('The .training-schedule element was not found in your DOM.');
+          return;
+      }
+      const trainingEntry = document.createElement('div');
+      trainingEntry.className = 'training-entry';
+      trainingEntry.innerHTML = `
+          <div class="training-details">
+              <p>Date: ${trainingData.date}</p>
+              <p>Time: ${trainingData.time}</p>
+              <p>Training Type: ${trainingData.trainingType}</p>
+          </div>
+          <button class="cancel-button">Cancel</button>
+      `;
+      trainingSchedule.appendChild(trainingEntry);
+  };
 
+  // Asynchronous function to fetch and display trainings
+  const fetchAndDisplayTrainings = async (userId) => {
+      const userBookingsRef = collection(db, 'users', userId, 'bookings');
+      try {
+          const querySnapshot = await getDocs(userBookingsRef);
+          if (querySnapshot.docs.length === 0) {
+              console.log('No trainings found in Firestore for this user.');
+          }
+          querySnapshot.forEach((doc) => {
+              const trainingData = doc.data();
+              displayTraining(trainingData);
+          });
+      } catch (error) {
+          console.error("Error fetching trainings:", error);
+      }
+  };
 
-// Asynchronous function to fetch and display trainings
-const fetchAndDisplayTrainings = async (userId) => {
-    console.log(`Fetching trainings for user ID: ${userId}`);  // Log to verify the function is called
-    const trainingsRef = collection(db, 'bookings');
-    const q = query(trainingsRef, where('userId', '==', userId));
+  // Function to fetch and display user data
+  const fetchAndDisplayUserData = async (userId) => {
+      const userDocRef = doc(db, 'users', userId);
+      try {
+          const docSnap = await getDoc(userDocRef);
+          if (docSnap.exists()) {
+              const userData = docSnap.data();
+              document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
+              document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
+              document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
+          } else {
+              console.log("No such document!");
+          }
+      } catch (error) {
+          console.log("Error getting document:", error);
+      }
+  };
 
-    try {
-        const querySnapshot = await getDocs(q);
-        console.log(`Found ${querySnapshot.docs.length} trainings for user ID: ${userId}`); // Log to check how many trainings are found
-        if (querySnapshot.docs.length === 0) {
-            console.log('No trainings found in Firestore for this user.');
-        }
-        querySnapshot.forEach((doc) => {
-            console.log(doc.data());  // Log actual data for each training
-            const trainingData = doc.data();
-            displayTraining(trainingData);
-        });
-    } catch (error) {
-        console.error("Error fetching trainings:", error);
-    }
-};
+  document.addEventListener('DOMContentLoaded', () => {
+      onAuthStateChanged(auth, (user) => {
+          if (user) {
+              fetchAndDisplayUserData(user.uid);
+              fetchAndDisplayTrainings(user.uid);
+          } else {
+              // User is signed out
+              // Redirect to login page or handle accordingly
+          }
+      });
 
+      const editProfileForm = document.getElementById('editProfileForm');
+      if (editProfileForm) {
+          editProfileForm.addEventListener('submit', (e) => {
+              e.preventDefault();
+              const firstName = document.getElementById('firstName').value;
+              const lastName = document.getElementById('lastName').value;
+              const email = document.getElementById('email').value;
+              const phone = document.getElementById('phone').value;
 
-
-
-// ... rest of the script
-
-
-// Function to fetch and display user data
-const fetchAndDisplayUserData = async (userId) => {
-    const userDocRef = doc(db, 'users', userId);
-    
-    try {
-        const docSnap = await getDoc(userDocRef);
-        if (docSnap.exists()) {
-            const userData = docSnap.data();
-            document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
-            document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
-            document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
-        } else {
-            console.log("No such document!");
-        }
-    } catch (error) {
-        console.log("Error getting document:", error);
-    }
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            fetchAndDisplayUserData(user.uid);
-            fetchAndDisplayTrainings(user.uid);
-        } else {
-            // User is signed out
-            // Redirect to login page or handle accordingly
-        }
-    });
-
-    const editProfileForm = document.getElementById('editProfileForm');
-    if (editProfileForm) {
-        editProfileForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            // ... handle profile update
-        });
-    }
-});
-	
+              const userDocRef = doc(db, 'users', user.uid);
+              setDoc(userDocRef, {
+                  firstName: firstName,
+                  lastName: lastName,
+                  email: email,
+                  phone: phone
+              }, { merge: true })
+              .then(() => {
+                  console.log('Profile updated successfully');
+                  alert('Profile updated successfully!');
+                  // Refresh user data on the page
+                  fetchAndDisplayUserData(user.uid);
+              })
+              .catch((error) => {
+                  console.error('Error updating profile:', error);
+                  alert('Error updating profile');
+              });
+          });
+      }
+  });
 </script>
+
 
 
 </body>
