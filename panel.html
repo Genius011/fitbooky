@@ -382,7 +382,8 @@ h2 {
 
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
-import { getFirestore, collection, getDocs, getDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+import { getFirestore, collection, getDocs, doc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+
 
 
 const firebaseConfig = {
@@ -404,6 +405,7 @@ getDoc(someDocumentRef).then((docSnap) => {
 export { db };
 
     document.addEventListener('DOMContentLoaded', function() {
+	displayFutureBookings();
     const dailyAvailabilityContainer = document.getElementById('dailyAvailability');
     const daysOfWeek = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
     const hours = Array.from({ length: 16 }, (_, i) => `${i + 6}:00`); // Generates hours from 6:00 to 21:00
@@ -476,42 +478,38 @@ export { db };
     updateWeekDays();
 });
 
-function displayFutureBookings() {
+async function displayFutureBookings() {
     const bookingsRef = collection(db, 'bookings');
-    const usersRef = collection(db, 'users'); // Referencja do kolekcji użytkowników
     const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
 
-    getDocs(bookingsRef).then(async (snapshot) => {
-        for (const doc of snapshot.docs) {
-            const booking = doc.data();
-            // Pobierz dane użytkownika na podstawie userId z rezerwacji
-            const userDoc = await getDoc(doc(db, 'users', booking.userId));
-            const user = userDoc.data();
-
-            // Tylko przyszłe rezerwacje
-            const bookingDate = new Date(booking.date);
-            if(bookingDate >= new Date()) {
-                const bookingRow = document.createElement('tr');
-                bookingRow.innerHTML = `
-                    <td>${user.firstName}</td>
-                    <td>${user.lastName}</td>
-                    <td>${booking.time}</td>
-                    <td>${booking.date}</td>
-                    <td>${booking.trainingType}</td>
-                `;
-                bookingsTableBody.appendChild(bookingRow);
+    try {
+        const bookingSnapshot = await getDocs(bookingsRef);
+        for (const bookingDoc of bookingSnapshot.docs) {
+            const booking = bookingDoc.data();
+            const userRef = doc(db, 'users', booking.userId);
+            const userSnap = await getDoc(userRef);
+            if (userSnap.exists()) {
+                const user = userSnap.data();
+                // Tylko przyszłe rezerwacje
+                const bookingDate = new Date(booking.date);
+                if(bookingDate >= new Date()) {
+                    const bookingRow = document.createElement('tr');
+                    bookingRow.innerHTML = `
+                        <td>${user.firstName}</td>
+                        <td>${user.lastName}</td>
+                        <td>${booking.time}</td>
+                        <td>${booking.date}</td>
+                        <td>${booking.trainingType}</td>
+                    `;
+                    bookingsTableBody.appendChild(bookingRow);
+                }
             }
         }
-    }).catch(error => {
+    } catch (error) {
         console.error("Error fetching bookings:", error);
-    });
+    }
 }
 
-// Wywołaj funkcję po załadowaniu dokumentu
-document.addEventListener('DOMContentLoaded', function() {
-    displayFutureBookings();
-    // ... (inne części skryptu)
-});
 
 </script>
 
