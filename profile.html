@@ -303,12 +303,38 @@
             console.log("Error getting document:", error);
         });
     };
+	
+	const fetchAndDisplayTrainings = (userId) => {
+    const trainingsRef = collection(db, 'bookings'); // Zmodyfikuj nazwę kolekcji zgodnie z rzeczywistą nazwą
+    const querySnapshot = await getDocs(query(trainingsRef, where('userId', '==', userId)));
+
+    querySnapshot.forEach((doc) => {
+        const trainingData = doc.data();
+        displayTraining(trainingData);
+    });
+};
+
+const displayTraining = (trainingData) => {
+    const trainingSchedule = document.querySelector('.training-schedule');
+    const trainingEntry = document.createElement('div');
+    trainingEntry.className = 'training-entry';
+    trainingEntry.innerHTML = `
+        <div class="training-details">
+            <p>Date: ${trainingData.date}</p>
+            <p>Time: ${trainingData.time}</p>
+            <p>Training Type: ${trainingData.trainingType}</p>
+        </div>
+        <button class="cancel-button">Cancel</button>
+    `;
+    trainingSchedule.appendChild(trainingEntry);
+};
 
     document.addEventListener('DOMContentLoaded', function() {
         // Get the current user's ID and update their Firestore document
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 fetchAndDisplayUserData(user.uid); // Fetch and display user data
+				fetchAndDisplayTrainings(user.uid);
                 const editProfileForm = document.getElementById('editProfileForm');
 
                 editProfileForm.addEventListener('submit', (e) => {
