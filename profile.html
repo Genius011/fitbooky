@@ -285,6 +285,7 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
+// Asynchroniczna funkcja do pobierania i wyświetlania rezerwacji treningów
 const fetchAndDisplayTrainings = async (userId) => {
     const trainingsRef = collection(db, 'bookings'); // Dopasuj do nazwy kolekcji w twojej bazie danych
     const q = query(trainingsRef, where('userId', '==', userId));
