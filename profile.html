@@ -201,6 +201,66 @@
 .form-button:hover {
     background: linear-gradient(135deg, #a777e3, #6e8efb);
 }
+@media (max-width: 768px) {
+    .profile-container {
+        width: 100%; /* Zmień szerokość kontenera na 100% dla mniejszych ekranów */
+        margin: 20px; /* Dodaj trochę marginesu dookoła */
+        box-sizing: border-box; /* Zapewnia, że padding i border są wliczane do szerokości */
+    }
+
+    .profile-header,
+    .profile-info,
+    .profile-details,
+    .profile-edit-form {
+        padding: 10px; /* Zmniejsz padding dla mniejszych ekranów */
+    }
+
+    .profile-image img {
+        width: 80px; /* Zmniejsz rozmiar zdjęcia profilowego */
+        height: 80px;
+    }
+
+    .profile-actions button,
+    .form-button,
+    .back-button {
+        width: 100%; /* Rozciągnij przyciski na całą szerokość kontenera */
+        margin: 10px 0; /* Dodaj margines pomiędzy przyciskami */
+    }
+
+    .profile-fields input,
+    .form-field input {
+        width: calc(100% - 20px); /* Odejmij padding, aby uniknąć przewijania poziomego */
+    }
+
+    .back-to-calendar {
+        position: relative; /* Zmień pozycjonowanie na względne dla mobilnej nawigacji */
+        top: auto;
+        left: auto;
+        margin-bottom: 10px; /* Dodaj margines na dole */
+    }
+
+    .training-schedule {
+        padding: 5px; /* Zmniejsz padding wewnątrz harmonogramu treningów */
+    }
+
+    .training-entry {
+        flex-direction: column; /* Układaj treści treningów w pionie */
+        margin-bottom: 5px;
+    }
+
+    .cancel-button,
+    .training-details {
+        width: 100%; /* Zapewnij, że treści zajmują całą szerokość */
+    }
+}
+
+/* Dla bardzo małych ekranów, jak smartfony w pionie */
+@media (max-width: 480px) {
+    .profile-info p,
+    .training-details p {
+        font-size: 14px; /* Zmniejsz rozmiar czcionki dla lepszej czytelności */
+    }
+}
 
     </style>
 </head>
