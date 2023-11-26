@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administracyjny Trenera</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-	<style>
+    <style>
         body {
     font-family: 'Roboto', sans-serif;
     background-image: url('dall.png');
@@ -492,7 +490,6 @@ h2 {
     <span class="close">&times;</span>
     <h2>Client`s Profile</h2>
     <div id="profileDetails">
-	
       <!-- Dane profilowe zostaną wypełnione tutaj -->
     </div>
   </div>
@@ -527,55 +524,71 @@ async function displayFutureBookings() {
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
-    let bookings = [];
-    for (const bookingDoc of bookingSnapshot.docs) {
-      let bookingData = { id: bookingDoc.id, ...bookingDoc.data() };
-      bookingData.dateTime = new Date(bookingData.date + 'T' + bookingData.time);
+    bookingsTableBody.innerHTML = ''; // Czyści poprzednie wpisy
 
-      const userRef = doc(db, 'users', bookingData.userId);
+    bookingSnapshot.docs.forEach(async (bookingDoc) => {
+      const bookingData = bookingDoc.data();
+      const userRef = doc(db, 'users', bookingData.userId); // Poprawne użycie funkcji 'doc'
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
         const userData = userSnap.data();
-        bookings.push({
-          ...bookingData,
-          name: userData.firstName,
-          surname: userData.lastName
-        });
-      } else {
-        bookings.push({
-          ...bookingData,
-          name: 'N/A',
-          surname: 'N/A'
-        });
+        const bookingRow = document.createElement('tr');
+        bookingRow.innerHTML = `
+          <td>${userData.firstName || ''}</td>
+          <td>${userData.lastName || ''}</td>
+          <td>${bookingData.time}</td>
+          <td>${bookingData.date}</td>
+          <td>${bookingData.trainingType}</td>
+          <td><button onclick="viewProfile('${bookingData.userId}')">View Profile</button></td>
+        `;
+        bookingsTableBody.appendChild(bookingRow);
       }
-    }
-
-    bookings.sort((a, b) => a.dateTime - b.dateTime);
-
-    bookingsTableBody.innerHTML = '';
-
-    bookings.forEach(booking => {
-      const bookingRow = document.createElement('tr');
-      bookingRow.innerHTML = `
-        <td>${booking.name || ''}</td>
-        <td>${booking.surname || ''}</td>
-        <td>${booking.time}</td>
-        <td>${booking.date}</td>
-        <td>${booking.trainingType}</td>
-        <td><button onclick="viewProfile('${booking.userId}')">View Profile</button></td>
-      `;
-      bookingsTableBody.appendChild(bookingRow);
     });
   } catch (error) {
     console.error("Error fetching bookings:", error);
   }
 }
 
+function viewProfile(userId) {
+  // Znajdź modal i elementy, które będą wypełnione danymi
+  const modal = document.getElementById('profileModal');
+  const profileDetails = document.getElementById('profileDetails');
+  const userRef = doc(db, 'users', userId);
+  
+  // Pobierz dane użytkownika i wyświetl je w modalu
+  getDoc(userRef).then((doc) => {
+    if (doc.exists) {
+      const user = doc.data();
+      profileDetails.innerHTML = `
+        <p>Imię: ${user.firstName}</p>
+        <p>Nazwisko: ${user.lastName}</p>
+        <p>Email: ${user.email}</p>
+        <p>Telefon: ${user.phone}</p>
+      `;
+      // Pokaż modal
+      modal.style.display = "block";
+    }
+  }).catch((error) => {
+    console.error("Error fetching user details:", error);
+  });
+  
+  // Gdy użytkownik kliknie (x), zamknij modal
+  const closeButton = document.querySelector('.close');
+  closeButton.onclick = function() {
+    modal.style.display = "none";
+  }
+  
+  // Gdy użytkownik kliknie poza modal, zamknij go
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+}
+window.viewProfile = viewProfile;
+
+
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
 
 </script>
-
-
-</body>
-</html>
