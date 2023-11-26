@@ -521,6 +521,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Define a new CSS class for highlighting rows
+const style = document.createElement('style');
+style.innerHTML = `
+  .today-highlight {
+    background-color: #ffff99; /* Choose a color that stands out */
+  }
+`;
+document.head.appendChild(style);
+
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
@@ -534,13 +543,8 @@ async function displayFutureBookings() {
       bookings.push(bookingData);
     });
 
-    // Get the current date and time
-    const now = new Date();
-
-    // Filter out past bookings and sort by date and time
-    bookings = bookings
-      .filter(booking => booking.dateTime >= now)
-      .sort((a, b) => a.dateTime - b.dateTime);
+    // Get the current date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
 
     // Clear the table body
     bookingsTableBody.innerHTML = '';
@@ -548,6 +552,10 @@ async function displayFutureBookings() {
     // Render the sorted bookings
     bookings.forEach(booking => {
       const bookingRow = document.createElement('tr');
+      // Check if the booking is for today and add the highlight class
+      if (booking.date === today) {
+        bookingRow.classList.add('today-highlight');
+      }
       bookingRow.innerHTML = `
         <td>${booking.name}</td>
         <td>${booking.surname}</td>
@@ -562,6 +570,9 @@ async function displayFutureBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
+
+// Remember to call displayFutureBookings where appropriate
+
 
 
 function viewProfile(userId) {
