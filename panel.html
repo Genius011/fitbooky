@@ -442,83 +442,60 @@ h2 {
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
-import { 
-  getFirestore, 
-  collection, 
-  getDocs, 
-  doc, 
-  getDoc, 
-  Timestamp 
-} from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+import { getFirestore, collection, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
-// Konfiguracja Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-  authDomain: "genius-f6a78.firebaseapp.com",
-  projectId: "genius-f6a78",
-  storageBucket: "genius-f6a78.appspot.com",
-  messagingSenderId: "4413237203",
-  appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+    apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+            authDomain: "genius-f6a78.firebaseapp.com",
+            projectId: "genius-f6a78",
+            storageBucket: "genius-f6a78.appspot.com",
+            messagingSenderId: "4413237203",
+            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
 };
 
-// Inicjalizacja aplikacji Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 async function displayFutureBookings() {
-  const bookingsRef = collection(db, 'bookings');
-  const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
-  bookingsTableBody.innerHTML = ''; // Czyści tabelę przed załadowaniem nowych danych
+    const bookingsRef = collection(db, 'bookings');
+    const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
 
-  try {
-    const bookingSnapshot = await getDocs(bookingsRef);
-    let bookings = [];
-
-    bookingSnapshot.forEach((docSnapshot) => {
-      const bookingData = docSnapshot.data();
-      // Konwersja daty jeśli jest to obiekt Timestamp
-      const bookingDate = bookingData.date instanceof Timestamp ? bookingData.date.toDate() : new Date(bookingData.date);
-      // Ajustowanie strefy czasowej
-      bookingDate.setMinutes(bookingDate.getMinutes() - bookingDate.getTimezoneOffset());
-
-      if (bookingDate > new Date()) {
-        // Pobranie danych użytkownika dla każdej rezerwacji
-        const userRef = doc(db, 'users', bookingData.userId);
-        getDoc(userRef).then((userDoc) => {
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            // Tworzenie wiersza tabeli z danymi użytkownika i rezerwacji
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${userData.firstName}</td>
-              <td>${userData.lastName}</td>
-              <td>${bookingData.time}</td>
-              <td>${bookingDate.toLocaleDateString()} ${bookingDate.toLocaleTimeString()}</td>
-              <td>${bookingData.trainingType}</td>
-              <td><button onclick="viewUserProfile('${bookingData.userId}')">View Profile</button></td>
+    try {
+        const bookingSnapshot = await getDocs(bookingsRef);
+        let bookings = [];
+        for (const bookingDoc of bookingSnapshot.docs) {
+            const booking = bookingDoc.data();
+            const userRef = doc(db, 'users', booking.userId);
+            const userSnap = await getDoc(userRef);
+            if (userSnap.exists()) {
+                const user = userSnap.data();
+                const bookingDate = new Date(booking.date);
+                if (bookingDate >= new Date()) {
+                    bookings.push({ user, booking });
+                }
+            }
+        }
+        // Sort bookings by date
+        bookings.sort((a, b) => new Date(a.booking.date) - new Date(b.booking.date));
+        // Create table rows
+        for (const { user, booking } of bookings) {
+            const bookingRow = document.createElement('tr');
+            bookingRow.innerHTML = `
+                <td>${user.firstName}</td>
+                <td>${user.lastName}</td>
+                <td>${booking.time}</td>
+                <td>${booking.date}</td>
+                <td>${booking.trainingType}</td>
             `;
-            bookingsTableBody.appendChild(row);
-          }
-        });
-      }
-    });
-  } catch (error) {
-    console.error("Error fetching bookings:", error);
-  }
+            bookingsTableBody.appendChild(bookingRow);
+        }
+    } catch (error) {
+        console.error("Error fetching bookings:", error);
+    }
 }
-
-// Funkcja obsługująca wyświetlanie profilu użytkownika
-function viewUserProfile(userId) {
-  // ... kod do wyświetlenia modalu z informacjami użytkownika ...
-}
-
-// ... reszta kodu ...
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
-
-
 </script>
-
 
 
 </body>
