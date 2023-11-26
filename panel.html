@@ -541,12 +541,7 @@ async function displayTrainingCount(userId) {
 }
 
 
-  // Dodaj wywołanie do nowej funkcji displayTrainingCount
-  displayTrainingCount(userId);
-
-
-
-async function displayFutureBookings() {
+  async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
 
@@ -616,6 +611,8 @@ function viewProfile(userId) {
 }
 window.viewProfile = viewProfile;
 
+  displayTrainingCount(userId);
+}
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
 
