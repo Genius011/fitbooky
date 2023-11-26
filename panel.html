@@ -460,46 +460,47 @@ const db = getFirestore(app);
 
 
     async function displayFutureBookings() {
-    const bookingsRef = collection(db, 'bookings');
-    const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
+        const bookingsRef = collection(db, 'bookings');
+        const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
 
-    try {
-        const bookingSnapshot = await getDocs(bookingsRef);
-        let bookings = [];
-        for (const bookingDoc of bookingSnapshot.docs) {
-            const booking = bookingDoc.data();
-            const bookingDate = new Date(booking.date);
-            if (bookingDate >= new Date()) {
-                bookings.push({ id: bookingDoc.id, ...booking }); // Include the document ID
+        try {
+            const bookingSnapshot = await getDocs(bookingsRef);
+            let bookings = [];
+            for (const bookingDoc of bookingSnapshot.docs) {
+                const booking = bookingDoc.data();
+                console.log('Booking:', booking); // Log dla diagnozy
+
+                const userRef = doc(db, 'users', booking.userId);
+                const userSnap = await getDoc(userRef);
+                if (userSnap.exists()) {
+                    const user = userSnap.data();
+                    console.log('User:', user); // Log dla diagnozy
+
+                    const bookingDate = new Date(booking.date);
+                    if (bookingDate >= new Date()) {
+                        bookings.push({ user, booking });
+                    }
+                }
             }
+            bookings.sort((a, b) => new Date(a.booking.date) - new Date(b.booking.date));
+            
+            for (const { user, booking } of bookings) {
+                const bookingRow = document.createElement('tr');
+                bookingRow.innerHTML = `
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>${booking.time}</td>
+                    <td>${booking.date}</td>
+                    <td>${booking.trainingType}</td>
+                `;
+                bookingsTableBody.appendChild(bookingRow);
+            }
+        } catch (error) {
+            console.error("Error fetching bookings:", error);
         }
-
-        bookings.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        for (const booking of bookings) {
-            const bookingRow = document.createElement('tr');
-            bookingRow.innerHTML = `
-                <td>${booking.userId}</td>
-                <td>${booking.time}</td>
-                <td>${booking.date}</td>
-                <td>${booking.trainingType}</td>
-                <td><button onclick="viewProfile('${booking.userId}')">View Profile</button></td>
-            `;
-            bookingsTableBody.appendChild(bookingRow);
-        }
-    } catch (error) {
-        console.error("Error fetching bookings:", error);
     }
-}
 
-function viewProfile(userId) {
-    // Here you can redirect to the user profile page or display it in a modal
-    console.log('View profile for user:', userId);
-    // Replace '/user_profile.html' with the actual path to your user profile page
-    window.location.href = `/user_profile.html?userId=${userId}`;
-}
-
-document.addEventListener('DOMContentLoaded', displayFutureBookings);
+    document.addEventListener('DOMContentLoaded', displayFutureBookings);
 </script>
 
 
