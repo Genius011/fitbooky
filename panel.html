@@ -412,22 +412,23 @@ h2 {
     </section>
 
     <section id="bookingManager" class="section">
-    <h2>Future bookings</h2>
-    <table id="futureBookingsTable">
-  <thead>
-    <tr>
-      <th>Imię</th>
-      <th>Nazwisko</th>
-      <th>Godzina</th>
-      <th>Data</th>
-      <th>Typ Treningu</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Miejsce na dane z rezerwacji -->
-  </tbody>
-</table>
-</section>
+        <h2>Future bookings</h2>
+        <table id="futureBookingsTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Hour</th>
+                    <th>Date</th>
+                    <th>Training type</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Miejsce na dane z rezerwacji -->
+            </tbody>
+        </table>
+    </section>
 
     <section id="trainingHistory" class="section">
         <h2>Booking history</h2>
@@ -464,27 +465,28 @@ async function displayFutureBookings() {
 
     try {
         const bookingSnapshot = await getDocs(bookingsRef);
-        let bookings = [];
+        bookingsTableBody.innerHTML = ''; // Wyczyść tabelę przed dodaniem nowych wierszy
         bookingSnapshot.docs.forEach((doc) => {
             const booking = doc.data();
             const bookingDate = new Date(booking.date);
             if (bookingDate >= new Date()) {
-                bookings.push({ id: doc.id, ...booking });
+                const userRef = doc(db, 'users', booking.userId);
+                getDoc(userRef).then((userSnap) => {
+                    if (userSnap.exists()) {
+                        const user = userSnap.data();
+                        const bookingRow = document.createElement('tr');
+                        bookingRow.innerHTML = `
+                            <td>${user.firstName || ''}</td>
+                            <td>${user.lastName || ''}</td>
+                            <td>${booking.time}</td>
+                            <td>${booking.date}</td>
+                            <td>${booking.trainingType}</td>
+                            <td><button onclick="viewProfile('${booking.userId}')">View Profile</button></td>
+                        `;
+                        bookingsTableBody.appendChild(bookingRow);
+                    }
+                });
             }
-        });
-
-        bookings.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        bookings.forEach((booking) => {
-            const bookingRow = document.createElement('tr');
-            bookingRow.innerHTML = `
-                <td>${booking.userId}</td>
-                <td>${booking.time}</td>
-                <td>${booking.date}</td>
-                <td>${booking.trainingType}</td>
-                <td><button onclick="viewProfile('${booking.userId}')">View Profile</button></td>
-            `;
-            bookingsTableBody.appendChild(bookingRow);
         });
     } catch (error) {
         console.error("Error fetching bookings:", error);
@@ -492,10 +494,10 @@ async function displayFutureBookings() {
 }
 
 function viewProfile(userId) {
-    // Poniżej możesz przekierować do strony profilu użytkownika lub wyświetlić ją w modalu.
     console.log('View profile for user:', userId);
-    // Zastąp poniższy URL rzeczywistą ścieżką do strony profilu użytkownika w Twojej aplikacji.
-    window.location.href = `/user_profile.html?userId=${userId}`;
+    // Implement actual navigation or modal opening logic here
+    // Example:
+    // window.location.href = `/user_profile.html?userId=${userId}`;
 }
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
