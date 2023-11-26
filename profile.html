@@ -216,12 +216,12 @@
 </div>
 
     
-    <div class="profile-info">
-    
+   <div class="profile-info">
+    <h1 id="welcomeMessage">Welcome, <span id="displayName">Name Surname</span></h1>
     <p id="displayEmail">Email: your.email@example.com</p>
     <p id="displayPhone">Phone: 123-456-7890</p>
-    <p>Total Training Sessions: 10</p>
-</div>
+    <p id="totalSessions">Total Training Sessions: --</p> <!-- Placeholder will be replaced by script -->
+  </div>
     <div class="profile-details">
         <h2>Next training session</h2>
         <div class="calendar">
@@ -266,8 +266,8 @@
  <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+   import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
     
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -285,30 +285,33 @@
     const auth = getAuth(app);
 
     // Function to fetch and display user data
-    const fetchAndDisplayUserData = (userId) => {
-        const userDocRef = doc(db, 'users', userId);
-        
-        getDoc(userDocRef).then((doc) => {
-            if (doc.exists()) {
-                const userData = doc.data();
-                // Replace 'displayName', 'displayEmail', 'displayPhone' with your actual element IDs
-                document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
-                document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
-                document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
-				
-            } else {
-                console.log("No such document!");
-            }
-        }).catch((error) => {
-            console.log("Error getting document:", error);
-        });
-    };
+    const fetchAndDisplayUserData = async (userId) => {
+    const userDocRef = doc(db, 'users', userId);
+    const userDocSnap = await getDoc(userDocRef);
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get the current user's ID and update their Firestore document
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                fetchAndDisplayUserData(user.uid); // Fetch and display user data
+    if (userDocSnap.exists()) {
+      const userData = userDocSnap.data();
+      document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
+      document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
+      document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
+
+      // Get the number of training sessions from the bookings collection
+      const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', userId));
+      const bookingsSnapshot = await getDocs(bookingsQuery);
+      const trainingCount = bookingsSnapshot.docs.length;
+      document.getElementById('totalSessions').textContent = `Total Training Sessions: ${trainingCount}`;
+    } else {
+      console.log("No such document!");
+    }
+  };
+
+   document.addEventListener('DOMContentLoaded', () => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        fetchAndDisplayUserData(user.uid);
+				
+				
+				
                 const editProfileForm = document.getElementById('editProfileForm');
 
                 editProfileForm.addEventListener('submit', (e) => {
