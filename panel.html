@@ -469,37 +469,44 @@ async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
   
-  // Czyszczenie istniejących wierszy
-  bookingsTableBody.innerHTML = "";
+  bookingsTableBody.innerHTML = ""; // Wyczyszczenie istniejących wierszy
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
-    let bookings = [];
+    let bookingPromises = [];
+
     bookingSnapshot.forEach((docSnapshot) => {
       const booking = docSnapshot.data();
       const bookingDateTime = new Date(`${booking.date}T${booking.time}`);
-
-      // Ustawianie czasu lokalnego dla przeglądarki użytkownika
-      const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-      const formattedDate = bookingDateTime.toLocaleDateString('pl-PL', options);
-      const formattedTime = bookingDateTime.toLocaleTimeString('pl-PL', options);
-
       if (bookingDateTime >= new Date()) {
-        bookings.push({ id: docSnapshot.id, ...booking, formattedDate, formattedTime });
+        // Pobieranie danych użytkownika dla każdej rezerwacji
+        const userPromise = getDoc(doc(db, 'users', booking.userId)).then((userSnap) => {
+          if (userSnap.exists()) {
+            const user = userSnap.data();
+            return { id: docSnapshot.id, ...booking, user, bookingDateTime };
+          } else {
+            throw new Error('User data not found');
+          }
+        });
+        bookingPromises.push(userPromise);
       }
     });
 
-    // Sortowanie rezerwacji po dacie i czasie
-    bookings.sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
+    // Czekanie na wszystkie obietnice dotyczące danych użytkownika i rezerwacji
+    const bookings = await Promise.all(bookingPromises);
+    bookings.sort((a, b) => a.bookingDateTime - b.bookingDateTime);
 
-    bookings.forEach(({ id, user, formattedDate, formattedTime, trainingType }) => {
+    bookings.forEach(({ id, user, bookingDateTime }) => {
+      const formattedDate = bookingDateTime.toLocaleDateString('pl-PL');
+      const formattedTime = bookingDateTime.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+
       const bookingRow = document.createElement('tr');
       bookingRow.innerHTML = `
         <td>${user.firstName}</td>
         <td>${user.lastName}</td>
         <td>${formattedTime}</td>
         <td>${formattedDate}</td>
-        <td>${trainingType}</td>
+        <td>${booking.trainingType}</td>
         <td><button onclick="viewUserProfile('${id}')">View Profile</button></td>
       `;
       bookingsTableBody.appendChild(bookingRow);
@@ -510,6 +517,7 @@ async function displayFutureBookings() {
 }
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
+
 </script>
 
 
