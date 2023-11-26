@@ -469,54 +469,47 @@ async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
   
-  bookingsTableBody.innerHTML = ""; // Wyczyszczenie istniejących wierszy
+  // Wyczyść istniejące wiersze w tabeli przed dodaniem nowych
+  bookingsTableBody.innerHTML = '';
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
-    let bookingPromises = [];
+    const bookings = [];
 
+    // Iteracja przez dokumenty w kolekcji rezerwacji
     bookingSnapshot.forEach((docSnapshot) => {
-      const booking = docSnapshot.data();
-      const bookingDateTime = new Date(`${booking.date}T${booking.time}`);
-      if (bookingDateTime >= new Date()) {
-        // Pobieranie danych użytkownika dla każdej rezerwacji
-        const userPromise = getDoc(doc(db, 'users', booking.userId)).then((userSnap) => {
-          if (userSnap.exists()) {
-            const user = userSnap.data();
-            return { id: docSnapshot.id, ...booking, user, bookingDateTime };
-          } else {
-            throw new Error('User data not found');
-          }
-        });
-        bookingPromises.push(userPromise);
+      const bookingData = docSnapshot.data();
+      const bookingDateTime = new Date(bookingData.date);
+      // Upewnij się, że data rezerwacji jest w przyszłości
+      if (bookingDateTime > new Date()) {
+        bookings.push(docSnapshot.data());
       }
     });
 
-    // Czekanie na wszystkie obietnice dotyczące danych użytkownika i rezerwacji
-    const bookings = await Promise.all(bookingPromises);
-    bookings.sort((a, b) => a.bookingDateTime - b.bookingDateTime);
+    // Sortuj rezerwacje po dacie
+    bookings.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-    bookings.forEach(({ id, user, bookingDateTime }) => {
-      const formattedDate = bookingDateTime.toLocaleDateString('pl-PL');
-      const formattedTime = bookingDateTime.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-
-      const bookingRow = document.createElement('tr');
-      bookingRow.innerHTML = `
-        <td>${user.firstName}</td>
-        <td>${user.lastName}</td>
-        <td>${formattedTime}</td>
-        <td>${formattedDate}</td>
+    // Teraz, gdy masz posortowane rezerwacje, możesz je wyświetlić
+    bookings.forEach((booking) => {
+      const row = document.createElement('tr');
+      // Tutaj użyj booking do wypełnienia wiersza tabeli
+      row.innerHTML = `
+        <td>${booking.clientName}</td>
+        <td>${booking.clientSurname}</td>
+        <td>${booking.time}</td>
+        <td>${booking.date}</td>
         <td>${booking.trainingType}</td>
-        <td><button onclick="viewUserProfile('${id}')">View Profile</button></td>
+        <td><button onclick="viewUserProfile('${booking.clientId}')">View Profile</button></td>
       `;
-      bookingsTableBody.appendChild(bookingRow);
+      bookingsTableBody.appendChild(row);
     });
   } catch (error) {
-    console.error("Error fetching bookings:", error);
+    console.error("Error fetching bookings: ", error);
   }
 }
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
+
 
 </script>
 
