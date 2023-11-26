@@ -262,11 +262,6 @@ h2 {
   cursor: pointer;
 }
 
-<style>
-  .today-highlight {
-    background-color: #e0ffe0; /* jasnozielony kolor tła dla wyróżnienia */
-  }
-</style>
 
     </style>
 </head>
@@ -529,7 +524,6 @@ const db = getFirestore(app);
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
-  
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
