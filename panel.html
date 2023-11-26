@@ -527,28 +527,24 @@ async function displayFutureBookings() {
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
-    const now = new Date();
     let bookings = [];
-    
-    for (const doc of bookingSnapshot.docs) {
-      let bookingData = { id: doc.id, ...doc.data() };
+    for (const bookingDoc of bookingSnapshot.docs) {  // Zmieniona nazwa zmiennej z 'doc' na 'bookingDoc'
+      let bookingData = { id: bookingDoc.id, ...bookingDoc.data() };
       bookingData.dateTime = new Date(bookingData.date + 'T' + bookingData.time);
-      
-      // Tylko dla przyszłych rezerwacji
-      if (bookingData.dateTime >= now) {
-        // Pobierz dane użytkownika na podstawie userId
-        const userRef = doc(db, 'users', bookingData.userId);
-        const userSnap = await getDoc(userRef);
-        
-        if (userSnap.exists()) {
-          // Dołącz dane użytkownika do bookingData
-          const userData = userSnap.data();
-          bookings.push({
-            ...bookingData,
-            name: userData.firstName,
-            surname: userData.lastName
-          });
-        } else {
+
+      // Kontynuuj tutaj z pobraniem danych użytkownika...
+      // Pamiętaj, żeby użyć `bookingDoc` zamiast `doc`
+      const userRef = doc(db, 'users', bookingData.userId); // Używamy tutaj funkcji 'doc'
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        bookings.push({
+          ...bookingData,
+          name: userData.firstName,
+          surname: userData.lastName
+        });
+      } else {
           bookings.push({
             ...bookingData,
             name: 'N/A',
