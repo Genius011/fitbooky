@@ -230,10 +230,20 @@ h2 {
 
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto; 
+  margin: 10% auto; /* Zmieniono z 15% dla lepszego centrowania */
   padding: 20px;
   border: 1px solid #888;
-  width: 80%; 
+  width: 30%; /* Zmniejszenie szerokości dla bardziej kwadratowego wyglądu */
+  border-radius: 20px; /* Dodanie zaokrągleń */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Dodanie cienia dla lepszej widoczności */
+}
+
+/* Media query dla mniejszych ekranów, aby modal był większy i czytelniejszy */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 80%;
+    margin: 20% auto;
+  }
 }
 
 .close {
