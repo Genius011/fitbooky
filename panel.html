@@ -550,7 +550,10 @@ async function displayFutureBookings() {
             name: 'N/A',
             surname: 'N/A'
           });
-        }
+         } catch (error) {
+    console.error("Error fetching bookings:", error);
+  }
+}
       }
     }
 
