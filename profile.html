@@ -266,7 +266,7 @@
  <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-    import { getFirestore, collection, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
     
     // Your web app's Firebase configuration
@@ -306,13 +306,15 @@
 
 // Funkcja do zliczania sesji treningowych użytkownika
 const countUserSessions = (userId) => {
-    const bookingsRef = collection(db, 'bookings');
-    getDocs(bookingsRef).then((querySnapshot) => {
-        const totalSessions = querySnapshot.docs.filter(doc => doc.data().userId === userId).length;
-        document.getElementById('totalSessions').textContent = `Total Training Sessions: ${totalSessions}`;
-    }).catch((error) => {
-        console.error("Error getting bookings:", error);
-    });
+  const bookingsRef = collection(db, 'bookings');
+  const q = query(bookingsRef, where("userId", "==", userId)); // Filtruj dokumenty po userId
+  
+  getDocs(q).then((querySnapshot) => {
+    const totalSessions = querySnapshot.docs.length;
+    document.getElementById('totalSessions').textContent = `Total Training Sessions: ${totalSessions}`;
+  }).catch((error) => {
+    console.error("Error getting bookings:", error);
+  });
 };
 
     document.addEventListener('DOMContentLoaded', function() {
