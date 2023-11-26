@@ -465,17 +465,17 @@ async function displayFutureBookings() {
     try {
         const bookingSnapshot = await getDocs(bookingsRef);
         let bookings = [];
-        for (const bookingDoc of bookingSnapshot.docs) {
-            const booking = bookingDoc.data();
+        bookingSnapshot.docs.forEach((doc) => {
+            const booking = doc.data();
             const bookingDate = new Date(booking.date);
             if (bookingDate >= new Date()) {
-                bookings.push({ id: bookingDoc.id, ...booking }); // Include the document ID
+                bookings.push({ id: doc.id, ...booking });
             }
-        }
+        });
 
         bookings.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        for (const booking of bookings) {
+        bookings.forEach((booking) => {
             const bookingRow = document.createElement('tr');
             bookingRow.innerHTML = `
                 <td>${booking.userId}</td>
@@ -485,20 +485,21 @@ async function displayFutureBookings() {
                 <td><button onclick="viewProfile('${booking.userId}')">View Profile</button></td>
             `;
             bookingsTableBody.appendChild(bookingRow);
-        }
+        });
     } catch (error) {
         console.error("Error fetching bookings:", error);
     }
 }
 
 function viewProfile(userId) {
-    // Here you can redirect to the user profile page or display it in a modal
+    // Poniżej możesz przekierować do strony profilu użytkownika lub wyświetlić ją w modalu.
     console.log('View profile for user:', userId);
-    // Replace '/user_profile.html' with the actual path to your user profile page
+    // Zastąp poniższy URL rzeczywistą ścieżką do strony profilu użytkownika w Twojej aplikacji.
     window.location.href = `/user_profile.html?userId=${userId}`;
 }
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
+
 </script>
 
 
