@@ -528,13 +528,11 @@ async function displayFutureBookings() {
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
     let bookings = [];
-    for (const bookingDoc of bookingSnapshot.docs) {  // Zmieniona nazwa zmiennej z 'doc' na 'bookingDoc'
+    for (const bookingDoc of bookingSnapshot.docs) {
       let bookingData = { id: bookingDoc.id, ...bookingDoc.data() };
       bookingData.dateTime = new Date(bookingData.date + 'T' + bookingData.time);
 
-      // Kontynuuj tutaj z pobraniem danych użytkownika...
-      // Pamiętaj, żeby użyć `bookingDoc` zamiast `doc`
-      const userRef = doc(db, 'users', bookingData.userId); // Używamy tutaj funkcji 'doc'
+      const userRef = doc(db, 'users', bookingData.userId);
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
@@ -545,25 +543,18 @@ async function displayFutureBookings() {
           surname: userData.lastName
         });
       } else {
-          bookings.push({
-            ...bookingData,
-            name: 'N/A',
-            surname: 'N/A'
-          });
-         } catch (error) {
-    console.error("Error fetching bookings:", error);
-  }
-}
+        bookings.push({
+          ...bookingData,
+          name: 'N/A',
+          surname: 'N/A'
+        });
       }
     }
 
-    // Sortuj rezerwacje
     bookings.sort((a, b) => a.dateTime - b.dateTime);
 
-    // Clear the table body
     bookingsTableBody.innerHTML = '';
 
-    // Render the sorted bookings
     bookings.forEach(booking => {
       const bookingRow = document.createElement('tr');
       bookingRow.innerHTML = `
