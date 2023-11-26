@@ -493,6 +493,7 @@ h2 {
     <h2>Client`s Profile</h2>
     <div id="profileDetails">
 	  <p id="profileTrainingCount">Ilość treningów: --</p>
+
       <!-- Dane profilowe zostaną wypełnione tutaj -->
     </div>
   </div>
@@ -520,6 +521,30 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// Funkcja do wyświetlania liczby treningów danego użytkownika
+async function displayTrainingCount(userId) {
+  const bookingsRef = collection(db, 'bookings');
+  const q = query(bookingsRef, where("userId", "==", userId));
+  
+  try {
+    const querySnapshot = await getDocs(q);
+    const trainingCount = querySnapshot.docs.length;
+    // Wyświetl ilość treningów w profilu użytkownika
+    const profileTrainingCount = document.getElementById('profileTrainingCount');
+    if (profileTrainingCount) {
+      profileTrainingCount.textContent = `Ilość treningów: ${trainingCount}`;
+    }
+  } catch (error) {
+    console.error("Error fetching training count:", error);
+  }
+}
+
+
+  // Dodaj wywołanie do nowej funkcji displayTrainingCount
+  displayTrainingCount(userId);
+}
+
 
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
@@ -593,30 +618,6 @@ window.viewProfile = viewProfile;
 
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
-
-// Funkcja do wyświetlania liczby treningów danego użytkownika
-async function displayTrainingCount(userId) {
-  const bookingsRef = collection(db, 'bookings');
-  const q = query(bookingsRef, where("userId", "==", userId));
-  
-  try {
-    const querySnapshot = await getDocs(q);
-    const trainingCount = querySnapshot.docs.length;
-    // Wyświetl ilość treningów w profilu użytkownika
-    const profileTrainingCount = document.getElementById('profileTrainingCount');
-    if (profileTrainingCount) {
-      profileTrainingCount.textContent = `Ilość treningów: ${trainingCount}`;
-    }
-  } catch (error) {
-    console.error("Error fetching training count:", error);
-  }
-}
-
-
-  // Dodaj wywołanie do nowej funkcji displayTrainingCount
-  displayTrainingCount(userId);
-}
-
 
 </script>
 
