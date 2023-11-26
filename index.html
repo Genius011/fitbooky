@@ -433,29 +433,40 @@ const db = getFirestore(app);
                 calendar.appendChild(dayElement);
             }
         }
-		 async function saveBooking(userId, dateString, trainingType, timeString) {
-    if (!userId) {
-      alert('Nie jesteś zalogowany!');
-      return;
-    }
+		 function convertToTimestamp(dateString, timeString) {
+  const dateParts = dateString.split('-').map(part => parseInt(part, 10));
+  const timeParts = timeString.split(':').map(part => parseInt(part, 10));
 
-    const dateParts = dateString.split('-');
-    const timeParts = timeString.split(':');
-    const bookingDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], timeParts[0], timeParts[1]);
-    const bookingTimestamp = Timestamp.fromDate(bookingDate);
+  // Tworzy obiekt Date w lokalnej strefie czasowej
+  const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], timeParts[0], timeParts[1]);
 
-    try {
-      await addDoc(collection(db, "bookings"), {
-        userId: userId,
-        date: bookingTimestamp,
-        trainingType: trainingType,
-      });
-      alert("Rezerwacja została zapisana");
-    } catch (error) {
-      console.error("Błąd podczas zapisu rezerwacji: ", error);
-      alert("Wystąpił błąd podczas zapisu rezerwacji");
-    }
+  // Konwersja na UTC
+  const utcDate = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
+
+  return Timestamp.fromMillis(utcDate);
+}
+
+async function saveBooking(userId, dateString, trainingType, timeString) {
+  if (!userId) {
+    alert('Nie jesteś zalogowany!');
+    return;
   }
+
+  const bookingTimestamp = convertToTimestamp(dateString, timeString);
+
+  try {
+    await addDoc(collection(db, "bookings"), {
+      userId: userId,
+      date: bookingTimestamp,
+      trainingType: trainingType,
+    });
+    alert("Rezerwacja została zapisana");
+  } catch (error) {
+    console.error("Błąd podczas zapisu rezerwacji: ", error);
+    alert("Wystąpił błąd podczas zapisu rezerwacji");
+  }
+}
+
 
         function openPopup(selectedDay) {
     const popup = document.createElement('div');
