@@ -472,18 +472,22 @@ const db = getFirestore(app);
 
     document.body.appendChild(popup);
 
-    // Dodanie obsługi kliknięcia dla przycisku Rezerwuj
     document.getElementById('bookButton').addEventListener('click', () => {
-        const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type');
-        const selectedTimeSlot = popup.querySelector('.time-slot.selected')?.textContent;
+                // Logika rezerwacji
+                const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type');
+                const selectedTimeSlot = popup.querySelector('.time-slot.selected')?.textContent;
 
-        if (selectedTrainingType && selectedTimeSlot) {
-        saveBooking(currentUserId, selectedDay.toISOString().split('T')[0], selectedTrainingType, selectedTimeSlot);
-            popup.remove();
-        } else {
-            alert("Proszę wybrać rodzaj treningu i godzinę");
-        }
-    });
+                if (selectedTrainingType && selectedTimeSlot) {
+                    // Formatowanie daty
+                    let adjustedMonth = selectedDay.getMonth() + 1; // Dodanie 1 do miesiąca
+                    let formattedDate = `${selectedDay.getFullYear()}-${adjustedMonth.toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
+                    
+                    saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot);
+                    popup.remove();
+                } else {
+                    alert("Proszę wybrać rodzaj treningu i godzinę");
+                }
+            });
 
     
 			
