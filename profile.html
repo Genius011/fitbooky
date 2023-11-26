@@ -320,9 +320,10 @@
 
       // Get the number of training sessions from the bookings collection
       const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', userId));
-      const bookingsSnapshot = await getDocs(bookingsQuery);
-      const trainingCount = bookingsSnapshot.docs.length;
-      document.getElementById('totalSessions').textContent = `Total Training Sessions: ${trainingCount}`;
+const bookingsSnapshot = await getDocs(bookingsQuery);
+const trainingCount = bookingsSnapshot.docs.length;
+document.getElementById('totalSessions').innerHTML = `<i class="fas fa-calendar-alt"></i> Total Training Sessions: ${trainingCount}`;
+
     } else {
       console.log("No such document!");
     }
