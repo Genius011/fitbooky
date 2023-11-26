@@ -337,7 +337,7 @@
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
   
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, collection, addDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+import { getFirestore, doc, getDoc, collection, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -433,25 +433,29 @@ const db = getFirestore(app);
                 calendar.appendChild(dayElement);
             }
         }
-		async function saveBooking(userId, date, trainingType, time) {
-        if (!userId) {
-            alert('Nie jesteś zalogowany!');
-            return;
-        }
-
-        try {
-            await addDoc(collection(db, "bookings"), {
-                userId: userId,  // Dodaj ID użytkownika do dokumentu rezerwacji
-                date: date,
-                trainingType: trainingType,
-                time: time
-            });
-            alert("Rezerwacja została zapisana");
-        } catch (e) {
-            console.error("Błąd podczas zapisu: ", e);
-            alert("Wystąpił błąd podczas zapisu rezerwacji");
-        }
+		 async function saveBooking(userId, dateString, trainingType, timeString) {
+    if (!userId) {
+      alert('Nie jesteś zalogowany!');
+      return;
     }
+
+    const dateParts = dateString.split('-');
+    const timeParts = timeString.split(':');
+    const bookingDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], timeParts[0], timeParts[1]);
+    const bookingTimestamp = Timestamp.fromDate(bookingDate);
+
+    try {
+      await addDoc(collection(db, "bookings"), {
+        userId: userId,
+        date: bookingTimestamp,
+        trainingType: trainingType,
+      });
+      alert("Rezerwacja została zapisana");
+    } catch (error) {
+      console.error("Błąd podczas zapisu rezerwacji: ", error);
+      alert("Wystąpił błąd podczas zapisu rezerwacji");
+    }
+  }
 
         function openPopup(selectedDay) {
     const popup = document.createElement('div');
@@ -474,15 +478,15 @@ const db = getFirestore(app);
 
     // Dodanie obsługi kliknięcia dla przycisku Rezerwuj
     document.getElementById('bookButton').addEventListener('click', () => {
-        const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type');
-        const selectedTimeSlot = popup.querySelector('.time-slot.selected')?.textContent;
+      const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type');
+      const selectedTimeSlot = popup.querySelector('.time-slot.selected')?.textContent;
 
-        if (selectedTrainingType && selectedTimeSlot) {
+      if (selectedTrainingType && selectedTimeSlot) {
         saveBooking(currentUserId, selectedDay.toISOString().split('T')[0], selectedTrainingType, selectedTimeSlot);
-            popup.remove();
-        } else {
-            alert("Proszę wybrać rodzaj treningu i godzinę");
-        }
+        popup.remove();
+      } else {
+        alert("Proszę wybrać rodzaj treningu i godzinę");
+      }
     });
 
     
