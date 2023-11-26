@@ -528,36 +528,29 @@ async function displayFutureBookings() {
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
     let bookings = [];
-    
-    for (const doc of bookingSnapshot.docs) {
+    bookingSnapshot.docs.forEach(doc => {
       let bookingData = { id: doc.id, ...doc.data() };
       bookingData.dateTime = new Date(bookingData.date + 'T' + bookingData.time);
-      
-      // Pobierz dane użytkownika na podstawie userId
-      const userRef = doc(db, 'users', bookingData.userId);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        // Dołącz dane użytkownika do bookingData
-        bookingData.userData = userSnap.data();
-      } else {
-        // Ustaw puste dane użytkownika, jeśli nie można ich znaleźć
-        bookingData.userData = { firstName: '', lastName: '' };
-      }
-      
       bookings.push(bookingData);
-    }
+    });
 
-    // Sortowanie i renderowanie przeniesione tutaj...
-    // ...
-    
+    // Get the current date and time
+    const now = new Date();
+
+    // Filter out past bookings and sort by date and time
+    bookings = bookings
+      .filter(booking => booking.dateTime >= now)
+      .sort((a, b) => a.dateTime - b.dateTime);
+
+    // Clear the table body
+    bookingsTableBody.innerHTML = '';
+
     // Render the sorted bookings
     bookings.forEach(booking => {
       const bookingRow = document.createElement('tr');
-      // Użyj danych użytkownika
       bookingRow.innerHTML = `
-        <td>${booking.userData.firstName || 'N/A'}</td>
-        <td>${booking.userData.lastName || 'N/A'}</td>
+        <td>${booking.name}</td>
+        <td>${booking.surname}</td>
         <td>${booking.time}</td>
         <td>${booking.date}</td>
         <td>${booking.trainingType}</td>
@@ -565,12 +558,10 @@ async function displayFutureBookings() {
       `;
       bookingsTableBody.appendChild(bookingRow);
     });
-
   } catch (error) {
     console.error("Error fetching bookings:", error);
   }
 }
-
 
 
 function viewProfile(userId) {
