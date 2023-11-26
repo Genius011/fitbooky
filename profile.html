@@ -312,11 +312,11 @@
     const userDocRef = doc(db, 'users', userId);
     const userDocSnap = await getDoc(userDocRef);
 
-    if (userDocSnap.exists()) {
-      const userData = userDocSnap.data();
-      document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
-      document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
-      document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
+     if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        document.getElementById('displayName').innerHTML = userData.firstName + ' ' + userData.lastName;
+        document.getElementById('displayEmail').innerHTML = '<i class="fas fa-envelope"></i> Email: ' + userData.email;
+        document.getElementById('displayPhone').innerHTML = '<i class="fas fa-phone"></i> Phone: ' + userData.phone;
 
       // Get the number of training sessions from the bookings collection
       const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', userId));
