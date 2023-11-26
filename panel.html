@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administracyjny Trenera</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
-    <style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+	<style>
         body {
     font-family: 'Roboto', sans-serif;
     background-image: url('dall.png');
@@ -561,11 +563,12 @@ function viewProfile(userId) {
     if (doc.exists) {
       const user = doc.data();
       profileDetails.innerHTML = `
-        <p>Imię: ${user.firstName}</p>
-        <p>Nazwisko: ${user.lastName}</p>
-        <p>Email: ${user.email}</p>
-        <p>Telefon: ${user.phone}</p>
-      `;
+  <p><i class="fas fa-user"></i> Imię: ${user.firstName}</p>
+  <p><i class="fas fa-user"></i> Nazwisko: ${user.lastName}</p>
+  <p><i class="fas fa-envelope"></i> Email: ${user.email}</p>
+  <p><i class="fas fa-phone"></i> Telefon: ${user.phone}</p>
+`;
+
       // Pokaż modal
       modal.style.display = "block";
     }
