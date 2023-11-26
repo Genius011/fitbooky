@@ -220,7 +220,7 @@
     
     <p id="displayEmail">Email: your.email@example.com</p>
     <p id="displayPhone">Phone: 123-456-7890</p>
-    <p>Total Training Sessions: 10</p>
+    <p id="totalSessions">Total Training Sessions: 0</p>
 </div>
     <div class="profile-details">
         <h2>Next training session</h2>
@@ -284,25 +284,36 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // Function to fetch and display user data
-    const fetchAndDisplayUserData = (userId) => {
-        const userDocRef = doc(db, 'users', userId);
-        
-        getDoc(userDocRef).then((doc) => {
-            if (doc.exists()) {
-                const userData = doc.data();
-                // Replace 'displayName', 'displayEmail', 'displayPhone' with your actual element IDs
-                document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
-                document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
-                document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
-				
-            } else {
-                console.log("No such document!");
-            }
-        }).catch((error) => {
-            console.log("Error getting document:", error);
-        });
-    };
+   const fetchAndDisplayUserData = (userId) => {
+    const userDocRef = doc(db, 'users', userId);
+    
+    getDoc(userDocRef).then((doc) => {
+        if (doc.exists()) {
+            const userData = doc.data();
+            document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
+            document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
+            document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
+            
+            // Dodatkowy kod do pobrania liczby sesji treningowych użytkownika
+            countUserSessions(userId);
+        } else {
+            console.log("No such document!");
+        }
+    }).catch((error) => {
+        console.error("Error getting document:", error);
+    });
+};
+
+// Funkcja do zliczania sesji treningowych użytkownika
+const countUserSessions = (userId) => {
+    const bookingsRef = collection(db, 'bookings');
+    getDocs(bookingsRef).then((querySnapshot) => {
+        const totalSessions = querySnapshot.docs.filter(doc => doc.data().userId === userId).length;
+        document.getElementById('totalSessions').textContent = `Total Training Sessions: ${totalSessions}`;
+    }).catch((error) => {
+        console.error("Error getting bookings:", error);
+    });
+};
 
     document.addEventListener('DOMContentLoaded', function() {
         // Get the current user's ID and update their Firestore document
