@@ -468,49 +468,45 @@ const db = getFirestore(app);
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
+  
+  // Czyszczenie istniejących wierszy
+  bookingsTableBody.innerHTML = "";
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
     let bookings = [];
-    bookingSnapshot.forEach((doc) => {
-      const bookingData = doc.data();
-      let bookingDate = bookingData.date.toDate ? bookingData.date.toDate() : new Date(bookingData.date);
-      const currentDate = new Date();
-      currentDate.setHours(0, 0, 0, 0); // Reset czasu do północy
+    bookingSnapshot.forEach((docSnapshot) => {
+      const booking = docSnapshot.data();
+      const bookingDateTime = new Date(`${booking.date}T${booking.time}`);
 
-      if (bookingDate >= currentDate) {
-        bookings.push({...bookingData, date: bookingDate, id: doc.id});
+      // Ustawianie czasu lokalnego dla przeglądarki użytkownika
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+      const formattedDate = bookingDateTime.toLocaleDateString('pl-PL', options);
+      const formattedTime = bookingDateTime.toLocaleTimeString('pl-PL', options);
+
+      if (bookingDateTime >= new Date()) {
+        bookings.push({ id: docSnapshot.id, ...booking, formattedDate, formattedTime });
       }
     });
-    bookings.sort((a, b) => a.date - b.date);
-    bookings.forEach((booking) => {
-      const userRef = doc(db, 'users', booking.userId);
-      getDoc(userRef).then((userDoc) => {
-        if (userDoc.exists()) {
-          const user = userDoc.data();
-          const bookingRow = document.createElement('tr');
-          bookingRow.innerHTML = `
-            <td>${user.firstName}</td>
-            <td>${user.lastName}</td>
-            <td>${booking.date.toLocaleTimeString()}</td>
-            <td>${booking.date.toLocaleDateString()}</td>
-            <td>${booking.trainingType}</td>
-            <td><button onclick="viewUserProfile('${booking.userId}')">View Profile</button></td>
-          `;
-          bookingsTableBody.appendChild(bookingRow);
-        }
-      });
+
+    // Sortowanie rezerwacji po dacie i czasie
+    bookings.sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
+
+    bookings.forEach(({ id, user, formattedDate, formattedTime, trainingType }) => {
+      const bookingRow = document.createElement('tr');
+      bookingRow.innerHTML = `
+        <td>${user.firstName}</td>
+        <td>${user.lastName}</td>
+        <td>${formattedTime}</td>
+        <td>${formattedDate}</td>
+        <td>${trainingType}</td>
+        <td><button onclick="viewUserProfile('${id}')">View Profile</button></td>
+      `;
+      bookingsTableBody.appendChild(bookingRow);
     });
   } catch (error) {
     console.error("Error fetching bookings:", error);
   }
-}
-
-function viewUserProfile(userId) {
-  // Funkcja do wyświetlania szczegółów profilu użytkownika
-  // Tutaj należy umieścić kod obsługi wyświetlania danych użytkownika
-  console.log('Viewing profile for user:', userId);
-  // Możesz tu dodać logikę wyświetlania modalu z danymi użytkownika
 }
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
