@@ -456,45 +456,51 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-async function displayFutureBookings() {
-    const bookingsRef = collection(db, 'bookings');
-    const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
+const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    try {
-        const bookingSnapshot = await getDocs(bookingsRef);
-        let bookings = [];
-        for (const bookingDoc of bookingSnapshot.docs) {
-            const booking = bookingDoc.data();
-            const userRef = doc(db, 'users', booking.userId);
-            const userSnap = await getDoc(userRef);
-            if (userSnap.exists()) {
-                const user = userSnap.data();
-                const bookingDate = new Date(booking.date);
-                if (bookingDate >= new Date()) {
-                    bookings.push({ user, booking });
+    async function displayFutureBookings() {
+        const bookingsRef = collection(db, 'bookings');
+        const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
+
+        try {
+            const bookingSnapshot = await getDocs(bookingsRef);
+            let bookings = [];
+            for (const bookingDoc of bookingSnapshot.docs) {
+                const booking = bookingDoc.data();
+                console.log('Booking:', booking); // Log dla diagnozy
+
+                const userRef = doc(db, 'users', booking.userId);
+                const userSnap = await getDoc(userRef);
+                if (userSnap.exists()) {
+                    const user = userSnap.data();
+                    console.log('User:', user); // Log dla diagnozy
+
+                    const bookingDate = new Date(booking.date);
+                    if (bookingDate >= new Date()) {
+                        bookings.push({ user, booking });
+                    }
                 }
             }
+            bookings.sort((a, b) => new Date(a.booking.date) - new Date(b.booking.date));
+            
+            for (const { user, booking } of bookings) {
+                const bookingRow = document.createElement('tr');
+                bookingRow.innerHTML = `
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>${booking.time}</td>
+                    <td>${booking.date}</td>
+                    <td>${booking.trainingType}</td>
+                `;
+                bookingsTableBody.appendChild(bookingRow);
+            }
+        } catch (error) {
+            console.error("Error fetching bookings:", error);
         }
-        // Sort bookings by date
-        bookings.sort((a, b) => new Date(a.booking.date) - new Date(b.booking.date));
-        // Create table rows
-        for (const { user, booking } of bookings) {
-            const bookingRow = document.createElement('tr');
-            bookingRow.innerHTML = `
-                <td>${user.firstName}</td>
-                <td>${user.lastName}</td>
-                <td>${booking.time}</td>
-                <td>${booking.date}</td>
-                <td>${booking.trainingType}</td>
-            `;
-            bookingsTableBody.appendChild(bookingRow);
-        }
-    } catch (error) {
-        console.error("Error fetching bookings:", error);
     }
-}
 
-document.addEventListener('DOMContentLoaded', displayFutureBookings);
+    document.addEventListener('DOMContentLoaded', displayFutureBookings);
 </script>
 
 
