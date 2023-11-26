@@ -316,6 +316,17 @@ const countUserSessions = (userId) => {
     console.error("Error getting bookings:", error);
   });
 };
+// Przykładowa funkcja, która pobiera dokumenty z kolekcji
+async function fetchDocuments() {
+  const querySnapshot = await getDocs(collection(db, 'your_collection_name'));
+  querySnapshot.forEach((doc) => {
+    console.log(`${doc.id} => ${doc.data()}`);
+  });
+}
+
+// Make sure to call your function inside an async function or within a .then() if not using async/await
+fetchDocuments();
+
 
     document.addEventListener('DOMContentLoaded', function() {
         // Get the current user's ID and update their Firestore document
