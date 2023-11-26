@@ -166,10 +166,12 @@
 }
 
 .form-field input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    box-sizing: border-box; /* Dostosowuje padding i border do szerokości elementu */
+    width: 100%; /* Szerokość inputa na 100% dostępnego miejsca */
+    padding: 10px; /* Ustawia równy padding dla wszystkich inputów */
+    border: 1px solid #ccc; /* Jednolite obramowanie */
+    border-radius: 5px; /* Zaokrąglone rogi */
+    margin-bottom: 10px; /* Odstęp między polami */
 }
 
 .form-button {
@@ -197,7 +199,8 @@
 }
 
 .profile-info, .profile-edit-form {
-    padding: 20px; /* zwiększ wypełnienie */
+     margin: 0 auto; /* Centrowanie formularza */
+    max-width: 90%; /* Maksymalna szerokość formularza */
 }
 
 .profile-actions button, .form-button {
@@ -230,6 +233,11 @@
 
 .form-field i {
     margin-right: 5px; /* margines dla ikon */
+}
+@media (max-width: 768px) {
+    .form-field input {
+        width: 100%; /* Szerokość inputa na 100% dostępnego miejsca na mniejszych ekranach */
+    }
 }
 
     </style>
