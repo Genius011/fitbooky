@@ -442,17 +442,26 @@ h2 {
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
-import { getFirestore, collection, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+import { 
+  getFirestore, 
+  collection, 
+  getDocs, 
+  doc, 
+  getDoc, 
+  Timestamp 
+} from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
+// Konfiguracja Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-            authDomain: "genius-f6a78.firebaseapp.com",
-            projectId: "genius-f6a78",
-            storageBucket: "genius-f6a78.appspot.com",
-            messagingSenderId: "4413237203",
-            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+  apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+  authDomain: "genius-f6a78.firebaseapp.com",
+  projectId: "genius-f6a78",
+  storageBucket: "genius-f6a78.appspot.com",
+  messagingSenderId: "4413237203",
+  appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
 };
 
+// Inicjalizacja aplikacji Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
@@ -464,52 +473,49 @@ async function displayFutureBookings() {
     const bookingSnapshot = await getDocs(bookingsRef);
     let bookings = [];
     bookingSnapshot.forEach((doc) => {
-      const booking = doc.data();
-      let bookingDate;
-      // Sprawdzenie, czy obiekt daty to instancja Timestamp
-      if (booking.date instanceof firebase.firestore.Timestamp) {
-        bookingDate = booking.date.toDate();
-      } else {
-        // Jeśli już jest to obiekt Date lub string, tworzymy nowy obiekt Date
-        bookingDate = new Date(booking.date);
-      }
+      const bookingData = doc.data();
+      let bookingDate = bookingData.date.toDate ? bookingData.date.toDate() : new Date(bookingData.date);
       const currentDate = new Date();
       currentDate.setHours(0, 0, 0, 0); // Reset czasu do północy
 
       if (bookingDate >= currentDate) {
-        const userRef = doc(db, 'users', booking.userId);
-        getDoc(userRef).then((userSnap) => {
-          if (userSnap.exists()) {
-            const user = userSnap.data();
-            bookings.push({ user, booking: {...booking, date: bookingDate} });
-            // Sortowanie i wyświetlanie muszą być wewnątrz bloku then, aby uwzględnić asynchroniczność
-            bookings.sort((a, b) => a.booking.date - b.booking.date);
-            bookings.forEach(({ user, booking }) => {
-              const bookingRow = document.createElement('tr');
-              bookingRow.innerHTML = `
-                <td>${user.firstName}</td>
-                <td>${user.lastName}</td>
-                <td>${booking.date.toLocaleTimeString()}</td>
-                <td>${booking.date.toLocaleDateString()}</td>
-                <td>${booking.trainingType}</td>
-              `;
-              bookingsTableBody.appendChild(bookingRow);
-            });
-          }
-        });
+        bookings.push({...bookingData, date: bookingDate, id: doc.id});
       }
+    });
+    bookings.sort((a, b) => a.date - b.date);
+    bookings.forEach((booking) => {
+      const userRef = doc(db, 'users', booking.userId);
+      getDoc(userRef).then((userDoc) => {
+        if (userDoc.exists()) {
+          const user = userDoc.data();
+          const bookingRow = document.createElement('tr');
+          bookingRow.innerHTML = `
+            <td>${user.firstName}</td>
+            <td>${user.lastName}</td>
+            <td>${booking.date.toLocaleTimeString()}</td>
+            <td>${booking.date.toLocaleDateString()}</td>
+            <td>${booking.trainingType}</td>
+            <td><button onclick="viewUserProfile('${booking.userId}')">View Profile</button></td>
+          `;
+          bookingsTableBody.appendChild(bookingRow);
+        }
+      });
     });
   } catch (error) {
     console.error("Error fetching bookings:", error);
   }
 }
 
-
-
-
+function viewUserProfile(userId) {
+  // Funkcja do wyświetlania szczegółów profilu użytkownika
+  // Tutaj należy umieścić kod obsługi wyświetlania danych użytkownika
+  console.log('Viewing profile for user:', userId);
+  // Możesz tu dodać logikę wyświetlania modalu z danymi użytkownika
+}
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
 </script>
+
 
 
 </body>
