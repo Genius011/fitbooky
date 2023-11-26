@@ -229,10 +229,10 @@
             <div class="training-schedule">
                 <div class="training-entry">
                     <div class="training-details">
-                        <p>Date: January 15, 2024</p>
-                        <p>Time: 10:00 AM</p>
-                        <p>Location: Gym XYZ</p>
-                    </div>
+  <p id="nextTrainingDate">Date: --</p>
+  <p id="nextTrainingTime">Time: --</p>
+</div>
+
                     <button class="cancel-button">Cancel</button>
                 </div>
             </div>
@@ -284,25 +284,23 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // Function to fetch and display user data
-    const fetchAndDisplayUserData = (userId) => {
-        const userDocRef = doc(db, 'users', userId);
-        
-        getDoc(userDocRef).then((doc) => {
-            if (doc.exists()) {
-                const userData = doc.data();
-                // Replace 'displayName', 'displayEmail', 'displayPhone' with your actual element IDs
-                document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
-                document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
-                document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
-				
-            } else {
-                console.log("No such document!");
-            }
-        }).catch((error) => {
-            console.log("Error getting document:", error);
-        });
-    };
+     // Funkcja wyświetlająca najbliższą przyszłą rezerwację treningu
+  function displayNextTrainingSession(userId) {
+    const bookingsRef = collection(db, 'bookings');
+    const q = query(bookingsRef, where("userId", "==", userId), where("date", ">=", new Date().toISOString().split('T')[0]), orderBy("date", "asc"), limit(1));
+
+    getDocs(q).then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        const nextSession = querySnapshot.docs[0].data();
+        document.getElementById('nextTrainingDate').textContent = `Date: ${nextSession.date}`;
+        document.getElementById('nextTrainingTime').textContent = `Time: ${nextSession.time}`;
+      } else {
+        console.log('No upcoming sessions found.');
+      }
+    }).catch((error) => {
+      console.error("Error getting documents: ", error);
+    });
+  }
 
     document.addEventListener('DOMContentLoaded', function() {
         // Get the current user's ID and update their Firestore document
