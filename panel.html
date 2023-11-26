@@ -443,8 +443,13 @@ h2 {
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
-import { getFirestore, collection, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
-
+import { 
+  getFirestore, 
+  collection, 
+  getDocs, 
+  doc, // Uprawienie: upewnij się, że 'doc' jest importowane prawidłowo.
+  getDoc 
+} from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
 
 const firebaseConfig = {
@@ -460,44 +465,40 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 async function displayFutureBookings() {
-    const bookingsRef = collection(db, 'bookings');
-    const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
+  const bookingsRef = collection(db, 'bookings');
+  const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
 
-    try {
-        const bookingSnapshot = await getDocs(bookingsRef);
-        bookingsTableBody.innerHTML = ''; // Wyczyść tabelę przed dodaniem nowych wierszy
-        bookingSnapshot.docs.forEach((doc) => {
-            const booking = doc.data();
-            const bookingDate = new Date(booking.date);
-            if (bookingDate >= new Date()) {
-                const userRef = doc(db, 'users', booking.userId);
-                getDoc(userRef).then((userSnap) => {
-                    if (userSnap.exists()) {
-                        const user = userSnap.data();
-                        const bookingRow = document.createElement('tr');
-                        bookingRow.innerHTML = `
-                            <td>${user.firstName || ''}</td>
-                            <td>${user.lastName || ''}</td>
-                            <td>${booking.time}</td>
-                            <td>${booking.date}</td>
-                            <td>${booking.trainingType}</td>
-                            <td><button onclick="viewProfile('${booking.userId}')">View Profile</button></td>
-                        `;
-                        bookingsTableBody.appendChild(bookingRow);
-                    }
-                });
-            }
-        });
-    } catch (error) {
-        console.error("Error fetching bookings:", error);
-    }
+  try {
+    const bookingSnapshot = await getDocs(bookingsRef);
+    bookingsTableBody.innerHTML = ''; // Czyści poprzednie wpisy
+
+    bookingSnapshot.docs.forEach(async (bookingDoc) => {
+      const bookingData = bookingDoc.data();
+      const userRef = doc(db, 'users', bookingData.userId); // Poprawne użycie funkcji 'doc'
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        const bookingRow = document.createElement('tr');
+        bookingRow.innerHTML = `
+          <td>${userData.firstName || ''}</td>
+          <td>${userData.lastName || ''}</td>
+          <td>${bookingData.time}</td>
+          <td>${bookingData.date}</td>
+          <td>${bookingData.trainingType}</td>
+          <td><button onclick="viewProfile('${bookingData.userId}')">View Profile</button></td>
+        `;
+        bookingsTableBody.appendChild(bookingRow);
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+  }
 }
 
 function viewProfile(userId) {
-    console.log('View profile for user:', userId);
-    // Implement actual navigation or modal opening logic here
-    // Example:
-    // window.location.href = `/user_profile.html?userId=${userId}`;
+  console.log('View profile for user:', userId);
+  // Tutaj dodaj logikę przekierowania lub otwierania profilu użytkownika
 }
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
