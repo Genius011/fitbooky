@@ -220,7 +220,7 @@
     
     <p id="displayEmail">Email: your.email@example.com</p>
     <p id="displayPhone">Phone: 123-456-7890</p>
-    <p id="totalSessions">Total Training Sessions: 0</p>
+    <p>Total Training Sessions: 10</p>
 </div>
     <div class="profile-details">
         <h2>Next training session</h2>
@@ -266,9 +266,8 @@
  <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
-
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
     
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -285,39 +284,25 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-   const fetchAndDisplayUserData = (userId) => {
-    const userDocRef = doc(db, 'users', userId);
-    
-    getDoc(userDocRef).then((doc) => {
-        if (doc.exists()) {
-            const userData = doc.data();
-            document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
-            document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
-            document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
-            
-            // Dodatkowy kod do pobrania liczby sesji treningowych użytkownika
-            countUserSessions(userId);
-        } else {
-            console.log("No such document!");
-        }
-    }).catch((error) => {
-        console.error("Error getting document:", error);
-    });
-};
-
-// Funkcja do zliczania sesji treningowych użytkownika
-const countUserSessions = (userId) => {
-  const bookingsRef = collection(db, 'bookings');
-  const q = query(bookingsRef, where("userId", "==", userId)); // Filtruj dokumenty po userId
-  
-  getDocs(q).then((querySnapshot) => {
-    const totalSessions = querySnapshot.docs.length;
-    document.getElementById('totalSessions').textContent = `Total Training Sessions: ${totalSessions}`;
-  }).catch((error) => {
-    console.error("Error getting bookings:", error);
-  });
-};
-
+    // Function to fetch and display user data
+    const fetchAndDisplayUserData = (userId) => {
+        const userDocRef = doc(db, 'users', userId);
+        
+        getDoc(userDocRef).then((doc) => {
+            if (doc.exists()) {
+                const userData = doc.data();
+                // Replace 'displayName', 'displayEmail', 'displayPhone' with your actual element IDs
+                document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
+                document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
+                document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
+				
+            } else {
+                console.log("No such document!");
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+    };
 
     document.addEventListener('DOMContentLoaded', function() {
         // Get the current user's ID and update their Firestore document
@@ -356,17 +341,6 @@ const countUserSessions = (userId) => {
             }
         });
     });
-	// Przykładowa funkcja, która pobiera dokumenty z kolekcji
-async function fetchDocuments() {
-  const querySnapshot = await getDocs(collection(db, 'your_collection_name'));
-  querySnapshot.forEach((doc) => {
-    console.log(`${doc.id} => ${doc.data()}`);
-  });
-}
-
-// Make sure to call your function inside an async function or within a .then() if not using async/await
-fetchDocuments();
-
 	
 </script>
 
