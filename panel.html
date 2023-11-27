@@ -663,6 +663,17 @@ document.getElementById('notificationBell').addEventListener('click', () => {
   const notificationsList = document.getElementById('notificationsList');
   notificationsList.style.display = notificationsList.style.display === 'none' ? 'block' : 'none';
 });
+document.addEventListener('DOMContentLoaded', () => {
+  // Reszta twojego kodu...
+
+  const notificationBell = document.getElementById('notificationBell');
+
+  notificationBell.addEventListener('click', () => {
+    notificationBell.style.color = 'red'; // Zmiana koloru dzwoneczka na czerwony po kliknięciu
+    // Tutaj możesz dodać dodatkowe akcje, np. wyświetlenie powiadomień
+    alert('You have new notifications!'); // Tymczasowe powiadomienie dla demonstracji
+  });
+});
 
 
 </script>
