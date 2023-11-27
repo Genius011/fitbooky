@@ -262,55 +262,45 @@ h2 {
   cursor: pointer;
 }
 
-/* Styl dla kontenera dzwoneczka */
+/* Dodatkowe style dla dzwoneczka powiadomień */
 .notification-bell-container {
-  position: fixed; /* lub 'absolute' w zależności od layoutu */
-  top: 20px; /* Dostosuj odległość od góry */
-  right: 20px; /* Dostosuj odległość od prawej strony */
-  z-index: 1000; /* Upewnij się, że ikona jest na wierzchu */
-  display: flex; /* Używamy flexbox do wyrównania elementów */
-  align-items: center; /* Wycentruj elementy pionowo */
-  justify-content: center; /* Wycentruj elementy poziomo */
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.notification-bell {
+  font-size: 24px;
+  color: white;
+  position: relative;
   cursor: pointer;
 }
 
-/* Styl dla dzwoneczka z liczbą powiadomień wewnątrz */
-.notification-bell {
-  position: relative; /* Umożliwia pozycjonowanie licznika */
-  color: #ffffff; /* Biały kolor ikony */
-  font-size: 24px; /* Dostosuj rozmiar ikony */
-}
-
-/* Styl dla licznika powiadomień */
 .notification-count {
-  position: absolute; /* Pozycjonuje licznik względem dzwoneczka */
-  top: -10px; /* Dostosuj pozycję, aby liczba była w prawym górnym rogu dzwoneczka */
+  position: absolute;
+  top: -10px;
   right: -10px;
   background-color: red;
   color: white;
-  border-radius: 50%; /* Okrągłe tło dla licznika */
-  padding: 2px 6px;
+  border-radius: 50%;
+  padding: 0 5px;
   font-size: 12px;
-  min-width: 16px; /* Zapewnia okrągły kształt dla licznika */
-  text-align: center;
+  min-width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-
-
-
 
     </style>
 </head>
 <body>
 
-<!-- Kontener dla dzwoneczka powiadomień z liczbą powiadomień wewnątrz -->
 <div class="notification-bell-container">
-  <i class="fas fa-bell notification-bell">
-    <span id="notificationCount" class="notification-count">3</span> <!-- Liczba powiadomień -->
-  </i>
+  <i class="fas fa-bell notification-bell"></i>
+  <span class="notification-count">3</span> <!-- Tutaj możesz dynamicznie zmieniać liczbę powiadomień -->
 </div>
-
-
 
 
 <div id="adminPanel" class="admin-panel">
@@ -640,8 +630,8 @@ window.viewProfile = viewProfile;
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
 
-
 </script>
+
 
 </body>
 </html>
