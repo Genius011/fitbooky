@@ -592,7 +592,32 @@ window.viewProfile = viewProfile;
 
 
 
+<button id="toggleAvailability">Rozwiń/Zwiń Zarządzanie Dostępnością</button>
 
+<!-- Sekcja do zwijania/rozwijania -->
+<section id="availabilityManager" class="section" style="display: none;">
+    <!-- Zawartość sekcji -->
+</section>
+
+<script>
+// Funkcja, która przełącza widoczność sekcji
+function toggleSection() {
+    var section = document.getElementById("availabilityManager");
+    if (section.style.display === "none") {
+        section.style.display = "block";
+    } else {
+        section.style.display = "none";
+    }
+}
+
+// Dodaj event listener do przycisku
+document.getElementById("toggleAvailability").addEventListener("click", toggleSection);
+
+// Wywołanie funkcji po załadowaniu strony, aby sekcja była domyślnie zwinięta
+document.addEventListener('DOMContentLoaded', (event) => {
+    toggleSection();
+});
+</script>
 
 </script>
 
