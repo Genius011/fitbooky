@@ -262,6 +262,33 @@ h2 {
   cursor: pointer;
 }
 
+/* Style for notification bell */
+#notificationBell {
+  cursor: pointer;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000; /* Ensure it's above other elements */
+  font-size: 24px; /* Size of the bell icon */
+}
+
+/* Style for notification count badge */
+#notificationCount {
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0 5px;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 12px;
+  display: none; /* Hide by default, show when there are notifications */
+}
+
+/* Additional hover effect for the bell */
+#notificationBell:hover {
+  color: #ffd700; /* Gold color on hover */
+}
 
     </style>
 </head>
@@ -627,6 +654,12 @@ function listenForNewBookings() {
 document.addEventListener('DOMContentLoaded', () => {
   listenForNewBookings();
   // ...reszta twojego kodu
+});
+
+document.getElementById('notificationBell').addEventListener('click', () => {
+  // Tutaj logika do wyświetlania listy powiadomień, na przykład:
+  const notificationsList = document.getElementById('notificationsList');
+  notificationsList.style.display = notificationsList.style.display === 'none' ? 'block' : 'none';
 });
 
 
