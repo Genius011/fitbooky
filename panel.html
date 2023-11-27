@@ -293,14 +293,43 @@ h2 {
   justify-content: center;
 }
 
+/* Style dla listy powiadomień */
+.notification-list {
+  position: absolute;
+  top: 40px; /* Dostosuj zależnie od pozycji dzwoneczka */
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 300px; /* Dostosuj zależnie od preferowanej szerokości */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.notification-list-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.notification-list-item:last-child {
+  border-bottom: none;
+}
+
+
     </style>
 </head>
 <body>
 
+<!-- Kontener powiadomień z dzwoneczkiem -->
 <div class="notification-bell-container">
-  <i class="fas fa-bell notification-bell"></i>
-  <span class="notification-count">3</span> <!-- Tutaj możesz dynamicznie zmieniać liczbę powiadomień -->
+  <i class="fas fa-bell notification-bell" id="notificationBell"></i>
+  <span class="notification-count" id="notificationCount">0</span>
+  <!-- Lista powiadomień -->
+  <div class="notification-list" id="notificationList" style="display: none;">
+    <!-- Tutaj pojawią się elementy listy -->
+  </div>
 </div>
+
 
 
 <div id="adminPanel" class="admin-panel">
@@ -541,6 +570,7 @@ import {
   getDocs, 
   doc, // Uprawienie: upewnij się, że 'doc' jest importowane prawidłowo.
   getDoc 
+  onSnapshot 
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
 
@@ -629,6 +659,55 @@ window.viewProfile = viewProfile;
 
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
+
+// Funkcja do aktualizacji listy powiadomień
+function updateNotificationList(bookings) {
+  const listContainer = document.getElementById('notificationList');
+  listContainer.innerHTML = ''; // Czyść listę przed dodaniem nowych pozycji
+
+  // Dodaj elementy do listy powiadomień
+  bookings.forEach(booking => {
+    const listItem = document.createElement('div');
+    listItem.classList.add('notification-list-item');
+    listItem.innerHTML = `
+      <strong>${booking.userData.firstName} ${booking.userData.lastName}</strong>
+      <div>${booking.date} ${booking.time}</div>
+    `;
+    listContainer.appendChild(listItem);
+  });
+}
+
+// Obserwator zmian w kolekcji rezerwacji
+const bookingsRef = collection(db, 'bookings');
+onSnapshot(bookingsRef, (snapshot) => {
+  const newBookings = [];
+  snapshot.docChanges().forEach((change) => {
+    if (change.type === "added") {
+      const bookingData = change.doc.data();
+      // Załóżmy, że mamy już dane użytkownika, ale normalnie musielibyśmy je pobrać
+      newBookings.push({
+        userData: { firstName: 'Imię', lastName: 'Nazwisko' }, // Tu powinny być prawdziwe dane
+        ...bookingData
+      });
+    }
+  });
+  if (newBookings.length > 0) {
+    // Aktualizuj licznik powiadomień
+    const countElement = document.getElementById('notificationCount');
+    countElement.textContent = newBookings.length;
+
+    // Aktualizuj listę powiadomień
+    updateNotificationList(newBookings);
+  }
+});
+
+// Obsługa kliknięcia dzwoneczka
+const bellIcon = document.getElementById('notificationBell');
+bellIcon.addEventListener('click', () => {
+  const listContainer = document.getElementById('notificationList');
+  const isVisible = listContainer.style.display === 'block';
+  listContainer.style.display = isVisible ? 'none' : 'block'; // Pokaż lub ukryj listę
+});
 
 </script>
 
