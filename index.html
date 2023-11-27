@@ -634,6 +634,15 @@ const db = getFirestore(app);
   loader.style.display = 'none';
 });
 
+
+const bookButton = document.getElementById('bookButton');
+if (bookButton) {
+  bookButton.addEventListener('click', () => {
+    // ... logika po kliknięciu ...
+  });
+} else {
+  console.error('bookButton nie istnieje w DOM');
+}
 // ... reszta Twojego kodu ...
 
 // Funkcja do sprawdzania dostępności terminu
