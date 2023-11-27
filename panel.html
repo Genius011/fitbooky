@@ -600,21 +600,26 @@ async function displayFutureBookings() {
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
   const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
 
-// Sort bookings by date and time, starting from the current day.
+  try {
+    const bookingSnapshot = await getDocs(bookingsRef);
+    const bookings = bookingSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    // Sort bookings by date and time, starting from the current day.
     bookings.sort((a, b) => {
       const dateA = new Date(`${a.date} ${a.time}`);
       const dateB = new Date(`${b.date} ${b.time}`);
       return dateA - dateB;
     });
-	
-  try {
-    const bookingSnapshot = await getDocs(bookingsRef);
+
+    // Clear previous bookings and display sorted bookings.
     bookingsTableBody.innerHTML = ''; // Clears previous entries
 
-    bookingSnapshot.docs.forEach((bookingDoc) => {
-      const bookingData = bookingDoc.data();
+    bookings.forEach(bookingData => {
       const userRef = doc(db, 'users', bookingData.userId);
-      getDoc(userRef).then((userSnap) => {
+      getDoc(userRef).then(userSnap => {
         if (userSnap.exists()) {
           const userData = userSnap.data();
           const bookingRow = document.createElement('tr');
@@ -626,7 +631,7 @@ async function displayFutureBookings() {
             <td>${bookingData.trainingType}</td>
             <td><button onclick="viewProfile('${bookingData.userId}')">View Profile</button></td>
           `;
-          // Dodaj klasę wyróżniającą, jeśli rezerwacja jest na dzisiejszą datę
+          // Add highlighting class if the booking is for today's date
           if (bookingData.date === today) {
             bookingRow.classList.add('highlighted');
           }
@@ -638,6 +643,11 @@ async function displayFutureBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
+
+// Call the function when DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  displayFutureBookings();
+});
 
 
 function viewProfile(userId) {
