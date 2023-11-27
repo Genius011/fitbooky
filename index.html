@@ -416,11 +416,6 @@ const db = getFirestore(app);
             for (let i = 0; i < 35; i++) {
                 let day = new Date(startDate);
                 day.setDate(day.getDate() + i);
-				
-				let dayElement = document.createElement('div');
-    dayElement.className = 'day';
-    // Format daty musi być zgodny z formatem zwracanym przez funkcję formatDate
-    dayElement.setAttribute('data-date', formatDate(new Date(currentYear, currentMonth, i - dayOfWeek + 1)));
 
                 let dayElement = document.createElement('div');
                 dayElement.className = 'day';
@@ -458,47 +453,6 @@ const db = getFirestore(app);
         }
     }
 
-// Funkcja, która wyłącza dni i godziny, które już minęły
-  function disablePastDaysAndTimes() {
-    const now = new Date();
-    const todayFormatted = formatDate(now);
-    const currentHour = now.getHours();
-
-    // Wyłącz przeszłe dni
-    document.querySelectorAll('.day').forEach(dayElement => {
-      const dayDate = dayElement.getAttribute('data-date');
-      if (dayDate < todayFormatted) {
-        dayElement.classList.add('disabled');
-        dayElement.removeEventListener('click', openPopup); // Przypisujemy openPopup do kliknięcia na dzień
-      }
-    });
-
-    // Wyłącz przeszłe godziny dla bieżącego dnia
-    document.querySelectorAll('.time-slot').forEach(slotElement => {
-      const slotHour = parseInt(slotElement.textContent.split(':')[0]);
-      if (todayFormatted === formatDate(selectedDay) && slotHour < currentHour) {
-        slotElement.classList.add('disabled');
-        slotElement.removeEventListener('click', handleTimeSlotClick); // Usuwamy event listener, jeśli masz taki ustawiony
-      }
-    });
-  }
-  
-  disablePastDaysAndTimes();
-  });
-
-function formatDate(date) {
-  let d = new Date(date),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
-
-  if (month.length < 2) month = '0' + month;
-  if (day.length < 2) day = '0' + day;
-
-  return [year, month, day].join('-');
-}
-
-
         function openPopup(selectedDay) {
     const popup = document.createElement('div');
     popup.className = 'popup';
@@ -515,9 +469,6 @@ function formatDate(date) {
             <button id="bookButton" class="book-btn">Rezerwuj</button>
         </div>
     `;
-	
-	disablePastDaysAndTimes();
-	}
 
     document.body.appendChild(popup);
 
