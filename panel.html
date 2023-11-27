@@ -570,7 +570,10 @@ import {
   getDocs, 
   doc, // Uprawienie: upewnij się, że 'doc' jest importowane prawidłowo.
   getDoc, 
-  onSnapshot 
+  onSnapshot,
+query, 
+orderBy, 
+limit  
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
 
@@ -708,7 +711,6 @@ bellIcon.addEventListener('click', () => {
   const isVisible = listContainer.style.display === 'block';
   listContainer.style.display = isVisible ? 'none' : 'block'; // Pokaż lub ukryj listę
 });
-
 
 
 // Zapytanie do pobrania nowych rezerwacji
