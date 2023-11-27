@@ -639,6 +639,17 @@
 
         generateCalendar(); // Initial call to display the calendar
     });
+	
+	document.getElementById('myButton').addEventListener('click', async () => {
+  try {
+    const data = await fetchData();
+    console.log(data);
+  } catch (error) {
+    console.error('There was an error fetching the data', error);
+  }
+});
+
+	
 </script>
 
 
