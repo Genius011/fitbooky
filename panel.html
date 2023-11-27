@@ -295,7 +295,36 @@ h2 {
 .highlighted {
   background-color: #a2d5f2; /* Wybierz kolor, który chcesz użyć do wyróżnienia */
 }
+/* Style dla tabeli Dzisiejsze rezerwacje */
+#todayBookingsTable {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+  margin-top: 20px;
+  background: white;
+  border-radius: 8px;
+}
 
+#todayBookingsTable thead {
+  background-color: #6e8efb;
+  color: white;
+}
+
+#todayBookingsTable th,
+#todayBookingsTable td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+#todayBookingsTable tbody tr:hover {
+  background-color: #ddd;
+}
+
+/* Style dla tabeli Aktualne rezerwacje */
+#futureBookingsTable {
+  /* Styl identyczny jak dla #todayBookingsTable, 
+     z wyjątkiem jakichkolwiek zmian, które chcesz wprowadzić */
+}
 
     </style>
 </head>
@@ -529,19 +558,19 @@ h2 {
 
     
         <div class="toggle-future-bookings">
-  <i id="toggleFutureBookingsIcon" class="fas fa-chevron-down"></i> Aktualne rezerwacje
+  <i id="toggleFutureBookingsIcon" class="fas fa-chevron-down"></i> Wszystkie rezerwacje
 </div>
 <section id="bookingManager" class="section">
 
         <table id="futureBookingsTable">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Surname</th>
-                    <th>Hour</th>
-                    <th>Date</th>
-                    <th>Training type</th>
-                    <th>Action</th>
+                    <th>Imię</th>
+                    <th>Nazwisko</th>
+                    <th>Godzina</th>
+                    <th>Data</th>
+                    <th>Rodzaj Treningu</th>
+                    <th>Akcja</th>
                 </tr>
             </thead>
             <tbody>
