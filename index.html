@@ -590,6 +590,36 @@ const db = getFirestore(app);
 
         generateCalendar(); // Initial call to display the calendar
     });
+	
+	async function saveBooking(userId, date, trainingType, time) {
+    if (!userId) {
+        alert('Nie jesteś zalogowany!');
+        return;
+    }
+
+    // Sprawdzanie, czy rezerwacja jest dokonywana przez trenera
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists() && userSnap.data().role === 'trener') {
+        // Dodawanie wpisu "dostępność zamknięta" do rezerwacji
+        trainingType = "dostępność zamknięta";
+    }
+
+    try {
+        await addDoc(collection(db, "bookings"), {
+            userId: userId,  // Dodaj ID użytkownika do dokumentu rezerwacji
+            date: date,
+            trainingType: trainingType,
+            time: time
+        });
+        alert("Rezerwacja została zapisana");
+    } catch (e) {
+        console.error("Błąd podczas zapisu: ", e);
+        alert("Wystąpił błąd podczas zapisu rezerwacji");
+    }
+}
+
+	
 </script>
 
 
