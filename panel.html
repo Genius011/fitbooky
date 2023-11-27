@@ -598,7 +598,7 @@ function setupWeekNavigation() {
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
- const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
     const bookings = bookingSnapshot.docs.map(doc => ({
