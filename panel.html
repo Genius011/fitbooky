@@ -268,8 +268,10 @@ h2 {
 
 <div id="adminPanel" class="admin-panel">
     <h1>Panel Administracyjny Trenera</h1>
-    <section id="availabilityManager" class="section">
-        
+<button id="toggleAvailability">Rozwiń/Zwiń Zarządzanie Dostępnością</button>
+
+<!-- Sekcja do zwijania/rozwijania -->
+<section id="availabilityManager" class="section" style="display: none;">        
         <section id="availabilityManager" class="section">
     <h2>Zarządzanie Dostępnością</h2>
     <div class="separator"></div>
@@ -590,34 +592,25 @@ function viewProfile(userId) {
 }
 window.viewProfile = viewProfile;
 
-
-
-<button id="toggleAvailability">Rozwiń/Zwiń Zarządzanie Dostępnością</button>
-
-<!-- Sekcja do zwijania/rozwijania -->
-<section id="availabilityManager" class="section" style="display: none;">
-    <!-- Zawartość sekcji -->
-</section>
-
-<script>
 // Funkcja, która przełącza widoczność sekcji
-function toggleSection() {
-    var section = document.getElementById("availabilityManager");
-    if (section.style.display === "none") {
-        section.style.display = "block";
-    } else {
-        section.style.display = "none";
-    }
-}
+  function toggleSection() {
+      var section = document.getElementById("availabilityManager");
+      if (section.style.display === "none") {
+          section.style.display = "block";
+      } else {
+          section.style.display = "none";
+      }
+  }
 
-// Dodaj event listener do przycisku
-document.getElementById("toggleAvailability").addEventListener("click", toggleSection);
+  // Dodaj event listener do przycisku
+  document.getElementById("toggleAvailability").addEventListener("click", toggleSection);
 
-// Wywołanie funkcji po załadowaniu strony, aby sekcja była domyślnie zwinięta
-document.addEventListener('DOMContentLoaded', (event) => {
-    toggleSection();
-});
-</script>
+  // Wywołanie funkcji po załadowaniu strony, aby sekcja była domyślnie zwinięta
+  document.addEventListener('DOMContentLoaded', (event) => {
+      toggleSection();
+  });
+
+
 
 </script>
 
