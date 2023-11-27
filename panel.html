@@ -262,6 +262,20 @@ h2 {
   cursor: pointer;
 }
 
+.toggle-availability {
+  cursor: pointer;
+  /* Pozostałe style, które chcesz zastosować */
+}
+
+.toggle-availability i {
+  margin-right: 5px;
+  transition: transform 0.3s ease;
+}
+
+/* Klasa, która obraca ikonę, kiedy sekcja jest zwinięta */
+.rotate-icon {
+  transform: rotate(180deg);
+}
 
     </style>
 </head>
@@ -270,6 +284,10 @@ h2 {
 <div id="adminPanel" class="admin-panel">
     <h1>Panel Administracyjny Trenera</h1>
     <button id="toggleAvailability">Rozwiń/Zwiń Zarządzanie Dostępnością</button>
+	<div class="toggle-availability">
+  <i id="toggleIcon" class="fas fa-chevron-down"></i> Zarządzanie Dostępnością
+</div>
+
 
 <!-- Sekcja do zwijania/rozwijania -->
 <section id="availabilityManager" class="section" style="display: none;">
@@ -597,21 +615,18 @@ window.viewProfile = viewProfile;
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
 
-function toggleSection() {
-    var section = document.getElementById("availabilityManager");
-    if (section.style.display === "none") {
-        section.style.display = "block";
-    } else {
-        section.style.display = "none";
-    }
-}
-
-// Dodaj event listener do przycisku
-document.getElementById("toggleAvailability").addEventListener("click", toggleSection);
-
-// Wywołanie funkcji po załadowaniu strony, aby sekcja była domyślnie zwinięta
-document.addEventListener('DOMContentLoaded', (event) => {
-    toggleSection();
+document.getElementById('toggleIcon').addEventListener('click', function() {
+  var section = document.getElementById('availabilityManager');
+  var icon = document.getElementById('toggleIcon');
+  
+  if (section.style.display === "none") {
+    section.style.display = "block";
+    icon.classList.remove('rotate-icon');
+  } else {
+    section.style.display = "none";
+    icon.classList.add('rotate-icon');
+  }
 });
+
 
 </script>
