@@ -607,15 +607,15 @@ async function displayFutureBookings() {
       ...doc.data()
     }));
 
-    // Sort bookings by date and time, starting from the current day.
+    // Sort bookings by date and time.
     bookings.sort((a, b) => {
-      const dateA = new Date(`${a.date} ${a.time}`);
-      const dateB = new Date(`${b.date} ${b.time}`);
+      let dateA = new Date(a.date + 'T' + a.time);
+      let dateB = new Date(b.date + 'T' + b.time);
       return dateA - dateB;
     });
 
     // Clear previous bookings and display sorted bookings.
-    bookingsTableBody.innerHTML = ''; // Clears previous entries
+    bookingsTableBody.innerHTML = '';
 
     bookings.forEach(bookingData => {
       const userRef = doc(db, 'users', bookingData.userId);
@@ -643,6 +643,7 @@ async function displayFutureBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
+
 
 function viewProfile(userId) {
   // Znajdź modal i elementy, które będą wypełnione danymi
