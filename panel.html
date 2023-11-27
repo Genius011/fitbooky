@@ -266,6 +266,11 @@ h2 {
     </style>
 </head>
 <body>
+<div id="notificationBell" style="cursor:pointer; position:fixed; top:10px; right:10px;">
+    <i class="fas fa-bell"></i>
+    <span id="notificationCount" style="background:red; color:white; border-radius:50%; padding:0 5px;">0</span>
+</div>
+
 
 <div id="adminPanel" class="admin-panel">
     <h1>Panel Administracyjny Trenera</h1>
@@ -593,5 +598,36 @@ window.viewProfile = viewProfile;
 
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
+
+// Wewnątrz twojego <script type="module">...</script>
+
+// Funkcja do aktualizacji licznika powiadomień
+function updateNotificationCount(increment) {
+  const notificationCountElement = document.getElementById('notificationCount');
+  let count = parseInt(notificationCountElement.textContent) || 0;
+  count += increment;
+  notificationCountElement.textContent = count.toString();
+  notificationCountElement.style.display = count > 0 ? 'inline' : 'none';
+}
+
+// Nasłuchuj na nowe rezerwacje
+function listenForNewBookings() {
+  const bookingsRef = collection(db, 'bookings');
+  onSnapshot(bookingsRef, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === 'added') {
+        // Nowa rezerwacja została dodana, aktualizujemy licznik
+        updateNotificationCount(1);
+      }
+    });
+  });
+}
+
+// Po załadowaniu DOM
+document.addEventListener('DOMContentLoaded', () => {
+  listenForNewBookings();
+  // ...reszta twojego kodu
+});
+
 
 </script>
