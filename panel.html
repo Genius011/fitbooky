@@ -293,9 +293,8 @@ h2 {
 }
 
 .highlighted {
-  background-color: #ffff99; /* Żółty kolor tła dla wyróżnienia */
+  background-color: #a2d5f2; /* Wybierz kolor, który chcesz użyć do wyróżnienia */
 }
-
 
 
     </style>
@@ -616,7 +615,7 @@ async function displayFutureBookings() {
     });
 
     // Clear previous bookings and display sorted bookings.
-    bookingsTableBody.innerHTML = '';
+    bookingsTableBody.innerHTML = ''; // Clears previous entries
 
     bookings.forEach(bookingData => {
       const userRef = doc(db, 'users', bookingData.userId);
@@ -644,7 +643,6 @@ async function displayFutureBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
-
 
 function viewProfile(userId) {
   // Znajdź modal i elementy, które będą wypełnione danymi
