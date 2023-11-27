@@ -261,11 +261,36 @@ h2 {
   text-decoration: none;
   cursor: pointer;
 }
+/* Styl dla dzwoneczka */
+.notification-bell {
+  position: relative;
+  cursor: pointer;
+  color: #ffffff; /* Biały kolor ikony */
+}
+
+/* Styl dla licznika powiadomień */
+.notification-count {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+}
 
 
     </style>
 </head>
 <body>
+
+<!-- Dzwoneczek powiadomień z ikoną font-awesome -->
+<div id="notificationBell" class="notification-bell">
+  <i class="fas fa-bell"></i>
+  <span id="notificationCount" class="notification-count">0</span>
+</div>
+
 
 <div id="adminPanel" class="admin-panel">
     <h1>Panel Administracyjny Trenera</h1>
@@ -594,4 +619,31 @@ window.viewProfile = viewProfile;
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
 
+document.addEventListener('DOMContentLoaded', () => {
+  const notificationBell = document.getElementById('notificationBell');
+  const notificationCount = document.getElementById('notificationCount');
+
+  notificationBell.addEventListener('click', () => {
+    // Tutaj możesz dodać logikę do wyświetlania powiadomień
+    alert('You have new notifications!');
+  });
+
+  // Funkcja do aktualizacji licznika powiadomień
+  function updateNotificationCount(count) {
+    notificationCount.textContent = count;
+    if (count > 0) {
+      notificationBell.style.color = 'red'; // Zmiana koloru dzwoneczka na czerwony jeśli są nowe powiadomienia
+    } else {
+      notificationBell.style.color = 'white'; // Zmiana koloru dzwoneczka na biały gdy nie ma nowych powiadomień
+    }
+  }
+
+  // Przykład aktualizacji licznika powiadomień
+  updateNotificationCount(3); // Załóżmy, że jest 3 nowe powiadomienia
+});
+
+
 </script>
+
+</body>
+</html>
