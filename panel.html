@@ -293,8 +293,9 @@ h2 {
 }
 
 .highlighted {
-  background-color: #a2d5f2; /* Wybierz kolor, który chcesz użyć do wyróżnienia */
+  background-color: #ffff99; /* Żółty kolor tła dla wyróżnienia */
 }
+
 
 
     </style>
@@ -598,6 +599,7 @@ function setupWeekNavigation() {
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
+  const today = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
@@ -614,7 +616,7 @@ async function displayFutureBookings() {
     });
 
     // Clear previous bookings and display sorted bookings.
-    bookingsTableBody.innerHTML = ''; // Clears previous entries
+    bookingsTableBody.innerHTML = '';
 
     bookings.forEach(bookingData => {
       const userRef = doc(db, 'users', bookingData.userId);
@@ -622,6 +624,10 @@ async function displayFutureBookings() {
         if (userSnap.exists()) {
           const userData = userSnap.data();
           const bookingRow = document.createElement('tr');
+          // Add 'highlighted' class if booking date is today
+          if (bookingData.date === today) {
+            bookingRow.classList.add('highlighted');
+          }
           bookingRow.innerHTML = `
             <td>${userData.firstName || ''}</td>
             <td>${userData.lastName || ''}</td>
@@ -638,6 +644,7 @@ async function displayFutureBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
+
 
 function viewProfile(userId) {
   // Znajdź modal i elementy, które będą wypełnione danymi
