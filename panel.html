@@ -606,43 +606,38 @@ async function displayFutureBookings() {
       ...doc.data()
     }));
 
-    // Sort bookings by date and then by time.
+    // Sort bookings by date and time, starting from the current day.
     bookings.sort((a, b) => {
-      const dateDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
-      if (dateDiff === 0) { // if the dates are the same, sort by time
-        const timeA = a.time.split(':').map(Number);
-        const timeB = b.time.split(':').map(Number);
-        return timeA[0] * 60 + timeA[1] - (timeB[0] * 60 + timeB[1]);
-      }
-      return dateDiff;
+      const dateA = new Date(`${a.date} ${a.time}`);
+      const dateB = new Date(`${b.date} ${b.time}`);
+      return dateA - dateB;
     });
 
-    // Clear previous bookings
-    bookingsTableBody.innerHTML = '';
+    // Clear previous bookings and display sorted bookings.
+    bookingsTableBody.innerHTML = ''; // Clears previous entries
 
-    // Add sorted bookings to the table
-    bookings.forEach((booking) => {
-      const row = bookingsTableBody.insertRow();
-      row.innerHTML = `
-        <td>${booking.name}</td>
-        <td>${booking.surname}</td>
-        <td>${booking.hour}</td>
-        <td>${booking.date}</td>
-        <td>${booking.trainingType}</td>
-        <td><button onclick="viewProfile('${booking.userId}')">View Profile</button></td>
-      `;
+    bookings.forEach(bookingData => {
+      const userRef = doc(db, 'users', bookingData.userId);
+      getDoc(userRef).then(userSnap => {
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          const bookingRow = document.createElement('tr');
+          bookingRow.innerHTML = `
+            <td>${userData.firstName || ''}</td>
+            <td>${userData.lastName || ''}</td>
+            <td>${bookingData.time}</td>
+            <td>${bookingData.date}</td>
+            <td>${bookingData.trainingType}</td>
+            <td><button onclick="viewProfile('${bookingData.userId}')">View Profile</button></td>
+          `;
+          bookingsTableBody.appendChild(bookingRow);
+        }
+      });
     });
   } catch (error) {
     console.error("Error fetching bookings:", error);
   }
 }
-
-// Ensure this function is called when the document is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  displayFutureBookings();
-});
-
-
 
 function viewProfile(userId) {
   // Znajdź modal i elementy, które będą wypełnione danymi
