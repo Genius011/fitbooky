@@ -711,9 +711,6 @@ bellIcon.addEventListener('click', () => {
 
 
 
-// Referencja do kolekcji z rezerwacjami
-const bookingsRef = collection(db, 'bookings');
-
 // Zapytanie do pobrania nowych rezerwacji
 const q = query(bookingsRef, orderBy('createdAt', 'desc'), limit(10));
 
