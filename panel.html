@@ -16,6 +16,45 @@
     padding: 20px;
 }
 
+/* Styl podstawowy dla przycisków */
+button {
+  background-color: #6e8efb; /* Niebieskie tło */
+  color: white; /* Biały tekst */
+  border: none; /* Brak obramowania */
+  padding: 10px 20px; /* Padding wewnątrz przycisku */
+  text-align: center; /* Wyśrodkowany tekst */
+  text-decoration: none; /* Brak dekoracji tekstu */
+  display: inline-block; /* Wyświetlanie w linii */
+  font-size: 16px; /* Wielkość czcionki */
+  margin: 4px 2px; /* Margines wokół przycisku */
+  transition-duration: 0.4s; /* Czas trwania efektu przejścia */
+  cursor: pointer; /* Kursor wskazujący */
+  border-radius: 5px; /* Zaokrąglone rogi */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtelny cień */
+}
+
+/* Efekt hover dla przycisków */
+button:hover {
+  background-color: #5d7ce2; /* Ciemniejszy niebieski kiedy najechane */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Większy cień dla efektu "podnoszenia" */
+}
+
+/* Styl dla przycisków zamykania (close button) */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
 .admin-panel {
     background-color: #fff;
     border-radius: 10px;
