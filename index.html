@@ -416,9 +416,14 @@ const q = query(
         let currentYear = currentDate.getFullYear();
 
         async function generateCalendar() {
-    const bookingsSnapshot = await getDocs(query(collection(db, "bookings"), where("trainingType", "==", "personal")));
-    const bookedSlots = new Set(bookingsSnapshot.docs.map(doc => `${doc.data().date} ${doc.data().time}`));
-		
+    const bookingsSnapshot = await getDocs(collection(db, "bookings"));
+  const bookedSlots = new Set();
+  bookingsSnapshot.docs.forEach(doc => {
+    const booking = doc.data();
+    if (booking.trainingType === "personal") {
+      bookedSlots.add(`${booking.date} ${booking.time}`);
+    }
+  });
 		
             calendar.innerHTML = '';
             let today = new Date();
@@ -487,6 +492,7 @@ const q = query(
     }
 
         function openPopup(selectedDay) {
+		  const formattedDate = formatDate(selectedDay);
     const popup = document.createElement('div');
     popup.className = 'popup';
     popup.innerHTML = `
@@ -502,6 +508,8 @@ const q = query(
             <button id="bookButton" class="book-btn">Rezerwuj</button>
         </div>
     `;
+  enableAllTimeSlots(popup, formattedDate, bookedSlots);
+}
 
     document.body.appendChild(popup);
 
@@ -523,7 +531,22 @@ const q = query(
             });
 
     
-			
+			function enableAllTimeSlots(popup, formattedDate, bookedSlots) {
+  const timeSlots = popup.querySelectorAll('.time-slot');
+  timeSlots.forEach(slot => {
+    const slotDateTime = `${formattedDate} ${slot.textContent.trim()}`;
+    if (bookedSlots.has(slotDateTime)) {
+      slot.classList.add('disabled');
+      slot.onclick = null; // disable the click event for this slot
+    } else {
+      slot.classList.remove('disabled');
+      slot.onclick = function() {
+        timeSlots.forEach(s => s.classList.remove('selected'));
+        slot.classList.add('selected');
+      };
+    }
+  });
+}
 			
 			
             document.body.appendChild(popup);
