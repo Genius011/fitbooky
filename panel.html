@@ -364,39 +364,6 @@ h2 {
      z wyjątkiem jakichkolwiek zmian, które chcesz wprowadzić */
 }
 
-@media (max-width: 600px) {
-  #todayBookingsTable, #futureBookingsTable {
-    border: 0;
-  }
-
-  #todayBookingsTable thead, #futureBookingsTable thead {
-    display: none;
-  }
-
-  #todayBookingsTable tbody tr, #futureBookingsTable tbody tr {
-    margin-bottom: 10px;
-    display: block;
-    border-bottom: 2px solid #ddd;
-  }
-
-  #todayBookingsTable td, #futureBookingsTable td {
-    display: block;
-    text-align: right;
-    font-size: 13px;
-    border-bottom: 1px dotted #ddd;
-  }
-
-  #todayBookingsTable td:last-child, #futureBookingsTable td:last-child {
-    border-bottom: 0;
-  }
-
-  #todayBookingsTable td:before, #futureBookingsTable td:before {
-    content: attr(data-label);
-    float: left;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-}
 
 
     </style>
@@ -413,13 +380,13 @@ h2 {
   <table id="todayBookingsTable">
     <thead>
       <tr>
-    <td data-label="Imię">${userData.firstName || ''}</td>
-    <td data-label="Nazwisko">${userData.lastName || ''}</td>
-    <td data-label="Godzina">${bookingData.time}</td>
-    <td data-label="Data">${bookingData.date}</td>
-    <td data-label="Rodzaj treningu">${bookingData.trainingType}</td>
-    <td data-label="Akcja"><button onclick="viewProfile('${bookingData.userId}')">View Profile</button></td>
-  </tr>
+        <th>Imię</th>
+        <th>Nazwisko</th>
+        <th>Godzina</th>
+        <th>Data</th>
+        <th>Rodzaj treningu</th>
+        <th>Akcja</th>
+      </tr>
     </thead>
     <tbody>
       <!-- Miejsce na dane z dzisiejszych rezerwacji -->
