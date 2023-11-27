@@ -262,44 +262,10 @@ h2 {
   cursor: pointer;
 }
 
-/* Style for notification bell */
-#notificationBell {
-  cursor: pointer;
-  position: fixed;
-  top: 20px; /* Adjust as needed */
-  right: 20px; /* Adjust as needed */
-  z-index: 1000; /* Ensure it's above other elements */
-  color: white; /* White color icon */
-}
-
-/* Style for notification count badge */
-#notificationCount {
-  background-color: red;
-  color: white;
-  border-radius: 50%;
-  padding: 0 5px;
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  font-size: 12px;
-  display: none; /* Hide by default, show when there are notifications */
-}
-
-
-/* Additional hover effect for the bell */
-#notificationBell:hover {
-  color: #ffd700; /* Gold color on hover */
-}
 
     </style>
 </head>
 <body>
-<div id="notificationBell" title="Check for new bookings">
-  <i class="fas fa-bell"></i>
-  <span id="notificationCount">0</span>
-</div>
-
-
 
 <div id="adminPanel" class="admin-panel">
     <h1>Panel Administracyjny Trenera</h1>
@@ -628,55 +594,4 @@ window.viewProfile = viewProfile;
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
 
-
-
-// Funkcja do aktualizacji licznika powiadomień
-function updateNotificationCount(increment) {
-  const notificationCountElement = document.getElementById('notificationCount');
-  let count = parseInt(notificationCountElement.textContent) || 0;
-  count += increment;
-  notificationCountElement.textContent = count.toString();
-  notificationCountElement.style.display = count > 0 ? 'inline' : 'none';
-}
-
-// Nasłuchuj na nowe rezerwacje
-function listenForNewBookings() {
-  const bookingsRef = collection(db, 'bookings');
-  onSnapshot(bookingsRef, (snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      if (change.type === 'added') {
-        // Nowa rezerwacja została dodana, aktualizujemy licznik
-        updateNotificationCount(1);
-      }
-    });
-  });
-}
-
-// Po załadowaniu DOM
-document.addEventListener('DOMContentLoaded', () => {
-  listenForNewBookings();
-  // ...reszta twojego kodu
-});
-
-document.getElementById('notificationBell').addEventListener('click', () => {
-  // Tutaj logika do wyświetlania listy powiadomień, na przykład:
-  const notificationsList = document.getElementById('notificationsList');
-  notificationsList.style.display = notificationsList.style.display === 'none' ? 'block' : 'none';
-});
-document.addEventListener('DOMContentLoaded', () => {
-  // Reszta twojego kodu...
-
-  const notificationBell = document.getElementById('notificationBell');
-
-  notificationBell.addEventListener('click', () => {
-    notificationBell.style.color = 'red'; // Zmiana koloru dzwoneczka na czerwony po kliknięciu
-    // Tutaj możesz dodać dodatkowe akcje, np. wyświetlenie powiadomień
-    alert('You have new notifications!'); // Tymczasowe powiadomienie dla demonstracji
-  });
-});
-
-
 </script>
-
-</body>
-</html>
