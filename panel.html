@@ -292,6 +292,10 @@ h2 {
   transform: rotate(180deg);
 }
 
+.highlighted {
+  background-color: #a2d5f2; /* Wybierz kolor, który chcesz użyć do wyróżnienia */
+}
+
 
     </style>
 </head>
@@ -594,27 +598,16 @@ function setupWeekNavigation() {
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
+  const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
-    const bookings = bookingSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-
-    // Sort bookings by date and time, starting from the current day.
-    bookings.sort((a, b) => {
-      const dateA = new Date(`${a.date} ${a.time}`);
-      const dateB = new Date(`${b.date} ${b.time}`);
-      return dateA - dateB;
-    });
-
-    // Clear previous bookings and display sorted bookings.
     bookingsTableBody.innerHTML = ''; // Clears previous entries
 
-    bookings.forEach(bookingData => {
+    bookingSnapshot.docs.forEach((bookingDoc) => {
+      const bookingData = bookingDoc.data();
       const userRef = doc(db, 'users', bookingData.userId);
-      getDoc(userRef).then(userSnap => {
+      getDoc(userRef).then((userSnap) => {
         if (userSnap.exists()) {
           const userData = userSnap.data();
           const bookingRow = document.createElement('tr');
@@ -626,6 +619,10 @@ async function displayFutureBookings() {
             <td>${bookingData.trainingType}</td>
             <td><button onclick="viewProfile('${bookingData.userId}')">View Profile</button></td>
           `;
+          // Dodaj klasę wyróżniającą, jeśli rezerwacja jest na dzisiejszą datę
+          if (bookingData.date === today) {
+            bookingRow.classList.add('highlighted');
+          }
           bookingsTableBody.appendChild(bookingRow);
         }
       });
@@ -634,6 +631,7 @@ async function displayFutureBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
+
 
 function viewProfile(userId) {
   // Znajdź modal i elementy, które będą wypełnione danymi
