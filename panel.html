@@ -598,7 +598,8 @@ function setupWeekNavigation() {
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
-  const today = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+  const today = new Date();
+  const todayFormatted = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
@@ -609,8 +610,8 @@ async function displayFutureBookings() {
 
     // Sort bookings by date and time.
     bookings.sort((a, b) => {
-      let dateA = new Date(a.date + 'T' + a.time);
-      let dateB = new Date(b.date + 'T' + b.time);
+      const dateA = new Date(`${a.date} ${a.time}`);
+      const dateB = new Date(`${b.date} ${b.time}`);
       return dateA - dateB;
     });
 
@@ -623,10 +624,12 @@ async function displayFutureBookings() {
         if (userSnap.exists()) {
           const userData = userSnap.data();
           const bookingRow = document.createElement('tr');
-          // Add 'highlighted' class if booking date is today
-          if (bookingData.date === today) {
+
+          // Add 'highlighted' class if booking date is today.
+          if (bookingData.date === todayFormatted) {
             bookingRow.classList.add('highlighted');
           }
+
           bookingRow.innerHTML = `
             <td>${userData.firstName || ''}</td>
             <td>${userData.lastName || ''}</td>
