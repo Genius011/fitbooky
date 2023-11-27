@@ -336,7 +336,7 @@
     // Import the required Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
-  import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+  import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where, } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -352,6 +352,18 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  const selectedDate = '2023-01-01'; // Example date
+const selectedTime = '10:00'; // Example time
+
+const colRef = collection(db, 'bookings');
+const q = query(
+  colRef, 
+  where('date', '==', selectedDate),
+  where('time', '==', selectedTime),
+  where('trainingType', '==', 'personal')
+);
+
+
 
      // Logout function
   logoutButton.addEventListener('click', () => {
