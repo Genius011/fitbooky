@@ -844,25 +844,27 @@ document.getElementById('toggleIcon').addEventListener('click', function() {
   var section = document.getElementById('availabilityManager');
   var icon = document.getElementById('toggleIcon');
   
+  // Przełącz wyświetlanie sekcji i obracanie ikony
   if (section.style.display === "none") {
     section.style.display = "block";
-    icon.classList.remove('rotate-icon');
+    icon.classList.add('rotate-icon');
   } else {
     section.style.display = "none";
-    icon.classList.add('rotate-icon');
+    icon.classList.remove('rotate-icon');
   }
 });
 
 document.getElementById('toggleFutureBookingsIcon').addEventListener('click', function() {
-  var section = document.getElementById('bookingManager'); // Upewnij się, że to jest właściwe ID twojej sekcji
+  var section = document.getElementById('bookingManager');
   var icon = document.getElementById('toggleFutureBookingsIcon');
   
+  // Przełącz wyświetlanie sekcji i obracanie ikony
   if (section.style.display === "none") {
     section.style.display = "block";
-    icon.classList.remove('rotate-icon');
+    icon.classList.add('rotate-icon');
   } else {
     section.style.display = "none";
-    icon.classList.add('rotate-icon');
+    icon.classList.remove('rotate-icon');
   }
 });
 
@@ -870,12 +872,13 @@ document.getElementById('toggleTodayBookingsIcon').addEventListener('click', fun
   var section = document.getElementById('todayBookingsManager');
   var icon = document.getElementById('toggleTodayBookingsIcon');
   
+  // Przełącz wyświetlanie sekcji i obracanie ikony
   if (section.style.display === "none") {
     section.style.display = "block";
-    icon.classList.remove('rotate-icon');
+    icon.classList.add('rotate-icon');
   } else {
     section.style.display = "none";
-    icon.classList.add('rotate-icon');
+    icon.classList.remove('rotate-icon');
   }
 });
 
