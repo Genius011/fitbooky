@@ -352,17 +352,6 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-  const selectedDate = '2023-01-01'; // Example date
-const selectedTime = '10:00'; // Example time
-
-const colRef = collection(db, 'bookings');
-const q = query(
-  colRef, 
-  where('date', '==', selectedDate),
-  where('time', '==', selectedTime),
-  where('trainingType', '==', 'personal')
-);
-
 
 
      // Logout function
@@ -414,6 +403,9 @@ const q = query(
         let currentDate = new Date();
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
+		
+		const bookingsSnapshot = await getDocs(query(collection(db, "bookings"), where("trainingType", "==", "personal")));
+    const bookedSlots = new Set(bookingsSnapshot.docs.map(doc => `${doc.data().date} ${doc.data().time}`));
 
         async function generateCalendar() {
     const bookingsSnapshot = await getDocs(collection(db, "bookings"));
@@ -568,7 +560,7 @@ const q = query(
             generateTimeSlots(popup.querySelector('.time-slots'), 6, 21);
 			
 			
-        ;
+        }
 		
 
         function generateTimeSlots(container, startHour, endHour) {
