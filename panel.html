@@ -266,15 +266,15 @@ h2 {
 #notificationBell {
   cursor: pointer;
   position: fixed;
-  top: 10px;
-  right: 10px;
+  top: 20px; /* Adjust as needed */
+  right: 20px; /* Adjust as needed */
   z-index: 1000; /* Ensure it's above other elements */
-  font-size: 24px; /* Size of the bell icon */
+  color: white; /* White color icon */
 }
 
 /* Style for notification count badge */
 #notificationCount {
-  background: red;
+  background-color: red;
   color: white;
   border-radius: 50%;
   padding: 0 5px;
@@ -285,6 +285,7 @@ h2 {
   display: none; /* Hide by default, show when there are notifications */
 }
 
+
 /* Additional hover effect for the bell */
 #notificationBell:hover {
   color: #ffd700; /* Gold color on hover */
@@ -293,10 +294,11 @@ h2 {
     </style>
 </head>
 <body>
-<div id="notificationBell" style="cursor:pointer; position:fixed; top:10px; right:10px;">
-    <i class="fas fa-bell"></i>
-    <span id="notificationCount" style="background:red; color:white; border-radius:50%; padding:0 5px;">0</span>
+<div id="notificationBell" title="Check for new bookings">
+  <i class="fas fa-bell"></i>
+  <span id="notificationCount">0</span>
 </div>
+
 
 
 <div id="adminPanel" class="admin-panel">
