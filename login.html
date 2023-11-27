@@ -120,7 +120,9 @@
             </form>
         </div>
         <div class="form-footer">
-            <p>Don't have an account? <a href="#" id="toggleRegistration">Register here</a></p>
+            <p>Nie masz konta? <a href="" id="toggleRegistration">Zarejestruj się tutaj</a></p>
+			<p>Jesteś trenerem? <a href="/sciezka_do_rejestracji" id="toggleRegistration">Rejestracja trenera</a></p>
+
         </div>
     </div>
 
@@ -186,39 +188,25 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   });
 
-  // Handle registration form submission for trainers
-registrationForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const email = registrationForm.querySelector('input[type="email"]').value;
-    const password = registrationForm.querySelector('input[type="password"]').value;
-    const firstName = registrationForm.querySelector('input[placeholder="Imię"]').value;
-    const lastName = registrationForm.querySelector('input[placeholder="Nazwisko"]').value;
-    const specialization = registrationForm.querySelector('input[placeholder="Specjalizacja"]').value;
-
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Add the trainer to the Firestore database with additional fields
-            const db = getFirestore(app);
-            setDoc(doc(db, "trainers", userCredential.user.uid), {
-                imie: firstName,
-                nazwisko: lastName,
-                email: email,
-                specjalizacja: specialization,
-                rola: 'trener',
-            }).then(() => {
-                console.log('Profil trenera został utworzony');
-                alert('Rejestracja przebiegła pomyślnie! Możesz się teraz zalogować.');
-                // Redirect to the trainer's dashboard or other page
-                window.location.href = 'trainer-dashboard.html'; // Adjust this URL as needed
+  // Handle registration form submission
+            registrationForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = registrationForm.querySelector('input[type="email"]').value;
+                const password = registrationForm.querySelector('input[type="password"]').value;
+                createUserWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        // Registered successfully, you can redirect or show a success message here
+                        console.log('Registration successful', userCredential);
+						alert('Registration successful! You can now log in.');
+          // Redirect to login page
+          window.location.href = 'login.html';
+                    })
+                    .catch((error) => {
+                        // Handle errors here, you can display an error message to the user
+                        console.error('Registration error', error);
+                    });
             });
-        })
-        .catch((error) => {
-            // Handle errors here, including if the user already exists
-            console.error('Błąd rejestracji', error);
-            alert('Błąd: ' + error.message);
         });
-});
-
 
 
 </script>
