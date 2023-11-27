@@ -261,21 +261,26 @@ h2 {
   text-decoration: none;
   cursor: pointer;
 }
-/* Styl dla dzwoneczka */
-.notification-bell {
+
+/* Styl dla kontenera dzwoneczka */
+.notification-bell-container {
   position: fixed; /* lub 'absolute' w zależności od layoutu */
   top: 20px; /* Dostosuj odległość od góry */
   right: 20px; /* Dostosuj odległość od prawej strony */
+  z-index: 1000; /* Upewnij się, że ikona jest na wierzchu */
+  display: flex; /* Używamy flexbox do wyrównania elementów */
+  align-items: center; /* Wycentruj elementy pionowo */
+}
+
+/* Styl dla dzwoneczka */
+.notification-bell {
   cursor: pointer;
   color: #ffffff; /* Biały kolor ikony */
-  z-index: 1000; /* Upewnij się, że ikona jest na wierzchu */
+  margin-right: 10px; /* Dajemy odstęp między ikoną a licznikiem */
 }
 
 /* Styl dla licznika powiadomień */
 .notification-count {
-  position: absolute;
-  top: -10px; /* Dostosuj, aby wyświetlał się w odpowiednim miejscu */
-  right: -10px; /* Dostosuj, aby wyświetlał się w odpowiednim miejscu */
   background-color: red;
   color: white;
   border-radius: 50%;
