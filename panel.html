@@ -600,6 +600,13 @@ async function displayFutureBookings() {
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
   const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
 
+// Sort bookings by date and time, starting from the current day.
+    bookings.sort((a, b) => {
+      const dateA = new Date(`${a.date} ${a.time}`);
+      const dateB = new Date(`${b.date} ${b.time}`);
+      return dateA - dateB;
+    });
+	
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
     bookingsTableBody.innerHTML = ''; // Clears previous entries
