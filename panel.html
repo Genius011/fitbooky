@@ -598,8 +598,7 @@ function setupWeekNavigation() {
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
-  const today = new Date();
-  const todayFormatted = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const todayFormatted = formatDate(new Date()); // Używamy funkcji formatDate, aby uzyskać dzisiejszą datę w odpowiednim formacie
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
@@ -608,7 +607,7 @@ async function displayFutureBookings() {
       ...doc.data()
     }));
 
-    // Sort bookings by date and time.
+    // Sort bookings by date and time, starting from the current day.
     bookings.sort((a, b) => {
       const dateA = new Date(`${a.date} ${a.time}`);
       const dateB = new Date(`${b.date} ${b.time}`);
@@ -625,10 +624,10 @@ async function displayFutureBookings() {
           const userData = userSnap.data();
           const bookingRow = document.createElement('tr');
 
-           if (bookingData.date === todayFormatted) {
-      bookingRow.classList.add('highlighted');
-      console.log('Highlighting booking for:', bookingData.date); // Dodaj to dla debugowania
-    }
+          // Jeśli data rezerwacji jest dzisiejszą datą, dodajemy klasę .highlighted
+          if (bookingData.date === todayFormatted) {
+            bookingRow.classList.add('highlighted');
+          }
 
           bookingRow.innerHTML = `
             <td>${userData.firstName || ''}</td>
@@ -646,6 +645,7 @@ async function displayFutureBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
+
 
 
 function viewProfile(userId) {
