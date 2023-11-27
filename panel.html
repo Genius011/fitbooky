@@ -640,29 +640,6 @@ window.viewProfile = viewProfile;
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
 
-document.addEventListener('DOMContentLoaded', () => {
-  const notificationBell = document.getElementById('notificationBell');
-  const notificationCount = document.getElementById('notificationCount');
-
-  notificationBell.addEventListener('click', () => {
-    // Tutaj możesz dodać logikę do wyświetlania powiadomień
-    alert('You have new notifications!');
-  });
-
-  // Funkcja do aktualizacji licznika powiadomień
-  function updateNotificationCount(count) {
-    notificationCount.textContent = count;
-    if (count > 0) {
-      notificationBell.style.color = 'red'; // Zmiana koloru dzwoneczka na czerwony jeśli są nowe powiadomienia
-    } else {
-      notificationBell.style.color = 'white'; // Zmiana koloru dzwoneczka na biały gdy nie ma nowych powiadomień
-    }
-  }
-
-  // Przykład aktualizacji licznika powiadomień
-  updateNotificationCount(3); // Załóżmy, że jest 3 nowe powiadomienia
-});
-
 
 </script>
 
