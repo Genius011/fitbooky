@@ -303,6 +303,10 @@
     transform-origin: center; /* Zapewnia, że skalowanie odbywa się względem środka obrazka */
 }
 
+.trainer-booking {
+    /* Twoje style dla rezerwacji dokonanych przez trenera, np. */
+    background-color: #ffcccc; /* czerwony kolor tła */
+}
 
     </style>
 </head>
@@ -619,7 +623,61 @@ const db = getFirestore(app);
     }
 }
 
-	
+// Funkcja saveBooking aktualizowana o logikę dla trenera
+async function saveBooking(userId, date, trainingType, time) {
+    if (!userId) {
+        alert('Nie jesteś zalogowany!');
+        return;
+    }
+
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+    const isTrainer = userSnap.exists() && userSnap.data().role === 'trener';
+  
+    if (isTrainer) {
+        // Jeśli trener dokonuje rezerwacji, zmieniamy typ treningu na "dostępność zamknięta"
+        trainingType = "dostępność zamknięta";
+    }
+
+    try {
+        await addDoc(collection(db, "bookings"), {
+            userId: userId,
+            date: date,
+            trainingType: trainingType,
+            time: time,
+            // Dodajemy flagę isTrainer do dokumentu rezerwacji, aby można było ją później łatwo identyfikować
+            isTrainer: isTrainer
+        });
+        alert("Rezerwacja została zapisana");
+    } catch (e) {
+        console.error("Błąd podczas zapisu: ", e);
+        alert("Wystąpił błąd podczas zapisu rezerwacji");
+    }
+}
+
+	// Zakładamy, że jest to funkcja wywoływana, gdy chcemy wyświetlić rezerwacje
+async function displayBookings() {
+    // ... (reszta kodu do pobierania rezerwacji)
+
+    bookings.forEach(bookingData => {
+        // ... (reszta kodu do wyświetlania rezerwacji)
+
+        // Sprawdź, czy rezerwacja została dokonana przez trenera
+        if (bookingData.isTrainer) {
+            // Dodajemy specjalne oznaczenie dla rezerwacji dokonanych przez trenera
+            bookingRow.classList.add('trainer-booking');
+            bookingRow.innerHTML += `<td>Dostępność zamknięta</td>`;
+        } else {
+            // Dla innych rezerwacji wyświetlamy normalnie
+            bookingRow.innerHTML += `<td>${bookingData.trainingType}</td>`;
+        }
+
+        // ... (reszta kodu do dodawania wiersza do tabeli)
+    });
+
+    // ... (reszta kodu funkcji)
+}
+
 </script>
 
 
