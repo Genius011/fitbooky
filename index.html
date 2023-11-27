@@ -623,12 +623,6 @@ const db = getFirestore(app);
     }
 }
 
-// Funkcja saveBooking aktualizowana o logikę dla trenera
-async function saveBooking(userId, date, trainingType, time) {
-    if (!userId) {
-        alert('Nie jesteś zalogowany!');
-        return;
-    }
 
     const userRef = doc(db, "users", userId);
     const userSnap = await getDoc(userRef);
