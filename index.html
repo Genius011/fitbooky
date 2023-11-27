@@ -634,6 +634,56 @@ const db = getFirestore(app);
   loader.style.display = 'none';
 });
 
+// ... reszta Twojego kodu ...
+
+// Funkcja do sprawdzania dostępności terminu
+async function isSlotAvailable(date, time, trainingType) {
+  // Utwórz referencję do kolekcji 'bookings' w Firestore
+  const bookingsRef = collection(db, 'bookings');
+  
+  // Wykonaj zapytanie do Firestore, aby znaleźć rezerwacje w tym samym terminie i dla tego samego typu treningu
+  const querySnapshot = await getDocs(query(bookingsRef, 
+    where('date', '==', date), 
+    where('time', '==', time), 
+    where('trainingType', '==', trainingType)));
+
+  // Jeśli znaleziono jakiekolwiek rezerwacje, termin jest zajęty
+  return querySnapshot.empty; // Zwraca 'true', jeśli termin jest wolny, 'false' jeśli zajęty
+}
+
+// Funkcja do tworzenia nowej rezerwacji
+async function createBooking(date, time, trainingType, userId) {
+  const slotAvailable = await isSlotAvailable(date, time, trainingType);
+
+  if (slotAvailable) {
+    try {
+      await addDoc(collection(db, "bookings"), {
+        userId: userId,
+        date: date,
+        trainingType: trainingType,
+        time: time
+      });
+      alert("Rezerwacja została zapisana");
+    } catch (e) {
+      console.error("Błąd podczas zapisu: ", e);
+      alert("Wystąpił błąd podczas zapisu rezerwacji");
+    }
+  } else {
+    alert("Ten termin jest już zajęty");
+  }
+}
+
+// ... reszta Twojego kodu ...
+
+// Zmodyfikuj istniejące wywołanie funkcji saveBooking wewnątrz obsługi zdarzeń 'click' na przycisku 'bookButton'
+document.getElementById('bookButton').addEventListener('click', () => {
+  // ... reszta Twojego kodu ...
+
+  // Zamiast bezpośrednio wywoływać saveBooking, użyj zmodyfikowanej funkcji createBooking
+  createBooking(formattedDate, selectedTimeSlot, selectedTrainingType, currentUserId);
+});
+
+
 </script>
 
 
