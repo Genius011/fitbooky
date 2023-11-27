@@ -709,6 +709,32 @@ bellIcon.addEventListener('click', () => {
   listContainer.style.display = isVisible ? 'none' : 'block'; // Pokaż lub ukryj listę
 });
 
+import { onSnapshot, query, orderBy, limit } from 'firebase/firestore';
+
+// Referencja do kolekcji z rezerwacjami
+const bookingsRef = collection(db, 'bookings');
+
+// Zapytanie do pobrania nowych rezerwacji
+const q = query(bookingsRef, orderBy('createdAt', 'desc'), limit(10));
+
+// Funkcja do aktualizacji listy powiadomień
+const updateNotificationsList = (bookings) => {
+  const notificationsListElement = document.getElementById('notificationsList');
+  notificationsListElement.innerHTML = ''; // Wyczyść aktualną listę
+
+  bookings.forEach((booking) => {
+    const li = document.createElement('li');
+    li.textContent = `Rezerwacja: ${booking.data().name} ${booking.data().surname} - ${booking.data().date} ${booking.data().time}`;
+    notificationsListElement.appendChild(li);
+  });
+};
+
+// Ustaw nasłuch na zapytanie
+onSnapshot(q, (snapshot) => {
+  updateNotificationsList(snapshot.docs);
+});
+
+
 </script>
 
 
