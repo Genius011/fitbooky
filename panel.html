@@ -626,9 +626,10 @@ async function displayFutureBookings() {
           const bookingRow = document.createElement('tr');
 
           // Add 'highlighted' class if booking date is today.
-          if (bookingData.date === todayFormatted) {
-            bookingRow.classList.add('highlighted');
-          }
+           if (bookingData.date === todayFormatted) {
+      bookingRow.classList.add('highlighted');
+      console.log('Highlighting booking for:', bookingData.date); // Dodaj to dla debugowania
+    }
 
           bookingRow.innerHTML = `
             <td>${userData.firstName || ''}</td>
