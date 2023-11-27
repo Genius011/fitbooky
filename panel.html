@@ -270,25 +270,31 @@ h2 {
   z-index: 1000; /* Upewnij się, że ikona jest na wierzchu */
   display: flex; /* Używamy flexbox do wyrównania elementów */
   align-items: center; /* Wycentruj elementy pionowo */
+  justify-content: center; /* Wycentruj elementy poziomo */
+  cursor: pointer;
 }
 
-/* Styl dla dzwoneczka */
+/* Styl dla dzwoneczka z liczbą powiadomień wewnątrz */
 .notification-bell {
-  cursor: pointer;
+  position: relative; /* Umożliwia pozycjonowanie licznika */
   color: #ffffff; /* Biały kolor ikony */
-  margin-right: 10px; /* Dajemy odstęp między ikoną a licznikiem */
+  font-size: 24px; /* Dostosuj rozmiar ikony */
 }
 
 /* Styl dla licznika powiadomień */
 .notification-count {
+  position: absolute; /* Pozycjonuje licznik względem dzwoneczka */
+  top: -10px; /* Dostosuj pozycję, aby liczba była w prawym górnym rogu dzwoneczka */
+  right: -10px;
   background-color: red;
   color: white;
-  border-radius: 50%;
+  border-radius: 50%; /* Okrągłe tło dla licznika */
   padding: 2px 6px;
   font-size: 12px;
-  min-width: 16px; /* Upewnij się, że kółko jest okrągłe nawet przy jednocyfrowych liczbach */
+  min-width: 16px; /* Zapewnia okrągły kształt dla licznika */
   text-align: center;
 }
+
 
 
 
@@ -297,11 +303,13 @@ h2 {
 </head>
 <body>
 
-<!-- Dzwoneczek powiadomień z ikoną font-awesome i licznikiem -->
-<div id="notificationBell" class="notification-bell">
-  <i class="fas fa-bell"></i>
-  <span id="notificationCount" class="notification-count">0</span>
+<!-- Kontener dla dzwoneczka powiadomień z liczbą powiadomień wewnątrz -->
+<div class="notification-bell-container">
+  <i class="fas fa-bell notification-bell">
+    <span id="notificationCount" class="notification-count">3</span> <!-- Liczba powiadomień -->
+  </i>
 </div>
+
 
 
 
