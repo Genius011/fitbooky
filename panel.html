@@ -387,20 +387,6 @@ h2 {
     cursor: pointer; /* Kursor wskazujący */
     transition: background-color 0.3s ease; /* Płynna zmiana tła */
 
-.deleteButton {
-    background: transparent;
-    border: none;
-    padding: 5px;
-    cursor: pointer;
-    font-size: 0.8em;
-    color: #888; /* szary kolor domyślny */
-    transition: color 0.3s ease;
-}
-
-/* Zmiana koloru przycisku kasowania na czerwony po najechaniu */
-.deleteButton:hover {
-    color: red;
-}
 
     </style>
 </head>
@@ -821,9 +807,6 @@ async function displayTodayBookings() {
   <button class="savePriceButton" aria-label="Zapisz cenę">
     <i class="fa fa-check"></i>
   </button>
-  <button class="deleteButton">
-            <i class="fas fa-times"></i>
-        </button>
 </td>
 
 
