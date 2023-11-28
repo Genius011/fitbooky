@@ -274,6 +274,71 @@ h2 {
     font-size: 1.2em;
 }
 
+#todayBookingsTable {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+  margin-top: 20px;
+  background: white;
+  border-radius: 8px;
+  text-align: left;
+}
+
+#todayBookingsTable thead {
+  background-color: #6e8efb;
+  color: white;
+}
+
+#todayBookingsTable th,
+#todayBookingsTable td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+#todayBookingsTable th {
+  position: sticky;
+  top: 0;
+}
+
+#todayBookingsTable tbody tr:hover {
+  background-color: #ddd;
+}
+
+/* Styl dla pola wprowadzania ceny i przycisku zapisu */
+.price-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.trainingPrice {
+  width: auto; /* Dostosuj szerokość do treści */
+  margin-right: 10px; /* Dostosuj odstęp od przycisku */
+}
+
+.savePriceButton {
+  padding: 5px 10px; /* Dostosuj padding przycisku */
+}
+
+/* Aby wszystkie kolumny miały tę samą szerokość */
+#todayBookingsTable th,
+#todayBookingsTable td {
+  width: calc(100% / liczba_kolumn); /* Dziel szerokość tabeli przez liczbę kolumn */
+}
+
+/* Zapewnienie, że pole input i przycisk są w tej samej linii */
+#todayBookingsTable .price-input-container {
+  white-space: nowrap;
+}
+
+/* Dostosowanie szerokości kolumn */
+#todayBookingsTable .trainingPrice {
+  width: 70%; /* lub inna wartość procentowa, która wygląda dobrze na ekranie */
+}
+
+#todayBookingsTable .savePriceButton {
+  width: 30%; /* lub inna wartość procentowa, która wygląda dobrze na ekranie */
+}
 
 
     </style>
