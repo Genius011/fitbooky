@@ -11,49 +11,46 @@
         body {
     font-family: 'Roboto', sans-serif;
     background-image: url('dall.png');
-	 background-size: cover;
+    background-size: cover;
     margin: 0;
     padding: 20px;
 }
 
-/* Styl podstawowy dla przycisków */
+/* Styl podstawowy dla wszystkich przycisków */
 button {
-  background-color: #6e8efb; /* Niebieskie tło */
-  color: white; /* Biały tekst */
-  border: none; /* Brak obramowania */
-  padding: 10px 20px; /* Padding wewnątrz przycisku */
-  text-align: center; /* Wyśrodkowany tekst */
-  text-decoration: none; /* Brak dekoracji tekstu */
-  display: inline-block; /* Wyświetlanie w linii */
-  font-size: 16px; /* Wielkość czcionki */
-  margin: 4px 2px; /* Margines wokół przycisku */
-  transition-duration: 0.4s; /* Czas trwania efektu przejścia */
-  cursor: pointer; /* Kursor wskazujący */
-  border-radius: 5px; /* Zaokrąglone rogi */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtelny cień */
+    background-color: #6e8efb;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Efekt hover dla przycisków */
 button:hover {
-  background-color: #5d7ce2; /* Ciemniejszy niebieski kiedy najechane */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Większy cień dla efektu "podnoszenia" */
+    background-color: #5d7ce2;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Styl dla przycisków zamykania (close button) */
 .close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+    color: #aaa;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
 }
 
 .close:hover,
 .close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
-
 
 .admin-panel {
     background-color: #fff;
@@ -69,35 +66,35 @@ button:hover {
     margin-bottom: 30px;
 }
 
+h1, h2, h3, th, td, label {
+    font-size: 0.9em;
+    color: #555;
+}
+
 h1 {
     text-align: center;
-    color: #333;
 }
 
 h2 {
     border-bottom: 2px solid #6e8efb;
-    color: #555;
     padding-bottom: 5px;
     margin-bottom: 20px;
 }
 
-.day-container {
+.day-container,
+.hours-container,
+.week-navigation,
+.day-column {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 10px;
 }
 
-.day-container label {
+.day-container label,
+.hour-label,
+.hour-checkbox,
+.day-column label {
     margin-right: 5px;
-}
-
-.hour-label {
-    margin: 0 5px;
-}
-
-.hour-checkbox {
-    margin-right: 2px;
 }
 
 .submit-btn {
@@ -105,46 +102,14 @@ h2 {
     width: 100%;
     margin-top: 20px;
 }
-.day-availability {
-    margin-bottom: 20px;
+
+.day-availability,
+.day-column {
     padding: 10px;
     background-color: #f9f9f9;
     border-radius: 5px;
-}
-
-.hours-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.toggle-day {
-    background-color: #6e8efb;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
     margin-bottom: 10px;
-}
-
-.toggle-day:hover {
-    background-color: #5d7ce2;
-}
-#availability-wrapper {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-.day-column {
-    flex-basis: calc(100% / 11); /* dzieli na 7 równych kolumn */
-    padding: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    margin: 10px;
-    background: #f9f9f9;
 }
 
 .day-column h3 {
@@ -152,261 +117,161 @@ h2 {
     margin-bottom: 10px;
 }
 
-.day-column button {
-    background-color: #6e8efb;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.day-column button:hover {
-    background-color: #5d7ce2;
-}
-
-.hour-list {
-    text-align: center;
-}
-
-.hour-list label {
-    display: block;
+.date-display {
     margin-bottom: 5px;
-}
-
-.week-navigation {
-    text-align: center;
-    margin: 20px;
 }
 
 .week-navigation button {
     padding: 5px 15px;
     margin: 0 10px;
-    /* Add more styles for buttons */
 }
 
-.date-display {
-    font-size: 0.9em;
-    color: #555;
-    margin-bottom: 5px;
-}
-
-/* Style dla tabeli z rezerwacjami */
+/* Styl dla tabel z rezerwacjami */
+#todayBookingsTable,
 #futureBookingsTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+    background: white;
+    border-radius: 8px;
 }
 
+#todayBookingsTable thead,
 #futureBookingsTable thead {
-  background-color: #6e8efb;
-  color: white;
-}
-
-#futureBookingsTable th,
-#futureBookingsTable td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-#futureBookingsTable tbody tr:nth-child(odd) {
-  background-color: #f2f2f2;
-}
-
-#futureBookingsTable tbody tr:hover {
-  background-color: #ddd;
-}
-
-/* Responsywność dla mniejszych ekranów */
-@media (max-width: 600px) {
-  #futureBookingsTable {
-    border: 0;
-  }
-
-  #futureBookingsTable thead {
-    display: none;
-  }
-
-  #futureBookingsTable tr {
-    margin-bottom: 10px;
-    display: block;
-    border-bottom: 2px solid #ddd;
-  }
-
-  #futureBookingsTable td {
-    display: block;
-    text-align: right;
-    font-size: 13px;
-    border-bottom: 1px dotted #ddd;
-  }
-
-  #futureBookingsTable td:last-child {
-    border-bottom: 0;
-  }
-
-  #futureBookingsTable td:before {
-    content: attr(data-label);
-    float: left;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-}
-
-.modal {
-  display: none; 
-  position: fixed; 
-  z-index: 1; 
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%; 
-  overflow: auto; 
-  background-color: rgb(0,0,0); 
-  background-color: rgba(0,0,0,0.4); 
-}
-
-.modal-content {
-  background-color: #fefefe;
-  margin: 10% auto; /* Zmieniono z 15% dla lepszego centrowania */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 30%; /* Zmniejszenie szerokości dla bardziej kwadratowego wyglądu */
-  border-radius: 20px; /* Dodanie zaokrągleń */
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Dodanie cienia dla lepszej widoczności */
-}
-
-/* Media query dla mniejszych ekranów, aby modal był większy i czytelniejszy */
-@media (max-width: 600px) {
-  .modal-content {
-    width: 80%;
-    margin: 20% auto;
-  }
-}
-
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.toggle-availability {
-  cursor: pointer;
-  /* Pozostałe style, które chcesz zastosować */
-}
-
-.toggle-availability i {
-  margin-right: 5px;
-  transition: transform 0.3s ease;
-}
-
-/* Klasa, która obraca ikonę, kiedy sekcja jest zwinięta */
-.rotate-icon {
-  transform: rotate(180deg);
-}
-
-.toggle-future-bookings {
-  cursor: pointer;
-  /* Dodaj tutaj pozostałe style, które uważasz za potrzebne */
-}
-
-.toggle-future-bookings i {
-  margin-right: 5px;
-  transition: transform 0.3s ease;
-}
-
-/* Klasa, która obraca ikonę, kiedy sekcja jest zwinięta */
-.rotate-icon {
-  transform: rotate(180deg);
-}
-
-
-}
-/* Style dla tabeli Dzisiejsze rezerwacje */
-#todayBookingsTable {
-  width: 100%;
-  border-collapse: collapse;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-  margin-top: 20px;
-  background: white;
-  border-radius: 8px;
-}
-
-#todayBookingsTable thead {
-  background-color: #6e8efb;
-  color: white;
+    background-color: #6e8efb;
+    color: white;
 }
 
 #todayBookingsTable th,
-#todayBookingsTable td {
-  padding: 10px 15px;
-  border-bottom: 1px solid #ddd;
+#todayBookingsTable td,
+#futureBookingsTable th,
+#futureBookingsTable td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
 }
 
-#todayBookingsTable tbody tr:hover {
-  background-color: #ddd;
+#todayBookingsTable tbody tr:hover,
+#futureBookingsTable tbody tr:hover {
+    background-color: #ddd;
 }
 
-/* Style dla tabeli Aktualne rezerwacje */
-#futureBookingsTable {
-  /* Styl identyczny jak dla #todayBookingsTable, 
-     z wyjątkiem jakichkolwiek zmian, które chcesz wprowadzić */
+@media (max-width: 600px) {
+    #futureBookingsTable thead,
+    #todayBookingsTable thead {
+        display: none;
+    }
+
+    #futureBookingsTable tr,
+    #todayBookingsTable tr {
+        margin-bottom: 10px;
+        display: block;
+        border-bottom: 2px solid #ddd;
+    }
+
+    #futureBookingsTable td,
+    #todayBookingsTable td {
+        display: block;
+        text-align: right;
+        font-size: 13px;
+        border-bottom: 1px dotted #ddd;
+    }
+
+    #futureBookingsTable td:last-child,
+    #todayBookingsTable td:last-child {
+        border-bottom: 0;
+    }
+
+    #futureBookingsTable td:before,
+    #todayBookingsTable td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
 }
 
-.toggle-button {
-  cursor: pointer;
-  margin: 0; /* Usuń wszelkie domyślne marginesy */
-  padding: 10px; /* Ustaw odpowiedni padding */
-  width: 100%; /* Opcjonalnie, aby przycisk był na całą szerokość */
-  text-align: left; /* Wyrównanie tekstu do lewej strony */
-  border: none; /* Usunięcie obramowania */
-  background: none; /* Usunięcie tła */
-  outline: none; /* Usunięcie konturu gdy przycisk jest aktywny */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
 }
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 600px) {
+    .modal-content {
+        width: 90%;
+        margin: 20% auto;
+    }
+}
+
+.toggle-availability,
+.toggle-future-bookings,
 .toggle-today-bookings {
-  cursor: pointer;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    font-size: 0.9em;
 }
-/* Styl dla kontenera zawierającego pole wprowadzania ceny i przycisk */
+
+.toggle-availability i,
+.toggle-future-bookings i,
+.toggle-today-bookings i {
+    margin-right: 5px;
+    transition: transform 0.3s ease;
+}
+
+.rotate-icon {
+    transform: rotate(180deg);
+}
+
 .price-container {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-/* Styl dla pola wprowadzania ceny */
 .trainingPrice {
-  width: 70%; /* Dostosuj szerokość pola wprowadzania */
-  padding: 5px;
-  margin-right: 5px; /* Dodaj odstęp między polem a przyciskiem */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 0.9em;
+    flex-grow: 1;
+    margin-right: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9em;
 }
 
-/* Styl dla przycisku z ikoną ptaszka */
 .savePriceButton {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: green; /* lub inny kolor pasujący do designu */
-  padding: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: green;
+    padding: 5px;
+    display: flex;
+    align-items: center;
 }
 
 .savePriceButton i {
-  font-size: 1.2em; /* Lekko większy rozmiar ikony dla lepszej widoczności */
+    font-size: 1.2em;
 }
 
 
