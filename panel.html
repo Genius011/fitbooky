@@ -690,6 +690,7 @@ import {
   doc, 
   getDoc, 
   updateDoc, 
+  deleteDoc,
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
 
@@ -780,7 +781,7 @@ async function displayFutureBookings() {
 			         <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
       <i class="fas fa-user"></i> <!-- Ikonka profilu -->
     </button>
-	<button class="deleteButton">
+  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}')">
             <i class="fas fa-times"></i>
         </button>
   </td>
@@ -839,7 +840,7 @@ async function displayTodayBookings() {
     <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
       <i class="fas fa-user"></i> <!-- Ikonka profilu -->
     </button>
-	<button class="deleteButton">
+  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}')">
             <i class="fas fa-times"></i>
         </button>
   
@@ -954,6 +955,17 @@ document.getElementById('toggleTodayBookingsIcon').addEventListener('click', fun
   }
 });
 
+async function deleteBooking(bookingId) {
+  try {
+    await deleteDoc(doc(db, 'bookings', bookingId));
+    console.log('Rezerwacja została usunięta');
+    // Tutaj możesz dodać odświeżenie listy rezerwacji lub inny kod reagujący na usunięcie
+  } catch (error) {
+    console.error('Błąd przy usuwaniu rezerwacji:', error);
+  }
+}
+
+window.deleteBooking = deleteBooking;
 
 
 </script>
