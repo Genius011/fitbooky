@@ -458,7 +458,7 @@ const db = getFirestore(app);
         }
     }
 
-        function openPopup(selectedDay) {
+       async function openPopup(selectedDay) {
     const popup = document.createElement('div');
     popup.className = 'popup';
     popup.innerHTML = `
@@ -476,23 +476,30 @@ const db = getFirestore(app);
     `;
 
     document.body.appendChild(popup);
+    const bookButton = document.getElementById('bookButton');
+    bookButton.addEventListener('click', async () => {
+        const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type');
+        const selectedTimeSlot = popup.querySelector('.time-slot.selected')?.textContent;
+        
+        if (selectedTrainingType && selectedTimeSlot) {
+            let adjustedMonth = selectedDay.getMonth() + 1;
+            let formattedDate = `${selectedDay.getFullYear()}-${adjustedMonth.toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
 
-    document.getElementById('bookButton').addEventListener('click', () => {
-                // Logika rezerwacji
-                const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type');
-                const selectedTimeSlot = popup.querySelector('.time-slot.selected')?.textContent;
-
-                if (selectedTrainingType && selectedTimeSlot) {
-                    // Formatowanie daty
-                    let adjustedMonth = selectedDay.getMonth() + 1; // Dodanie 1 do miesiąca
-                    let formattedDate = `${selectedDay.getFullYear()}-${adjustedMonth.toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
-                    
-                    saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot);
-                    popup.remove();
-                } else {
-                    alert("Proszę wybrać rodzaj treningu i godzinę");
+            // Sprawdź dostępność dla wybranego slotu czasowego i treningu personalnego
+            if (selectedTrainingType === 'personal') {
+                const available = await isTimeSlotAvailable(formattedDate, selectedTimeSlot, selectedTrainingType);
+                if (!available) {
+                    alert("Ten termin jest już zajęty. Wybierz inną godzinę.");
+                    return;
                 }
-            });
+            }
+
+            saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot);
+            popup.remove();
+        } else {
+            alert("Proszę wybrać rodzaj treningu i godzinę");
+        }
+    });
 
     
 			
@@ -522,18 +529,26 @@ const db = getFirestore(app);
         function generateTimeSlots(container, startHour, endHour) {
     container.innerHTML = '';
     for (let hour = startHour; hour <= endHour; hour++) {
-        let timeString = `${hour.toString().padStart(2, '0')}:00`;
-        let timeSlot = document.createElement('div');
-        timeSlot.className = 'time-slot';
-        timeSlot.textContent = timeString;
+    let timeString = `${hour.toString().padStart(2, '0')}:00`;
+    let timeSlot = document.createElement('div');
+    timeSlot.className = 'time-slot';
+    timeSlot.textContent = timeString;
 
+    // Sprawdź dostępność dla treningów indywidualnych
+    isTimeSlotAvailable(formattedDate, timeString, 'personal').then(available => {
+      if (!available) {
+        timeSlot.classList.add('inactive');
+        timeSlot.onclick = null;
+      } else {
         timeSlot.onclick = function() {
-            container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
-            timeSlot.classList.add('selected');
+          container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+          timeSlot.classList.add('selected');
         };
+      }
+    });
 
-        container.appendChild(timeSlot);
-    }
+    container.appendChild(timeSlot);
+  }
 }
 
 
@@ -600,6 +615,12 @@ const db = getFirestore(app);
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Ustaw godzinę na początek dnia
     return date < today;
+}
+
+async function isTimeSlotAvailable(date, time, trainingType) {
+  const bookingsRef = collection(db, "bookings");
+  const querySnapshot = await getDocs(query(bookingsRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
+  return querySnapshot.empty; // Zwróć true jeśli nie ma rezerwacji, false w przeciwnym wypadku
 }
 
 	
