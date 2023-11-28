@@ -248,23 +248,27 @@ h2 {
     transform: rotate(180deg);
 }
 
-.price-container {
-    display: flex;
+display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
 }
 
 .trainingPrice {
-     width: 50%; /* Zmniejsz szerokość o 50% */
-    margin: 0;
+   flex-grow: 1; /* Pozwala na rozszerzanie się */
+    flex-basis: 33%; /* Początkowa szerokość */
+    margin: 0 10px 0 0; /* Dodaje margines z prawej strony */
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 0.8em; /* Dostosuj rozmiar czcionki do przycisku */
-    line-height: 1.5; /* Ustawienie wysokości linii na 1.5 dla lepszego wyśrodkowania tekstu */
+    font-size: 0.8em;
+    line-height: 1.5;
+    box-sizing: border-box;
+}
 
 .savePriceButton {
-    padding: 5px; /* Ustaw mniejszy padding aby pasował do przycisku profilowego */
+    flex-grow: 0; /* Nie pozwala na rozszerzanie się */
+    padding: 5px 10px;
     font-size: 0.8em; /* Ustaw mniejszy rozmiar czcionki aby pasował do przycisku profilowego */
     border-radius: 4px; /* Dostosuj zaokrąglenia */
     display: inline-flex; /* Umożliwia wyśrodkowanie ikony i tekstu */
