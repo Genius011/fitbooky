@@ -786,6 +786,7 @@ async function displayTodayBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
+			<td>${bookingData.price || '---'} PLN</td>
             <td><button onclick="viewProfile('${bookingData.userId}')">Profil</button></td>
           `;
 
