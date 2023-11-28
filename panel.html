@@ -967,9 +967,12 @@ async function displayTodayBookings() {
 			<td class="price-container">
   <input type="number" class="trainingPrice" placeholder="Cena w PLN" />
   <!-- Przycisk z ikoną ptaszka -->
-  <button class="savePriceButton" aria-label="Zapisz cenę">
+  <td class="price-container">
+  <input type="number" class="trainingPrice" id="price-${bookingData.id}" placeholder="Cena w PLN" />
+  <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
     <i class="fa fa-check"></i>
   </button>
+</td>
               <td>
     <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
       <i class="fas fa-user"></i> <!-- Ikonka profilu -->
@@ -1181,6 +1184,30 @@ document.getElementById('toggleFinancesIcon').addEventListener('click', function
     icon.classList.remove('rotate-icon');
   }
 });
+
+// Dodaj tę funkcję do swojego skryptu
+async function savePrice(bookingId) {
+  const priceInput = document.getElementById(`price-${bookingId}`);
+  const price = Number(priceInput.value);
+  const bookingRef = doc(db, 'bookings', bookingId);
+
+  if (price <= 0) {
+    alert('Proszę wprowadzić poprawną cenę.');
+    return;
+  }
+
+  try {
+    await updateDoc(bookingRef, {
+      price: price
+    });
+    alert('Cena została zaktualizowana.');
+  } catch (error) {
+    console.error('Błąd przy aktualizacji ceny:', error);
+    alert('Wystąpił błąd przy aktualizacji ceny.');
+  }
+}
+
+window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
 
 </script>
