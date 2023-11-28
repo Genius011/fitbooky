@@ -307,40 +307,21 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
     });
 };
 
-// Funkcja do wyszukiwania i wyświetlania najbliższej sesji treningowej użytkownika
-const displayNextTrainingSession = (userId) => {
-  const bookingsRef = collection(db, 'bookings');
-  const q = query(bookingsRef, where("userId", "==", userId), orderBy("date", "asc"), orderBy("time", "asc"), limit(1));
 
-  getDocs(q).then((querySnapshot) => {
-    if (!querySnapshot.empty) {
-      const nextSession = querySnapshot.docs[0].data();
-      document.getElementById('nextTraining').textContent = `Następny trening: ${nextSession.date} o godzinie ${nextSession.time}`;
-    } else {
-      document.getElementById('nextTraining').textContent = 'Brak zaplanowanych treningów.';
-    }
-  }).catch((error) => {
-    console.error("Error getting next training session:", error);
-  });
-};
 
-// Funkcja do zliczania sesji treningowych użytkownika i wywołania funkcji wyświetlającej następny trening
+
+// Funkcja do zliczania sesji treningowych użytkownika
 const countUserSessions = (userId) => {
   const bookingsRef = collection(db, 'bookings');
-  const q = query(bookingsRef, where("userId", "==", userId));
-
+  const q = query(bookingsRef, where("userId", "==", userId)); // Filtruj dokumenty po userId
+  
   getDocs(q).then((querySnapshot) => {
     const totalSessions = querySnapshot.docs.length;
     document.getElementById('totalSessions').textContent = `Total Training Sessions: ${totalSessions}`;
-    displayNextTrainingSession(userId); // Wywołaj funkcję wyświetlającą następny trening
   }).catch((error) => {
     console.error("Error getting bookings:", error);
   });
 };
-
-// Dodaj ten element do HTML, aby wyświetlić informacje o następnym treningu
-<div id="nextTraining"></div>
-
 
 
     document.addEventListener('DOMContentLoaded', function() {
