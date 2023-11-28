@@ -750,15 +750,7 @@ async function displayFutureBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
-			<td>
-  <input type="number" class="trainingPrice" placeholder="Cena w PLN" />
-  <!-- Przycisk z ikoną ptaszka -->
-  <button class="savePriceButton" aria-label="Zapisz cenę">
-    <i class="fa fa-check"></i>
-  </button>
-</td>
-
-            <td><button onclick="viewProfile('${bookingData.userId}')">Profil</button></td>
+			            <td><button onclick="viewProfile('${bookingData.userId}')">Profil</button></td>
           `;
           bookingsTableBody.appendChild(bookingRow);
         }
@@ -804,7 +796,14 @@ async function displayTodayBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
-			<td>${bookingData.price || '---'} PLN</td>
+			<td>
+  <input type="number" class="trainingPrice" placeholder="Cena w PLN" />
+  <!-- Przycisk z ikoną ptaszka -->
+  <button class="savePriceButton" aria-label="Zapisz cenę">
+    <i class="fa fa-check"></i>
+  </button>
+</td>
+
             <td><button onclick="viewProfile('${bookingData.userId}')">Profil</button></td>
           `;
 
