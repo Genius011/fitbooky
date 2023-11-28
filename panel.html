@@ -321,15 +321,23 @@ display: flex;
 }
 
 .trainingPrice {
-  flex-grow: 0; /* Nie pozwala polemu na rozciąganie się */
-    width: auto; /* Automatycznie dostosowuje szerokość do zawartości */
-    margin-right: 10px; /* Dostosowuje odstęp od przycisku */
+  flex: 0 0 auto; /* Nie pozwala na rozciąganie się */
+    width: auto; /* Pozwala na automatyczne dostosowanie szerokości */
+    max-width: 33%; /* Maksymalna szerokość ustawiona na 1/3 komórki tabeli */
+    margin-right: 10px; /* Odstęp od przycisku */
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    height: 30px; /* Dopasowanie wysokości do przycisków */
+    font-size: 0.8em;
+    line-height: 1.5;
     box-sizing: border-box;
 }
+
+.price-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Zmienione z 'space-between' na 'flex-start' */
+    width: 100%; /* Zajmuje całą szerokość komórki tabeli */
 
 .savePriceButton {
   padding: 5px;
