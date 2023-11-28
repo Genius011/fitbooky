@@ -481,30 +481,24 @@ h2 {
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Ustawia tekst i ikonę po przeciwnych stronach */
+  justify-content: flex-start; /* Ustawia tekst i ikonę po lewej stronie */
   padding: 10px; /* Ustawia padding identyczny jak w innych sekcjach */
   margin-bottom: 10px; /* Dodaje margines na dole, aby oddzielić od zawartości */
 }
 
+/* Klasa dla ikony, aby była z lewej strony */
 .toggle-finances i {
-  margin-right: 5px; /* Dodaje margines po prawej stronie ikony */
-  transition: transform 0.3s ease; /* Animacja obracania ikony */
+  margin-right: 10px; /* Dodaje margines między ikoną a tekstem */
+}
+
+/* Styl dla tekstu wewnątrz przycisku, aby był wyświetlany po prawej stronie */
+.toggle-finances span {
+  margin-left: auto;
 }
 
 /* Dodaje efekt podświetlenia podczas najechania na przycisk */
 .toggle-finances:hover {
   background-color: #f2f2f2; /* Lekkie podświetlenie tła */
-}
-
-/* Styl dla ikony chevron (strzałka) */
-.toggle-finances .fas {
-  font-size: 1.2em; /* Ustawia większy rozmiar ikony */
-  color: #6e8efb; /* Kolor ikony dopasowany do motywu przycisków */
-}
-
-/* Klasa obracająca ikonę gdy sekcja jest rozwinięta */
-.rotate-icon {
-  transform: rotate(180deg);
 }
 
 
@@ -764,8 +758,10 @@ h2 {
 	
 	<!-- Sekcja do rozwijania Finanse -->
 <div class="toggle-finances">
-  <i id="toggleFinancesIcon" class="fas fa-chevron-down"></i> Finanse
+  <i id="toggleFinancesIcon" class="fas fa-chevron-down"></i>
+  <span>Finanse</span>
 </div>
+
 
 <!-- Kontener Finanse -->
 <section id="financesManager" class="section" style="display: none;">
