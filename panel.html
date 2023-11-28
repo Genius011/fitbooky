@@ -377,6 +377,7 @@ h2 {
 .toggle-today-bookings {
   cursor: pointer;
 }
+
 .savePriceButton {
   background: transparent;
   border: none;
@@ -387,7 +388,6 @@ h2 {
 .savePriceButton i {
   font-size: 1em; /* Dostosuj rozmiar do potrzeb */
 }
-
 
     </style>
 </head>
@@ -409,14 +409,6 @@ h2 {
         <th>Data</th>
         <th>Rodzaj treningu</th>
 		 <th>Cena</th>
-		 <td>
-  <input type="number" class="trainingPrice" placeholder="Cena w PLN" />
-  <!-- Przycisk z ikoną ptaszka -->
-  <button class="savePriceButton" aria-label="Zapisz cenę">
-    <i class="fa fa-check"></i>
-  </button>
-</td>
-
         <th>Akcja</th>
       </tr>
     </thead>
@@ -758,7 +750,11 @@ async function displayFutureBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
-			<td>${bookingData.price || '---'} PLN</td> <!-- Dodaj informację o cenie -->
+			<td><input type="number" class="trainingPrice" placeholder="Cena w PLN" />
+  <!-- Przycisk z ikoną ptaszka -->
+  <button class="savePriceButton" aria-label="Zapisz cenę">
+    <i class="fa fa-check"></i>
+  </button></td> <!-- Dodaj informację o cenie -->
 			
 			
             <td><button onclick="viewProfile('${bookingData.userId}')">Profil</button></td>
