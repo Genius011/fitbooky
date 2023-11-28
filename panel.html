@@ -900,10 +900,8 @@ async function displayFutureBookings() {
         if (userSnap.exists()) {
           const userData = userSnap.data();
           const bookingRow = document.createElement('tr');
-
-          // Jeśli data rezerwacji jest dzisiejszą datą, dodajemy klasę .highlighted
-          if (bookingData.date === todayFormatted) {
-            bookingRow.classList.add('highlighted');
+			const priceValue = bookingData.price ? bookingData.price : '';
+          
           }
 
           bookingRow.innerHTML = `
@@ -952,7 +950,7 @@ async function displayTodayBookings() {
         if (userSnap.exists()) {
           const userData = userSnap.data();
           const bookingRow = document.createElement('tr');
-          
+          onst priceValue = bookingData.price ? bookingData.price : '';
           // Dodaj klasę .highlighted, jeśli to konieczne
           if (bookingData.date === todayFormatted) {
             bookingRow.classList.add('highlighted');
@@ -964,12 +962,12 @@ async function displayTodayBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
-			<td class="price-container">
-  <input type="number" class="trainingPrice" id="price-${bookingData.id}" placeholder="Cena w PLN" />
-  <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
-    <i class="fa fa-check"></i>
-  </button>
-</td>
+			 <td class="price-container">
+    <input type="number" class="trainingPrice" id="price-${bookingData.id}" value="${priceValue}" placeholder="Cena w PLN" />
+    <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
+      <i class="fa fa-check"></i>
+    </button>
+  </td>
               <td>
     <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
       <i class="fas fa-user"></i> <!-- Ikonka profilu -->
@@ -1182,7 +1180,6 @@ document.getElementById('toggleFinancesIcon').addEventListener('click', function
   }
 });
 
-// Dodaj tę funkcję do swojego skryptu
 async function savePrice(bookingId) {
   const priceInput = document.getElementById(`price-${bookingId}`);
   const price = Number(priceInput.value);
@@ -1194,10 +1191,14 @@ async function savePrice(bookingId) {
   }
 
   try {
+    // Aktualizacja ceny w Firestore
     await updateDoc(bookingRef, {
       price: price
     });
     alert('Cena została zaktualizowana.');
+    // Odśwież widok tabeli, aby pokazać nową cenę
+    displayFutureBookings();
+    displayTodayBookings();
   } catch (error) {
     console.error('Błąd przy aktualizacji ceny:', error);
     alert('Wystąpił błąd przy aktualizacji ceny.');
