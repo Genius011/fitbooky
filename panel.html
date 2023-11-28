@@ -872,12 +872,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function viewProfile(userId) {
-  // Znajdź modal i elementy, które będą wypełnione danymi
+  
   const modal = document.getElementById('profileModal');
   const profileDetails = document.getElementById('profileDetails');
   const userRef = doc(db, 'users', userId);
   
-  // Pobierz dane użytkownika i wyświetl je w modalu
+  
   getDoc(userRef).then((doc) => {
     if (doc.exists) {
       const user = doc.data();
@@ -886,9 +886,15 @@ function viewProfile(userId) {
   <p><i class="fas fa-user"></i> Nazwisko: ${user.lastName}</p>
   <p><i class="fas fa-envelope"></i> Email: ${user.email}</p>
   <p><i class="fas fa-phone"></i> Telefon: ${user.phone}</p>
-`;
+  <p><i class="fas fa-dumbbell"></i> Liczba treningów: ${numberOfBookings}</p>
 
-      // Pokaż modal
+const bookingsRef = collection(db, 'bookings');
+      getDocs(bookingsRef).then(snapshot => {
+        const userBookings = snapshot.docs.filter(doc => doc.data().userId === userId);
+        const numberOfBookings = userBookings.length; // Liczba rezerwacji
+
+
+`;
       modal.style.display = "block";
     }
   }).catch((error) => {
