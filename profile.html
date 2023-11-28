@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
-    <style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+	<style>
         body {
             font-family: 'Roboto', sans-serif;
             background-image: url('dall.png');
@@ -15,6 +17,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+
         }
 
         .profile-container {
@@ -23,32 +26,17 @@
             border-radius: 10px;
             overflow: hidden;
             width: 90%;
-            max-width: 600px;
+            max-width: 400px;
             text-align: center;
         }
 
         .profile-header {
             background: linear-gradient(135deg, #6e8efb, #a777e3);
             color: #fff;
-            padding: 10px 0;
+            padding: 20px 0;
         }
 
-        .profile-image {
-            margin: 20px;
-            position: relative;
-        }
-
-        .profile-image img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-        }
-
-        .profile-image input[type="file"] {
-            display: none;
-        }
-
-        .profile-info {
+             .profile-info {
             text-align: left;
             padding: 10px;
         }
@@ -180,10 +168,12 @@
 }
 
 .form-field input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    box-sizing: border-box; /* Dostosowuje padding i border do szerokości elementu */
+    width: 100%; /* Szerokość inputa na 100% dostępnego miejsca */
+    padding: 10px; /* Ustawia równy padding dla wszystkich inputów */
+    border: 1px solid #ccc; /* Jednolite obramowanie */
+    border-radius: 5px; /* Zaokrąglone rogi */
+    margin-bottom: 10px; /* Odstęp między polami */
 }
 
 .form-button {
@@ -201,6 +191,56 @@
 .form-button:hover {
     background: linear-gradient(135deg, #a777e3, #6e8efb);
 }
+.profile-container {
+    /* ...existing styles... */
+    max-width: 400px; /* zmniejsz szerokość dla lepszego wyglądu na desktopach */
+}
+
+.profile-header {
+    padding: 20px 0; /* zwiększ wypełnienie */
+}
+
+.profile-info, .profile-edit-form {
+     margin: 0 auto; /* Centrowanie formularza */
+    max-width: 90%; /* Maksymalna szerokość formularza */
+}
+
+.profile-actions button, .form-button {
+    width: calc(100% - 40px); /* dopasuj szerokość przycisku do paddingu kontenera */
+    margin: 10px 0; /* dodaj margines dla przycisków */
+}
+
+/* Dla responsywności */
+@media (max-width: 768px) {
+    .profile-container {
+        width: 95%; /* szerokość kontenera na urządzeniach mobilnych */
+        margin: 20px; /* dodaj margines na zewnątrz */
+    }
+
+    .profile-actions button, .form-button {
+        width: calc(100% - 40px); /* dostosuj szerokość przycisku do paddingu kontenera */
+    }
+}
+
+/* Efekty wskazujące dla przycisków */
+.profile-actions button:hover, .form-button:hover {
+    opacity: 0.9; /* delikatna zmiana przezroczystości */
+}
+
+/* Ikony dla pól */
+.form-field label {
+    display: flex;
+    align-items: center;
+}
+
+.form-field i {
+    margin-right: 5px; /* margines dla ikon */
+}
+@media (max-width: 768px) {
+    .form-field input {
+        width: 100%; /* Szerokość inputa na 100% dostępnego miejsca na mniejszych ekranach */
+    }
+}
 
     </style>
 </head>
@@ -216,29 +256,12 @@
 </div>
 
     
-    <div class="profile-info">
-    
-    <p id="displayEmail">Email: your.email@example.com</p>
-    <p id="displayPhone">Phone: 123-456-7890</p>
-    <p id="totalSessions">Total Training Sessions: 0</p>
+   <div class="profile-info">
+    <p id="displayEmail"><i class="fas fa-envelope"></i> Email: t.staworzynski@protonmail.com</p>
+    <p id="displayPhone"><i class="fas fa-phone"></i> Phone: +48789387011</p>
+    <p id="totalSessions"><i class="fas fa-calendar-alt"></i> Total Training Sessions: 1</p>
 </div>
-    <div class="profile-details">
-        <h2>Next training session</h2>
-        <div class="calendar">
-            <!-- Training entries go here -->
-            <div class="training-schedule">
-                <div class="training-entry">
-                    <div class="training-details">
-                        <p>Date: January 15, 2024</p>
-                        <p>Time: 10:00 AM</p>
-                        <p>Location: Gym XYZ</p>
-                    </div>
-                    <button class="cancel-button">Cancel</button>
-                </div>
-            </div>
-            <!-- More training entries go here -->
-        </div>
-    </div>
+    
 	<div class="profile-edit-form">
     <h2>Edit Profile</h2>
     <form id="editProfileForm">
@@ -266,10 +289,9 @@
  <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
 
-    
     // Your web app's Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
@@ -285,67 +307,46 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-   const fetchAndDisplayUserData = (userId) => {
-    const userDocRef = doc(db, 'users', userId);
-    
-    getDoc(userDocRef).then((doc) => {
-        if (doc.exists()) {
-            const userData = doc.data();
-            document.getElementById('displayName').textContent = userData.firstName + ' ' + userData.lastName;
-            document.getElementById('displayEmail').textContent = 'Email: ' + userData.email;
-            document.getElementById('displayPhone').textContent = 'Phone: ' + userData.phone;
-            
-            // Dodatkowy kod do pobrania liczby sesji treningowych użytkownika
-            countUserSessions(userId);
+    // Function to fetch and display user data
+    const fetchAndDisplayUserData = async (userId) => {
+        const userDocRef = doc(db, 'users', userId);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+            const userData = userDocSnap.data();
+            document.getElementById('displayName').innerHTML = userData.firstName + ' ' + userData.lastName;
+            document.getElementById('displayEmail').innerHTML = '<i class="fas fa-envelope"></i> Email: ' + userData.email;
+            document.getElementById('displayPhone').innerHTML = '<i class="fas fa-phone"></i> Phone: ' + userData.phone;
+            const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', userId));
+            const bookingsSnapshot = await getDocs(bookingsQuery);
+            const trainingCount = bookingsSnapshot.docs.length;
+            document.getElementById('totalSessions').innerHTML = `<i class="fas fa-calendar-alt"></i> Total Training Sessions: ${trainingCount}`;
         } else {
             console.log("No such document!");
         }
-    }).catch((error) => {
-        console.error("Error getting document:", error);
-    });
-};
+    };
 
-// Funkcja do zliczania sesji treningowych użytkownika
-const countUserSessions = (userId) => {
-  const bookingsRef = collection(db, 'bookings');
-  const q = query(bookingsRef, where("userId", "==", userId)); // Filtruj dokumenty po userId
-  
-  getDocs(q).then((querySnapshot) => {
-    const totalSessions = querySnapshot.docs.length;
-    document.getElementById('totalSessions').textContent = `Total Training Sessions: ${totalSessions}`;
-  }).catch((error) => {
-    console.error("Error getting bookings:", error);
-  });
-};
-
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get the current user's ID and update their Firestore document
+    document.addEventListener('DOMContentLoaded', () => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                fetchAndDisplayUserData(user.uid); // Fetch and display user data
+                fetchAndDisplayUserData(user.uid);
                 const editProfileForm = document.getElementById('editProfileForm');
-
                 editProfileForm.addEventListener('submit', (e) => {
                     e.preventDefault();
                     const firstName = document.getElementById('firstName').value;
                     const lastName = document.getElementById('lastName').value;
                     const email = document.getElementById('email').value;
                     const phone = document.getElementById('phone').value;
-
                     const userDocRef = doc(db, 'users', user.uid);
-
                     setDoc(userDocRef, {
                         firstName: firstName,
                         lastName: lastName,
                         email: email,
                         phone: phone
-                    }, { merge: true }) // Use merge to avoid overwriting entire document
-                    .then(() => {
+                    }, { merge: true }).then(() => {
                         console.log('Profile updated successfully');
                         alert('Profile updated successfully!');
-                    })
-                    .catch((error) => {
+                    }).catch((error) => {
                         console.error('Error updating profile:', error);
                         alert('Error updating profile');
                     });
@@ -356,19 +357,56 @@ const countUserSessions = (userId) => {
             }
         });
     });
-	// Przykładowa funkcja, która pobiera dokumenty z kolekcji
-async function fetchDocuments() {
-  const querySnapshot = await getDocs(collection(db, 'your_collection_name'));
-  querySnapshot.forEach((doc) => {
-    console.log(`${doc.id} => ${doc.data()}`);
-  });
-}
 
-// Make sure to call your function inside an async function or within a .then() if not using async/await
-fetchDocuments();
+    // Definiowanie funkcji viewProfile
+    function viewProfile(userId) {
+        const modal = document.getElementById('profileModal'); // Upewnij się, że masz element modal w HTML
+        const profileDetails = document.getElementById('profileDetails'); // I ten element również
 
+        getDoc(doc(db, 'users', userId)).then(docSnap => {
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                profileDetails.innerHTML = `
+                    <p>Imię: ${userData.firstName}</p>
+                    <p>Nazwisko: ${userData.lastName}</p>
+                    <p>Email: ${userData.email}</p>
+                    <p>Telefon: ${userData.phone}</p>
+                `;
+                modal.style.display = 'block';
+            } else {
+                console.error('Nie znaleziono dokumentu użytkownika');
+            }
+        }).catch(error => {
+            console.error('Błąd podczas pobierania danych użytkownika:', error);
+        });
+    }
+
+    // Gdy użytkownik kliknie (x), zamknij modal
+    const closeButton = document.querySelector('.close');
+    closeButton.onclick = function() {
+        const modal = document.getElementById('profileModal');
+        modal.style.display = "none";
+    }
+
+    // Gdy użytkownik kliknie poza modal, zamknij go
+    window.onclick = function(event) {
+        const modal = document.getElementById('profileModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Eksportowanie viewProfile do globalnego zasięgu
+    window.viewProfile = viewProfile;
+	
+	bookings.forEach(booking => {
+    // ...
+    const viewButton = bookingRow.querySelector('button');
+    viewButton.addEventListener('click', () => viewProfile(booking.userId));
+});
 	
 </script>
+
 
 
 </body>
