@@ -872,38 +872,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function viewProfile(userId) {
-  
   const modal = document.getElementById('profileModal');
   const profileDetails = document.getElementById('profileDetails');
   const userRef = doc(db, 'users', userId);
-  
-  
+
+  // Pobieranie danych użytkownika
   getDoc(userRef).then((doc) => {
     if (doc.exists) {
       const user = doc.data();
+      // Tymczasowe wyświetlanie danych użytkownika bez liczby treningów
       profileDetails.innerHTML = `
-  <p><i class="fas fa-user"></i> Imię: ${user.firstName}</p>
-  <p><i class="fas fa-user"></i> Nazwisko: ${user.lastName}</p>
-  <p><i class="fas fa-envelope"></i> Email: ${user.email}</p>
-  <p><i class="fas fa-phone"></i> Telefon: ${user.phone}</p>
-  <p><i class="fas fa-dumbbell"></i> Liczba treningów: ${numberOfBookings}</p>
+        <p><i class="fas fa-user"></i> Imię: ${user.firstName}</p>
+        <p><i class="fas fa-user"></i> Nazwisko: ${user.lastName}</p>
+        <p><i class="fas fa-envelope"></i> Email: ${user.email}</p>
+        <p><i class="fas fa-phone"></i> Telefon: ${user.phone}</p>
+      `;
 
-const bookingsRef = collection(db, 'bookings');
+      // Pobieranie rezerwacji użytkownika
+      const bookingsRef = collection(db, 'bookings');
       getDocs(bookingsRef).then(snapshot => {
         const userBookings = snapshot.docs.filter(doc => doc.data().userId === userId);
         const numberOfBookings = userBookings.length; // Liczba rezerwacji
 
-        // Dodaj informację o liczbie treningów do modalu
-        // Upewnij się, że ten kod jest wewnątrz tego samego bloku .then, który zawiera numberOfBookings
+        // Dodanie informacji o liczbie treningów do wcześniej wyświetlonych danych
         profileDetails.innerHTML += `
           <p><i class="fas fa-dumbbell"></i> Liczba treningów: ${numberOfBookings}</p>
         `;
 
-      modal.style.display = "block";
+        // Pokazanie modalu
+        modal.style.display = "block";
+      });
     }
   }).catch((error) => {
     console.error("Error fetching user details:", error);
   });
+}
+
   
   // Gdy użytkownik kliknie (x), zamknij modal
   const closeButton = document.querySelector('.close');
