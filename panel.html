@@ -341,17 +341,20 @@ h2 {
 }
 
 .profileButton {
-  background: none; /* Usuwa tło */
-  border: none; /* Usuwa obramowanie */
-  cursor: pointer; /* Pokazuje kursor 'pointer' gdy najedziesz myszką */
-  padding: 5px; /* Dodaje trochę przestrzeni wokół ikony */
-  font-size: 1em; /* Ustawia rozmiar ikony */
-  color: #6e8efb; /* Ustawia kolor ikony */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 1.2em; /* nieco większa ikona dla lepszej widoczności */
+  color: #6e8efb; /* domyślny kolor ikony */
+  transition: color 0.3s ease; /* płynna zmiana koloru */
 }
 
 .profileButton:hover {
-  color: #5d7ce2; /* Ciemniejszy niebieski kolor ikony podczas najechania */
+  color: #000; /* ciemniejszy kolor podczas najechania */
+  text-shadow: 0px 0px 8px rgba(0,0,0,0.5); /* dodaje cień dla lepszego kontrastu */
 }
+
 
 
     </style>
@@ -773,7 +776,11 @@ async function displayTodayBookings() {
 </td>
 
 
-            <td><button onclick="viewProfile('${bookingData.userId}')">Profil</button></td>
+            <td>
+    <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
+      <i class="fas fa-user"></i> <!-- Ikonka profilu -->
+    </button>
+  </td>
           `;
 
           // Dodawanie wierszy do tabeli dzisiejszych rezerwacji
