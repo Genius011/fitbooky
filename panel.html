@@ -951,12 +951,8 @@ async function displayTodayBookings() {
       getDoc(userRef).then(userSnap => {
         if (userSnap.exists()) {
           const userData = userSnap.data();
+          const priceValue = bookingData.price ? `${bookingData.price} PLN` : 'Nie ustawiono';
           const bookingRow = document.createElement('tr');
-          
-          // Dodaj klasę .highlighted, jeśli to konieczne
-          if (bookingData.date === todayFormatted) {
-            bookingRow.classList.add('highlighted');
-          }
           
           bookingRow.innerHTML = `
             <td>${userData.firstName || ''}</td>
@@ -964,32 +960,30 @@ async function displayTodayBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
-			<td class="price-container">
-  <input type="number" class="trainingPrice" placeholder="Cena w PLN" />
-  <!-- Przycisk z ikoną ptaszka -->
-  <button class="savePriceButton" aria-label="Zapisz cenę">
-    <i class="fa fa-check"></i>
-  </button>
-              <td>
-    <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
-      <i class="fas fa-user"></i> <!-- Ikonka profilu -->
-    </button>
-  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
-            <i class="fas fa-times"></i>
-        </button>
-  
-  </td>
+            <td>${priceValue}</td>
+            <td class="price-container">
+              <input type="number" class="trainingPrice" id="price-${bookingData.id}" placeholder="Cena w PLN" />
+              <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
+                <i class="fa fa-check"></i>
+              </button>
+            </td>
+            <td>
+              <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
+                <i class="fas fa-user"></i> <!-- Ikonka profilu -->
+              </button>
+              <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
+                <i class="fas fa-times"></i>
+              </button>
+            </td>
           `;
-
-          // Dodawanie wierszy do tabeli dzisiejszych rezerwacji
           todayBookingsTableBody.appendChild(bookingRow);
         }
-      });
+      }); // Tutaj dodano brakujący nawias zamykający `})`
     });
   } catch (error) {
     console.error("Error fetching bookings:", error);
   }
-}
+
 document.addEventListener('DOMContentLoaded', function() {
   // Wywołanie funkcji do wyświetlenia dzisiejszych rezerwacji
   displayTodayBookings();
@@ -1181,6 +1175,32 @@ document.getElementById('toggleFinancesIcon').addEventListener('click', function
     icon.classList.remove('rotate-icon');
   }
 });
+
+async function savePrice(bookingId) {
+  const priceInput = document.getElementById(`price-${bookingId}`);
+  const price = Number(priceInput.value);
+  const bookingRef = doc(db, 'bookings', bookingId);
+
+  if (price <= 0) {
+    alert('Proszę wprowadzić poprawną cenę.');
+    return;
+  }
+
+  try {
+    await updateDoc(bookingRef, {
+      price: price
+    });
+    alert('Cena została zaktualizowana.');
+    // Odśwież widok tabeli, aby pokazać nową cenę
+    displayFutureBookings();
+    displayTodayBookings();
+  } catch (error) {
+    console.error('Błąd przy aktualizacji ceny:', error);
+    alert('Wystąpił błąd przy aktualizacji ceny.');
+  }
+}
+
+window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
 
 </script>
