@@ -781,7 +781,7 @@ async function displayFutureBookings() {
 			         <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
       <i class="fas fa-user"></i> <!-- Ikonka profilu -->
     </button>
-  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}')">
+  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
             <i class="fas fa-times"></i>
         </button>
   </td>
@@ -840,7 +840,7 @@ async function displayTodayBookings() {
     <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
       <i class="fas fa-user"></i> <!-- Ikonka profilu -->
     </button>
-  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}')">
+  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
             <i class="fas fa-times"></i>
         </button>
   
@@ -955,15 +955,22 @@ document.getElementById('toggleTodayBookingsIcon').addEventListener('click', fun
   }
 });
 
-async function deleteBooking(bookingId) {
+async function deleteBooking(bookingId, event) {
   try {
     await deleteDoc(doc(db, 'bookings', bookingId));
     console.log('Rezerwacja została usunięta');
-    // Tutaj możesz dodać odświeżenie listy rezerwacji lub inny kod reagujący na usunięcie
+    
+    // Usunięcie wiersza tabeli z DOM
+    let btn = event.target;
+    while (btn.nodeName !== 'TR') {
+      btn = btn.parentNode; // szukamy w górę hierarchii DOM aż znajdziemy wiersz 'TR'
+    }
+    btn.parentNode.removeChild(btn); // usuwamy wiersz 'TR' z tabeli
   } catch (error) {
     console.error('Błąd przy usuwaniu rezerwacji:', error);
   }
 }
+
 
 window.deleteBooking = deleteBooking;
 
