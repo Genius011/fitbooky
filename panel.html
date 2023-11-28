@@ -954,30 +954,6 @@ document.getElementById('toggleTodayBookingsIcon').addEventListener('click', fun
   }
 });
 
-document.getElementById('updatePriceForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  // Pobierz wpisaną wartość
-  const price = document.getElementById('trainingPrice').value;
-  
-  // Identyfikator rezerwacji, do której chcesz dodać cenę
-  const bookingId = 'ID_REZERWACJI'; // To ID musisz uzyskać w inny sposób, np. z kontekstu użytkownika
-  
-  // Referencja do odpowiedniego dokumentu w kolekcji 'bookings'
-  const bookingRef = doc(db, 'bookings', bookingId);
-
-  // Aktualizacja dokumentu z nową ceną
-  updateDoc(bookingRef, {
-    price: price
-  }).then(() => {
-    alert('Cena została zaktualizowana.');
-    // Tutaj możesz dodać logikę odświeżania strony lub aktualizacji widoku
-  }).catch(error => {
-    console.error('Błąd aktualizacji ceny: ', error);
-    alert('Nie udało się zaktualizować ceny.');
-  });
-});
-
 
 
 </script>
