@@ -952,19 +952,17 @@ async function displayTodayBookings() {
         if (userSnap.exists()) {
           const userData = userSnap.data();
           const bookingRow = document.createElement('tr');
-          
-          // Dodaj klasę .highlighted, jeśli to konieczne
-          if (bookingData.date === todayFormatted) {
-            bookingRow.classList.add('highlighted');
+            const priceValue = bookingData.price ? `${bookingData.price} PLN` : 'Nie ustawiono';
+
           }
           
           bookingRow.innerHTML = `
             <td>${userData.firstName || ''}</td>
-            <td>${userData.lastName || ''}</td>
-            <td>${bookingData.time}</td>
-            <td>${bookingData.date}</td>
-            <td>${bookingData.trainingType}</td>
-			<td class="price-container">
+    <td>${userData.lastName || ''}</td>
+    <td>${bookingData.time}</td>
+    <td>${bookingData.date}</td>
+    <td>${bookingData.trainingType}</td>
+    <td>${priceValue}</td>
  
   <!-- Przycisk z ikoną ptaszka -->
   <td class="price-container">
@@ -1185,7 +1183,6 @@ document.getElementById('toggleFinancesIcon').addEventListener('click', function
   }
 });
 
-// Dodaj tę funkcję do swojego skryptu
 async function savePrice(bookingId) {
   const priceInput = document.getElementById(`price-${bookingId}`);
   const price = Number(priceInput.value);
@@ -1201,6 +1198,9 @@ async function savePrice(bookingId) {
       price: price
     });
     alert('Cena została zaktualizowana.');
+    // Odśwież widok tabeli, aby pokazać nową cenę
+    displayFutureBookings();
+    displayTodayBookings();
   } catch (error) {
     console.error('Błąd przy aktualizacji ceny:', error);
     alert('Wystąpił błąd przy aktualizacji ceny.');
