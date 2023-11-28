@@ -844,23 +844,6 @@ async function displayTodayBookings() {
         </button>
   
   </td>
-  
-  // Utworzenie przycisku zapisu ceny
-      const savePriceButton = document.createElement('button');
-      savePriceButton.className = 'savePriceButton';
-      savePriceButton.innerHTML = '<i class="fa fa-check"></i>';
-      savePriceButton.addEventListener('click', handlePriceUpdate);
-      // Dodaj przycisk do wiersza
-      bookingRow.querySelector('.price-container').appendChild(savePriceButton);
-
-      // Dodawanie wierszy do tabeli dzisiejszych rezerwacji
-      todayBookingsTableBody.appendChild(bookingRow);
-    }
-  }).catch(error => {
-    console.error('Błąd przy pobieraniu danych użytkownika:', error);
-  });
-});
-  
           `;
 
           // Dodawanie wierszy do tabeli dzisiejszych rezerwacji
@@ -994,43 +977,6 @@ document.getElementById('updatePriceForm').addEventListener('submit', function(e
     alert('Nie udało się zaktualizować ceny.');
   });
 });
-
-// Funkcja aktualizująca cenę rezerwacji
-function updateBookingPrice(bookingId, newPrice) {
-  const bookingRef = doc(db, 'bookings', bookingId); // Tworzenie referencji do dokumentu rezerwacji
-
-  // Aktualizacja ceny w dokumencie rezerwacji
-  updateDoc(bookingRef, {
-    price: newPrice
-  }).then(() => {
-    console.log('Cena została zaktualizowana');
-    // Tutaj możesz dodać dodatkowe akcje po pomyślnej aktualizacji, np. wyświetlenie komunikatu
-  }).catch((error) => {
-    console.error('Błąd aktualizacji ceny:', error);
-  });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  // Dodaj event listener do wszystkich przycisków ptaszek tylko po załadowaniu DOM
-  document.querySelectorAll('.savePriceButton').forEach(button => {
-    button.addEventListener('click', handlePriceUpdate);
-  });
-});
-
-function handlePriceUpdate(event) {
-  const bookingRow = event.target.closest('tr'); // Znajdź najbliższy wiersz tabeli
-  const bookingId = bookingRow.getAttribute('data-booking-id'); // Pobierz ID rezerwacji z atrybutu data
-  const newPrice = bookingRow.querySelector('.trainingPrice').value; // Pobierz nową cenę z pola input
-
-  // Sprawdź, czy cena jest liczbą i większa od 0
-  if (newPrice && !isNaN(newPrice) && Number(newPrice) > 0) {
-    updateBookingPrice(bookingId, Number(newPrice)); // Aktualizuj cenę w bazie
-  } else {
-    alert('Proszę wprowadzić poprawną cenę');
-  }
-}
-
-// Reszta kodu funkcji updateBookingPrice...
 
 
 
