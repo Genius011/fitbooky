@@ -893,8 +893,12 @@ const bookingsRef = collection(db, 'bookings');
         const userBookings = snapshot.docs.filter(doc => doc.data().userId === userId);
         const numberOfBookings = userBookings.length; // Liczba rezerwacji
 
+        // Dodaj informację o liczbie treningów do modalu
+        // Upewnij się, że ten kod jest wewnątrz tego samego bloku .then, który zawiera numberOfBookings
+        profileDetails.innerHTML += `
+          <p><i class="fas fa-dumbbell"></i> Liczba treningów: ${numberOfBookings}</p>
+        `;
 
-`;
       modal.style.display = "block";
     }
   }).catch((error) => {
