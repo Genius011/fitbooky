@@ -252,23 +252,24 @@ h2 {
 }
 
 .trainingPrice {
-    flex-grow: 1;
-    margin-right: 10px;
+     width: 50%; /* Zmniejsz szerokość o 50% */
+    margin: 0;
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 0.9em;
-}
+    font-size: 0.8em; /* Dostosuj rozmiar czcionki do przycisku */
+    line-height: 1.5; /* Ustawienie wysokości linii na 1.5 dla lepszego wyśrodkowania tekstu */
 
 .savePriceButton {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: green;
-    padding: 5px;
-    display: flex;
-    align-items: center;
-}
+    padding: 5px; /* Ustaw mniejszy padding aby pasował do przycisku profilowego */
+    font-size: 0.8em; /* Ustaw mniejszy rozmiar czcionki aby pasował do przycisku profilowego */
+    border-radius: 4px; /* Dostosuj zaokrąglenia */
+    display: inline-flex; /* Umożliwia wyśrodkowanie ikony i tekstu */
+    justify-content: center; /* Wyśrodkowanie zawartości w poziomie */
+    align-items: center; /* Wyśrodkowanie zawartości w pionie */
+    border: none; /* Brak obramowania */
+    cursor: pointer; /* Kursor wskazujący */
+    transition: background-color 0.3s ease;
 
 .savePriceButton i {
     font-size: 1.2em;
