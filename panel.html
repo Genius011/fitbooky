@@ -808,42 +808,34 @@ h2 {
 
 
 <!-- Kontener Finanse -->
-<section id="financesManager" class="section" style="display: none;">
-  <h2>Podsumowanie Finansowe</h2>
-  <!-- Tabela podsumowania -->
-  <table id="summaryTable" class="summary-table">
-    <thead>
-      <tr>
-        <th>Okres</th>
-        <th>Liczba rezerwacji</th>
-        <th>Suma kwot</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Dane podsumowujące zostaną wypełnione tutaj -->
-    </tbody>
-  </table>
-
-  <div id="detailedFinances">
-    <!-- Tabela szczegółowych finansów -->
-    <table id="financesTable">
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Liczba rezerwacji</th>
-          <th>Suma kwot</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Dane finansowe zostaną wypełnione tutaj -->
-      </tbody>
+<section id="financesManager" class="section">
+    <h2>Podsumowanie Finansowe</h2>
+    <table id="financesSummaryTable">
+        <thead>
+            <tr>
+                <th>Kategoria</th>
+                <th>Dziennie</th>
+                <th>Miesięcznie</th>
+                <th>Średnia (Miesięcznie)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Przychody</td>
+                <td id="dailyRevenue">0 PLN</td>
+                <td id="monthlyRevenue">0 PLN</td>
+                <td id="averageMonthlyPrice">0 PLN</td>
+            </tr>
+            <tr>
+                <td>Rezerwacje</td>
+                <td id="dailyBookingsCount">0</td>
+                <td id="monthlyBookingsCount">0</td>
+                <td id="averageDailyBookings">0</td>
+            </tr>
+        </tbody>
     </table>
-  </div>
-  <div id="dailySummary">
-    Podsumowanie dzienne: <span id="dailyTotal">0 PLN</span>
-</div>
-
 </section>
+
 
 
 </div>
@@ -1258,13 +1250,52 @@ async function savePrice(bookingId) {
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
-const dailyTotalElement = document.getElementById('dailyTotal');
-console.log(dailyTotalElement); // To pokaże, czy element jest null czy nie
-if (dailyTotalElement) {
-    dailyTotalElement.textContent = `${dailyTotal} PLN`;
-} else {
-    console.error('Element #dailyTotal nie został znaleziony.');
+async function updateFinancesSummary() {
+    const bookingsRef = collection(db, 'bookings');
+    let dailyRevenue = 0;
+    let monthlyRevenue = 0;
+    let dailyBookingsCount = 0;
+    let monthlyBookingsCount = 0;
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    try {
+        const bookingSnapshot = await getDocs(bookingsRef);
+        bookingSnapshot.docs.forEach(doc => {
+            const booking = doc.data();
+            const bookingDate = new Date(booking.date);
+
+            // Sprawdź, czy rezerwacja jest z dzisiaj
+            if (bookingDate.toDateString() === today.toDateString()) {
+                dailyRevenue += booking.price;
+                dailyBookingsCount++;
+            }
+
+            // Sprawdź, czy rezerwacja jest z tego miesiąca
+            if (bookingDate >= firstDayOfMonth && bookingDate <= today) {
+                monthlyRevenue += booking.price;
+                monthlyBookingsCount++;
+            }
+        });
+
+        const averageMonthlyPrice = monthlyBookingsCount > 0 ? (monthlyRevenue / monthlyBookingsCount).toFixed(2) : 0;
+        const averageDailyBookings = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate() > 0 ? (monthlyBookingsCount / new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate()).toFixed(2) : 0;
+
+        // Aktualizacja wartości w tabeli
+        document.getElementById('dailyRevenue').textContent = `${dailyRevenue.toFixed(2)} PLN`;
+        document.getElementById('monthlyRevenue').textContent = `${monthlyRevenue.toFixed(2)} PLN`;
+        document.getElementById('averageMonthlyPrice').textContent = `${averageMonthlyPrice} PLN`;
+        document.getElementById('dailyBookingsCount').textContent = dailyBookingsCount;
+        document.getElementById('monthlyBookingsCount').textContent = monthlyBookingsCount;
+        document.getElementById('averageDailyBookings').textContent = averageDailyBookings;
+
+    } catch (error) {
+        console.error("Error updating finances summary:", error);
+    }
 }
+
+// Wywołaj tę funkcję w odpowiednim miejscu, na przykład po załadowaniu strony
+updateFinancesSummary();
 
 
 </script>
