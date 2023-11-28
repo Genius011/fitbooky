@@ -519,31 +519,6 @@ h2 {
 
 
 
-/* Dostosowanie szerokości kolumny akcji */
-#todayBookingsTable th:nth-child(7),
-#todayBookingsTable td:nth-child(7) {
-    width: 120px; /* Dostosuj szerokość do swoich potrzeb */
-}
-
-/* Zastosowanie flexboxa do wyrównania przycisków w kolumnie akcji */
-#todayBookingsTable td:nth-child(7) {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Rozdziela przyciski równomiernie */
-}
-
-/* Dostosowanie wielkości przycisków */
-.profileButton,
-.deleteButton {
-    flex-grow: 1; /* Pozwala przyciskom rozciągnąć się, aby zapełnić dostępną przestrzeń */
-    margin: 0 4px; /* Dodaje marginesy po bokach przycisków */
-}
-
-/* Opcjonalnie, jeśli przyciski są zbyt szerokie, możesz zastosować maksymalną szerokość */
-.profileButton,
-.deleteButton {
-    max-width: 50px; /* Ustawia maksymalną szerokość przycisków */
-}
 
 
     </style>
@@ -990,11 +965,12 @@ async function displayTodayBookings() {
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
 			<td class="price-container">
-  <input type="number" class="trainingPrice" id="price-${bookingData.id}" placeholder="Cena w PLN" />
-  <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
+  <input type="number" class="trainingPrice" placeholder="Cena w PLN" />
+  <!-- Przycisk z ikoną ptaszka -->
+  <button class="savePriceButton" aria-label="Zapisz cenę">
     <i class="fa fa-check"></i>
   </button>
-</td>
+              <td>
     <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
       <i class="fas fa-user"></i> <!-- Ikonka profilu -->
     </button>
@@ -1206,28 +1182,6 @@ document.getElementById('toggleFinancesIcon').addEventListener('click', function
   }
 });
 
-async function savePrice(bookingId) {
-  const priceInput = document.getElementById(`price-${bookingId}`);
-  const price = Number(priceInput.value);
-  const bookingRef = doc(db, 'bookings', bookingId);
-
-  if (price <= 0) {
-    alert('Proszę wprowadzić poprawną cenę.');
-    return;
-  }
-
-  try {
-    await updateDoc(bookingRef, {
-      price: price
-    });
-    alert('Cena została zaktualizowana.');
-  } catch (error) {
-    console.error('Błąd przy aktualizacji ceny:', error);
-    alert('Wystąpił błąd przy aktualizacji ceny.');
-  }
-}
-
-window.savePrice = savePrice;
 
 </script>
 
