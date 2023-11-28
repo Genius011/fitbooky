@@ -951,41 +951,34 @@ async function displayTodayBookings() {
       getDoc(userRef).then(userSnap => {
         if (userSnap.exists()) {
           const userData = userSnap.data();
+          const priceValue = bookingData.price ? `${bookingData.price} PLN` : 'Nie ustawiono';
           const bookingRow = document.createElement('tr');
-            const priceValue = bookingData.price ? `${bookingData.price} PLN` : 'Nie ustawiono';
-
-          }
           
           bookingRow.innerHTML = `
             <td>${userData.firstName || ''}</td>
-    <td>${userData.lastName || ''}</td>
-    <td>${bookingData.time}</td>
-    <td>${bookingData.date}</td>
-    <td>${bookingData.trainingType}</td>
-    <td>${priceValue}</td>
- 
-  <!-- Przycisk z ikoną ptaszka -->
-  <td class="price-container">
-  <input type="number" class="trainingPrice" id="price-${bookingData.id}" placeholder="Cena w PLN" />
-  <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
-    <i class="fa fa-check"></i>
-  </button>
-</td>
-              <td>
-    <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
-      <i class="fas fa-user"></i> <!-- Ikonka profilu -->
-    </button>
-  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
-            <i class="fas fa-times"></i>
-        </button>
-  
-  </td>
+            <td>${userData.lastName || ''}</td>
+            <td>${bookingData.time}</td>
+            <td>${bookingData.date}</td>
+            <td>${bookingData.trainingType}</td>
+            <td>${priceValue}</td>
+            <td class="price-container">
+              <input type="number" class="trainingPrice" id="price-${bookingData.id}" placeholder="Cena w PLN" />
+              <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
+                <i class="fa fa-check"></i>
+              </button>
+            </td>
+            <td>
+              <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
+                <i class="fas fa-user"></i> <!-- Ikonka profilu -->
+              </button>
+              <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
+                <i class="fas fa-times"></i>
+              </button>
+            </td>
           `;
-
-          // Dodawanie wierszy do tabeli dzisiejszych rezerwacji
           todayBookingsTableBody.appendChild(bookingRow);
         }
-      });
+      }); // Tutaj dodano brakujący nawias zamykający `})`
     });
   } catch (error) {
     console.error("Error fetching bookings:", error);
