@@ -221,8 +221,6 @@
     <p id="displayEmail">Email: your.email@example.com</p>
     <p id="displayPhone">Phone: 123-456-7890</p>
     <p id="totalSessions">Total Training Sessions: 0</p>
-	<div id="nextTraining"></div>
-
 </div>
     <div class="profile-details">
         <h2>Next training session</h2>
@@ -307,9 +305,6 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
     });
 };
 
-
-
-
 // Funkcja do zliczania sesji treningowych użytkownika
 const countUserSessions = (userId) => {
   const bookingsRef = collection(db, 'bookings');
@@ -371,7 +366,6 @@ async function fetchDocuments() {
 
 // Make sure to call your function inside an async function or within a .then() if not using async/await
 fetchDocuments();
-
 
 	
 </script>
