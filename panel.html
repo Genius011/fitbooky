@@ -947,29 +947,32 @@ async function displayTodayBookings() {
     todayBookingsTableBody.innerHTML = ''; // Czyści istniejące wiersze tabeli
 
     todayBookings.forEach(bookingData => {
-      const userRef = doc(db, 'users', bookingData.userId);
-      getDoc(userRef).then(userSnap => {
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-          const bookingRow = document.createElement('tr');
+    const userRef = doc(db, 'users', bookingData.userId);
+    getDoc(userRef).then(userSnap => {
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        const bookingRow = document.createElement('tr');
           
           // Dodaj klasę .highlighted, jeśli to konieczne
           if (bookingData.date === todayFormatted) {
             bookingRow.classList.add('highlighted');
           }
           
+		  
+		          const priceValue = bookingData.price ? bookingData.price : '';
+
           bookingRow.innerHTML = `
-            <td>${userData.firstName || ''}</td>
-            <td>${userData.lastName || ''}</td>
-            <td>${bookingData.time}</td>
-            <td>${bookingData.date}</td>
-            <td>${bookingData.trainingType}</td>
-			<td class="price-container">
-  <input type="number" class="trainingPrice" id="price-${bookingData.id}" placeholder="Cena w PLN" />
-  <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
-    <i class="fa fa-check"></i>
-  </button>
-</td>
+          <td>${userData.firstName || ''}</td>
+          <td>${userData.lastName || ''}</td>
+          <td>${bookingData.time}</td>
+          <td>${bookingData.date}</td>
+          <td>${bookingData.trainingType}</td>
+          <td class="price-container">
+            <input type="number" class="trainingPrice" id="price-${bookingData.id}" value="${priceValue}" placeholder="Cena w PLN" />
+            <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
+              <i class="fa fa-check"></i>
+            </button>
+          </td>
               <td>
     <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
       <i class="fas fa-user"></i> <!-- Ikonka profilu -->
@@ -1199,13 +1202,20 @@ async function savePrice(bookingId) {
     });
     alert('Cena została zaktualizowana.');
     // Odśwież widok tabeli, aby pokazać nową cenę
-    displayFutureBookings();
     displayTodayBookings();
+    // Jeśli masz osobną funkcję do wyświetlania przyszłych rezerwacji, wywołaj ją tutaj również
+    // displayFutureBookings();
   } catch (error) {
     console.error('Błąd przy aktualizacji ceny:', error);
     alert('Wystąpił błąd przy aktualizacji ceny.');
   }
 }
+
+// Upewnij się, że funkcje displayTodayBookings i displayFutureBookings są wywoływane po załadowaniu strony, aby odświeżyć dane
+document.addEventListener('DOMContentLoaded', () => {
+  displayTodayBookings();
+  displayFutureBookings();
+});
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
