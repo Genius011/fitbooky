@@ -494,8 +494,27 @@ h2 {
 
 /* Konkretnie dla przycisku Finanse, upewniając się, że jest on częścią tej samej klasy */
 .toggle-finances {
-  /* Tutaj dodaj wszelkie specyficzne style, jeśli są potrzebne */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Wyrównanie do lewej */
+  padding: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  font-size: 0.9em;
+  color: #555;
 }
+
+.toggle-finances i {
+  margin-right: 10px; /* Odstęp między ikoną a tekstem */
+}
+
+/* Styl dla tekstu w przycisku "Finanse", aby był wyśrodkowany */
+.toggle-finances span {
+  margin-left: auto;
+}
+
+
 
 
 
@@ -754,7 +773,7 @@ h2 {
     </section>
 	
 	<!-- Sekcja do rozwijania Finanse -->
-<div class="toggle-finances">
+<div class="toggle-section toggle-finances">
   <i id="toggleFinancesIcon" class="fas fa-chevron-down"></i>
   <span>Finanse</span>
 </div>
