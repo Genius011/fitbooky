@@ -378,6 +378,16 @@ h2 {
   cursor: pointer;
 }
 
+.savePriceButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: green; /* lub inny kolor pasujący do designu */
+}
+
+.savePriceButton i {
+  font-size: 1em; /* Dostosuj rozmiar do potrzeb */
+}
 
     </style>
 </head>
@@ -399,8 +409,6 @@ h2 {
         <th>Data</th>
         <th>Rodzaj treningu</th>
 		 <th>Cena</th>
-		 <input type="number" class="trainingPrice" placeholder="Wpisz cenę" />
-            <button class="savePriceButton">Zapisz</button>
         <th>Akcja</th>
       </tr>
     </thead>
@@ -743,6 +751,13 @@ async function displayFutureBookings() {
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
 			<td>${bookingData.price || '---'} PLN</td> <!-- Dodaj informację o cenie -->
+			<td>
+  <input type="number" class="trainingPrice" placeholder="Cena w PLN" />
+  <!-- Przycisk z ikoną ptaszka -->
+  <button class="savePriceButton" aria-label="Zapisz cenę">
+    <i class="fa fa-check"></i>
+  </button>
+</td>
 			
             <td><button onclick="viewProfile('${bookingData.userId}')">Profil</button></td>
           `;
