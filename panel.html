@@ -1212,10 +1212,7 @@ async function savePrice(bookingId) {
 }
 
 // Upewnij się, że funkcje displayTodayBookings i displayFutureBookings są wywoływane po załadowaniu strony, aby odświeżyć dane
-document.addEventListener('DOMContentLoaded', () => {
-  displayTodayBookings();
-  displayFutureBookings();
-});
+
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
