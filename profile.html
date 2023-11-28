@@ -324,20 +324,23 @@ const displayNextTrainingSession = (userId) => {
   });
 };
 
-
-
-// Funkcja do zliczania sesji treningowych użytkownika
+// Funkcja do zliczania sesji treningowych użytkownika i wywołania funkcji wyświetlającej następny trening
 const countUserSessions = (userId) => {
   const bookingsRef = collection(db, 'bookings');
-  const q = query(bookingsRef, where("userId", "==", userId)); // Filtruj dokumenty po userId
-  
+  const q = query(bookingsRef, where("userId", "==", userId));
+
   getDocs(q).then((querySnapshot) => {
     const totalSessions = querySnapshot.docs.length;
     document.getElementById('totalSessions').textContent = `Total Training Sessions: ${totalSessions}`;
+    displayNextTrainingSession(userId); // Wywołaj funkcję wyświetlającą następny trening
   }).catch((error) => {
     console.error("Error getting bookings:", error);
   });
 };
+
+// Dodaj ten element do HTML, aby wyświetlić informacje o następnym treningu
+<div id="nextTraining"></div>
+
 
 
     document.addEventListener('DOMContentLoaded', function() {
