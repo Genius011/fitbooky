@@ -978,6 +978,37 @@ document.getElementById('updatePriceForm').addEventListener('submit', function(e
   });
 });
 
+// Funkcja aktualizująca cenę rezerwacji
+function updateBookingPrice(bookingId, newPrice) {
+  const bookingRef = doc(db, 'bookings', bookingId); // Tworzenie referencji do dokumentu rezerwacji
+
+  // Aktualizacja ceny w dokumencie rezerwacji
+  updateDoc(bookingRef, {
+    price: newPrice
+  }).then(() => {
+    console.log('Cena została zaktualizowana');
+    // Tutaj możesz dodać dodatkowe akcje po pomyślnej aktualizacji, np. wyświetlenie komunikatu
+  }).catch((error) => {
+    console.error('Błąd aktualizacji ceny:', error);
+  });
+}
+
+// Dodaj event listener do wszystkich przycisków ptaszek
+document.querySelectorAll('.savePriceButton').forEach(button => {
+  button.addEventListener('click', (event) => {
+    const bookingRow = event.target.closest('tr'); // Znajdź najbliższy wiersz tabeli
+    const bookingId = bookingRow.getAttribute('data-booking-id'); // Pobierz ID rezerwacji z atrybutu data
+    const newPrice = bookingRow.querySelector('.trainingPrice').value; // Pobierz nową cenę z pola input
+
+    // Sprawdź, czy cena jest liczbą i większa od 0
+    if (newPrice && !isNaN(newPrice) && Number(newPrice) > 0) {
+      updateBookingPrice(bookingId, Number(newPrice)); // Aktualizuj cenę w bazie
+    } else {
+      alert('Proszę wprowadzić poprawną cenę');
+    }
+  });
+});
+
 
 </script>
 
