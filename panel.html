@@ -956,18 +956,20 @@ document.getElementById('toggleTodayBookingsIcon').addEventListener('click', fun
 });
 
 async function deleteBooking(bookingId, event) {
-  try {
-    await deleteDoc(doc(db, 'bookings', bookingId));
-    console.log('Rezerwacja została usunięta');
-    
-    // Usunięcie wiersza tabeli z DOM
-    let btn = event.target;
-    while (btn.nodeName !== 'TR') {
-      btn = btn.parentNode; // szukamy w górę hierarchii DOM aż znajdziemy wiersz 'TR'
+  // Wyświetlenie zapytania o potwierdzenie
+  const confirmDeletion = confirm('Czy na pewno chcesz usunąć tę rezerwację?');
+  if (confirmDeletion) {
+    try {
+      await deleteDoc(doc(db, 'bookings', bookingId));
+      console.log('Rezerwacja została usunięta');
+      
+      // Usunięcie wiersza tabeli z DOM
+      const btn = event.target.closest('tr'); // Znajdź najbliższy wiersz tabeli
+      btn.remove(); // Usuwa wiersz tabeli
+      
+    } catch (error) {
+      console.error('Błąd przy usuwaniu rezerwacji:', error);
     }
-    btn.parentNode.removeChild(btn); // usuwamy wiersz 'TR' z tabeli
-  } catch (error) {
-    console.error('Błąd przy usuwaniu rezerwacji:', error);
   }
 }
 
