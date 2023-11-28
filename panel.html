@@ -469,37 +469,39 @@ h2 {
   color: #333;
 }
 
-/* Styl dla przycisku rozwijania sekcji Finanse */
-.toggle-finances {
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.9em; /* Dopasowuje rozmiar czcionki do innych przycisków */
-  color: #555; /* Dopasowuje kolor tekstu do innych sekcji */
-  background: none;
-  border: none;
-  text-align: left;
-  width: 100%;
-  cursor: pointer;
+/* Zastosuj te style globalnie dla wszystkich przycisków rozwijania sekcji */
+.toggle-section {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Ustawia tekst i ikonę po lewej stronie */
-  padding: 10px; /* Ustawia padding identyczny jak w innych sekcjach */
-  margin-bottom: 10px; /* Dodaje margines na dole, aby oddzielić od zawartości */
+  justify-content: flex-start; /* Wyrównuje zawartość do lewej */
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  font-size: 0.9em;
+  color: #555;
+  transition: background-color 0.3s ease;
 }
 
-/* Klasa dla ikony, aby była z lewej strony */
-.toggle-finances i {
-  margin-right: 10px; /* Dodaje margines między ikoną a tekstem */
+.toggle-section i {
+  margin-right: 10px; /* Dodaje odstęp między ikoną a tekstem */
 }
 
-/* Styl dla tekstu wewnątrz przycisku, aby był wyświetlany po prawej stronie */
-.toggle-finances span {
-  margin-left: auto;
+.toggle-section:hover {
+  background-color: #f2f2f2; /* Lekkie podświetlenie tła podczas najechania */
 }
 
-/* Dodaje efekt podświetlenia podczas najechania na przycisk */
-.toggle-finances:hover {
-  background-color: #f2f2f2; /* Lekkie podświetlenie tła */
+/* Konkretnie dla przycisku Finanse, upewniając się, że jest on częścią tej samej klasy */
+.toggle-finances {
+  /* Tutaj dodaj wszelkie specyficzne style, jeśli są potrzebne */
 }
+
+/* Dodaj odpowiednie klasy do przycisków w HTML */
+<div class="toggle-section toggle-finances">
+  <i id="toggleFinancesIcon" class="fas fa-chevron-down"></i> Finanse
+</div>
+
 
 
     </style>
