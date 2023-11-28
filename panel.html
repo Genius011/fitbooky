@@ -340,6 +340,19 @@ h2 {
   width: 30%; /* lub inna wartość procentowa, która wygląda dobrze na ekranie */
 }
 
+.profileButton {
+  background: none; /* Usuwa tło */
+  border: none; /* Usuwa obramowanie */
+  cursor: pointer; /* Pokazuje kursor 'pointer' gdy najedziesz myszką */
+  padding: 5px; /* Dodaje trochę przestrzeni wokół ikony */
+  font-size: 1em; /* Ustawia rozmiar ikony */
+  color: #6e8efb; /* Ustawia kolor ikony */
+}
+
+.profileButton:hover {
+  color: #5d7ce2; /* Ciemniejszy niebieski kolor ikony podczas najechania */
+}
+
 
     </style>
 </head>
@@ -702,7 +715,10 @@ async function displayFutureBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
-			            <td><button onclick="viewProfile('${bookingData.userId}')">Profil</button></td>
+			         <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
+      <i class="fas fa-user"></i> <!-- Ikonka profilu -->
+    </button>
+  </td>
           `;
           bookingsTableBody.appendChild(bookingRow);
         }
