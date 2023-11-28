@@ -377,16 +377,38 @@ h2 {
 .toggle-today-bookings {
   cursor: pointer;
 }
+/* Styl dla kontenera zawierającego pole wprowadzania ceny i przycisk */
+.price-container {
+  display: flex;
+  align-items: center;
+}
+
+/* Styl dla pola wprowadzania ceny */
+.trainingPrice {
+  width: 70%; /* Dostosuj szerokość pola wprowadzania */
+  padding: 5px;
+  margin-right: 5px; /* Dodaj odstęp między polem a przyciskiem */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Styl dla przycisku z ikoną ptaszka */
 .savePriceButton {
   background: transparent;
   border: none;
   cursor: pointer;
   color: green; /* lub inny kolor pasujący do designu */
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .savePriceButton i {
-  font-size: 1em; /* Dostosuj rozmiar do potrzeb */
+  font-size: 1.2em; /* Lekko większy rozmiar ikony dla lepszej widoczności */
 }
+
 
 
     </style>
@@ -796,13 +818,14 @@ async function displayTodayBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
-			<td>
+			<td class="price-container">
   <input type="number" class="trainingPrice" placeholder="Cena w PLN" />
   <!-- Przycisk z ikoną ptaszka -->
   <button class="savePriceButton" aria-label="Zapisz cenę">
     <i class="fa fa-check"></i>
   </button>
 </td>
+
 
             <td><button onclick="viewProfile('${bookingData.userId}')">Profil</button></td>
           `;
