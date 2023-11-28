@@ -316,7 +316,9 @@ h2 {
   margin-right: 10px; /* Dostosuj odstęp od przycisku */
 }
 
-
+.savePriceButton {
+  padding: 5px 10px; /* Dostosuj padding przycisku */
+}
 
 /* Aby wszystkie kolumny miały tę samą szerokość */
 #todayBookingsTable th,
@@ -339,17 +341,14 @@ h2 {
 }
 
 .profileButton {
-  padding: 5px 10px; /* Ustawia mniejszy padding */
-    font-size: 0.8em; /* Ustawia mniejszy rozmiar czcionki */
-    line-height: 1; /* Aby wysokość przycisku była proporcjonalna do tekstu */
-    border-radius: 4px; /* Nieco mniejsze zaokrąglenie */
-    display: inline-flex; /* Umożliwia wyśrodkowanie ikony i tekstu */
-    justify-content: center; /* Wyśrodkowanie zawartości w poziomie */
-    align-items: center; /* Wyśrodkowanie zawartości w pionie */
-    text-align: center; /* Wyśrodkowanie tekstu */
-    border: none; /* Brak obramowania */
-    cursor: pointer; /* Kursor wskazujący */
-    transition: background-color 0.3s ease; /* Płynna zmiana tła */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 1.2em; /* nieco większa ikona dla lepszej widoczności */
+  color: #6e8efb; /* domyślny kolor ikony */
+  transition: color 0.3s ease; /* płynna zmiana koloru */
+}
 
 .profileButton:hover {
   color: #000; /* ciemniejszy kolor podczas najechania */
@@ -364,26 +363,18 @@ h2 {
 }
 
 .price-input {
-  width: 40px; /* lub określona szerokość, ale nie więcej niż szerokość komórki */
+  width: auto; /* lub określona szerokość, ale nie więcej niż szerokość komórki */
   margin: 0;
   padding: 5px;
   border: 1px solid #ccc;
-  height: 20px; /* wysokość mniejsza niż komórka, aby nie wyjeżdżać */
+  height: 25px; /* wysokość mniejsza niż komórka, aby nie wyjeżdżać */
 }
 
 .savePriceButton {
-width: 20px;
-  padding: 5px 10px; /* Ustawia mniejszy padding */
-    font-size: 0.8em; /* Ustawia mniejszy rozmiar czcionki */
-    line-height: 1; /* Aby wysokość przycisku była proporcjonalna do tekstu */
-    border-radius: 4px; /* Nieco mniejsze zaokrąglenie */
-    display: inline-flex; /* Umożliwia wyśrodkowanie ikony i tekstu */
-    justify-content: center; /* Wyśrodkowanie zawartości w poziomie */
-    align-items: center; /* Wyśrodkowanie zawartości w pionie */
-    text-align: center; /* Wyśrodkowanie tekstu */
-    border: none; /* Brak obramowania */
-    cursor: pointer; /* Kursor wskazujący */
-    transition: background-color 0.3s ease; /* Płynna zmiana tła */
+  padding: 5px;
+  margin-left: 5px; /* niewielki margines dla separacji od pola ceny */
+  height: 30px; /* wysokość dopasowana do pola ceny */
+}
 
 
     </style>
