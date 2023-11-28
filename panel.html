@@ -399,6 +399,8 @@ h2 {
         <th>Data</th>
         <th>Rodzaj treningu</th>
 		 <th>Cena</th>
+		 <input type="number" class="trainingPrice" placeholder="Wpisz cenę" />
+            <button class="savePriceButton">Zapisz</button>
         <th>Akcja</th>
       </tr>
     </thead>
@@ -650,8 +652,9 @@ import {
   getFirestore, 
   collection, 
   getDocs, 
-  doc, // Uprawienie: upewnij się, że 'doc' jest importowane prawidłowo.
-  getDoc 
+  doc, 
+  getDoc, 
+  updateDoc, 
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
 
@@ -740,6 +743,7 @@ async function displayFutureBookings() {
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
 			<td>${bookingData.price || '---'} PLN</td> <!-- Dodaj informację o cenie -->
+			
             <td><button onclick="viewProfile('${bookingData.userId}')">Profil</button></td>
           `;
           bookingsTableBody.appendChild(bookingRow);
@@ -896,6 +900,30 @@ document.getElementById('toggleTodayBookingsIcon').addEventListener('click', fun
     section.style.display = "none";
     icon.classList.remove('rotate-icon');
   }
+});
+
+document.getElementById('updatePriceForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  // Pobierz wpisaną wartość
+  const price = document.getElementById('trainingPrice').value;
+  
+  // Identyfikator rezerwacji, do której chcesz dodać cenę
+  const bookingId = 'ID_REZERWACJI'; // To ID musisz uzyskać w inny sposób, np. z kontekstu użytkownika
+  
+  // Referencja do odpowiedniego dokumentu w kolekcji 'bookings'
+  const bookingRef = doc(db, 'bookings', bookingId);
+
+  // Aktualizacja dokumentu z nową ceną
+  updateDoc(bookingRef, {
+    price: price
+  }).then(() => {
+    alert('Cena została zaktualizowana.');
+    // Tutaj możesz dodać logikę odświeżania strony lub aktualizacji widoku
+  }).catch(error => {
+    console.error('Błąd aktualizacji ceny: ', error);
+    alert('Nie udało się zaktualizować ceny.');
+  });
 });
 
 
