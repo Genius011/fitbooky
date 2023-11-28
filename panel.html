@@ -38,94 +38,6 @@ button:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.admin-panel {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin: auto;
-    width: 90%;
-    max-width: 800px;
-}
-
-.section {
-    margin-bottom: 30px;
-}
-
-h1, h2, h3, th, td, label {
-    font-size: 0.9em;
-    color: #555;
-}
-
-h1 {
-    text-align: center;
-}
-
-h2 {
-    border-bottom: 2px solid #6e8efb;
-    padding-bottom: 5px;
-    margin-bottom: 20px;
-}
-
-.day-container,
-.hours-container,
-.week-navigation,
-.day-column {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.day-container label,
-.hour-label,
-.hour-checkbox,
-.day-column label {
-    margin-right: 5px;
-}
-
-.submit-btn {
-    display: block;
-    width: 100%;
-    margin-top: 20px;
-}
-
-.day-availability,
-.day-column {
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.day-column h3 {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.date-display {
-    margin-bottom: 5px;
-}
-
-.week-navigation button {
-    padding: 5px 15px;
-    margin: 0 10px;
-}
-
 /* Styl dla tabel z rezerwacjami */
 #todayBookingsTable,
 #futureBookingsTable {
@@ -147,26 +59,48 @@ h2 {
 #todayBookingsTable td,
 #futureBookingsTable th,
 #futureBookingsTable td {
-    padding: 10px 15px;
+    padding: 10px;
     border-bottom: 1px solid #ddd;
+    text-align: left;
 }
 
-#todayBookingsTable tbody tr:hover,
-#futureBookingsTable tbody tr:hover {
-    background-color: #ddd;
+/* Style dla sekcji i nagłówków */
+.admin-panel,
+.section,
+h1, h2, h3 {
+    text-align: center;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
 }
 
+/* Style dla formularzy */
+.form-input,
+.submit-btn {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Style dla modalu */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsywne style dla tabeli na małych ekranach */
 @media (max-width: 600px) {
     #futureBookingsTable thead,
     #todayBookingsTable thead {
         display: none;
-    }
-
-    #futureBookingsTable tr,
-    #todayBookingsTable tr {
-        margin-bottom: 10px;
-        display: block;
-        border-bottom: 2px solid #ddd;
     }
 
     #futureBookingsTable td,
@@ -189,192 +123,59 @@ h2 {
         font-weight: bold;
         text-transform: uppercase;
     }
-}
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 10% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    border-radius: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-@media (max-width: 600px) {
     .modal-content {
         width: 90%;
         margin: 20% auto;
     }
 }
 
-.toggle-availability,
-.toggle-future-bookings,
-.toggle-today-bookings {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: none;
-    border: none;
-    padding: 10px;
-    width: 100%;
-    font-size: 0.9em;
-}
-
-.toggle-availability i,
-.toggle-future-bookings i,
-.toggle-today-bookings i {
-    margin-right: 5px;
-    transition: transform 0.3s ease;
-}
-
-.rotate-icon {
-    transform: rotate(180deg);
-}
-
-.price-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.trainingPrice {
-    flex-grow: 1;
-    margin-right: 10px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 0.9em;
-}
-
-.savePriceButton {
-    background: transparent;
+/* Style dla przycisku profilowego */
+.profile-btn {
+    background-color: transparent;
     border: none;
     cursor: pointer;
-    color: green;
-    padding: 5px;
-    display: flex;
-    align-items: center;
+    color: #6e8efb;
+    padding: 0;
 }
 
-.savePriceButton i {
+.profile-btn i {
     font-size: 1.2em;
 }
 
-#todayBookingsTable {
-  width: 100%;
-  border-collapse: collapse;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-  margin-top: 20px;
-  background: white;
-  border-radius: 8px;
-  text-align: left;
+.profile-btn:hover {
+    color: #5d7ce2;
 }
 
-#todayBookingsTable thead {
-  background-color: #6e8efb;
-  color: white;
-}
-
-#todayBookingsTable th,
-#todayBookingsTable td {
-  padding: 10px 15px;
-  border-bottom: 1px solid #ddd;
-}
-
-#todayBookingsTable th {
-  position: sticky;
-  top: 0;
-}
-
-#todayBookingsTable tbody tr:hover {
-  background-color: #ddd;
-}
-
-/* Styl dla pola wprowadzania ceny i przycisku zapisu */
-.price-input-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.trainingPrice {
-  width: auto; /* Dostosuj szerokość do treści */
-  margin-right: 10px; /* Dostosuj odstęp od przycisku */
-}
-
-.savePriceButton {
-  padding: 5px 10px; /* Dostosuj padding przycisku */
-}
-
-/* Aby wszystkie kolumny miały tę samą szerokość */
-#todayBookingsTable th,
-#todayBookingsTable td {
-  width: calc(100% / liczba_kolumn); /* Dziel szerokość tabeli przez liczbę kolumn */
-}
-
-/* Zapewnienie, że pole input i przycisk są w tej samej linii */
-#todayBookingsTable .price-input-container {
-  white-space: nowrap;
-}
-
-/* Dostosowanie szerokości kolumn */
-#todayBookingsTable .trainingPrice {
-  width: 70%; /* lub inna wartość procentowa, która wygląda dobrze na ekranie */
-}
-
-#todayBookingsTable .savePriceButton {
-  width: 30%; /* lub inna wartość procentowa, która wygląda dobrze na ekranie */
-}
-
-.profileButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-  font-size: 1.2em; /* nieco większa ikona dla lepszej widoczności */
-  color: #6e8efb; /* domyślny kolor ikony */
-  transition: color 0.3s ease; /* płynna zmiana koloru */
-}
-
-.profileButton:hover {
-  color: #000; /* ciemniejszy kolor podczas najechania */
-  text-shadow: 0px 0px 8px rgba(0,0,0,0.5); /* dodaje cień dla lepszego kontrastu */
-}
-
-#todayBookingsTable td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  height: 50px; /* przykładowa wysokość, dostosuj według potrzeb */
-  box-sizing: border-box; /* uwzględnia padding i border w wymiarach elementu */
-}
-
+/* Style dla pól ceny */
 .price-input {
-  width: auto; /* lub określona szerokość, ale nie więcej niż szerokość komórki */
-  margin: 0;
-  padding: 5px;
-  border: 1px solid #ccc;
-  height: 30px; /* wysokość mniejsza niż komórka, aby nie wyjeżdżać */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    width: 70%;
+    margin-right: 10px;
 }
 
-.savePriceButton {
-  padding: 5px;
-  margin-left: 5px; /* niewielki margines dla separacji od pola ceny */
-  height: 30px; /* wysokość dopasowana do pola ceny */
+.save-price-btn {
+    padding: 5px 10px;
+    width: 30%;
 }
+
+/* Style dla ikon */
+.fa {
+    cursor: pointer;
+}
+
+.fa:hover {
+    opacity: 0.7;
+}
+
+/* Upewnij się, że wszystkie teksty są wyraźne i czytelne */
+* {
+    color: #333;
+    font-size: 1rem;
+}
+
 
 
     </style>
