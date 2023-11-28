@@ -844,6 +844,23 @@ async function displayTodayBookings() {
         </button>
   
   </td>
+  
+  // Utworzenie przycisku zapisu ceny
+      const savePriceButton = document.createElement('button');
+      savePriceButton.className = 'savePriceButton';
+      savePriceButton.innerHTML = '<i class="fa fa-check"></i>';
+      savePriceButton.addEventListener('click', handlePriceUpdate);
+      // Dodaj przycisk do wiersza
+      bookingRow.querySelector('.price-container').appendChild(savePriceButton);
+
+      // Dodawanie wierszy do tabeli dzisiejszych rezerwacji
+      todayBookingsTableBody.appendChild(bookingRow);
+    }
+  }).catch(error => {
+    console.error('Błąd przy pobieraniu danych użytkownika:', error);
+  });
+});
+  
           `;
 
           // Dodawanie wierszy do tabeli dzisiejszych rezerwacji
