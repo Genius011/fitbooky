@@ -398,6 +398,7 @@ h2 {
         <th>Godzina</th>
         <th>Data</th>
         <th>Rodzaj treningu</th>
+		 <th>Cena</th>
         <th>Akcja</th>
       </tr>
     </thead>
@@ -738,6 +739,7 @@ async function displayFutureBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
+			<td>${bookingData.price || '---'} PLN</td> <!-- Dodaj informację o cenie -->
             <td><button onclick="viewProfile('${bookingData.userId}')">Profil</button></td>
           `;
           bookingsTableBody.appendChild(bookingRow);
