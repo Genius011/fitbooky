@@ -377,7 +377,6 @@ h2 {
 .toggle-today-bookings {
   cursor: pointer;
 }
-
 .savePriceButton {
   background: transparent;
   border: none;
@@ -388,6 +387,7 @@ h2 {
 .savePriceButton i {
   font-size: 1em; /* Dostosuj rozmiar do potrzeb */
 }
+
 
     </style>
 </head>
@@ -750,9 +750,14 @@ async function displayFutureBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
-			<td>${bookingData.price || '---'} PLN</td> <!-- Dodaj informację o cenie -->
-			
-			
+			<td>
+  <input type="number" class="trainingPrice" placeholder="Cena w PLN" />
+  <!-- Przycisk z ikoną ptaszka -->
+  <button class="savePriceButton" aria-label="Zapisz cenę">
+    <i class="fa fa-check"></i>
+  </button>
+</td>
+
             <td><button onclick="viewProfile('${bookingData.userId}')">Profil</button></td>
           `;
           bookingsTableBody.appendChild(bookingRow);
@@ -799,14 +804,7 @@ async function displayTodayBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
-			<td><td>
-  <input type="number" class="trainingPrice" placeholder="Cena w PLN" />
-  <!-- Przycisk z ikoną ptaszka -->
-  <button class="savePriceButton" aria-label="Zapisz cenę">
-    <i class="fa fa-check"></i>
-  </button>
-</td>
-</td>
+			<td>${bookingData.price || '---'} PLN</td>
             <td><button onclick="viewProfile('${bookingData.userId}')">Profil</button></td>
           `;
 
