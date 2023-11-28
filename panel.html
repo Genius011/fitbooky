@@ -519,6 +519,31 @@ h2 {
 
 
 
+/* Dostosowanie szerokości kolumny akcji */
+#todayBookingsTable th:nth-child(7),
+#todayBookingsTable td:nth-child(7) {
+    width: 120px; /* Dostosuj szerokość do swoich potrzeb */
+}
+
+/* Zastosowanie flexboxa do wyrównania przycisków w kolumnie akcji */
+#todayBookingsTable td:nth-child(7) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Rozdziela przyciski równomiernie */
+}
+
+/* Dostosowanie wielkości przycisków */
+.profileButton,
+.deleteButton {
+    flex-grow: 1; /* Pozwala przyciskom rozciągnąć się, aby zapełnić dostępną przestrzeń */
+    margin: 0 4px; /* Dodaje marginesy po bokach przycisków */
+}
+
+/* Opcjonalnie, jeśli przyciski są zbyt szerokie, możesz zastosować maksymalną szerokość */
+.profileButton,
+.deleteButton {
+    max-width: 50px; /* Ustawia maksymalną szerokość przycisków */
+}
 
 
     </style>
