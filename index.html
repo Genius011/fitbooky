@@ -413,7 +413,7 @@ const db = getFirestore(app);
             monthName.textContent = `${startDate.toLocaleString('en-US', { month: 'long' })} ${currentYear}`;
             startDate.setDate(startDate.getDate() - dayOfWeek);
 
-            for (let i = 0; i < 35; i++) {
+    for (let i = 0; i < 35; i++) {
                 let day = new Date(startDate);
                 day.setDate(day.getDate() + i);
 
@@ -423,13 +423,18 @@ const db = getFirestore(app);
                     dayElement.classList.add('current-day');
                 }
                 if (day.getMonth() === currentMonth) {
-                    dayElement.textContent = day.getDate();
-                    dayElement.onclick = function() {
-                        openPopup(day);
-                    };
-                } else {
-                    dayElement.classList.add('inactive');
-                }
+            dayElement.textContent = day.getDate();
+            if (!isDateInPast(day)) {
+                dayElement.onclick = function() {
+                    openPopup(day);
+                };
+            } else {
+                dayElement.classList.add('inactive');
+                dayElement.onclick = null; // Usuń event onclick dla dni w przeszłości
+            }
+        } else {
+            dayElement.classList.add('inactive');
+        }
                 calendar.appendChild(dayElement);
             }
         }
@@ -591,7 +596,12 @@ const db = getFirestore(app);
         generateCalendar(); // Initial call to display the calendar
     });
 	
-	
+	function isDateInPast(date) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Ustaw godzinę na początek dnia
+    return date < today;
+}
+
 	
 </script>
 
