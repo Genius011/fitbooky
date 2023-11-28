@@ -307,18 +307,31 @@ h2 {
 
 /* Styl dla pola wprowadzania ceny i przycisku zapisu */
 .price-input-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+   display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Aby wyrównać do prawej krawędzi */
+    height: 100%;
 }
 
 .trainingPrice {
-  width: auto; /* Dostosuj szerokość do treści */
-  margin-right: 10px; /* Dostosuj odstęp od przycisku */
+  flex-grow: 0; /* Nie pozwala polemu na rozciąganie się */
+    width: auto; /* Automatycznie dostosowuje szerokość do zawartości */
+    margin-right: 10px; /* Dostosowuje odstęp od przycisku */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 30px; /* Dopasowanie wysokości do przycisków */
+    box-sizing: border-box;
 }
 
 .savePriceButton {
-  padding: 5px 10px; /* Dostosuj padding przycisku */
+  padding: 5px;
+    margin-left: 5px; /* Niewielki margines dla separacji od pola ceny */
+    height: 30px; /* Wysokość dopasowana do pola ceny */
+    width: 30px; /* Szerokość przycisku z ikoną */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Aby wszystkie kolumny miały tę samą szerokość */
@@ -334,7 +347,7 @@ h2 {
 
 /* Dostosowanie szerokości kolumn */
 #todayBookingsTable .trainingPrice {
-  width: 70%; /* lub inna wartość procentowa, która wygląda dobrze na ekranie */
+  width: 50%; /* lub inna wartość procentowa, która wygląda dobrze na ekranie */
 }
 
 #todayBookingsTable .savePriceButton {
@@ -353,6 +366,7 @@ h2 {
     border: none; /* Brak obramowania */
     cursor: pointer; /* Kursor wskazujący */
     transition: background-color 0.3s ease; /* Płynna zmiana tła */
+	width: 30px;
 
 .profileButton:hover {
   color: #000; /* ciemniejszy kolor podczas najechania */
@@ -387,7 +401,21 @@ h2 {
     cursor: pointer; /* Kursor wskazujący */
     transition: background-color 0.3s ease; /* Płynna zmiana tła */
 
+/* Usunięcie domyślnych stylów komórek tabeli dla komórki z polem ceny */
+#todayBookingsTable .price-input-container td {
+    padding: 0; /* Usuwa padding z komórki tabeli */
+    height: auto; /* Pozwala na automatyczne dostosowanie wysokości */
+    align-items: center; /* Wyśrodkowanie zawartości w pionie */
+    display: flex; /* Umożliwia elastyczne pozycjonowanie pola ceny */
+}
 
+/* Aplikowanie stylu do konkretnego td zawierającego pole ceny */
+#todayBookingsTable .price-cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 15px; /* Dodaje odstęp od prawej krawędzi komórki */
+}
     </style>
 </head>
 <body>
