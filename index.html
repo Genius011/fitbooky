@@ -469,6 +469,19 @@ document.getElementById('logout').addEventListener('click', () => {
             <button id="bookButton" class="book-btn">Rezerwuj</button>
         </div>
     `;
+	<!-- Dodaj ten kod przed zamknięciem tagu </body> -->
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <h2>Warunki rezerwacji</h2>
+        <p>Tutaj wpisz swoje warunki rezerwacji.</p>
+        <div class="accept-container">
+            <label for="acceptTerms">Akceptuję warunki rezerwacji:</label>
+            <input type="checkbox" id="acceptTerms">
+        </div>
+        <button id="confirmReservation" class="book-btn" disabled>Rezerwuj</button>
+    </div>
+</div>
+
 
     document.body.appendChild(popup);
     const bookButton = document.getElementById('bookButton');
@@ -628,6 +641,43 @@ document.getElementById('logout').addEventListener('click', () => {
         // An error happened during sign out
         console.error('Logout failed', error);
     });
+});
+
+// Dodaj ten kod w bloku JavaScript w swoim pliku
+document.addEventListener('DOMContentLoaded', function () {
+    const popup = document.getElementById('popup');
+    const acceptTermsCheckbox = document.getElementById('acceptTerms');
+    const confirmReservationButton = document.getElementById('confirmReservation');
+
+    // Otwarcie pop-upa przed rezerwacją
+    function openReservationPopup() {
+        popup.style.display = 'block';
+    }
+
+    // Zamknięcie pop-upa
+    function closeReservationPopup() {
+        popup.style.display = 'none';
+    }
+
+    // Sprawdzenie, czy checkbox został zaznaczony
+    acceptTermsCheckbox.addEventListener('change', function () {
+        if (acceptTermsCheckbox.checked) {
+            confirmReservationButton.disabled = false;
+        } else {
+            confirmReservationButton.disabled = true;
+        }
+    });
+
+    // Rezerwacja po kliknięciu przycisku "Rezerwuj"
+    confirmReservationButton.addEventListener('click', function () {
+        // Tutaj dodaj kod rezerwacji, który zostanie wykonany po zaakceptowaniu warunków.
+        // Możesz dodać go poniżej.
+        alert('Rezerwacja została dokonana.');
+        closeReservationPopup();
+    });
+
+    // Otwarcie pop-upa przed rezerwacją
+    openReservationPopup();
 });
 
 	
