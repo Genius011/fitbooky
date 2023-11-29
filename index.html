@@ -82,9 +82,10 @@
 }
 
 .training-type-container {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
+     display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .training-type, .time-slot {
@@ -240,11 +241,11 @@
 
 .training-type {
     background-color: white; /* Set the initial background color to white */
-    color: #6e8efb; /* Set the initial text color */
+    color: black; /* Set the text color to black */
     padding: 12px; /* Adjust padding for button size */
     border-radius: 5px; /* Add border radius for rounded corners */
     cursor: pointer; /* Change cursor on hover */
-    transition: background-color 0.3s, color 0.3s; /* Add transition for smoother hover effect */
+    transition: background-color 0.3s; /* Add transition for smoother hover effect */
 }
 
 .training-type.selected {
