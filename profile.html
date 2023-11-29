@@ -267,7 +267,12 @@
 	<br>
 	<span class="close">&times;</span>
 	<br>
-
+	<div class="add-to-google-calendar">
+    <a href="#" id="addToGoogleCalendarButton" class="google-calendar-button">
+        <i class="fab fa-google"></i> Dodaj do kalendarza Google
+    </a>
+	<br>
+</div>
 
 </div>
     
@@ -464,6 +469,24 @@
         const modal = document.getElementById('profileModal');
         modal.style.display = "none";
     }
+	
+	// Dodaj obsługę kliknięcia przycisku "Dodaj do kalendarza Google"
+const addToGoogleCalendarButton = document.getElementById('addToGoogleCalendarButton');
+addToGoogleCalendarButton.addEventListener('click', () => {
+    // Tutaj możesz dodać kod do generowania linku do kalendarza Google
+    // Na przykład, używając odpowiednich parametrów, utwórz link do wydarzenia w kalendarzu Google
+    const eventTitle = "Następny trening"; // Tytuł wydarzenia
+    const eventDate = "2023-12-01"; // Data wydarzenia w formacie YYYY-MM-DD
+    const eventTime = "10:00"; // Godzina wydarzenia w formacie HH:mm
+
+    // Utwórz link do kalendarza Google z odpowiednimi parametrami
+    const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=${eventDate}T${eventTime}/${eventDate}T${eventTime}`;
+
+    // Otwórz link w nowym oknie lub zakładce
+    window.open(googleCalendarLink, '_blank');
+});
+
+
 </script>
 
 
