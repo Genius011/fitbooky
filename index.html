@@ -347,9 +347,10 @@
 <body>
 <div class="button-container">
     <div class="dropdown">
-        <button id="logoutButton">Zalogowany jako [Imię użytkownika]</button>
-        <div class="dropdown-content">
+        <button id="logoutButton"><span id="logoutButtonText">Zaloguj</span></button>
+        <div class="dropdown-content" style="display: none;">
             <a href="profile.html">Profil</a>
+            <a href="panel.html" id="trainerPanelLink">Panel Trenera</a>
             <a href="#" id="logout">Wyloguj</a>
         </div>
     </div>
@@ -424,26 +425,17 @@ const db = getFirestore(app);
                 const userFirstName = userData.firstName; // Accessing the 'firstName' field from Firestore
 
                 // Update the logout button text with the user's first name
+                const logoutButtonText = document.getElementById('logoutButtonText');
                 if (userFirstName) {
-                    const logoutButton = document.getElementById('logoutButton');
-                    logoutButton.textContent = `Zalogowany jako ${userFirstName}`;
+                    logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
                 } else {
                     console.log("User's first name is not defined in the document.");
                 }
 
-                // Check if the user is a trainer and add a trainer panel button if so
+                // Check if the user is a trainer and show the 'Panel Trenera' link
                 if (userData.role === 'trener') {
-                    const buttonContainer = document.querySelector('.button-container');
-                    let trainerPanelButton = buttonContainer.querySelector('.trainerPanelButton'); // Check if the button already exists
-                    
-                    // If the button does not exist, create it
-                    if (!trainerPanelButton) {
-                        trainerPanelButton = document.createElement('button');
-                        trainerPanelButton.textContent = 'Panel Trenera';
-                        trainerPanelButton.className = 'profileButton trainerPanelButton'; // Add class for styling
-                        trainerPanelButton.onclick = () => window.location.href = 'panel.html';
-                        buttonContainer.appendChild(trainerPanelButton);
-                    }
+                    const trainerPanelLink = document.getElementById('trainerPanelLink');
+                    trainerPanelLink.style.display = 'block'; // Show the link if the user is a trainer
                 }
             } else {
                 console.log("User data not found in Firestore.");
@@ -454,6 +446,26 @@ const db = getFirestore(app);
         window.location.href = 'login.html';
     }
 });
+
+// Ensure the dropdown content is hidden initially and shown on hover
+const dropdown = document.querySelector('.dropdown');
+dropdown.addEventListener('mouseover', () => {
+    document.querySelector('.dropdown-content').style.display = 'block';
+});
+
+dropdown.addEventListener('mouseout', () => {
+    document.querySelector('.dropdown-content').style.display = 'none';
+});
+
+// Add logout functionality
+document.getElementById('logout').addEventListener('click', () => {
+    signOut(auth).then(() => {
+        window.location.href = 'login.html';
+    }).catch((error) => {
+        console.error('Logout failed', error);
+    });
+});
+
 
 
 
