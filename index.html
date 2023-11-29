@@ -283,6 +283,7 @@
 
 #cancellationText {
     border: none; /* Usuń ramkę pola tekstowego */
+    width: 100%; /* Ustaw szerokość pola tekstowego na 100% dostępnej przestrzeni */
 }
 
 .checkbox-section {
@@ -291,8 +292,9 @@
 }
 
 #cancellationCheckbox {
-    margin-right: 10px; /* Dodaj odstęp między checkboxem a tekstem */
+    margin-left: 10px; /* Dodaj odstęp między checkboxem a tekstem */
 }
+
 
 
 </style>
@@ -503,7 +505,7 @@ document.getElementById('logout').addEventListener('click', () => {
                 <div class="training-type" data-type="group">Group</div>
             </div>
 			
-            <<hr class="separator">
+           <hr class="separator">
     <div class="time-slots"></div>
     <div class="booking-section">
         <div class="booking-text">
@@ -512,8 +514,8 @@ document.getElementById('logout').addEventListener('click', () => {
             </textarea>
         </div>
         <div class="checkbox-section">
-            <input type="checkbox" id="cancellationCheckbox">
             <label for="cancellationCheckbox">Akceptuję warunki anulacji</label>
+            <input type="checkbox" id="cancellationCheckbox">
         </div>
     </div>
     <button id="bookButton" class="book-btn">Rezerwuj</button>
