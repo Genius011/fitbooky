@@ -446,37 +446,39 @@ const db = getFirestore(app);
 
     onAuthStateChanged(auth, (user) => {
     if (user) {
-        currentUserId = user.uid;
-
-        // Get user document from Firestore
-        const userRef = doc(getFirestore(), 'users', user.uid);
+        // Użytkownik jest zalogowany, pobierz jego dane
+        const userRef = doc(db, 'users', user.uid);
         getDoc(userRef).then((docSnap) => {
             if (docSnap.exists()) {
                 const userData = docSnap.data();
-                const userFirstName = userData.firstName; // Accessing the 'firstName' field from Firestore
-
-                // Update the logout button text with the user's first name
-                const logoutButtonText = document.getElementById('logoutButtonText');
-                if (userFirstName) {
-                    logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
-                } else {
-                    console.log("User's first name is not defined in the document.");
-                }
-
-                // Check if the user is a trainer and show the 'Panel Trenera' link
+                
+                // Uaktualnij tekst przycisku wylogowania
+                const logoutButton = document.getElementById('logoutButton');
+                logoutButton.textContent = `Zalogowany jako ${userData.firstName || 'Użytkownik'}`;
+                
+                // Sprawdź, czy użytkownik jest trenerem
                 if (userData.role === 'trener') {
-                    const trainerPanelLink = document.getElementById('trainerPanelLink');
-                    trainerPanelLink.style.display = 'block'; // Show the link if the user is a trainer
+                    // Użytkownik jest trenerem, dodaj przycisk panelu trenera
+                    const dropdownMenu = document.getElementById('dropdownMenu');
+                    const trainerPanelButton = document.createElement('button');
+                    trainerPanelButton.textContent = 'Panel Trenera';
+                    trainerPanelButton.className = 'dropdown-item';
+                    trainerPanelButton.onclick = function() {
+                        window.location.href = 'trainer_panel.html'; // Adres URL do panelu trenera
+                    };
+                    // Dodaj przycisk do menu dropdown
+                    dropdownMenu.appendChild(trainerPanelButton);
                 }
             } else {
-                console.log("User data not found in Firestore.");
+                console.log("Dane użytkownika nie znalezione.");
             }
         });
     } else {
-        console.log("No user is logged in, redirecting to login");
+        // Użytkownik nie jest zalogowany, przekieruj na stronę logowania
         window.location.href = 'login.html';
     }
 });
+
 
 // Ensure the dropdown content is hidden initially and shown on hover
 const dropdown = document.querySelector('.dropdown');
