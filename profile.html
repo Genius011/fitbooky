@@ -465,6 +465,32 @@
         const modal = document.getElementById('profileModal');
         modal.style.display = "none";
 		}
+		
+		// Define the Firestore collection where bookings are stored
+const bookingsCollection = collection(db, 'bookings');
+
+// Define a query to get bookings for the currently authenticated user (assuming you have user authentication in place)
+const bookingsQuery = query(bookingsCollection, where('userId', '==', user.uid));
+
+// Fetch the bookings data
+getDocs(bookingsQuery)
+  .then((bookingsSnapshot) => {
+    // Process the bookings data here
+    // You can iterate through the snapshots and store them in the `bookings` variable or use them directly
+    const bookings = [];
+    bookingsSnapshot.forEach((bookingDoc) => {
+      const bookingData = bookingDoc.data();
+      // Process and store the booking data as needed
+      bookings.push(bookingData);
+    });
+
+    // Now you can work with the `bookings` variable
+    console.log(bookings);
+  })
+  .catch((error) => {
+    console.error('Error fetching bookings:', error);
+  });
+
 	
 </script>
 
