@@ -423,61 +423,74 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+const auth = getAuth(app);
 const db = getFirestore(app);
 
-     // Logout function
-  logoutButton.addEventListener('click', () => {
-    signOut(auth).then(() => {
-      // Sign-out successful, redirect to login page
-      window.location.href = 'login.html';
-    }).catch((error) => {
-      // An error happened during sign out
-      console.error('Logout failed', error);
-    });
-  });
-  
-  
-  
-   
-    document.addEventListener('DOMContentLoaded', function() {
-    const auth = getAuth();
-    let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
-
-    onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // Użytkownik jest zalogowany, pobierz jego dane
-        const userRef = doc(db, 'users', user.uid);
-        getDoc(userRef).then((docSnap) => {
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                
-                // Uaktualnij tekst przycisku wylogowania
-                const logoutButton = document.getElementById('logoutButton');
-                logoutButton.textContent = `Zalogowany jako ${userData.firstName || 'Użytkownik'}`;
-                
-                // Sprawdź, czy użytkownik jest trenerem
-                if (userData.role === 'trener') {
-                    // Użytkownik jest trenerem, dodaj przycisk panelu trenera
-                    const dropdownMenu = document.getElementById('dropdownMenu');
-                    const trainerPanelButton = document.createElement('button');
-                    trainerPanelButton.textContent = 'Panel Trenera';
-                    trainerPanelButton.className = 'dropdown-item';
-                    trainerPanelButton.onclick = function() {
-                        window.location.href = 'trainer_panel.html'; // Adres URL do panelu trenera
-                    };
-                    // Dodaj przycisk do menu dropdown
-                    dropdownMenu.appendChild(trainerPanelButton);
-                }
-            } else {
-                console.log("Dane użytkownika nie znalezione.");
-            }
-        });
+function checkUserRoleAndSetupUI(user) {
+  const userRef = doc(db, 'users', user.uid);
+  getDoc(userRef).then((docSnap) => {
+    if (docSnap.exists()) {
+      const userData = docSnap.data();
+      setupLogoutButton(userData.firstName);
+      if (userData.role === 'trener') {
+        showTrainerPanelButton();
+      } else {
+        hideTrainerPanelButton();
+      }
     } else {
-        // Użytkownik nie jest zalogowany, przekieruj na stronę logowania
-        window.location.href = 'login.html';
+      console.error("User data not found");
     }
+  }).catch((error) => {
+    console.error("Error fetching user data:", error);
+  });
+}
+
+function setupLogoutButton(firstName) {
+  const logoutButton = document.getElementById('logoutButton');
+  if (firstName) {
+    logoutButton.textContent = `Zalogowany jako ${firstName}`;
+  } else {
+    logoutButton.textContent = 'Zalogowany jako Anonim';
+  }
+}
+
+function showTrainerPanelButton() {
+  const buttonContainer = document.querySelector('.button-container');
+  let trainerPanelButton = buttonContainer.querySelector('.trainerPanelButton');
+  if (!trainerPanelButton) {
+    trainerPanelButton = document.createElement('button');
+    trainerPanelButton.textContent = 'Panel Trenera';
+    trainerPanelButton.className = 'profileButton trainerPanelButton';
+    trainerPanelButton.onclick = () => window.location.href = 'trainer_panel.html';
+    buttonContainer.appendChild(trainerPanelButton);
+  }
+}
+
+function hideTrainerPanelButton() {
+  const trainerPanelButton = document.querySelector('.trainerPanelButton');
+  if (trainerPanelButton) {
+    trainerPanelButton.remove();
+  }
+}
+
+// Logout function
+document.getElementById('logout').addEventListener('click', () => {
+  signOut(auth).then(() => {
+    window.location.href = 'login.html';
+  }).catch((error) => {
+    console.error('Logout failed', error);
+  });
 });
+
+// Listen for auth state changes
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    checkUserRoleAndSetupUI(user);
+  } else {
+    window.location.href = 'login.html';
+  }
+});
+
 
 
 // Ensure the dropdown content is hidden initially and shown on hover
