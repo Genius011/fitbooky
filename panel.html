@@ -878,25 +878,23 @@ display: flex;
   <span>Zarządzanie miejscami na trening grupowy</span>
 </div>
 
-<!-- Sekcja Zarządzanie Miejscami na Trening Grupowy -->
-
+<!-- Sekcja Zarządzania Miejscami na Trening Grupowy -->
 <section id="groupTrainingManager" class="section" style="display: none;">
-    <h2>Zarządzanie miejscami na trening grupowy</h2>
-    <div id="groupTrainingSlots">
-        <!-- Przykład dla jednego dnia, powtórz dla każdego dnia tygodnia -->
-        <div class="day-column">
-            <h3>Poniedziałek</h3>
-            <div class="group-training-slots">
-                <!-- Inputy dla liczby miejsc, powtórz dla każdej godziny -->
-                <label>6:00 <input type="number" name="monday-6:00" min="0"></label>
-                <label>7:00 <input type="number" name="monday-7:00" min="0"></label>
-                <!-- ... więcej godzin ... -->
-            </div>
-        </div>
-        <!-- ... więcej dni ... -->
+  <!-- Tutaj umieść formularz do zarządzania dostępnością miejsc -->
+  <form id="groupTrainingForm">
+    <div class="day-container">
+      <!-- Powtórz poniższą strukturę dla każdego dnia tygodnia -->
+      <div class="day-column">
+        <h3>Poniedziałek</h3>
+        <label for="monday-spots">Miejsca: </label>
+        <input type="number" id="monday-spots" name="monday" min="0">
+      </div>
+      <!-- Dodaj kolejne dni tygodnia tutaj... -->
     </div>
-    <button id="updateGroupTrainingSlots" class="submit-btn">Aktualizuj Miejsca</button>
+    <button type="submit" class="submit-btn">Zapisz zmiany</button>
+  </form>
 </section>
+
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
@@ -1299,28 +1297,11 @@ async function savePrice(bookingId) {
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
-document.getElementById('updateGroupTrainingSlots').addEventListener('click', async function() {
-    const slotsData = {};
-    document.querySelectorAll('#groupTrainingSlots .day-column').forEach(dayColumn => {
-        const day = dayColumn.querySelector('h3').textContent;
-        slotsData[day] = {};
-
-        dayColumn.querySelectorAll('.group-training-slots input[type="number"]').forEach(input => {
-            const time = input.name.split('-')[1];
-            const count = input.value;
-            slotsData[day][time] = count;
-        });
-    });
-
-    // Tutaj możesz zapisać slotsData do bazy danych
-    console.log(slotsData);
-    // Przykład: await updateDoc(doc(db, 'groupTrainingSlots', 'yourId'), slotsData);
-	
-	document.getElementById('toggleGroupTrainingIcon').addEventListener('click', function() {
+document.getElementById('toggleGroupTrainingIcon').addEventListener('click', function() {
   const section = document.getElementById('groupTrainingManager');
   const icon = document.getElementById('toggleGroupTrainingIcon');
   
-  // Przełączanie wyświetlania sekcji i obracanie ikony
+  // Przełączanie widoczności sekcji i ikony
   if (section.style.display === "none") {
     section.style.display = "block";
     icon.classList.add('rotate-icon');
@@ -1330,8 +1311,19 @@ document.getElementById('updateGroupTrainingSlots').addEventListener('click', as
   }
 });
 
-	
+// Przetwarzanie formularza
+document.getElementById('groupTrainingForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  // Tu dodaj logikę do przetwarzania danych z formularza
+  // Możesz pobrać wartości z pól input i zapisywać je w bazie danych lub innym miejscu
+  // Na przykład:
+  const mondaySpots = document.getElementById('monday-spots').value;
+  // Przetwarzaj wartości dla każdego dnia
+
+  alert('Zapisano zmiany dla treningów grupowych.');
 });
+
 
 
 </script>
