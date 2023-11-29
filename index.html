@@ -396,6 +396,7 @@ const db = getFirestore(app);
             window.location.href = 'login.html';
         }
     });
+	
         const calendar = document.getElementById('calendar');
         const prevMonth = document.getElementById('prevMonth');
         const nextMonth = document.getElementById('nextMonth');
@@ -624,6 +625,63 @@ async function isTimeSlotAvailable(date, time, trainingType) {
   const querySnapshot = await getDocs(query(bookingsRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
   return querySnapshot.empty; // Zwróć true jeśli nie ma rezerwacji, false w przeciwnym wypadku
 }
+
+function enableSingleHourSelection() {
+    const timeSlots = document.querySelectorAll('.time-slot');
+    // Usuwanie zdarzeń kliknięcia, jeśli istnieją
+    timeSlots.forEach(slot => {
+        slot.removeEventListener('click', handleMultipleTimeSlotClick);
+        slot.classList.remove('selected'); // Usuwamy zaznaczenie, jeśli jest
+    });
+
+    // Dodanie zdarzenia kliknięcia z funkcją zezwalającą tylko na jedno zaznaczenie
+    timeSlots.forEach(slot => {
+        slot.addEventListener('click', handleSingleTimeSlotClick);
+    });
+}
+
+function handleSingleTimeSlotClick(event) {
+    const timeSlots = document.querySelectorAll('.time-slot');
+    // Usuwamy zaznaczenie ze wszystkich slotów czasowych
+    timeSlots.forEach(slot => slot.classList.remove('selected'));
+    // Dodajemy zaznaczenie tylko do klikniętego slota
+    event.target.classList.add('selected');
+}
+
+function enableMultipleHoursSelection() {
+    const timeSlots = document.querySelectorAll('.time-slot');
+    // Usuwanie zdarzeń kliknięcia, jeśli istnieją
+    timeSlots.forEach(slot => {
+        slot.removeEventListener('click', handleSingleTimeSlotClick);
+    });
+
+    // Dodanie zdarzenia kliknięcia z funkcją zezwalającą na wielokrotne zaznaczenie
+    timeSlots.forEach(slot => {
+        slot.addEventListener('click', handleMultipleTimeSlotClick);
+    });
+}
+
+function handleMultipleTimeSlotClick(event) {
+    event.target.classList.toggle('selected');
+}
+
+// Wywołanie funkcji w zależności od roli użytkownika
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // Pobranie danych użytkownika
+        const userRef = doc(db, 'users', user.uid);
+        getDoc(userRef).then((docSnap) => {
+            if (docSnap.exists() && docSnap.data().role === 'trener') {
+                enableMultipleHoursSelection();
+            } else {
+                enableSingleHourSelection();
+            }
+        });
+    } else {
+        // Jeśli nie jest zalogowany, przekieruj do strony logowania
+        window.location.href = 'login.html';
+    }
+});
 
 	
 </script>
