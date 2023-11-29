@@ -1311,17 +1311,24 @@ document.getElementById('toggleGroupTrainingIcon').addEventListener('click', fun
   }
 });
 
-// Przetwarzanie formularza
-document.getElementById('groupTrainingForm').addEventListener('submit', function(event) {
-  event.preventDefault();
 
-  // Tu dodaj logikę do przetwarzania danych z formularza
-  // Możesz pobrać wartości z pól input i zapisywać je w bazie danych lub innym miejscu
-  // Na przykład:
-  const mondaySpots = document.getElementById('monday-spots').value;
-  // Przetwarzaj wartości dla każdego dnia
+document.addEventListener('DOMContentLoaded', function() {
+  // ... Twój istniejący kod ...
 
-  alert('Zapisano zmiany dla treningów grupowych.');
+  // Dodanie event listenera dla rozwijania sekcji zarządzania treningiem grupowym
+  document.getElementById('toggleGroupTrainingIcon').addEventListener('click', function() {
+    const section = document.getElementById('groupTrainingManager');
+    const icon = document.getElementById('toggleGroupTrainingIcon');
+  
+    // Przełączanie widoczności sekcji i ikony
+    if (section.style.display === "none") {
+      section.style.display = "block";
+      icon.classList.add('rotate-icon');
+    } else {
+      section.style.display = "none";
+      icon.classList.remove('rotate-icon');
+    }
+  });
 });
 
 
