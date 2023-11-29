@@ -373,29 +373,45 @@ const db = getFirestore(app);
     let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
 
     onAuthStateChanged(auth, (user) => {
-        if (user) {
-            currentUserId = user.uid;
-			
-            // Jeśli użytkownik jest zalogowany, sprawdź, czy ma rolę 'trener'
-            const userRef = doc(getFirestore(), 'users', user.uid);
-            getDoc(userRef).then((docSnap) => {
-                if (docSnap.exists() && docSnap.data().role === 'trener') {
-                    // Utwórz i dodaj przycisk Panelu Trenera
+    if (user) {
+        currentUserId = user.uid;
+
+        // Get user document from Firestore
+        const userRef = doc(getFirestore(), 'users', user.uid);
+        getDoc(userRef).then((docSnap) => {
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                const userName = userData.name; // Assuming 'name' is the field for the user's name
+
+                // Update the logout button text
+                const logoutButton = document.getElementById('logoutButton');
+                logoutButton.textContent = `Zalogowany jako ${userName}`;
+
+                // Check if the user is a trainer and create a trainer panel button if so
+                if (userData.role === 'trener') {
                     const buttonContainer = document.querySelector('.button-container');
-                    const trainerPanelButton = document.createElement('button');
-                    trainerPanelButton.textContent = 'Panel Trenera';
-                    trainerPanelButton.className = 'profileButton'; // Klasa dla stylizacji
-                    trainerPanelButton.onclick = function() {
-                        window.location.href = 'panel.html'; // Zmień URL na odpowiedni dla panelu trenera
-                    };
-                    buttonContainer.appendChild(trainerPanelButton);
+                    let trainerPanelButton = buttonContainer.querySelector('.trainerPanelButton'); // Check if the button already exists
+                    
+                    // If the button does not exist, create it
+                    if (!trainerPanelButton) {
+                        trainerPanelButton = document.createElement('button');
+                        trainerPanelButton.textContent = 'Panel Trenera';
+                        trainerPanelButton.className = 'profileButton trainerPanelButton'; // Add class for styling
+                        trainerPanelButton.onclick = () => window.location.href = 'panel.html';
+                        buttonContainer.appendChild(trainerPanelButton);
+                    }
                 }
-            });
-        } else {
-            // Przekieruj na stronę logowania, jeśli użytkownik nie jest zalogowany
-            window.location.href = 'login.html';
-        }
-    });
+            } else {
+                console.log("User data not found");
+            }
+        });
+    } else {
+        console.log("No user is logged in, redirecting to login");
+        window.location.href = 'login.html';
+    }
+});
+
+	
         const calendar = document.getElementById('calendar');
         const prevMonth = document.getElementById('prevMonth');
         const nextMonth = document.getElementById('nextMonth');
