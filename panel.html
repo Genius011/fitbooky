@@ -861,8 +861,6 @@ display: flex;
 
 <!-- Kontener Finanse -->
 
-
-
 </div>
 <div id="profileModal" class="modal">
   <div class="modal-content">
@@ -873,6 +871,26 @@ display: flex;
     </div>
   </div>
 </div>
+
+<!-- Sekcja Zarządzanie Miejscami na Trening Grupowy -->
+
+<section id="groupTrainingManager" class="section" style="display: none;">
+    <h2>Zarządzanie miejscami na trening grupowy</h2>
+    <div id="groupTrainingSlots">
+        <!-- Przykład dla jednego dnia, powtórz dla każdego dnia tygodnia -->
+        <div class="day-column">
+            <h3>Poniedziałek</h3>
+            <div class="group-training-slots">
+                <!-- Inputy dla liczby miejsc, powtórz dla każdej godziny -->
+                <label>6:00 <input type="number" name="monday-6:00" min="0"></label>
+                <label>7:00 <input type="number" name="monday-7:00" min="0"></label>
+                <!-- ... więcej godzin ... -->
+            </div>
+        </div>
+        <!-- ... więcej dni ... -->
+    </div>
+    <button id="updateGroupTrainingSlots" class="submit-btn">Aktualizuj Miejsca</button>
+</section>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
@@ -1274,6 +1292,24 @@ async function savePrice(bookingId) {
 
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
+
+document.getElementById('updateGroupTrainingSlots').addEventListener('click', async function() {
+    const slotsData = {};
+    document.querySelectorAll('#groupTrainingSlots .day-column').forEach(dayColumn => {
+        const day = dayColumn.querySelector('h3').textContent;
+        slotsData[day] = {};
+
+        dayColumn.querySelectorAll('.group-training-slots input[type="number"]').forEach(input => {
+            const time = input.name.split('-')[1];
+            const count = input.value;
+            slotsData[day][time] = count;
+        });
+    });
+
+    // Tutaj możesz zapisać slotsData do bazy danych
+    console.log(slotsData);
+    // Przykład: await updateDoc(doc(db, 'groupTrainingSlots', 'yourId'), slotsData);
+});
 
 
 </script>
