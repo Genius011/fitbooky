@@ -696,6 +696,9 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+document.querySelectorAll('.time-slot').forEach(slot => {
+    slot.addEventListener('click', handleMultipleTimeSlotClick);
+});
 
 	
 </script>
