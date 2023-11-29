@@ -658,8 +658,10 @@ function enableMultipleHoursSelection() {
 }
 
 function handleMultipleTimeSlotClick(event) {
-    console.log("Multiple time slot clicked: ", event.target);
+    console.log("Clicked on slot: ", event.target);
     event.target.classList.toggle('selected');
+	    console.log("Is slot selected? ", event.target.classList.contains('selected'));
+
 }
 
 // Wywołanie funkcji w zależności od roli użytkownika
