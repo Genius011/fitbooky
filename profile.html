@@ -471,27 +471,31 @@
         modal.style.display = "none";
     }
 	
-	// Dodaj obsługę kliknięcia przycisku "Dodaj do kalendarza Google"
-const addToGoogleCalendarButton = document.getElementById('addToGoogleCalendarButton');
-addToGoogleCalendarButton.addEventListener('click', () => {
-    // Pobierz dane dotyczące następnego treningu
-    const nextTrainingDateElement = document.getElementById('nextTrainingDate');
-    const nextTrainingDate = nextTrainingDateElement.textContent;
+	// Pobierz dane dotyczące następnego treningu
+const nextTrainingDateElement = document.getElementById('nextTrainingDate');
+const nextTrainingDateText = nextTrainingDateElement.textContent;
 
-    if (nextTrainingDate) {
-        // Utwórz link do kalendarza Google z danymi treningu
+if (nextTrainingDateText) {
+    // Pobierz datę w odpowiednim formacie i przypisz ją do zmiennej nextTrainingDate
+    const nextTrainingDate = new Date(nextTrainingDateText); // Przyjmujemy, że data jest w formacie "YYYY-MM-DD"
+
+    // Sprawdź, czy data jest prawidłowa
+    if (!isNaN(nextTrainingDate.getTime())) {
+        // Data jest prawidłowa, możesz kontynuować tworzenie linku do kalendarza Google
         const eventTitle = "Następny trening"; // Tytuł wydarzenia
-        const eventDate = nextTrainingDate; // Data wydarzenia (pobrana z elementu)
 
         // Utwórz link do kalendarza Google z odpowiednimi parametrami
-        const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=${eventDate}/${eventDate}`;
+        const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=${nextTrainingDate.toISOString()}/${nextTrainingDate.toISOString()}`;
 
         // Otwórz link w nowym oknie lub zakładce
         window.open(googleCalendarLink, '_blank');
     } else {
-        alert("Brak danych dotyczących następnego treningu.");
+        alert("Nieprawidłowy format daty następnego treningu.");
     }
-});
+} else {
+    alert("Brak danych dotyczących następnego treningu.");
+}
+
 
 
 
