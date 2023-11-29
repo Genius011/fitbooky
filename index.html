@@ -530,6 +530,8 @@ document.getElementById('logout').addEventListener('click', () => {
     bookButton.addEventListener('click', async () => {
         const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type');
         const selectedTimeSlot = popup.querySelector('.time-slot.selected')?.textContent;
+		    const cancellationCheckbox = document.getElementById('cancellationCheckbox');
+
         
         if (selectedTrainingType && selectedTimeSlot) {
             let adjustedMonth = selectedDay.getMonth() + 1;
@@ -546,6 +548,9 @@ document.getElementById('logout').addEventListener('click', () => {
 
             saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot);
             popup.remove();
+			} else {
+            alert("Aby dokonać rezerwacji, musisz zaakceptować warunki anulacji.");
+        }
         } else {
             alert("Proszę wybrać rodzaj treningu i godzinę");
         }
