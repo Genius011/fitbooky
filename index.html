@@ -372,24 +372,40 @@ const db = getFirestore(app);
     const auth = getAuth();
     let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
 
-    // ...
-onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (user) => {
     if (user) {
         console.log("User is logged in: ", user.uid);
         currentUserId = user.uid;
-        
-        // Pobieranie informacji o roli użytkownika z bazy danych Firestore
+
+        // Pobranie danych użytkownika
         const userRef = doc(db, 'users', user.uid);
         getDoc(userRef).then((docSnap) => {
             if (docSnap.exists()) {
-                const isTrainer = docSnap.data().role === 'trener';
-                console.log(`Role detected: ${isTrainer ? 'Trainer' : 'Regular user'}`);
+                const userData = docSnap.data();
+                console.log(`User role: ${userData.role}`);
                 
-                if (isTrainer) {
+                // Logika dla trenera
+                if (userData.role === 'trener') {
+                    const buttonContainer = document.querySelector('.button-container');
+                    let trainerPanelButton = document.querySelector('.trainerPanelButton'); // Sprawdzenie, czy przycisk już istnieje
+                    
+                    // Jeśli przycisk nie istnieje, tworzymy nowy
+                    if (!trainerPanelButton) {
+                        trainerPanelButton = document.createElement('button');
+                        trainerPanelButton.textContent = 'Panel Trenera';
+                        trainerPanelButton.className = 'profileButton trainerPanelButton'; // Dodanie klasy dla przycisku
+                        trainerPanelButton.onclick = () => window.location.href = 'panel.html';
+                        buttonContainer.appendChild(trainerPanelButton);
+                    }
+
+                    // Włączenie wielokrotnego wyboru godzin
                     enableMultipleHoursSelection();
                 } else {
+                    // Logika dla zwykłego użytkownika
                     enableSingleHourSelection();
                 }
+            } else {
+                console.log("User data not found");
             }
         });
     } else {
@@ -397,7 +413,6 @@ onAuthStateChanged(auth, (user) => {
         window.location.href = 'login.html';
     }
 });
-// ...
 
 	
         const calendar = document.getElementById('calendar');
