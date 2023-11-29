@@ -372,26 +372,13 @@
   background-color: #f1f1f1;
 }
 
-.dropdown-style {
-  background-color: #ffffff; /* Biały tło */
-  color: #333333; /* Ciemniejszy tekst */
-  padding: 10px 15px; /* Odpowiednie wypełnienie */
-  border: 1px solid #ddd; /* Subtelna obramówka */
-  border-radius: 5px; /* Zaokrąglone rogi */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Cień pudełka */
-  cursor: pointer; /* Kursor wskazujący, że jest to element klikalny */
-  font-size: 0.9em; /* Rozmiar czcionki */
-  /* Dodaj więcej stylów według potrzeb */
-}
-
 
     </style>
 </head>
 <body>
 <div class="button-container">
     <div class="dropdown">
-        <button id="logoutButton" class="dropdown-style">Jesteś zalogowany jako Jan</button>
-
+        <button id="logoutButton"><span id="logoutButtonText">Zaloguj</span></button>
         <div class="dropdown-content" style="display: none;">
             <a href="profile.html">Profil</a>
             <a href="panel.html" id="trainerPanelLink">Panel Trenera</a>
