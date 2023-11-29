@@ -310,7 +310,7 @@
   <script type="module">
     // Import the required Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
-import { getAuth, onAuthStateChanged, signOut, setPersistence, Auth } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js'; // Dodane setPersistence
+import { getAuth, onAuthStateChanged, signOut, setPersistence } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
 import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -328,7 +328,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // Ustawienie czasu wygaśnięcia sesji na 30 minut (1800 sekund)
-setPersistence(auth, Auth.Persistence.SESSION)
+setPersistence(auth, /* opcje */ {type: 'SESSION'})
     .then(() => {
         // Sesja została ustawiona na wygasanie po 30 minutach
         console.log('Sesja została ustawiona na wygaśnięcie po 30 minutach');
