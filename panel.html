@@ -872,6 +872,27 @@ display: flex;
   </div>
 </div>
 
+<div class="toggle-section toggle-group-training">
+  <i id="toggleGroupTrainingIcon" class="fas fa-chevron-down"></i>
+  <span>Zarządzanie miejscami na trening grupowy</span>
+</div>
+
+<section id="groupTrainingManager" class="section" style="display: none;">
+  <form id="groupTrainingForm">
+    <div class="day-container">
+      <!-- Powtórz poniższą strukturę dla każdego dnia tygodnia -->
+      <div class="day-column">
+        <h3>Poniedziałek</h3>
+        <label for="monday-spots">Miejsca: </label>
+        <input type="number" id="monday-spots" name="monday" min="0">
+      </div>
+      <!-- Dodaj kolejne dni tygodnia tutaj... -->
+    </div>
+    <button type="submit" class="submit-btn">Zapisz zmiany</button>
+  </form>
+</section>
+
+
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
@@ -1274,6 +1295,29 @@ async function savePrice(bookingId) {
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
+// Słuchacz zdarzeń dla formularza zarządzania miejscami na trening grupowy
+document.getElementById('groupTrainingForm').addEventListener('submit', async function(event) {
+  event.preventDefault();
+
+  // Obiekt do przechowywania danych
+  const groupTrainingAvailability = {};
+
+  // Pobieranie wartości z pól formularza
+  groupTrainingAvailability['monday'] = document.getElementById('monday-spots').value;
+  // Powtórz dla pozostałych dni tygodnia...
+
+  // Tutaj dodaj kod do zapisywania tych danych w bazie danych Firebase
+  // Przykładowo, załóżmy że mamy kolekcję 'groupTrainingAvailability' w Firebase
+  try {
+    const db = getFirestore(app);
+    const docRef = doc(db, "groupTrainingAvailability", "yourDocId"); // 'yourDocId' to identyfikator dokumentu
+    await updateDoc(docRef, groupTrainingAvailability);
+    alert('Zmiany zostały zapisane.');
+  } catch (error) {
+    console.error('Wystąpił błąd podczas zapisu dostępności:', error);
+    alert('Wystąpił błąd podczas zapisu.');
+  }
+});
 
 
 </script>
