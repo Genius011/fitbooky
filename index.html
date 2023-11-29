@@ -740,6 +740,36 @@ document.getElementById('logout').addEventListener('click', () => {
     });
 });
 
+// Function that checks if the user is a trainer and adds the button if so
+function addTrainerPanelButtonIfTrainer(user) {
+  const userRef = doc(db, 'users', user.uid);
+  getDoc(userRef).then((docSnap) => {
+    if (docSnap.exists() && docSnap.data().role === 'trener') {
+      const buttonContainer = document.querySelector('.button-container');
+      const trainerPanelButton = document.createElement('button');
+      trainerPanelButton.textContent = 'Panel Trenera';
+      trainerPanelButton.className = 'profileButton';
+      trainerPanelButton.onclick = function() {
+        window.location.href = 'trainer_panel.html'; // Change to your trainer panel URL
+      };
+      buttonContainer.appendChild(trainerPanelButton);
+    }
+  }).catch((error) => {
+    console.error("Error fetching user data:", error);
+  });
+}
+
+// Listen for auth state changes
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in, call the function to check if they are a trainer
+    addTrainerPanelButtonIfTrainer(user);
+  } else {
+    // User is signed out
+    window.location.href = 'login.html';
+  }
+});
+
 	
 </script>
 
