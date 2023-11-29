@@ -206,6 +206,39 @@
 .dropdown-content a:hover {
     background-color: #f1f1f1;
 }
+
+.popup-content .time-slots {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Create two columns within the popup only */
+    gap: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.popup-content .time-slot {
+    padding: 12px;
+    margin-bottom: 10px; /* Provide some space at the bottom within the popup only */
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+
+/* Ensure the popup content doesn't exceed the viewport height */
+.popup-content {
+    max-height: calc(100vh - 40px); /* Viewport height minus some space */
+    overflow-y: auto;
+}
+
+/* Adjust the popup container padding and flex properties to ensure it aligns correctly */
+.popup {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to the top to avoid centering when content overflows */
+}
+
+
 </style>
 
 </head>
