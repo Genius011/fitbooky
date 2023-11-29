@@ -872,29 +872,6 @@ display: flex;
   </div>
 </div>
 
-<!-- Przycisk do rozwijania/zwijania sekcji Zarządzania Miejscami na Trening Grupowy -->
-<div class="toggle-section toggle-group-training">
-  <i id="toggleGroupTrainingIcon" class="fas fa-chevron-down"></i>
-  <span>Zarządzanie miejscami na trening grupowy</span>
-</div>
-
-<!-- Sekcja Zarządzania Miejscami na Trening Grupowy -->
-<section id="groupTrainingManager" class="section" style="display: none;">
-  <!-- Tutaj umieść formularz do zarządzania dostępnością miejsc -->
-  <form id="groupTrainingForm">
-    <div class="day-container">
-      <!-- Powtórz poniższą strukturę dla każdego dnia tygodnia -->
-      <div class="day-column">
-        <h3>Poniedziałek</h3>
-        <label for="monday-spots">Miejsca: </label>
-        <input type="number" id="monday-spots" name="monday" min="0">
-      </div>
-      <!-- Dodaj kolejne dni tygodnia tutaj... -->
-    </div>
-    <button type="submit" class="submit-btn">Zapisz zmiany</button>
-  </form>
-</section>
-
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
@@ -1296,40 +1273,6 @@ async function savePrice(bookingId) {
 
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
-
-document.getElementById('toggleGroupTrainingIcon').addEventListener('click', function() {
-  const section = document.getElementById('groupTrainingManager');
-  const icon = document.getElementById('toggleGroupTrainingIcon');
-  
-  // Przełączanie widoczności sekcji i ikony
-  if (section.style.display === "none") {
-    section.style.display = "block";
-    icon.classList.add('rotate-icon');
-  } else {
-    section.style.display = "none";
-    icon.classList.remove('rotate-icon');
-  }
-});
-
-
-document.addEventListener('DOMContentLoaded', function() {
-  // ... Twój istniejący kod ...
-
-  // Dodanie event listenera dla rozwijania sekcji zarządzania treningiem grupowym
-  document.getElementById('toggleGroupTrainingIcon').addEventListener('click', function() {
-    const section = document.getElementById('groupTrainingManager');
-    const icon = document.getElementById('toggleGroupTrainingIcon');
-  
-    // Przełączanie widoczności sekcji i ikony
-    if (section.style.display === "none") {
-      section.style.display = "block";
-      icon.classList.add('rotate-icon');
-    } else {
-      section.style.display = "none";
-      icon.classList.remove('rotate-icon');
-    }
-  });
-});
 
 
 
