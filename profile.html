@@ -260,6 +260,8 @@
     <p id="displayEmail"><i class="fas fa-envelope"></i> Email: t.staworzynski@protonmail.com</p>
     <p id="displayPhone"><i class="fas fa-phone"></i> Phone: +48789387011</p>
     <p id="totalSessions"><i class="fas fa-calendar-alt"></i> Total Training Sessions: 1</p>
+	<p id="nextTraining"><i class="fas fa-clock"></i> Next Training: </p>
+
 </div>
     
 	<div class="profile-edit-form">
@@ -404,6 +406,57 @@
     const viewButton = bookingRow.querySelector('button');
     viewButton.addEventListener('click', () => viewProfile(booking.userId));
 });
+	
+	document.addEventListener('DOMContentLoaded', () => {
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            fetchAndDisplayUserData(user.uid);
+
+            // Fetch user's bookings
+            const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid));
+            getDocs(bookingsQuery)
+                .then((bookingsSnapshot) => {
+                    const now = new Date();
+                    let nextTraining = null;
+
+                    // Find the next training session
+                    bookingsSnapshot.forEach((bookingDoc) => {
+                        const bookingData = bookingDoc.data();
+                        const trainingDate = new Date(bookingData.date + ' ' + bookingData.time);
+
+                        // Check if the training is in the future and not canceled
+                        if (trainingDate > now && !bookingData.canceled) {
+                            if (!nextTraining || trainingDate < nextTraining.date) {
+                                nextTraining = {
+                                    date: trainingDate,
+                                    type: bookingData.trainingType,
+                                };
+                            }
+                        }
+                    });
+
+                    // Display the next training session information
+                    const nextTrainingElement = document.getElementById('nextTraining');
+                    if (nextTraining) {
+                        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+                        const formattedDate = nextTraining.date.toLocaleDateString('en-US', options);
+                        nextTrainingElement.innerHTML += ` ${formattedDate}, ${nextTraining.type}`;
+                    } else {
+                        nextTrainingElement.innerHTML += ' None';
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching bookings:', error);
+                });
+
+            // Rest of your code...
+        } else {
+            // User is signed out
+            // Handle user state when not logged in if necessary
+        }
+    });
+});
+
 	
 </script>
 
