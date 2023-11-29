@@ -423,75 +423,60 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+  const auth = getAuth(app);
 const db = getFirestore(app);
 
-function checkUserRoleAndSetupUI(user) {
-  const userRef = doc(db, 'users', user.uid);
-  getDoc(userRef).then((docSnap) => {
-    if (docSnap.exists()) {
-      const userData = docSnap.data();
-      setupLogoutButton(userData.firstName);
-      if (userData.role === 'trener') {
-        showTrainerPanelButton();
-      } else {
-        hideTrainerPanelButton();
-      }
+     // Logout function
+  logoutButton.addEventListener('click', () => {
+    signOut(auth).then(() => {
+      // Sign-out successful, redirect to login page
+      window.location.href = 'login.html';
+    }).catch((error) => {
+      // An error happened during sign out
+      console.error('Logout failed', error);
+    });
+  });
+  
+  
+  
+   
+    document.addEventListener('DOMContentLoaded', function() {
+    const auth = getAuth();
+    let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
+
+    onAuthStateChanged(auth, (user) => {
+    if (user) {
+        currentUserId = user.uid;
+
+        // Get user document from Firestore
+        const userRef = doc(getFirestore(), 'users', user.uid);
+        getDoc(userRef).then((docSnap) => {
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                const userFirstName = userData.firstName; // Accessing the 'firstName' field from Firestore
+
+                // Update the logout button text with the user's first name
+                const logoutButtonText = document.getElementById('logoutButtonText');
+                if (userFirstName) {
+                    logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
+                } else {
+                    console.log("User's first name is not defined in the document.");
+                }
+
+                // Check if the user is a trainer and show the 'Panel Trenera' link
+                if (userData.role === 'trener') {
+                    const trainerPanelLink = document.getElementById('trainerPanelLink');
+                    trainerPanelLink.style.display = 'block'; // Show the link if the user is a trainer
+                }
+            } else {
+                console.log("User data not found in Firestore.");
+            }
+        });
     } else {
-      console.error("User data not found");
+        console.log("No user is logged in, redirecting to login");
+        window.location.href = 'login.html';
     }
-  }).catch((error) => {
-    console.error("Error fetching user data:", error);
-  });
-}
-
-function setupLogoutButton(firstName) {
-  const logoutButton = document.getElementById('logoutButton');
-  if (firstName) {
-    logoutButton.textContent = `Zalogowany jako ${firstName}`;
-  } else {
-    logoutButton.textContent = 'Zalogowany jako Anonim';
-  }
-}
-
-function showTrainerPanelButton() {
-  const buttonContainer = document.querySelector('.button-container');
-  let trainerPanelButton = buttonContainer.querySelector('.trainerPanelButton');
-  if (!trainerPanelButton) {
-    trainerPanelButton = document.createElement('button');
-    trainerPanelButton.textContent = 'Panel Trenera';
-    trainerPanelButton.className = 'profileButton trainerPanelButton';
-    trainerPanelButton.onclick = () => window.location.href = 'trainer_panel.html';
-    buttonContainer.appendChild(trainerPanelButton);
-  }
-}
-
-function hideTrainerPanelButton() {
-  const trainerPanelButton = document.querySelector('.trainerPanelButton');
-  if (trainerPanelButton) {
-    trainerPanelButton.remove();
-  }
-}
-
-// Logout function
-document.getElementById('logout').addEventListener('click', () => {
-  signOut(auth).then(() => {
-    window.location.href = 'login.html';
-  }).catch((error) => {
-    console.error('Logout failed', error);
-  });
 });
-
-// Listen for auth state changes
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    checkUserRoleAndSetupUI(user);
-  } else {
-    window.location.href = 'login.html';
-  }
-});
-
-
 
 // Ensure the dropdown content is hidden initially and shown on hover
 const dropdown = document.querySelector('.dropdown');
@@ -753,36 +738,6 @@ document.getElementById('logout').addEventListener('click', () => {
         // An error happened during sign out
         console.error('Logout failed', error);
     });
-});
-
-// Function that checks if the user is a trainer and adds the button if so
-function addTrainerPanelButtonIfTrainer(user) {
-  const userRef = doc(db, 'users', user.uid);
-  getDoc(userRef).then((docSnap) => {
-    if (docSnap.exists() && docSnap.data().role === 'trener') {
-      const buttonContainer = document.querySelector('.button-container');
-      const trainerPanelButton = document.createElement('button');
-      trainerPanelButton.textContent = 'Panel Trenera';
-      trainerPanelButton.className = 'profileButton';
-      trainerPanelButton.onclick = function() {
-        window.location.href = 'panel.html'; // Change to your trainer panel URL
-      };
-      buttonContainer.appendChild(trainerPanelButton);
-    }
-  }).catch((error) => {
-    console.error("Error fetching user data:", error);
-  });
-}
-
-// Listen for auth state changes
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // User is signed in, call the function to check if they are a trainer
-    addTrainerPanelButtonIfTrainer(user);
-  } else {
-    // User is signed out
-    window.location.href = 'login.html';
-  }
 });
 
 	
