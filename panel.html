@@ -872,6 +872,12 @@ display: flex;
   </div>
 </div>
 
+<!-- Przycisk do rozwijania/zwijania sekcji Zarządzania Miejscami na Trening Grupowy -->
+<div class="toggle-section toggle-group-training">
+  <i id="toggleGroupTrainingIcon" class="fas fa-chevron-down"></i>
+  <span>Zarządzanie miejscami na trening grupowy</span>
+</div>
+
 <!-- Sekcja Zarządzanie Miejscami na Trening Grupowy -->
 
 <section id="groupTrainingManager" class="section" style="display: none;">
@@ -1309,6 +1315,22 @@ document.getElementById('updateGroupTrainingSlots').addEventListener('click', as
     // Tutaj możesz zapisać slotsData do bazy danych
     console.log(slotsData);
     // Przykład: await updateDoc(doc(db, 'groupTrainingSlots', 'yourId'), slotsData);
+	
+	document.getElementById('toggleGroupTrainingIcon').addEventListener('click', function() {
+  const section = document.getElementById('groupTrainingManager');
+  const icon = document.getElementById('toggleGroupTrainingIcon');
+  
+  // Przełączanie wyświetlania sekcji i obracanie ikony
+  if (section.style.display === "none") {
+    section.style.display = "block";
+    icon.classList.add('rotate-icon');
+  } else {
+    section.style.display = "none";
+    icon.classList.remove('rotate-icon');
+  }
+});
+
+	
 });
 
 
