@@ -373,48 +373,29 @@ const db = getFirestore(app);
     let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
 
     onAuthStateChanged(auth, (user) => {
-    if (user) {
-        console.log("User is logged in: ", user.uid);
-        currentUserId = user.uid;
-
-        // Pobranie danych użytkownika
-        const userRef = doc(db, 'users', user.uid);
-        getDoc(userRef).then((docSnap) => {
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                console.log(`User role: ${userData.role}`);
-                
-                // Logika dla trenera
-                if (userData.role === 'trener') {
+        if (user) {
+            currentUserId = user.uid;
+			
+            // Jeśli użytkownik jest zalogowany, sprawdź, czy ma rolę 'trener'
+            const userRef = doc(getFirestore(), 'users', user.uid);
+            getDoc(userRef).then((docSnap) => {
+                if (docSnap.exists() && docSnap.data().role === 'trener') {
+                    // Utwórz i dodaj przycisk Panelu Trenera
                     const buttonContainer = document.querySelector('.button-container');
-                    let trainerPanelButton = document.querySelector('.trainerPanelButton'); // Sprawdzenie, czy przycisk już istnieje
-                    
-                    // Jeśli przycisk nie istnieje, tworzymy nowy
-                    if (!trainerPanelButton) {
-                        trainerPanelButton = document.createElement('button');
-                        trainerPanelButton.textContent = 'Panel Trenera';
-                        trainerPanelButton.className = 'profileButton trainerPanelButton'; // Dodanie klasy dla przycisku
-                        trainerPanelButton.onclick = () => window.location.href = 'panel.html';
-                        buttonContainer.appendChild(trainerPanelButton);
-                    }
-
-                    // Włączenie wielokrotnego wyboru godzin
-                    enableMultipleHoursSelection();
-                } else {
-                    // Logika dla zwykłego użytkownika
-                    enableSingleHourSelection();
+                    const trainerPanelButton = document.createElement('button');
+                    trainerPanelButton.textContent = 'Panel Trenera';
+                    trainerPanelButton.className = 'profileButton'; // Klasa dla stylizacji
+                    trainerPanelButton.onclick = function() {
+                        window.location.href = 'panel.html'; // Zmień URL na odpowiedni dla panelu trenera
+                    };
+                    buttonContainer.appendChild(trainerPanelButton);
                 }
-            } else {
-                console.log("User data not found");
-            }
-        });
-    } else {
-        console.log("No user is logged in, redirecting to login");
-        window.location.href = 'login.html';
-    }
-});
-
-	
+            });
+        } else {
+            // Przekieruj na stronę logowania, jeśli użytkownik nie jest zalogowany
+            window.location.href = 'login.html';
+        }
+    });
         const calendar = document.getElementById('calendar');
         const prevMonth = document.getElementById('prevMonth');
         const nextMonth = document.getElementById('nextMonth');
@@ -643,62 +624,6 @@ async function isTimeSlotAvailable(date, time, trainingType) {
   const querySnapshot = await getDocs(query(bookingsRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
   return querySnapshot.empty; // Zwróć true jeśli nie ma rezerwacji, false w przeciwnym wypadku
 }
-
-function enableSingleHourSelection() {
-    console.log("Enabling single hour selection for regular users");
-
-    const timeSlots = document.querySelectorAll('.time-slot');
-    timeSlots.forEach(slot => {
-        slot.removeEventListener('click', handleMultipleTimeSlotClick);
-        slot.addEventListener('click', handleSingleTimeSlotClick);
-    });
-}
-
-function handleSingleTimeSlotClick(event) {
-    console.log("Single time slot clicked: ", event.target);
-
-    const timeSlots = document.querySelectorAll('.time-slot');
-    timeSlots.forEach(slot => slot.classList.remove('selected'));
-    event.target.classList.add('selected');
-}
-
-function enableMultipleHoursSelection() {
-    console.log("Enabling multiple hours selection for trainers");
-    const timeSlots = document.querySelectorAll('.time-slot');
-    timeSlots.forEach(slot => {
-        slot.removeEventListener('click', handleSingleTimeSlotClick);
-        slot.addEventListener('click', handleMultipleTimeSlotClick);
-    });
-}
-
-function handleMultipleTimeSlotClick(event) {
-    console.log("Multiple time slot clicked: ", event.target);
-
-    // Dodajemy lub usuwamy klasę 'selected' w zależności od jej obecności
-    event.target.classList.toggle('selected');
-    console.log("Is slot selected? ", event.target.classList.contains('selected'));
-}
-
-
-// Wywołanie funkcji w zależności od roli użytkownika
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        const userRef = doc(db, 'users', user.uid);
-        getDoc(userRef).then((docSnap) => {
-            if (docSnap.exists() && docSnap.data().role === 'trener') {
-                enableMultipleHoursSelection();
-            } else {
-                enableSingleHourSelection();
-            }
-        });
-    } else {
-        window.location.href = 'login.html';
-    }
-});
-
-document.querySelectorAll('.time-slot').forEach(slot => {
-    slot.addEventListener('click', handleMultipleTimeSlotClick);
-});
 
 	
 </script>
