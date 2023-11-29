@@ -147,13 +147,19 @@
 }
 
 .button-container button, .button-container a button {
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
-    color: white;
+    background: white; /* White background */
+    color: black; /* Black text */
     border: none;
     font-weight: bold;
     border-radius: 5px;
     padding: 10px 20px;
     text-decoration: none;
+}
+
+.button-container button:hover, .button-container a button:hover {
+    background-color: #f1f1f1; /* Light grey background on hover */
+    color: black; /* Keep text black on hover */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Adds shadow on hover */
 }
 
 .logo-image {
