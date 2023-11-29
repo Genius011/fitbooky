@@ -479,26 +479,37 @@ document.getElementById('logout').addEventListener('click', () => {
             }
         }
 		async function saveBooking(userId, date, trainingType, time) {
-        if (!userId) {
-            alert('Nie jesteś zalogowany!');
-            return;
-        }
+  if (!userId) {
+    alert('Nie jesteś zalogowany!');
+    return;
+  }
 
-        try {
-            await addDoc(collection(db, "bookings"), {
-                userId: userId,  // Dodaj ID użytkownika do dokumentu rezerwacji
-                date: date,
-                trainingType: trainingType,
-                time: time
-				email: userData.email, // Dodaj email użytkownika do dokumentu rezerwacji
-				firstName: userData.firstName
-            });
-            alert("Rezerwacja została zapisana w Twoim profilu");
-        } catch (e) {
-            console.error("Błąd podczas zapisu: ", e);
-            alert("Wystąpił błąd podczas zapisu rezerwacji");
-        }
+  try {
+    // Pobranie dodatkowych informacji o użytkowniku
+    const userRef = doc(getFirestore(), 'users', userId);
+    const docSnap = await getDoc(userRef);
+
+    // Jeśli dokument użytkownika istnieje, użyj jego danych
+    if (docSnap.exists()) {
+      const userData = docSnap.data();
+      await addDoc(collection(db, "bookings"), {
+        userId: userId,
+        date: date,
+        trainingType: trainingType,
+        time: time,
+        email: userData.email, // Dodaj email użytkownika do dokumentu rezerwacji
+        firstName: userData.firstName // Dodaj firstName użytkownika do dokumentu rezerwacji
+      });
+      alert("Rezerwacja została zapisana w Twoim profilu");
+    } else {
+      console.log("Nie znaleziono danych użytkownika.");
     }
+  } catch (e) {
+    console.error("Błąd podczas zapisu: ", e);
+    alert("Wystąpił błąd podczas zapisu rezerwacji");
+  }
+}
+
 
        async function openPopup(selectedDay) {
     const popup = document.createElement('div');
