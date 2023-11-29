@@ -146,20 +146,23 @@
     gap: 10px;
 }
 
-.button-container button, .button-container a button {
+.button-container button,
+.button-container a button {
     background: white; /* White background */
-    color: black; /* Black text */
+    color: black; /* Black text to match the dropdown */
     border: none;
     font-weight: bold;
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 12px 16px; /* Padding to match dropdown links */
     text-decoration: none;
+    cursor: pointer;
 }
 
-.button-container button:hover, .button-container a button:hover {
-    background-color: #f1f1f1; /* Light grey background on hover */
+.button-container button:hover,
+.button-container a button:hover {
+    background-color: #f1f1f1; /* Light grey background on hover to match dropdown links */
     color: black; /* Keep text black on hover */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Adds shadow on hover */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow on hover to match dropdown links */
 }
 
 .logo-image {
