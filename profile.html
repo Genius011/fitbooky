@@ -334,6 +334,7 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 fetchAndDisplayUserData(user.uid);
+
                 const editProfileForm = document.getElementById('editProfileForm');
                 editProfileForm.addEventListener('submit', (e) => {
                     e.preventDefault();
@@ -402,96 +403,62 @@
 
     // Eksportowanie viewProfile do globalnego zasięgu
     window.viewProfile = viewProfile;
-	
-	bookings.forEach(booking => {
-    // ...
-    const viewButton = bookingRow.querySelector('button');
-    viewButton.addEventListener('click', () => viewProfile(booking.userId));
-});
-	
-	document.addEventListener('DOMContentLoaded', () => {
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            fetchAndDisplayUserData(user.uid);
 
-            // Fetch user's bookings
-            const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid));
-            getDocs(bookingsQuery)
-                .then((bookingsSnapshot) => {
-                    const now = new Date();
-                    let nextTraining = null;
+    document.addEventListener('DOMContentLoaded', () => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                fetchAndDisplayUserData(user.uid);
 
-                    // Find the next training session
-                    bookingsSnapshot.forEach((bookingDoc) => {
-                        const bookingData = bookingDoc.data();
-                        const trainingDate = new Date(bookingData.date + ' ' + bookingData.time);
+                // Fetch user's bookings
+                const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid));
+                getDocs(bookingsQuery)
+                    .then((bookingsSnapshot) => {
+                        const now = new Date();
+                        let nextTraining = null;
 
-                        // Check if the training is in the future and not canceled
-                        if (trainingDate > now && !bookingData.canceled) {
-                            if (!nextTraining || trainingDate < nextTraining.date) {
-                                nextTraining = {
-                                    date: trainingDate,
-                                    type: bookingData.trainingType,
-                                };
+                        // Find the next training session
+                        bookingsSnapshot.forEach((bookingDoc) => {
+                            const bookingData = bookingDoc.data();
+                            const trainingDate = new Date(bookingData.date + ' ' + bookingData.time);
+
+                            // Check if the training is in the future and not canceled
+                            if (trainingDate > now && !bookingData.canceled) {
+                                if (!nextTraining || trainingDate < nextTraining.date) {
+                                    nextTraining = {
+                                        date: trainingDate,
+                                        type: bookingData.trainingType,
+                                    };
+                                }
                             }
+                        });
+
+                        // Display the next training session information
+                        const nextTrainingElement = document.getElementById('nextTraining');
+                        if (nextTraining) {
+                            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+                            const formattedDate = nextTraining.date.toLocaleDateString('en-US', options);
+                            nextTrainingElement.innerHTML += ` ${formattedDate}, ${nextTraining.type}`;
+                        } else {
+                            nextTrainingElement.innerHTML += ' None';
                         }
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching bookings:', error);
                     });
 
-                    // Display the next training session information
-                    const nextTrainingElement = document.getElementById('nextTraining');
-                    if (nextTraining) {
-                        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-                        const formattedDate = nextTraining.date.toLocaleDateString('en-US', options);
-                        nextTrainingElement.innerHTML += ` ${formattedDate}, ${nextTraining.type}`;
-                    } else {
-                        nextTrainingElement.innerHTML += ' None';
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error fetching bookings:', error);
-                });
-
-            // Rest of your code...
-        } else {
-            // User is signed out
-            // Handle user state when not logged in if necessary
-        }
+                // Rest of your code...
+            } else {
+                // User is signed out
+                // Handle user state when not logged in if necessary
+            }
+        });
     });
-});
 
-// Set onclick handler for the close button
-    
+    // Set onclick handler for the close button
     closeButton.onclick = function() {
         const modal = document.getElementById('profileModal');
         modal.style.display = "none";
-		}
-		
-		// Define the Firestore collection where bookings are stored
-const bookingsCollection = collection(db, 'bookings');
-
-// Define a query to get bookings for the currently authenticated user (assuming you have user authentication in place)
-const bookingsQuery = query(bookingsCollection, where('userId', '==', user.uid));
-
-// Fetch the bookings data
-getDocs(bookingsQuery)
-  .then((bookingsSnapshot) => {
-    // Process the bookings data here
-    // You can iterate through the snapshots and store them in the `bookings` variable or use them directly
-    const bookings = [];
-    bookingsSnapshot.forEach((bookingDoc) => {
-      const bookingData = bookingDoc.data();
-      // Process and store the booking data as needed
-      bookings.push(bookingData);
-    });
-
-    // Now you can work with the `bookings` variable
-    console.log(bookings);
-  })
-  .catch((error) => {
-    console.error('Error fetching bookings:', error);
-  });
-
-	
+    }
 </script>
 
 
