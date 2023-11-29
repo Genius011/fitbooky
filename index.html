@@ -82,10 +82,11 @@
 }
 
 .training-type-container {
-     display: grid;
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     margin-bottom: 10px;
+    text-align: center; 
 }
 
 .training-type, .time-slot {
@@ -246,6 +247,10 @@
     border-radius: 5px; /* Add border radius for rounded corners */
     cursor: pointer; /* Change cursor on hover */
     transition: background-color 0.3s; /* Add transition for smoother hover effect */
+	padding: 12px;
+    margin-bottom: 10px;
+    flex-basis: 45%;
+    text-align: center;
 }
 
 .training-type.selected {
