@@ -48,7 +48,7 @@
 
 .day-names, .calendar-grid, .time-slots {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* Two columns for larger screens */
     gap: 10px;
     text-align: center;
 }
@@ -206,6 +206,44 @@
 .dropdown-content a:hover {
     background-color: #f1f1f1;
 }
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+    .popup-content {
+        width: 95%; /* Take up more width on smaller screens */
+        max-width: none; /* Allow the popup to expand */
+    }
+
+    .time-slots {
+        grid-template-columns: 1fr; /* Single column layout for smaller screens */
+        gap: 5px; /* Reduce gap to save space */
+    }
+
+    .training-type-container {
+        flex-direction: column; /* Stack training types vertically */
+    }
+
+    .training-type, .time-slot {
+        flex-basis: auto; /* Allow the elements to take up the available space */
+        width: 100%; /* Full width for easier tapping */
+    }
+}
+
+/* Further adjustments for very small screens */
+@media (max-width: 480px) {
+    .popup-content {
+        padding: 15px; /* Reduce padding to save space */
+    }
+
+    .close-btn {
+        font-size: 20px; /* Smaller close button */
+    }
+
+    .book-btn {
+        padding: 10px 15px; /* Smaller button padding */
+    }
+}
+
 </style>
 
 </head>
