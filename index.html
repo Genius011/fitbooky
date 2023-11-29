@@ -381,11 +381,15 @@ const db = getFirestore(app);
         getDoc(userRef).then((docSnap) => {
             if (docSnap.exists()) {
                 const userData = docSnap.data();
-                const userName = userData.name; // Assuming 'name' is the field for the user's name
+                const userName = userData.name; // Make sure 'name' corresponds to the field in your Firestore document
 
-                // Update the logout button text
-                const logoutButton = document.getElementById('logoutButton');
-                logoutButton.textContent = `Zalogowany jako ${userName}`;
+                // Update the logout button text only if userName is not undefined
+                if (userName) {
+                    const logoutButton = document.getElementById('logoutButton');
+                    logoutButton.textContent = `Zalogowany jako ${userName}`;
+                } else {
+                    console.log("User name is not defined in the document.");
+                }
 
                 // Check if the user is a trainer and create a trainer panel button if so
                 if (userData.role === 'trener') {
@@ -402,7 +406,7 @@ const db = getFirestore(app);
                     }
                 }
             } else {
-                console.log("User data not found");
+                console.log("User data not found in Firestore.");
             }
         });
     } else {
@@ -410,6 +414,7 @@ const db = getFirestore(app);
         window.location.href = 'login.html';
     }
 });
+
 
 	
         const calendar = document.getElementById('calendar');
