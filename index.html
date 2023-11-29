@@ -374,6 +374,8 @@ const db = getFirestore(app);
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
+		            console.log("User is logged in: ", user.uid);
+
             currentUserId = user.uid;
 			
             // Jeśli użytkownik jest zalogowany, sprawdź, czy ma rolę 'trener'
@@ -392,6 +394,8 @@ const db = getFirestore(app);
                 }
             });
         } else {
+		            console.log("No user is logged in, redirecting to login");
+
             // Przekieruj na stronę logowania, jeśli użytkownik nie jest zalogowany
             window.location.href = 'login.html';
         }
@@ -627,6 +631,8 @@ async function isTimeSlotAvailable(date, time, trainingType) {
 }
 
 function enableSingleHourSelection() {
+    console.log("Enabling single hour selection for regular users");
+
     const timeSlots = document.querySelectorAll('.time-slot');
     timeSlots.forEach(slot => {
         slot.removeEventListener('click', handleMultipleTimeSlotClick);
@@ -635,12 +641,15 @@ function enableSingleHourSelection() {
 }
 
 function handleSingleTimeSlotClick(event) {
+    console.log("Single time slot clicked: ", event.target);
+
     const timeSlots = document.querySelectorAll('.time-slot');
     timeSlots.forEach(slot => slot.classList.remove('selected'));
     event.target.classList.add('selected');
 }
 
 function enableMultipleHoursSelection() {
+    console.log("Enabling multiple hours selection for trainers");
     const timeSlots = document.querySelectorAll('.time-slot');
     timeSlots.forEach(slot => {
         slot.removeEventListener('click', handleSingleTimeSlotClick);
@@ -649,6 +658,7 @@ function enableMultipleHoursSelection() {
 }
 
 function handleMultipleTimeSlotClick(event) {
+    console.log("Multiple time slot clicked: ", event.target);
     event.target.classList.toggle('selected');
 }
 
