@@ -598,6 +598,84 @@ display: flex;
     margin-bottom: 20px;
 }
 
+/* Styl dla sekcji zarządzania treningami grupowymi */
+.toggle-group-training {
+  cursor: pointer;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  background-color: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.toggle-group-training i {
+  transition: transform 0.3s ease;
+}
+
+.rotate-icon {
+  transform: rotate(180deg);
+}
+
+#groupTrainingManager {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+}
+
+#groupTrainingForm {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.day-column {
+  background-color: #f7f7f7;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.day-column h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.day-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.day-container input[type="number"] {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.submit-btn {
+  width: auto;
+  background-color: #5cb85c;
+  padding: 10px 15px;
+  font-size: 16px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #4cae4c;
+}
+
+
     </style>
 </head>
 <body>
