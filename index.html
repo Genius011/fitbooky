@@ -490,6 +490,8 @@ document.getElementById('logout').addEventListener('click', () => {
                 date: date,
                 trainingType: trainingType,
                 time: time
+				email: userData.email, // Dodaj email użytkownika do dokumentu rezerwacji
+				firstName: userData.firstName
             });
             alert("Rezerwacja została zapisana w Twoim profilu");
         } catch (e) {
