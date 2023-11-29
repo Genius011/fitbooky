@@ -438,43 +438,40 @@ const db = getFirestore(app);
     const auth = getAuth();
     let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
 
-    function updateUserInterface(userData) {
-  const logoutButton = document.getElementById('logoutButton');
-  const dropdownMenu = document.querySelector('.dropdown-content');
-  const userFirstName = userData.firstName || 'Użytkownik';
-  logoutButton.textContent = `Zalogowany jako ${userFirstName}`;
-
-  // Usuń przycisk panelu trenera, jeśli istnieje
-  const existingTrainerButton = dropdownMenu.querySelector('.trainerPanelButton');
-  if (existingTrainerButton) {
-    dropdownMenu.removeChild(existingTrainerButton);
-  }
-
-  // Jeśli użytkownik jest trenerem, dodaj przycisk panelu trenera
-  if (userData.role === 'trener') {
-    const trainerPanelButton = document.createElement('button');
-    trainerPanelButton.textContent = 'Panel Trenera';
-    trainerPanelButton.className = 'dropdown-item trainerPanelButton';
-    trainerPanelButton.onclick = () => window.location.href = 'trainer_panel.html';
-    dropdownMenu.appendChild(trainerPanelButton);
-  }
-}
+    
 	
 	onAuthStateChanged(auth, (user) => {
-  if (user) {
-    const userRef = doc(db, 'users', user.uid);
-    getDoc(userRef).then((docSnap) => {
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        updateUserInterface(userData); // Aktualizacja interfejsu użytkownika na podstawie danych
-      } else {
-        console.log("Dane użytkownika nie znalezione.");
-      }
-    });
-  } else {
-    console.log("No user is logged in, redirecting to login");
-    window.location.href = 'login.html';
-  }
+    if (user) {
+        currentUserId = user.uid;
+
+        // Get user document from Firestore
+        const userRef = doc(getFirestore(), 'users', user.uid);
+        getDoc(userRef).then((docSnap) => {
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                const userFirstName = userData.firstName; // Accessing the 'firstName' field from Firestore
+
+                // Update the logout button text with the user's first name
+                const logoutButtonText = document.getElementById('logoutButtonText');
+                if (userFirstName) {
+                    logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
+                } else {
+                    console.log("User's first name is not defined in the document.");
+                }
+
+                // Check if the user is a trainer and show the 'Panel Trenera' link
+                if (userData.role === 'trener') {
+                    const trainerPanelLink = document.getElementById('trainerPanelLink');
+                    trainerPanelLink.style.display = 'block'; // Show the link if the user is a trainer
+                }
+            } else {
+                console.log("User data not found in Firestore.");
+            }
+        });
+    } else {
+        console.log("No user is logged in, redirecting to login");
+        window.location.href = 'login.html';
+    }
 });
 
 // Ensure the dropdown content is hidden initially and shown on hover
