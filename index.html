@@ -270,6 +270,15 @@
 	color: white;
 	font-size: 16px;
 }
+.booking-section {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Dodaj odstęp między polem tekstowym a przyciskiem */
+}
+
+#cancellationText {
+    flex-grow: 1; /* Rozciągnij pole tekstowe, aby zajęło dostępną przestrzeń */
+}
 
 
 </style>
@@ -479,14 +488,17 @@ document.getElementById('logout').addEventListener('click', () => {
                 <div class="training-type" data-type="personal">Personal</div>
                 <div class="training-type" data-type="group">Group</div>
             </div>
+			
             <hr class="separator">
-            <div class="time-slots"></div>
-            <button id="bookButton" class="book-btn">Rezerwuj</button>
-			     <textarea id="cancellationText" rows="4" cols="50" readonly>
-        Bezpłatna anulacja rezerwacji do 12h przed treningiem. Później 50% opłaty.
-    </textarea>
-
-        </div>
+    <div class="time-slots"></div>
+    <div class="booking-section">
+        <!-- Pole tekstowe obok przycisku "Rezerwuj" -->
+        <textarea id="cancellationText" rows="4" cols="50" readonly>
+            Bezpłatna anulacja rezerwacji do 12h przed treningiem. Później 50% opłaty.
+        </textarea>
+        <button id="bookButton" class="book-btn">Rezerwuj</button>
+    </div>
+</div>
     `;
 
     document.body.appendChild(popup);
