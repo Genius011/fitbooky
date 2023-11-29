@@ -6,10 +6,10 @@
     <title>Book your training</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <style>
-        body {
+  body {
     font-family: 'Roboto', sans-serif;
     background-image: url('dall.png');
-	 background-size: cover;
+    background-size: cover;
     margin: 0;
     display: flex;
     justify-content: center;
@@ -17,10 +17,13 @@
     height: 100vh;
 }
 
-.calendar-container {
+.calendar-container, .popup-content {
     background-color: #fff;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.calendar-container {
     overflow: hidden;
     width: 90%;
     max-width: 600px;
@@ -35,274 +38,123 @@
     padding: 10px 20px;
 }
 
-.nav-button {
+.nav-button, .close-btn, .day, .time-slot, .book-btn {
     cursor: pointer;
+}
+
+.nav-button {
     font-size: 20px;
 }
 
-.day-names {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    background-color: #f7f7f7;
-    text-align: center;
-    padding: 10px 0;
-}
-
-.calendar-grid {
+.day-names, .calendar-grid, .time-slots {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
+    text-align: center;
+}
+
+.day-names {
+    background-color: #f7f7f7;
+    padding: 10px 0;
+}
+
+.calendar-grid, .time-slots {
     padding: 20px;
 }
 
-.day {
+.day, .time-slot, .book-btn {
     background-color: #ffffff;
     padding: 15px;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s, transform 0.3s;
 }
 
-.day:hover {
-    background-color: #eff6ff;
+.day:hover, .time-slot:hover, .book-btn:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transform: translateY(-2px);
 }
 
-.inactive {
+.inactive, .time-slot.disabled {
     color: #cccccc;
     background-color: #f9f9f9;
     pointer-events: none;
 }
 
-/* ... existing styles ... */
+.training-type-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.training-type, .time-slot {
+    padding: 12px;
+    margin-bottom: 10px;
+    flex-basis: 45%; /* Adjust width accordingly */
+}
+
+.training-type.selected, .time-slot.selected, .book-btn {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+}
+
+.current-day {
+    background-color: #a777e3;
+}
 
 .popup {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     z-index: 1000;
-  }
+}
 
-  .popup-content {
-    background-color: #fff;
+.popup-content {
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    width: auto;
-    max-width: 95%;
+    position: relative;
+    width: 80%;
+    max-width: 400px;
     max-height: 80%;
     overflow-y: auto;
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+}
 
 .close-btn {
     position: absolute;
     top: 10px;
     right: 10px;
-    cursor: pointer;
     font-size: 25px;
 }
-.training-type-container {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-  }
 
-.training-type {
-    background-color: #ffffff;
-    padding: 12px;
-    border-radius: 5px;
-    text-align: center;
-    cursor: pointer;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s, transform 0.3s;
-    flex-basis: 45%; /* Adjust width accordingly */
-}
-
- .training-type-container {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-  }
-
-.training-type:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-}
-
- .training-type, .time-slot {
-    flex-basis: calc(50% - 10px);
-    margin: 5px;
-  }
-
-.training-type.selected {
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
-    color: white;
-}
-
-
-.time-slots {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
-
-.time-slot, .book-btn {
-    background-color: #ffffff;
-    padding: 12px;
-    border-radius: 5px; /* Rounded corners */
-    text-align: center;
-    cursor: pointer;
-    margin-bottom: 10px; /* Space between time slots */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    transition: box-shadow 0.3s, transform 0.3s; /* Smooth transition for hover effect */
-}
-
-/* Hover effect for time slots */
-.time-slot:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-}
-
-/* Selected time slot style */
-.time-slot.selected {
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
-    color: white;
-}
-.current-day {
-    background-color: #a777e3; /* Light blue background, adjust color as needed */
-    border-radius: 5px; /* Optional, for rounded corners */
-}
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 20px;
-    align-self: flex-end; /* Aligns the button to the right */
-}
-
-.book-btn {
-    background: linear-gradient(135deg, #6e8efb, #a777e3); /* Gradient background */
-    color: white;
-    border: none;
-    font-weight: bold;
-    display: block; /* Allows the use of margin for positioning */
-    width: fit-content; /* Adjust width to content */
-    margin-left: auto; /* Align the button to the right */
-    box-shadow: none; /* No shadow by default */
-}
-
-/* Hover effect for the 'Rezerwuj' button */
-.book-btn:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-}
-
-.popup-content {
-    display: flex;
-    flex-direction: column;
-    max-width: 300px; /* Adjust the max width as necessary */
-    margin: auto; /* Center the popup content */
-    overflow-y: auto; /* Enable scroll if content overflows */
-    padding-bottom: 20px; /* Extra padding at the bottom */
-}
-	.separator {
+.separator {
     border: 0;
     height: 1px;
-    background-image: linear-gradient(to right, transparent, #6e8efb, #a777e3, transparent); /* Gradient line */
-    margin: 20px 0; /* Add some vertical spacing */
+    background-image: linear-gradient(to right, transparent, #6e8efb, #a777e3, transparent);
+    margin: 20px 0;
 }
 
-.time-slot.disabled {
-    background-color: #e0e0e0; /* Lighter color for disabled slots */
-    color: #a0a0a0; /* Dimmed text color */
-    cursor: not-allowed;
-    pointer-events: none; /* Prevents clicking on the slot */
-}
-	.login-button {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-}
-
-.login-button button {
-    background: white;
-    color: black;
-    border: none;
-    font-weight: bold;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-}
-.login-button {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-}
-
-.login-button button {
-    background: white;
-    color: black;
-    border: none;
-    font-weight: bold;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-right: 10px; /* Add spacing between buttons */
-}
-
-.login-button button:last-child {
-    margin-right: 0; /* Remove margin-right for the last button */
-}
-
-
-/* Updated CSS */
 .button-container {
     position: absolute;
     top: 20px;
     left: 20px;
-    display: flex; /* This will align the buttons next to each other */
-    gap: 10px; /* This adds some space between your buttons */
+    display: flex;
+    gap: 10px;
 }
 
-.button-container button,
-.button-container a button {
+.button-container button, .button-container a button {
     background: linear-gradient(135deg, #6e8efb, #a777e3);
     color: white;
     border: none;
     font-weight: bold;
     border-radius: 5px;
     padding: 10px 20px;
-    cursor: pointer;
-    text-decoration: none; /* This removes the underline from the anchor tag */
+    text-decoration: none;
 }
-
-.button-container button:hover,
-.button-container a button:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-}
-
-   
-
 
 .logo-image {
     display: block;
@@ -310,16 +162,16 @@
     height: auto;
     opacity: 0.9;
     margin: 0 auto 20px;
-    transform: scale(0.4); /* Skaluje logo do 40% jego pierwotnego rozmiaru */
-    transform-origin: center; /* Zapewnia, że skalowanie odbywa się względem środka obrazka */
+    transform: scale(0.4);
+    transform-origin: center;
 }
-/* Dropdown Container */
+
+/* Dropdown styles */
 .dropdown {
     position: relative;
     display: inline-block;
 }
 
-/* Dropdown Content (hidden by default) */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -327,64 +179,26 @@
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
+    border-radius: 5px;
 }
 
-/* Links inside the dropdown */
 .dropdown-content a {
     color: black;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
+    border-radius: 5px;
 }
 
-/* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
-/* Change the background color of dropdown links on hover */
 .dropdown-content a:hover {
     background-color: #f1f1f1;
 }
+</style>
 
-/* Change the background color of the dropdown button on hover */
-.dropdown:hover .dropbtn {
-    background-color: #3e8e41;
-}
-
-/* Dropdown Button */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-/* Dropdown Content (Hidden by default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  border-radius: 5px; /* This adds the rounded corners */
-}
-
-/* Links inside the dropdown */
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  border-radius: 5px; /* This adds the rounded corners to the links as well */
-}
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
-}
-
-
-    </style>
 </head>
 <body>
 <div class="button-container">
