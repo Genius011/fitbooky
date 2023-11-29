@@ -291,6 +291,19 @@
         <div id="calendar" class="calendar-grid"></div>
     </div>
    
+   <!-- Dodaj ten kod przed zamknięciem tagu </body> -->
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <h2>Warunki rezerwacji</h2>
+        <p>Tutaj wpisz swoje warunki rezerwacji.</p>
+        <div class="accept-container">
+            <label for="acceptTerms">Akceptuję warunki rezerwacji:</label>
+            <input type="checkbox" id="acceptTerms">
+        </div>
+        <button id="confirmReservation" class="book-btn" disabled>Rezerwuj</button>
+    </div>
+</div>
+
    
   <script type="module">
     // Import the required Firebase modules
@@ -469,19 +482,7 @@ document.getElementById('logout').addEventListener('click', () => {
             <button id="bookButton" class="book-btn">Rezerwuj</button>
         </div>
     `;
-	<!-- Dodaj ten kod przed zamknięciem tagu </body> -->
-<div id="popup" class="popup">
-    <div class="popup-content">
-        <h2>Warunki rezerwacji</h2>
-        <p>Tutaj wpisz swoje warunki rezerwacji.</p>
-        <div class="accept-container">
-            <label for="acceptTerms">Akceptuję warunki rezerwacji:</label>
-            <input type="checkbox" id="acceptTerms">
-        </div>
-        <button id="confirmReservation" class="book-btn" disabled>Rezerwuj</button>
-    </div>
-</div>
-
+	
 
     document.body.appendChild(popup);
     const bookButton = document.getElementById('bookButton');
