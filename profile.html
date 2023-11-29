@@ -261,6 +261,8 @@
     <p id="displayPhone"><i class="fas fa-phone"></i> Phone: +48789387011</p>
     <p id="totalSessions"><i class="fas fa-calendar-alt"></i> Total Training Sessions: 1</p>
 	<p id="nextTraining"><i class="fas fa-clock"></i> Next Training: </p>
+	<span class="close">&times;</span>
+
 
 </div>
     
@@ -457,6 +459,11 @@
     });
 });
 
+// Set onclick handler for the close button
+    const closeButton = document.querySelector('.close');
+    closeButton.onclick = function() {
+        const modal = document.getElementById('profileModal');
+        modal.style.display = "none";
 	
 </script>
 
