@@ -372,34 +372,33 @@ const db = getFirestore(app);
     const auth = getAuth();
     let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
 
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-		            console.log("User is logged in: ", user.uid);
-
-            currentUserId = user.uid;
-			
-            // Jeśli użytkownik jest zalogowany, sprawdź, czy ma rolę 'trener'
-            const userRef = doc(getFirestore(), 'users', user.uid);
-            getDoc(userRef).then((docSnap) => {
-                if (docSnap.exists() && docSnap.data().role === 'trener') {
-                    // Utwórz i dodaj przycisk Panelu Trenera
-                    const buttonContainer = document.querySelector('.button-container');
-                    const trainerPanelButton = document.createElement('button');
-                    trainerPanelButton.textContent = 'Panel Trenera';
-                    trainerPanelButton.className = 'profileButton'; // Klasa dla stylizacji
-                    trainerPanelButton.onclick = function() {
-                        window.location.href = 'panel.html'; // Zmień URL na odpowiedni dla panelu trenera
-                    };
-                    buttonContainer.appendChild(trainerPanelButton);
+    // ...
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log("User is logged in: ", user.uid);
+        currentUserId = user.uid;
+        
+        // Pobieranie informacji o roli użytkownika z bazy danych Firestore
+        const userRef = doc(db, 'users', user.uid);
+        getDoc(userRef).then((docSnap) => {
+            if (docSnap.exists()) {
+                const isTrainer = docSnap.data().role === 'trener';
+                console.log(`Role detected: ${isTrainer ? 'Trainer' : 'Regular user'}`);
+                
+                if (isTrainer) {
+                    enableMultipleHoursSelection();
+                } else {
+                    enableSingleHourSelection();
                 }
-            });
-        } else {
-		            console.log("No user is logged in, redirecting to login");
+            }
+        });
+    } else {
+        console.log("No user is logged in, redirecting to login");
+        window.location.href = 'login.html';
+    }
+});
+// ...
 
-            // Przekieruj na stronę logowania, jeśli użytkownik nie jest zalogowany
-            window.location.href = 'login.html';
-        }
-    });
 	
         const calendar = document.getElementById('calendar');
         const prevMonth = document.getElementById('prevMonth');
