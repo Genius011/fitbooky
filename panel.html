@@ -599,7 +599,12 @@ display: flex;
     margin-bottom: 20px;
 }
 
-/* Dodaj ten styl, aby ukryć menu po najechaniu myszą */
+/* Dropdown styles */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
 .dropdown-content {
     display: none;
     position: absolute;
@@ -608,10 +613,8 @@ display: flex;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     border-radius: 5px;
-    right: 0; /* Dopasuj pozycję menu do prawej strony przycisku */
 }
 
-/* Styl dla poszczególnych elementów menu */
 .dropdown-content a {
     color: black;
     padding: 12px 16px;
@@ -620,12 +623,10 @@ display: flex;
     border-radius: 5px;
 }
 
-/* Styl dla elementów menu po najechaniu myszą */
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
-/* Styl dla elementów menu po najechaniu myszą */
 .dropdown-content a:hover {
     background-color: #f1f1f1;
 }
