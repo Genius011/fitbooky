@@ -912,8 +912,6 @@ import {
   updateDoc, 
   deleteDoc,
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
-
 
 
 const firebaseConfig = {
@@ -927,13 +925,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
-
-onAuthStateChanged(auth, (user) => {
-  // Twoje działania w przypadku zmiany stanu uwierzytelnienia
-});
-
-
 
 document.addEventListener('DOMContentLoaded', function() {
   
