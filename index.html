@@ -390,7 +390,7 @@ const db = getFirestore(app);
         getDoc(userRef).then((docSnap) => {
             if (docSnap.exists()) {
                 const userData = docSnap.data();
-                const userFirstName = userData.firstName; // Accessing the 'firstName' field from Firestore
+                const userFirstName = userData.firstName;
 
                 // Update the logout button text with the user's first name
                 const logoutButtonText = document.getElementById('logoutButtonText');
@@ -400,10 +400,12 @@ const db = getFirestore(app);
                     console.log("User's first name is not defined in the document.");
                 }
 
-                // Check if the user is a trainer and show the 'Panel Trenera' link
+                // Check if the user is a trainer and show/hide the 'Panel Trenera' link
+                const trainerPanelLink = document.getElementById('trainerPanelLink');
                 if (userData.role === 'trener') {
-                    const trainerPanelLink = document.getElementById('trainerPanelLink');
-                    trainerPanelLink.style.display = 'block'; // Show the link if the user is a trainer
+                    trainerPanelLink.style.display = 'block';
+                } else {
+                    trainerPanelLink.style.display = 'none';
                 }
             } else {
                 console.log("User data not found in Firestore.");
@@ -414,6 +416,7 @@ const db = getFirestore(app);
         window.location.href = 'login.html';
     }
 });
+
 
 // Ensure the dropdown content is hidden initially and shown on hover
 const dropdown = document.querySelector('.dropdown');
