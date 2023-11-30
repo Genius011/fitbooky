@@ -398,17 +398,21 @@
 
     // Gdy użytkownik kliknie (x), zamknij modal
     const closeButton = document.querySelector('.close');
-    closeButton.onclick = function() {
-        const modal = document.getElementById('profileModal');
-        modal.style.display = "none";
-    }
+    const modal = document.getElementById('profileModal');
 
-    // Gdy użytkownik kliknie poza modal, zamknij go
-    window.onclick = function(event) {
-        const modal = document.getElementById('profileModal');
-        if (event.target == modal) {
+    if (closeButton && modal) {
+        closeButton.onclick = function() {
             modal.style.display = "none";
         }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+		
+		} else {
+        console.error('Element .close lub #profileModal nie istnieje w DOM.');
     }
 
     // Eksportowanie viewProfile do globalnego zasięgu
