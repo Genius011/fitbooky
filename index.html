@@ -716,32 +716,6 @@ document.getElementById('logout').addEventListener('click', () => {
     });
 });
 
- onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // Użytkownik jest zalogowany, zapisz to w localStorage
-            localStorage.setItem('loggedIn', 'true');
-        } else {
-            // Użytkownik nie jest zalogowany, usuń informację z localStorage
-            localStorage.removeItem('loggedIn');
-        }
-    });
-
-    // Funkcja do wylogowania
-    function logoutUser() {
-        signOut(auth).then(() => {
-            // Wylogowanie powiodło się
-            window.location.href = 'login.html';
-        }).catch((error) => {
-            console.error('Logout failed', error);
-        });
-    }
-
-    // Nasłuchiwanie na zdarzenie 'beforeunload'
-    window.addEventListener('beforeunload', function(event) {
-        if (localStorage.getItem('loggedIn') === 'true') {
-            logoutUser();
-        }
-    });
 
 	
 </script>
