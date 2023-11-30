@@ -164,6 +164,8 @@
 
     // Przełączanie między formularzami logowania i rejestracji
     toggleRegistration.addEventListener('click', function(e) {
+	  console.log("Toggle clicked"); // Dodaj tę linię
+
       e.preventDefault();
       if (loginForm.style.display === 'none') {
         loginForm.style.display = 'block';
