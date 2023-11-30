@@ -447,36 +447,42 @@ document.getElementById('logout').addEventListener('click', () => {
         function generateCalendar() {
   calendar.innerHTML = '';
   let today = new Date();
+  today.setHours(0, 0, 0, 0);
   let startDayOfMonth = new Date(currentYear, currentMonth, 1);
-  let endDayOfMonth = new Date(currentYear, currentMonth + 1, 0); // Ostatni dzień miesiąca
-  let firstDayOfWeek = startDayOfMonth.getDay();
-  let daysInMonth = endDayOfMonth.getDate(); // Ilość dni w miesiącu
+  let endDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+  let totalDays = (endDayOfMonth.getDate() - startDayOfMonth.getDate()) + 1 + startDayOfMonth.getDay() + (6 - endDayOfMonth.getDay());
 
-  startDayOfMonth.setDate(startDayOfMonth.getDate() - firstDayOfWeek); // Ustawienie na pierwszy dzień w kalendarzu
-
-  // Ilość dni do wygenerowania to ilość dni w miesiącu + padding dla dni tygodnia na początku i na końcu
-  let totalDays = daysInMonth + firstDayOfWeek + (7 - endDayOfMonth.getDay() - 1);
-  
   monthName.textContent = `${startDayOfMonth.toLocaleString('en-US', { month: 'long' })} ${currentYear}`;
-  
+  startDayOfMonth.setDate(startDayOfMonth.getDate() - startDayOfMonth.getDay());
+
   for (let i = 0; i < totalDays; i++) {
     let day = new Date(startDayOfMonth);
     day.setDate(day.getDate() + i);
 
     let dayElement = document.createElement('div');
     dayElement.className = 'day';
-    if (day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear()) {
-      dayElement.classList.add('current-day');
-    }
     if (day.getMonth() === currentMonth) {
       dayElement.textContent = day.getDate();
-      // ... (reszta kodu nie ulega zmianie)
+      if (day >= today) {
+        dayElement.addEventListener('click', function() {
+          openPopup(day);
+        });
+      } else {
+        dayElement.classList.add('inactive');
+      }
     } else {
       dayElement.classList.add('inactive');
     }
+
+    if (day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear()) {
+      dayElement.classList.add('current-day');
+    }
+
     calendar.appendChild(dayElement);
   }
 }
+
+// Poniżej musisz wkleić funkcję openPopup oraz inne pomocnicze funkcje, które współpracują z generateCalendar.
 
 		async function saveBooking(userId, date, trainingType, time) {
   if (!userId) {
