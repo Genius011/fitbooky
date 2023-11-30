@@ -208,16 +208,16 @@ registrationForm.addEventListener('submit', function(e) {
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
-            // Dodanie imienia i email użytkownika do Firestore
+            // Zmiana tutaj: użyj 'firstName' zamiast 'userFirstName'
             setDoc(doc(firestore, "users", user.uid), {
                 uid: user.uid,
-                userFirstName: firstName, // Dodanie imienia
+                firstName: firstName, // Używamy 'firstName'
                 email: email
             })
             .then(() => {
                 console.log('User with first name added to Firestore');
                 alert('Registration successful! You can now log in.');
-                window.location.href = 'login.html'; // Przekierowanie na stronę logowania
+                window.location.href = 'login.html';
             })
             .catch((error) => {
                 console.error('Error adding user to Firestore:', error);
@@ -227,7 +227,7 @@ registrationForm.addEventListener('submit', function(e) {
             console.error('Registration error:', error);
         });
 });
-});
+
 
 </script>
 
