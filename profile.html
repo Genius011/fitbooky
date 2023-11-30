@@ -492,6 +492,46 @@ addToGoogleCalendarButton.addEventListener('click', () => {
     }
 });
 
+// Fetch the next training session
+const fetchNextTrainingSession = async (userId) => {
+    // Get the current date and time
+    const now = new Date();
+    // Query the bookings collection for the logged-in user's upcoming sessions
+    const bookingsRef = collection(db, 'bookings');
+    const q = query(bookingsRef, where('userId', '==', userId), where('date', '>=', now), orderBy('date'), limit(1));
+    const querySnapshot = await getDocs(q);
+    // If there is an upcoming session
+    if (!querySnapshot.empty) {
+        // Get the data of the next session
+        const nextSessionData = querySnapshot.docs[0].data();
+        // Format the date and time
+        const nextSessionDateTime = new Date(nextSessionData.date + 'T' + nextSessionData.time);
+        return nextSessionDateTime;
+    }
+    return null;
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const nextTrainingDateTime = await fetchNextTrainingSession(user.uid);
+            if (nextTrainingDateTime) {
+                // Format the date and time to display
+                const nextTrainingDateElement = document.getElementById('nextTrainingDate');
+                nextTrainingDateElement.textContent = nextTrainingDateTime.toLocaleString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+        } else {
+            // Handle the case when no user is logged in
+        }
+    });
+});
 
 
 </script>
