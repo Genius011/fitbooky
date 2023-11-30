@@ -6,10 +6,10 @@
     <title>Book your training</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <style>
-  body {
+        body {
     font-family: 'Roboto', sans-serif;
     background-image: url('dall.png');
-    background-size: cover;
+	 background-size: cover;
     margin: 0;
     display: flex;
     justify-content: center;
@@ -17,13 +17,10 @@
     height: 100vh;
 }
 
-.calendar-container, .popup-content {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
 .calendar-container {
+    background-color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
     overflow: hidden;
     width: 90%;
     max-width: 600px;
@@ -38,71 +35,45 @@
     padding: 10px 20px;
 }
 
-.nav-button, .close-btn, .day, .time-slot, .book-btn {
-    cursor: pointer;
-}
-
 .nav-button {
+    cursor: pointer;
     font-size: 20px;
 }
 
-.day-names, .calendar-grid, .time-slots {
+.day-names {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 10px;
-    text-align: center;
-}
-
-.day-names {
     background-color: #f7f7f7;
+    text-align: center;
     padding: 10px 0;
 }
 
-.calendar-grid, .time-slots {
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
     padding: 20px;
 }
 
-.day, .time-slot, .book-btn {
+.day {
     background-color: #ffffff;
     padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s, transform 0.3s;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.day:hover, .time-slot:hover, .book-btn:hover {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    transform: translateY(-2px);
+.day:hover {
+    background-color: #eff6ff;
 }
 
-.inactive, .time-slot.disabled {
+.inactive {
     color: #cccccc;
     background-color: #f9f9f9;
     pointer-events: none;
 }
 
-.training-type-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-bottom: 10px;
-    text-align: center; 
-}
-
-.training-type, .time-slot {
-    padding: 12px;
-    margin-bottom: 10px;
-    flex-basis: 45%; /* Adjust width accordingly */
-}
-
-.training-type.selected, .time-slot.selected, .book-btn {
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
-    color: white;
-}
-
-.current-day {
-    background-color: #a777e3;
-}
+/* ... existing styles ... */
 
 .popup {
     position: fixed;
@@ -117,55 +88,210 @@
     z-index: 1000;
 }
 
+
 .popup-content {
+    background-color: #fff;
     padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     position: relative;
     width: 80%;
     max-width: 400px;
-    max-height: 80%;
-    overflow-y: auto;
+	max-height: 80%; /* Ustaw maksymalną wysokość na 80% ekranu */
+        overflow-y: auto;
 }
 
 .close-btn {
     position: absolute;
     top: 10px;
     right: 10px;
+    cursor: pointer;
     font-size: 25px;
 }
-
-.separator {
-    border: 0;
-    height: 1px;
-    background-image: linear-gradient(to right, transparent, #6e8efb, #a777e3, transparent);
-    margin: 20px 0;
+.training-type-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
 }
 
+.training-type {
+    background-color: #ffffff;
+    padding: 12px;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s, transform 0.3s;
+    flex-basis: 45%; /* Adjust width accordingly */
+}
+
+.training-type:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.training-type.selected {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+}
+
+
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Adjust based on your layout */
+    gap: 10px;
+}
+
+.time-slot, .book-btn {
+    background-color: #ffffff;
+    padding: 12px;
+    border-radius: 5px; /* Rounded corners */
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 10px; /* Space between time slots */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: box-shadow 0.3s, transform 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Hover effect for time slots */
+.time-slot:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Selected time slot style */
+.time-slot.selected {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+}
+.current-day {
+    background-color: #a777e3; /* Light blue background, adjust color as needed */
+    border-radius: 5px; /* Optional, for rounded corners */
+}
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 20px;
+    align-self: flex-end; /* Aligns the button to the right */
+}
+
+.book-btn {
+    background: linear-gradient(135deg, #6e8efb, #a777e3); /* Gradient background */
+    color: white;
+    border: none;
+    font-weight: bold;
+    display: block; /* Allows the use of margin for positioning */
+    width: fit-content; /* Adjust width to content */
+    margin-left: auto; /* Align the button to the right */
+    box-shadow: none; /* No shadow by default */
+}
+
+/* Hover effect for the 'Rezerwuj' button */
+.book-btn:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.popup-content {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px; /* Adjust the max width as necessary */
+    margin: auto; /* Center the popup content */
+    overflow-y: auto; /* Enable scroll if content overflows */
+    padding-bottom: 20px; /* Extra padding at the bottom */
+}
+	.separator {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, transparent, #6e8efb, #a777e3, transparent); /* Gradient line */
+    margin: 20px 0; /* Add some vertical spacing */
+}
+
+.time-slot.disabled {
+    background-color: #e0e0e0; /* Lighter color for disabled slots */
+    color: #a0a0a0; /* Dimmed text color */
+    cursor: not-allowed;
+    pointer-events: none; /* Prevents clicking on the slot */
+}
+	.login-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.login-button button {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.login-button button:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+.login-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.login-button button {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 10px; /* Add spacing between buttons */
+}
+
+.login-button button:last-child {
+    margin-right: 0; /* Remove margin-right for the last button */
+}
+
+.login-button button:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+/* Updated CSS */
 .button-container {
     position: absolute;
     top: 20px;
     left: 20px;
-    display: flex;
-    gap: 10px;
+    display: flex; /* This will align the buttons next to each other */
+    gap: 10px; /* This adds some space between your buttons */
 }
 
 .button-container button,
 .button-container a button {
-    background: white; /* White background */
-    color: black; /* Black text to match the dropdown */
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
     border: none;
     font-weight: bold;
     border-radius: 5px;
-    padding: 12px 16px; /* Padding to match dropdown links */
-    text-decoration: none;
+    padding: 10px 20px;
     cursor: pointer;
+    text-decoration: none; /* This removes the underline from the anchor tag */
 }
 
 .button-container button:hover,
 .button-container a button:hover {
-    background-color: #f1f1f1; /* Light grey background on hover to match dropdown links */
-    color: black; /* Keep text black on hover */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow on hover to match dropdown links */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
 }
+
+   
+
 
 .logo-image {
     display: block;
@@ -173,153 +299,20 @@
     height: auto;
     opacity: 0.9;
     margin: 0 auto 20px;
-    transform: scale(0.4);
-    transform-origin: center;
-}
-
-/* Dropdown styles */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: 5px;
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    border-radius: 5px;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-.popup-content .time-slots {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Create two columns within the popup only */
-    gap: 10px;
-    padding: 20px;
-    text-align: center;
-}
-
-.popup-content .time-slot {
-    padding: 12px;
-    margin-bottom: 10px; /* Provide some space at the bottom within the popup only */
-    background-color: #ffffff;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s, transform 0.3s;
-}
-
-/* Ensure the popup content doesn't exceed the viewport height */
-.popup-content {
-    max-height: calc(100vh - 40px); /* Viewport height minus some space */
-    overflow-y: auto;
-}
-
-/* Adjust the popup container padding and flex properties to ensure it aligns correctly */
-.popup {
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Align to the top to avoid centering when content overflows */
-}
-
-.training-type {
-    background-color: white; /* Set the initial background color to white */
-    color: black; /* Set the text color to black */
-    padding: 12px; /* Adjust padding for button size */
-    border-radius: 5px; /* Add border radius for rounded corners */
-    cursor: pointer; /* Change cursor on hover */
-    transition: background-color 0.3s; /* Add transition for smoother hover effect */
-	padding: 12px;
-    margin-bottom: 10px;
-    flex-basis: 45%;
-    text-align: center;
-	border-radius: 5px
-}
-
-.training-type.selected {
-    background: linear-gradient(135deg, #6e8efb, #a777e3); /* Set the gradient background when selected */
-    color: white; /* Set the text color when selected */
-}
-
-.arrow-down {
-    font-size: 14px; /* Dostosuj rozmiar strzałki */
-    color: #888; /* Dostosuj kolor strzałki */
-}
-#logoutButton {
-    background: none; /* Usuń tło przycisku */
-    border: none; /* Usuń obramowanie przycisku */
-    padding: 0; /* Usuń wewnętrzny padding przycisku */
-	color: white;
-	font-size: 16px;
-}
-.booking-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Wyrownaj do prawej i lewej na równo */
-    gap: 20px; /* Dodaj odstęp między elementami */
-}
-
-.booking-text {
-    flex-grow: 1; /* Rozciągnij pole tekstowe, aby zajęło dostępną przestrzeń */
-    font-family: 'Roboto', sans-serif; /* Użyj czcionki Roboto */
-}
-
-#cancellationText {
-    border: none; /* Usuń ramkę pola tekstowego */
-    width: 100%; /* Ustaw szerokość pola tekstowego na 100% dostępnej przestrzeni */
-    font-family: 'Roboto', sans-serif; /* Użyj tej samej czcionki Roboto */
-}
-
-.checkbox-section {
-    display: flex;
-    align-items: center;
-    font-family: 'Roboto', sans-serif; /* Użyj czcionki Roboto */
-}
-
-#cancellationCheckbox {
-    margin-left: 10px; /* Dodaj odstęp między checkboxem a tekstem */
-    font-family: 'Roboto', sans-serif; /* Użyj tej samej czcionki Roboto */
-}
-
-.centered-title {
-  text-align: center;
+    transform: scale(0.4); /* Skaluje logo do 40% jego pierwotnego rozmiaru */
+    transform-origin: center; /* Zapewnia, że skalowanie odbywa się względem środka obrazka */
 }
 
 
-</style>
-
+    </style>
 </head>
 <body>
 <div class="button-container">
-    <div class="dropdown">
-        <button id="logoutButton">
-    <span id="logoutButtonText">Zaloguj</span> <span class="arrow-down">&#9660;</span>
-</button>
-
-        <div class="dropdown-content" style="display: none;">
-            <a href="profile.html">Profil</a>
-            <a href="panel.html" id="trainerPanelLink">Panel Trenera</a>
-            <a href="#" id="logout">Wyloguj</a>
-        </div>
-    </div>
+    
+	  <button id="logoutButton">Logout</button>
+    <a href="profile.html"><button id="profileButton">Profile</button></a>
+	
+</div>
 
 
 	
@@ -379,65 +372,30 @@ const db = getFirestore(app);
     const auth = getAuth();
     let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
 
-    
-	
-	onAuthStateChanged(auth, (user) => {
-    if (user) {
-        currentUserId = user.uid;
-
-        // Get user document from Firestore
-        const userRef = doc(getFirestore(), 'users', user.uid);
-        getDoc(userRef).then((docSnap) => {
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                const userFirstName = userData.firstName; // Accessing the 'firstName' field from Firestore
-
-                // Update the logout button text with the user's first name
-                const logoutButtonText = document.getElementById('logoutButtonText');
-                if (userFirstName) {
-                    logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
-                } else {
-                    console.log("User's first name is not defined in the document.");
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUserId = user.uid;
+			
+            // Jeśli użytkownik jest zalogowany, sprawdź, czy ma rolę 'trener'
+            const userRef = doc(getFirestore(), 'users', user.uid);
+            getDoc(userRef).then((docSnap) => {
+                if (docSnap.exists() && docSnap.data().role === 'trener') {
+                    // Utwórz i dodaj przycisk Panelu Trenera
+                    const buttonContainer = document.querySelector('.button-container');
+                    const trainerPanelButton = document.createElement('button');
+                    trainerPanelButton.textContent = 'Panel Trenera';
+                    trainerPanelButton.className = 'profileButton'; // Klasa dla stylizacji
+                    trainerPanelButton.onclick = function() {
+                        window.location.href = 'panel.html'; // Zmień URL na odpowiedni dla panelu trenera
+                    };
+                    buttonContainer.appendChild(trainerPanelButton);
                 }
-
-                // Check if the user is a trainer and show the 'Panel Trenera' link
-                if (userData.role === 'trener') {
-                    const trainerPanelLink = document.getElementById('trainerPanelLink');
-                    trainerPanelLink.style.display = 'block'; // Show the link if the user is a trainer
-                }
-            } else {
-                console.log("User data not found in Firestore.");
-            }
-        });
-    } else {
-        console.log("No user is logged in, redirecting to login");
-        window.location.href = 'login.html';
-    }
-});
-
-// Ensure the dropdown content is hidden initially and shown on hover
-const dropdown = document.querySelector('.dropdown');
-dropdown.addEventListener('mouseover', () => {
-    document.querySelector('.dropdown-content').style.display = 'block';
-});
-
-dropdown.addEventListener('mouseout', () => {
-    document.querySelector('.dropdown-content').style.display = 'none';
-});
-
-// Add logout functionality
-document.getElementById('logout').addEventListener('click', () => {
-    signOut(auth).then(() => {
-        window.location.href = 'login.html';
-    }).catch((error) => {
-        console.error('Logout failed', error);
+            });
+        } else {
+            // Przekieruj na stronę logowania, jeśli użytkownik nie jest zalogowany
+            window.location.href = 'login.html';
+        }
     });
-});
-
-
-
-
-	
         const calendar = document.getElementById('calendar');
         const prevMonth = document.getElementById('prevMonth');
         const nextMonth = document.getElementById('nextMonth');
@@ -447,77 +405,58 @@ document.getElementById('logout').addEventListener('click', () => {
         let currentYear = currentDate.getFullYear();
 
         function generateCalendar() {
-  calendar.innerHTML = '';
-  let today = new Date();
-  today.setHours(0, 0, 0, 0);
-  let startDayOfMonth = new Date(currentYear, currentMonth, 1);
-  let endDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-  let totalDays = (endDayOfMonth.getDate() - startDayOfMonth.getDate()) + 1 + startDayOfMonth.getDay() + (6 - endDayOfMonth.getDay());
+            calendar.innerHTML = '';
+            let today = new Date();
+            let startDate = new Date(currentYear, currentMonth, 1);
+            let dayOfWeek = startDate.getDay();
 
-  monthName.textContent = `${startDayOfMonth.toLocaleString('en-US', { month: 'long' })} ${currentYear}`;
-  startDayOfMonth.setDate(startDayOfMonth.getDate() - startDayOfMonth.getDay());
+            monthName.textContent = `${startDate.toLocaleString('en-US', { month: 'long' })} ${currentYear}`;
+            startDate.setDate(startDate.getDate() - dayOfWeek);
 
-  for (let i = 0; i < totalDays; i++) {
-    let day = new Date(startDayOfMonth);
-    day.setDate(day.getDate() + i);
+    for (let i = 0; i < 35; i++) {
+                let day = new Date(startDate);
+                day.setDate(day.getDate() + i);
 
-    let dayElement = document.createElement('div');
-    dayElement.className = 'day';
-    if (day.getMonth() === currentMonth) {
-      dayElement.textContent = day.getDate();
-      if (day >= today) {
-        dayElement.addEventListener('click', function() {
-          openPopup(day);
-        });
-      } else {
-        dayElement.classList.add('inactive');
-      }
-    } else {
-      dayElement.classList.add('inactive');
-    }
-
-    if (day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear()) {
-      dayElement.classList.add('current-day');
-    }
-
-    calendar.appendChild(dayElement);
-  }
-}
-
-// Poniżej musisz wkleić funkcję openPopup oraz inne pomocnicze funkcje, które współpracują z generateCalendar.
-
+                let dayElement = document.createElement('div');
+                dayElement.className = 'day';
+                if (day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear()) {
+                    dayElement.classList.add('current-day');
+                }
+                if (day.getMonth() === currentMonth) {
+            dayElement.textContent = day.getDate();
+            if (!isDateInPast(day)) {
+                dayElement.onclick = function() {
+                    openPopup(day);
+                };
+            } else {
+                dayElement.classList.add('inactive');
+                dayElement.onclick = null; // Usuń event onclick dla dni w przeszłości
+            }
+        } else {
+            dayElement.classList.add('inactive');
+        }
+                calendar.appendChild(dayElement);
+            }
+        }
 		async function saveBooking(userId, date, trainingType, time) {
-  if (!userId) {
-    alert('Nie jesteś zalogowany!');
-    return;
-  }
+        if (!userId) {
+            alert('Nie jesteś zalogowany!');
+            return;
+        }
 
-  try {
-    // Pobranie dodatkowych informacji o użytkowniku
-    const userRef = doc(getFirestore(), 'users', userId);
-    const docSnap = await getDoc(userRef);
-
-    // Jeśli dokument użytkownika istnieje, użyj jego danych
-    if (docSnap.exists()) {
-      const userData = docSnap.data();
-      await addDoc(collection(db, "bookings"), {
-        userId: userId,
-        date: date,
-        trainingType: trainingType,
-        time: time,
-        email: userData.email, // Dodaj email użytkownika do dokumentu rezerwacji
-        firstName: userData.firstName // Dodaj firstName użytkownika do dokumentu rezerwacji
-      });
-      alert("Rezerwacja została zapisana w Twoim profilu");
-    } else {
-      console.log("Nie znaleziono danych użytkownika.");
+        try {
+            await addDoc(collection(db, "bookings"), {
+                userId: userId,  // Dodaj ID użytkownika do dokumentu rezerwacji
+                date: date,
+                trainingType: trainingType,
+                time: time
+            });
+            alert("Rezerwacja została zapisana");
+        } catch (e) {
+            console.error("Błąd podczas zapisu: ", e);
+            alert("Wystąpił błąd podczas zapisu rezerwacji");
+        }
     }
-  } catch (e) {
-    console.error("Błąd podczas zapisu: ", e);
-    alert("Wystąpił błąd podczas zapisu rezerwacji");
-  }
-}
-
 
        async function openPopup(selectedDay) {
     const popup = document.createElement('div');
@@ -525,58 +464,42 @@ document.getElementById('logout').addEventListener('click', () => {
     popup.innerHTML = `
         <div class="popup-content">
             <span class="close-btn">&times;</span>
-          <h2 class="centered-title">Zarezerwuj swój trening</h2>
+            <h2>Book your time</h2>
             <div class="training-type-container">
-                <div class="training-type" data-type="personal">Personalny</div>
-                <div class="training-type" data-type="group">Grupowy</div>
+                <div class="training-type" data-type="personal">Personal</div>
+                <div class="training-type" data-type="group">Group</div>
             </div>
-			
-           <hr class="separator">
-    <div class="time-slots"></div>
-    <div class="booking-section">
-        <div class="booking-text">
-           
+            <hr class="separator">
+            <div class="time-slots"></div>
+            <button id="bookButton" class="book-btn">Rezerwuj</button>
         </div>
-        <div class="checkbox-section">
-            <label for="cancellationCheckbox">Akceptuję warunki anulacji</label>
-            <input type="checkbox" id="cancellationCheckbox">
-        </div>
-    </div>
-    <button id="bookButton" class="book-btn">Rezerwuj</button>
-</div>
     `;
 
     document.body.appendChild(popup);
-const bookButton = document.getElementById('bookButton');
-bookButton.addEventListener('click', async () => {
-    const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type');
-    const selectedTimeSlot = popup.querySelector('.time-slot.selected')?.textContent;
-    const cancellationCheckbox = document.getElementById('cancellationCheckbox');
+    const bookButton = document.getElementById('bookButton');
+    bookButton.addEventListener('click', async () => {
+        const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type');
+        const selectedTimeSlot = popup.querySelector('.time-slot.selected')?.textContent;
+        
+        if (selectedTrainingType && selectedTimeSlot) {
+            let adjustedMonth = selectedDay.getMonth() + 1;
+            let formattedDate = `${selectedDay.getFullYear()}-${adjustedMonth.toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
 
-    if (selectedTrainingType && selectedTimeSlot) {
-        let adjustedMonth = selectedDay.getMonth() + 1;
-        let formattedDate = `${selectedDay.getFullYear()}-${adjustedMonth.toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
-
-        // Sprawdź dostępność dla wybranego slotu czasowego i treningu personalnego
-        if (selectedTrainingType === 'personal') {
-            const available = await isTimeSlotAvailable(formattedDate, selectedTimeSlot, selectedTrainingType);
-            if (!available) {
-                alert("Ten termin jest już zajęty. Wybierz inną godzinę.");
-                return;
+            // Sprawdź dostępność dla wybranego slotu czasowego i treningu personalnego
+            if (selectedTrainingType === 'personal') {
+                const available = await isTimeSlotAvailable(formattedDate, selectedTimeSlot, selectedTrainingType);
+                if (!available) {
+                    alert("Ten termin jest już zajęty. Wybierz inną godzinę.");
+                    return;
+                }
             }
-        }
 
-        if (cancellationCheckbox.checked) {
             saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot);
             popup.remove();
         } else {
-            alert("Aby dokonać rezerwacji, musisz zaakceptować warunki anulacji.");
+            alert("Proszę wybrać rodzaj treningu i godzinę");
         }
-    } else {
-        alert("Proszę wybrać rodzaj treningu i godzinę");
-    }
-});
-
+    });
 
     
 			
@@ -701,16 +624,6 @@ async function isTimeSlotAvailable(date, time, trainingType) {
   const querySnapshot = await getDocs(query(bookingsRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
   return querySnapshot.empty; // Zwróć true jeśli nie ma rezerwacji, false w przeciwnym wypadku
 }
-
-document.getElementById('logout').addEventListener('click', () => {
-    signOut(auth).then(() => {
-        // Sign-out successful, redirect to login page
-        window.location.href = 'login.html';
-    }).catch((error) => {
-        // An error happened during sign out
-        console.error('Logout failed', error);
-    });
-});
 
 	
 </script>
