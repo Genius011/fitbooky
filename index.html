@@ -303,6 +303,10 @@
   text-align: center;
 }
 
+#trainerPanelLink {
+    display: none; /* Hide by default */
+}
+
 
 </style>
 
@@ -382,38 +386,38 @@ const db = getFirestore(app);
     
 	
 	onAuthStateChanged(auth, (user) => {
-    if (user) {
-        currentUserId = user.uid;
+        if (user) {
+            currentUserId = user.uid;
 
-        // Get user document from Firestore
-        const userRef = doc(getFirestore(), 'users', user.uid);
-        getDoc(userRef).then((docSnap) => {
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                const userFirstName = userData.firstName; // Accessing the 'firstName' field from Firestore
+            // Get user document from Firestore
+            const userRef = doc(getFirestore(), 'users', user.uid);
+            getDoc(userRef).then((docSnap) => {
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    const userFirstName = userData.firstName; // Accessing the 'firstName' field from Firestore
 
-                // Update the logout button text with the user's first name
-                const logoutButtonText = document.getElementById('logoutButtonText');
-                if (userFirstName) {
-                    logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
+                    // Update the logout button text with the user's first name
+                    const logoutButtonText = document.getElementById('logoutButtonText');
+                    if (userFirstName) {
+                        logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
+                    } else {
+                        console.log("User's first name is not defined in the document.");
+                    }
+
+                    // Check if the user is a trainer and show the 'Panel Trenera' link
+                    if (userData.role === 'trener') {
+                        const trainerPanelLink = document.getElementById('trainerPanelLink');
+                        trainerPanelLink.style.display = 'block'; // Show the link if the user is a trainer
+                    }
                 } else {
-                    console.log("User's first name is not defined in the document.");
+                    console.log("User data not found in Firestore.");
                 }
-
-                // Check if the user is a trainer and show the 'Panel Trenera' link
-                if (userData.role === 'trener') {
-                    const trainerPanelLink = document.getElementById('trainerPanelLink');
-                    trainerPanelLink.style.display = 'block'; // Show the link if the user is a trainer
-                }
-            } else {
-                console.log("User data not found in Firestore.");
-            }
-        });
-    } else {
-        console.log("No user is logged in, redirecting to login");
-        window.location.href = 'login.html';
-    }
-});
+            });
+        } else {
+            console.log("No user is logged in, redirecting to login");
+            window.location.href = 'login.html';
+        }
+    });
 
 // Ensure the dropdown content is hidden initially and shown on hover
 const dropdown = document.querySelector('.dropdown');
