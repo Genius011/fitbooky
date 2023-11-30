@@ -128,6 +128,8 @@
   
   // Since modules are already deferred, we don't need to wrap the imports in the DOMContentLoaded listener
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
+  import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+
   import {
     getAuth,
     signInWithEmailAndPassword,
@@ -186,25 +188,32 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   });
 
-  // Handle registration form submission
-            registrationForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const email = registrationForm.querySelector('input[type="email"]').value;
-                const password = registrationForm.querySelector('input[type="password"]').value;
-                createUserWithEmailAndPassword(auth, email, password)
-                    .then((userCredential) => {
-                        // Registered successfully, you can redirect or show a success message here
-                        console.log('Registration successful', userCredential);
-						alert('Registration successful! You can now log in.');
-          // Redirect to login page
-          window.location.href = 'login.html';
-                    })
-                    .catch((error) => {
-                        // Handle errors here, you can display an error message to the user
-                        console.error('Registration error', error);
-                    });
+  registrationForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = registrationForm.querySelector('input[type="email"]').value;
+    const password = registrationForm.querySelector('input[type="password"]').value;
+    createUserWithEmailAndPassword(auth, email, password)
+        .then(async (userCredential) => {
+            // Registered successfully
+            console.log('Registration successful', userCredential);
+            
+            // Create a user document in Firestore
+            const db = getFirestore();
+            await setDoc(doc(db, "users", userCredential.user.uid), {
+                email: email,
+                // Add any other user fields here
             });
+
+            alert('Registration successful! You can now log in.');
+            // Redirect to login page
+            window.location.href = 'login.html';
+        })
+        .catch((error) => {
+            // Handle errors here
+            console.error('Registration error', error);
+            alert('Error during registration: ' + error.message);
         });
+});
 
 
 </script>

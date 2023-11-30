@@ -1,62 +1,77 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const calendar = document.getElementById('calendar');
-    const prevMonth = document.getElementById('prevMonth');
-    const nextMonth = document.getElementById('nextMonth');
-    const monthName = document.getElementById('monthName');
-    let currentDate = new Date();
-    let currentMonth = currentDate.getMonth();
-    let currentYear = currentDate.getFullYear();
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Honey - Œwiat Treningów Personalnych</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
 
-    function generateCalendar() {
-        calendar.innerHTML = ''; // Clear the calendar
-        let startDate = new Date(currentYear, currentMonth, currentDate.getDate());
-        let dayOfWeek = startDate.getDay(); // Get the starting day of the week (0-6)
+header {
+    background: #6e8efb;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
 
-        // Set the month name
-        monthName.textContent = `${startDate.toLocaleString('default', { month: 'long' })} ${currentYear}`;
+section {
+    padding: 20px;
+}
 
-        // Adjust the start date back to the first day shown in the calendar view
-        startDate.setDate(startDate.getDate() - dayOfWeek);
+#featured-trainers {
+    /* Dodaj style dla sekcji polecanych trenerów */
+}
 
-        for (let i = 0; i < 35; i++) { // Create enough cells to cover 5 weeks (5 rows of 7 days each)
-            let day = new Date(startDate);
-            day.setDate(day.getDate() + i);
-            
-            let dayElement = document.createElement('div');
-            dayElement.className = 'day';
-            // Only show the date number and month if it's within the current month
-            if (day.getMonth() === currentMonth) {
-                dayElement.textContent = day.getDate();
-                dayElement.onclick = function() {
-                    // Placeholder for click event, you can customize this
-                    alert(`You clicked on ${day.toDateString()}`);
-                };
-            } else {
-                dayElement.classList.add('inactive'); // Style differently days that are not from the current month
-            }
-            calendar.appendChild(dayElement);
-        }
-    }
+#trainers-map {
+    /* Dodaj style dla sekcji mapy trenerów */
+}
 
-    prevMonth.addEventListener('click', function() {
-        currentMonth--;
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
-        }
-        currentDate = new Date(currentYear, currentMonth, 1);
-        generateCalendar();
-    });
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Honey - Œwiat Treningów Personalnych</h1>
+        <!-- Tutaj dodaj nawigacjê -->
+    </header>
 
-    nextMonth.addEventListener('click', function() {
-        currentMonth++;
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
-        }
-        currentDate = new Date(currentYear, currentMonth, 1);
-        generateCalendar();
-    });
+    <section id="featured-trainers">
+        <h2>Poleceni Trenerzy</h2>
+        <!-- Tutaj dodaj listê trenerów -->
+    </section>
 
-    generateCalendar(); // Initial call to display the calendar
-});
+    <section id="trainers-map">
+        <h2>Mapa Trenerów</h2>
+        <!-- Tutaj dodaj mapê trenerów -->
+    </section>
+
+    <section id="about-us">
+        <h2>O Nas</h2>
+        <!-- Tutaj dodaj informacje o stronie/serwisie -->
+    </section>
+
+    <section id="contact">
+        <h2>Kontakt</h2>
+        <!-- Tutaj dodaj formularz kontaktowy -->
+    </section>
+
+    <footer>
+        <!-- Tutaj dodaj stopkê strony -->
+    </footer>
+
+    <script>
+        // Tutaj dodaj JavaScript, jeœli jest potrzebny
+    </script>
+</body>
+</html>
