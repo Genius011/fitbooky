@@ -598,6 +598,9 @@ display: flex;
     margin-bottom: 20px;
 }
 
+#trainerPanelLink {
+    display: none; /* Hide by default */
+}
 
 
     </style>
@@ -1299,7 +1302,30 @@ async function savePrice(bookingId) {
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        const userRef = doc(getFirestore(), 'users', user.uid);
+        getDoc(userRef).then((docSnap) => {
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                // ... existing code ...
 
+                // Conditionally show the 'Panel Trenera' link based on the user's role
+                if (userData.role === 'trener') {
+                    const trainerPanelLink = document.getElementById('trainerPanelLink');
+                    trainerPanelLink.style.display = 'block'; // Only show the link if the user is a trainer
+                }
+            } else {
+                console.log("No such document!");
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+    } else {
+        // User is signed out
+        // ... existing code ...
+    }
+});
 
 </script>
 
