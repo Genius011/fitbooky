@@ -1404,28 +1404,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Pobierz elementy z menu i przycisk "Zaloguj"
-const dropdown = document.querySelector('.dropdown');
-const dropdownContent = document.querySelector('.dropdown-content');
-const logoutButton = document.getElementById('logoutButton');
-
-// Dodaj obsługę zdarzenia najechania myszą na przycisk "Zaloguj"
-dropdown.addEventListener('mouseenter', () => {
-    dropdownContent.style.display = 'block';
-});
-
-// Dodaj obsługę zdarzenia zjechania myszą z obszaru menu
-dropdown.addEventListener('mouseleave', () => {
-    dropdownContent.style.display = 'none';
-});
-
-// Dodaj obsługę zdarzenia kliknięcia na przycisk "Wyloguj"
-logoutButton.addEventListener('click', () => {
-    // Tutaj możesz dodać kod obsługujący wylogowanie
-    // Na przykład wylogowanie użytkownika i przekierowanie go na stronę logowania
-});
-
- // Get the button and the dropdown content
+/ // Get the button and the dropdown content
     var button = document.getElementById("logoutButton");
     var dropdown = document.querySelector('.dropdown-content');
 
@@ -1442,6 +1421,8 @@ logoutButton.addEventListener('click', () => {
             }
         }
     };
+
+
 
 </script>
 
