@@ -1299,15 +1299,6 @@ async function savePrice(bookingId) {
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
-document.addEventListener('DOMContentLoaded', function() {
-    const toggleFinancesIcon = document.getElementById('toggleFinancesIcon');
-    const financesManager = document.getElementById('financesManager');
-    toggleFinancesIcon.addEventListener('click', () => {
-        financesManager.style.display = financesManager.style.display === 'none' ? 'block' : 'none';
-    });
-
-    // Tu możesz dodać logikę do pobierania i wyświetlania rzeczywistych danych statystycznych
-});
 
 
 </script>
