@@ -361,8 +361,6 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
   const auth = getAuth(app);
 const db = getFirestore(app);
 
-
-
      // Logout function
   logoutButton.addEventListener('click', () => {
     signOut(auth).then(() => {
