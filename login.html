@@ -187,25 +187,31 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Handle registration form submission
-            registrationForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const email = registrationForm.querySelector('input[type="email"]').value;
-                const password = registrationForm.querySelector('input[type="password"]').value;
-                createUserWithEmailAndPassword(auth, email, password)
-                    .then((userCredential) => {
-                        // Registered successfully, you can redirect or show a success message here
-                        console.log('Registration successful', userCredential);
-						alert('Registration successful! You can now log in.');
-          // Redirect to login page
-          window.location.href = 'login.html';
-                    })
-                    .catch((error) => {
-                        // Handle errors here, you can display an error message to the user
-                        console.error('Registration error', error);
-                    });
-            });
-        });
+registrationForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = registrationForm.querySelector('input[type="email"]').value;
+    const password = registrationForm.querySelector('input[type="password"]').value;
 
+    createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Rejestracja pomyślna, teraz dodajmy użytkownika do Firestore
+            const user = userCredential.user;
+            setDoc(doc(firestore, "users", user.uid), { email: email /* inne dane użytkownika */ })
+                .then(() => {
+                    console.log('Użytkownik dodany do Firestore');
+                    alert('Registration successful! You can now log in.');
+                    // Przekierowanie na stronę logowania
+                    window.location.href = 'login.html';
+                })
+                .catch((error) => {
+                    console.error('Błąd podczas dodawania użytkownika do Firestore:', error);
+                });
+        })
+        .catch((error) => {
+            // Obsługa błędów tutaj
+            console.error('Błąd rejestracji:', error);
+        });
+});
 
 </script>
 
