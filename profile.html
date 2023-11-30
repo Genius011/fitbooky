@@ -423,54 +423,53 @@
     window.viewProfile = viewProfile;
 
     document.addEventListener('DOMContentLoaded', () => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                fetchAndDisplayUserData(user.uid);
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            fetchAndDisplayUserData(user.uid);
 
-                // Fetch user's bookings
-                const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid));
-                getDocs(bookingsQuery)
-                    .then((bookingsSnapshot) => {
-                        const now = new Date();
-                        let nextTraining = null;
-
-                        // Find the next training session
-                        bookingsSnapshot.forEach((bookingDoc) => {
-                            const bookingData = bookingDoc.data();
-                            const trainingDate = new Date(bookingData.date + ' ' + bookingData.time);
-
-                            // Check if the training is in the future and not canceled
-                            if (trainingDate > now && !bookingData.canceled) {
-                                if (!nextTraining || trainingDate < nextTraining.date) {
-                                    nextTraining = {
-                                        date: trainingDate,
-                                        type: bookingData.trainingType,
-                                    };
-                                }
-                            }
-                        });
-
-                        // Display the next training session information
-                        const nextTrainingElement = document.getElementById('nextTraining');
-                        if (nextTraining) {
-                            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-                            const formattedDate = nextTraining.date.toLocaleDateString('en-US', options);
-                            nextTrainingElement.innerHTML += ` ${formattedDate}, ${nextTraining.type}`;
-                        } else {
-                            nextTrainingElement.innerHTML += ' None';
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Error fetching bookings:', error);
+            const editProfileForm = document.getElementById('editProfileForm');
+            if (editProfileForm) {
+                editProfileForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const firstName = document.getElementById('firstName').value;
+                    const lastName = document.getElementById('lastName').value;
+                    const email = document.getElementById('email').value;
+                    const phone = document.getElementById('phone').value;
+                    const userDocRef = doc(db, 'users', user.uid);
+                    setDoc(userDocRef, {
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        phone: phone
+                    }, { merge: true }).then(() => {
+                        console.log('Profile updated successfully');
+                        alert('Profile updated successfully!');
+                    }).catch((error) => {
+                        console.error('Error updating profile:', error);
+                        alert('Error updating profile');
                     });
-
-                // Rest of your code...
+                });
             } else {
-                // User is signed out
-                // Handle user state when not logged in if necessary
+                console.error('Edit profile form not found');
             }
-        });
+
+            // Additional code for other elements
+            const myElement = document.getElementById('myElementId');
+            if (myElement) {
+                myElement.onclick = function() {
+                    // Your onclick handler code here
+                };
+            } else {
+                console.error('Element with ID myElementId not found');
+            }
+
+            // Additional logic...
+        } else {
+            // User is signed out
+            // Handle user state when not logged in if necessary
+        }
     });
+});
 
     // Set onclick handler for the close button
     closeButton.onclick = function() {
