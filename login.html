@@ -192,28 +192,31 @@ document.addEventListener('DOMContentLoaded', function() {
     e.preventDefault();
     const email = registrationForm.querySelector('input[type="email"]').value;
     const password = registrationForm.querySelector('input[type="password"]').value;
+
     createUserWithEmailAndPassword(auth, email, password)
         .then(async (userCredential) => {
-            // Registered successfully
             console.log('Registration successful', userCredential);
-            
-            // Create a user document in Firestore
             const db = getFirestore();
-            await setDoc(doc(db, "users", userCredential.user.uid), {
-                email: email,
-                // Add any other user fields here
-            });
-
-            alert('Registration successful! You can now log in.');
-            // Redirect to login page
-            window.location.href = 'login.html';
+            try {
+                await setDoc(doc(db, "users", userCredential.user.uid), {
+                    email: email,
+                    // Add any other user fields here
+                });
+                alert('Registration successful! You can now log in.');
+                window.location.href = 'login.html';
+            } catch (error) {
+                // Obsługa błędów związanych z Firestore
+                console.error('Firestore error:', error);
+                alert('Error during Firestore operation: ' + error.message);
+            }
         })
         .catch((error) => {
-            // Handle errors here
+            // Obsługa błędów związanych z rejestracją użytkownika
             console.error('Registration error', error);
             alert('Error during registration: ' + error.message);
         });
 });
+
 
 
 </script>
