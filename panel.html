@@ -6,6 +6,7 @@
     <title>Panel Trenera</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js"></script>
 
 	<style>
         body {
@@ -909,6 +910,7 @@ display: flex;
 
 
 <script type="module">
+
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
 import { 
   getFirestore, 
@@ -919,6 +921,8 @@ import {
   updateDoc, 
   deleteDoc,
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
+
 
 
 const firebaseConfig = {
