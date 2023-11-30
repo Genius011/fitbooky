@@ -113,11 +113,12 @@
             </form>
             <!-- Registration Form -->
             <form id="registrationForm" style="display: none;">
-                <input type="email" class="form-input" placeholder="Email" required>
-                <input type="password" class="form-input" placeholder="Password" required>
-                <input type="password" class="form-input" placeholder="Confirm Password" required>
-                <button type="submit" class="form-button">Register</button>
-            </form>
+    <input type="text" class="form-input" placeholder="First Name" required>
+    <input type="email" class="form-input" placeholder="Email" required>
+    <input type="password" class="form-input" placeholder="Password" required>
+    <input type="password" class="form-input" placeholder="Confirm Password" required>
+    <button type="submit" class="form-button">Register</button>
+</form>
         </div>
         <div class="form-footer">
             <p>Don't have an account? <a href="#" id="toggleRegistration">Register here</a></p>
@@ -198,29 +199,35 @@
     });
 
     // Obsługa rejestracji
-    registrationForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const email = registrationForm.querySelector('input[type="email"]').value;
-      const password = registrationForm.querySelector('input[type="password"]').value;
+registrationForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const firstName = registrationForm.querySelector('input[type="text"]').value;
+    const email = registrationForm.querySelector('input[type="email"]').value;
+    const password = registrationForm.querySelector('input[type="password"]').value;
 
-      createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          const user = userCredential.user;
-          setDoc(doc(firestore, "users", user.uid), { email: email /* inne dane użytkownika */ })
+            const user = userCredential.user;
+            // Dodanie imienia i email użytkownika do Firestore
+            setDoc(doc(firestore, "users", user.uid), {
+                uid: user.uid,
+                userFirstName: firstName, // Dodanie imienia
+                email: email
+            })
             .then(() => {
-              console.log('Użytkownik dodany do Firestore');
-              alert('Registration successful! You can now log in.');
-              window.location.href = 'login.html'; // Przekierowanie na stronę logowania
+                console.log('User with first name added to Firestore');
+                alert('Registration successful! You can now log in.');
+                window.location.href = 'login.html'; // Przekierowanie na stronę logowania
             })
             .catch((error) => {
-              console.error('Błąd podczas dodawania użytkownika do Firestore:', error);
+                console.error('Error adding user to Firestore:', error);
             });
         })
         .catch((error) => {
-          console.error('Błąd rejestracji:', error);
+            console.error('Registration error:', error);
         });
-    });
-  });
+});
+
 
 </script>
 
