@@ -207,71 +207,11 @@
     background-image: linear-gradient(to right, transparent, #6e8efb, #a777e3, transparent); /* Gradient line */
     margin: 20px 0; /* Add some vertical spacing */
 }
-
-.time-slot.disabled {
-    background-color: #e0e0e0; /* Lighter color for disabled slots */
-    color: #a0a0a0; /* Dimmed text color */
-    cursor: not-allowed;
-    pointer-events: none; /* Prevents clicking on the slot */
-}
-	.login-button {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-}
-
-.login-button button {
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
-    color: white;
-    border: none;
-    font-weight: bold;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-.login-button button:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-}
-.login-button {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-}
-
-.login-button button {
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
-    color: white;
-    border: none;
-    font-weight: bold;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-right: 10px; /* Add spacing between buttons */
-}
-
-.login-button button:last-child {
-    margin-right: 0; /* Remove margin-right for the last button */
-}
-
-.login-button button:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-}
-
+	
     </style>
 </head>
 <body>
-<div class="login-button">
-    <button id="loginButton">Login</button>
-	
-</div>
-<div class="login-button">
-        <a href="login.html"><button id="loginButton">Login</button></a>
 
-	<a href="profile.html"><button id="profileButton">Profile</button></a>
-</div>
     <div class="calendar-container">
         <div class="calendar-header">
     <div id="prevMonth" class="nav-button">&#8592;</div> <!-- Left arrow -->
@@ -295,22 +235,25 @@
         let currentYear = currentDate.getFullYear();
 
         function generateCalendar() {
-            calendar.innerHTML = '';
+            calendar.innerHTML = ''; // Clear the calendar
             let today = new Date();
             let startDate = new Date(currentYear, currentMonth, 1);
             let dayOfWeek = startDate.getDay();
 
+            // Set the month name
             monthName.textContent = `${startDate.toLocaleString('default', { month: 'long' })} ${currentYear}`;
+
+            // Adjust the start date back to the first day shown in the calendar view
             startDate.setDate(startDate.getDate() - dayOfWeek);
 
-            for (let i = 0; i < 35; i++) {
+            for (let i = 0; i < 35; i++) { // Create enough cells to cover 5 weeks
                 let day = new Date(startDate);
                 day.setDate(day.getDate() + i);
 
                 let dayElement = document.createElement('div');
                 dayElement.className = 'day';
                 if (day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear()) {
-                    dayElement.classList.add('current-day');
+                    dayElement.classList.add('current-day'); // Add class for current day
                 }
                 if (day.getMonth() === currentMonth) {
                     dayElement.textContent = day.getDate();
@@ -330,41 +273,35 @@
             popup.innerHTML = `
                 <div class="popup-content">
                     <span class="close-btn">&times;</span>
-                    <h2>Choose Time for ${selectedDay.toDateString()}</h2>
+                    <h2>Choose training type and hour</h2>
                     <div class="training-type-container">
                         <div class="training-type" data-type="personal">Personal</div>
                         <div class="training-type" data-type="group">Group</div>
                     </div>
-                    <hr class="separator">
+					 <hr class="separator">
                     <div class="time-slots"></div>
-                    <button id="bookButton" class="book-btn">Rezerwuj</button>
+                    <button id="bookButton" class="book-btn">Book</button>
                 </div>
             `;
-			
-			
             document.body.appendChild(popup);
 
             const closeBtn = popup.querySelector('.close-btn');
-            const personalTraining = popup.querySelector('.training-type[data-type="personal"]');
-            const groupTraining = popup.querySelector('.training-type[data-type="group"]');
+            const trainingTypes = popup.querySelectorAll('.training-type');
+            const timeSlots = popup.querySelector('.time-slots');
             closeBtn.onclick = () => popup.remove();
 
-            personalTraining.onclick = function() {
-                selectTrainingType(personalTraining, groupTraining);
-                enableAllTimeSlots(popup);
-            };
-            groupTraining.onclick = function() {
-                selectTrainingType(groupTraining, personalTraining);
-                enableGroupTrainingSlots(popup, selectedDay);
-            };
+            trainingTypes.forEach(type => {
+                type.onclick = () => {
+                    trainingTypes.forEach(t => t.classList.remove('selected'));
+                    type.classList.add('selected');
+                };
+            });
 
-            generateTimeSlots(popup.querySelector('.time-slots'), 6, 21, 30);
-			
-			
+            generateTimeSlots(timeSlots, 6, 21, 30);
         }
 
         function generateTimeSlots(container, startHour, endHour, interval) {
-            container.innerHTML = '';
+            container.innerHTML = ''; // Clear previous slots
             for (let hour = startHour; hour <= endHour; hour++) {
                 for (let minutes = 0; minutes < 60; minutes += interval) {
                     let timeString = `${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
@@ -373,49 +310,15 @@
                     timeSlot.textContent = timeString;
 
                     timeSlot.onclick = function() {
+                        // Remove 'selected' class from all other time slots
                         container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+                        // Add 'selected' class to the clicked time slot
                         timeSlot.classList.add('selected');
                     };
 
                     container.appendChild(timeSlot);
                 }
             }
-        }
-
-        function enableAllTimeSlots(popup) {
-            const timeSlots = popup.querySelectorAll('.time-slot');
-            timeSlots.forEach(slot => {
-                slot.classList.remove('disabled');
-                slot.onclick = function() {
-                    timeSlots.forEach(s => s.classList.remove('selected'));
-                    slot.classList.add('selected');
-                };
-            });
-        }
-
-        function enableGroupTrainingSlots(popup, selectedDay) {
-            const timeSlots = popup.querySelectorAll('.time-slot');
-            timeSlots.forEach(slot => {
-                const slotTime = slot.textContent.trim();
-                const dayOfWeek = selectedDay.getDay();
-
-                slot.classList.add('disabled');
-                slot.onclick = null;
-
-                if ((dayOfWeek === 2 || dayOfWeek === 4) && slotTime === '19:00' || 
-                    (dayOfWeek === 6 && slotTime === '10:00')) {
-                    slot.classList.remove('disabled');
-                    slot.onclick = function() {
-                        timeSlots.forEach(s => s.classList.remove('selected'));
-                        slot.classList.add('selected');
-                    };
-                }
-            });
-        }
-
-        function selectTrainingType(selected, other) {
-            selected.classList.add('selected');
-            other.classList.remove('selected');
         }
 
         prevMonth.addEventListener('click', function() {
@@ -441,7 +344,6 @@
         generateCalendar(); // Initial call to display the calendar
     });
 </script>
-
 
 </body>
 </html>
