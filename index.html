@@ -716,6 +716,36 @@ document.getElementById('logout').addEventListener('click', () => {
     });
 });
 
+// ...
+
+// Zakładając, że logowanie jest już obsługiwane
+// Po zalogowaniu ustaw flagę w localStorage
+function onLoginSuccess() {
+    localStorage.setItem('loggedIn', 'true');
+    // Reszta logiki logowania
+}
+
+// Funkcja do wylogowania użytkownika
+function logoutUser() {
+    localStorage.removeItem('loggedIn');
+    signOut(auth).then(() => {
+        // Sign-out successful, redirect to login page
+        window.location.href = 'login.html';
+    }).catch((error) => {
+        // An error happened during sign out
+        console.error('Logout failed', error);
+    });
+}
+
+// Wyloguj użytkownika i wyczyść localStorage gdy okno jest zamykane
+window.addEventListener('beforeunload', function(event) {
+    if (localStorage.getItem('loggedIn') === 'true') {
+        logoutUser();
+    }
+});
+
+// ...
+
 	
 </script>
 
