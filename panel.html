@@ -1309,19 +1309,35 @@ async function savePrice(bookingId) {
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
-const auth = getAuth();
-    const logoutButtonText = document.getElementById('logoutButtonText');
+// Inside your onAuthStateChanged callback
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        currentUserId = user.uid;
 
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // If a user is logged in, update the text with their name or information.
-            // Replace 'userFirstName' and 'userData.firstName' with the appropriate field from your user data.
-            const userFirstName = userData.firstName; // Update this with the correct field
-            if (userFirstName) {
-                logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
+        // Get user document from Firestore
+        const userRef = doc(getFirestore(), 'users', user.uid);
+        getDoc(userRef).then((docSnap) => {
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                const userFirstName = userData.firstName; // Accessing the 'firstName' field from Firestore
+
+                // Update the logout button text with the user's first name
+                const logoutButtonText = document.getElementById('logoutButtonText');
+                if (userFirstName) {
+                    logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
+                } else {
+                    console.log("User's first name is not defined in the document.");
+                }
+            } else {
+                console.log("User data not found in Firestore.");
             }
-        }
-    });
+        });
+    } else {
+        console.log("No user is logged in, redirecting to login");
+        window.location.href = 'login.html';
+    }
+});
+
 
 </script>
 
