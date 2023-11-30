@@ -861,6 +861,8 @@ display: flex;
 
 <!-- Kontener Finanse -->
 
+
+
 </div>
 <div id="profileModal" class="modal">
   <div class="modal-content">
@@ -871,28 +873,6 @@ display: flex;
     </div>
   </div>
 </div>
-
-<div class="toggle-section toggle-group-training">
-  <i id="toggleGroupTrainingIcon" class="fas fa-chevron-down"></i>
-  <span>Zarządzanie miejscami na trening grupowy</span>
-</div>
-
-<section id="groupTrainingManager" class="section" style="display: none;">
-  <form id="groupTrainingForm">
-    <div class="day-container">
-      <!-- Powtórz poniższą strukturę dla każdego dnia tygodnia -->
-      <div class="day-column">
-        <h3>Poniedziałek</h3>
-        <label for="monday-spots">Miejsca: </label>
-        <input type="number" id="monday-spots" name="monday" min="0">
-      </div>
-      <!-- Dodaj kolejne dni tygodnia tutaj... -->
-    </div>
-    <button type="submit" class="submit-btn">Zapisz zmiany</button>
-  </form>
-</section>
-
-
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
@@ -1294,7 +1274,6 @@ async function savePrice(bookingId) {
 
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
-
 
 
 </script>
