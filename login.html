@@ -126,14 +126,20 @@
 
     <script type="module">
   
-  // Since modules are already deferred, we don't need to wrap the imports in the DOMContentLoaded listener
+  // Import modułów Firebase App, Auth i Firestore
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
   import {
     getAuth,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword
   } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
+  import {
+    getFirestore,
+    doc,
+    setDoc
+  } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
+  // Konfiguracja Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
     authDomain: "genius-f6a78.firebaseapp.com",
@@ -143,77 +149,79 @@
     appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
   };
 
+  // Inicjalizacja Firebase App i Auth
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-document.addEventListener('DOMContentLoaded', function() {
+  // Inicjalizacja Firestore
+  const firestore = getFirestore(app);
 
-  const loginForm = document.getElementById('loginForm');
-  const registrationForm = document.getElementById('registrationForm');
-  const toggleRegistration = document.getElementById('toggleRegistration');
+  document.addEventListener('DOMContentLoaded', function() {
 
-  // Toggle between Login and Registration forms
-  toggleRegistration.addEventListener('click', function(e) {
-    e.preventDefault();
-    if (loginForm.style.display === 'none') {
-      loginForm.style.display = 'block';
-      registrationForm.style.display = 'none';
-      toggleRegistration.textContent = 'Register here';
-    } else {
-      loginForm.style.display = 'none';
-      registrationForm.style.display = 'block';
-      toggleRegistration.textContent = 'Login here';
-    }
-  });
+    const loginForm = document.getElementById('loginForm');
+    const registrationForm = document.getElementById('registrationForm');
+    const toggleRegistration = document.getElementById('toggleRegistration');
 
-  // Handle Login
-  loginForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const email = loginForm.querySelector('input[type="email"]').value;
-    const password = loginForm.querySelector('input[type="password"]').value;
+    // Przełączanie między formularzami logowania i rejestracji
+    toggleRegistration.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (loginForm.style.display === 'none') {
+        loginForm.style.display = 'block';
+        registrationForm.style.display = 'none';
+        toggleRegistration.textContent = 'Register here';
+      } else {
+        loginForm.style.display = 'none';
+        registrationForm.style.display = 'block';
+        toggleRegistration.textContent = 'Login here';
+      }
+    });
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in 
-        console.log('Logged in user:', userCredential.user);
-        alert('Login successful!');
-        window.location.href = 'index.html'; // Redirect to index.html
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert('Error: ' + errorMessage);
-      });
-  });
+    // Obsługa logowania
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = loginForm.querySelector('input[type="email"]').value;
+      const password = loginForm.querySelector('input[type="password"]').value;
 
-  // Handle registration form submission
-registrationForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const email = registrationForm.querySelector('input[type="email"]').value;
-    const password = registrationForm.querySelector('input[type="password"]').value;
-
-    createUserWithEmailAndPassword(auth, email, password)
+      signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            // Rejestracja pomyślna, teraz dodajmy użytkownika do Firestore
-            const user = userCredential.user;
-            setDoc(doc(firestore, "users", user.uid), { email: email /* inne dane użytkownika */ })
-                .then(() => {
-                    console.log('Użytkownik dodany do Firestore');
-                    alert('Registration successful! You can now log in.');
-                    // Przekierowanie na stronę logowania
-                    window.location.href = 'login.html';
-                })
-                .catch((error) => {
-                    console.error('Błąd podczas dodawania użytkownika do Firestore:', error);
-                });
+          console.log('Logged in user:', userCredential.user);
+          alert('Login successful!');
+          window.location.href = 'index.html'; // Przekierowanie do index.html
         })
         .catch((error) => {
-            // Obsługa błędów tutaj
-            console.error('Błąd rejestracji:', error);
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          alert('Error: ' + errorMessage);
         });
-});
+    });
+
+    // Obsługa rejestracji
+    registrationForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = registrationForm.querySelector('input[type="email"]').value;
+      const password = registrationForm.querySelector('input[type="password"]').value;
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          setDoc(doc(firestore, "users", user.uid), { email: email /* inne dane użytkownika */ })
+            .then(() => {
+              console.log('Użytkownik dodany do Firestore');
+              alert('Registration successful! You can now log in.');
+              window.location.href = 'login.html'; // Przekierowanie na stronę logowania
+            })
+            .catch((error) => {
+              console.error('Błąd podczas dodawania użytkownika do Firestore:', error);
+            });
+        })
+        .catch((error) => {
+          console.error('Błąd rejestracji:', error);
+        });
+    });
+  });
 
 </script>
+
 
 
 
