@@ -361,6 +361,26 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
   const auth = getAuth(app);
 const db = getFirestore(app);
 
+// Handle registration
+registrationForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = registrationForm.querySelector('input[type="email"]').value;
+  const password = registrationForm.querySelector('input[type="password"]').value;
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    await setDoc(doc(db, 'users', user.uid), {
+      email: email,
+      // ... any other user fields you want to include
+    });
+    alert('Registration successful! You can now log in.');
+    window.location.href = 'login.html'; // Redirect to login page
+  } catch (error) {
+    console.error('Registration error', error);
+    alert('Registration failed: ' + error.message);
+  }
+});
+
      // Logout function
   logoutButton.addEventListener('click', () => {
     signOut(auth).then(() => {
