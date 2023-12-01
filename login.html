@@ -223,9 +223,10 @@
     
 
         </div>
-        <div class="form-footer">
-            <p>Nie masz konta? <a href="#" id="toggleRegistration">Kliknij</a></p>
-        </div>
+        <<div class="form-footer">
+    <p id="accountQuestion">Nie masz konta? <a href="#" id="toggleRegistration">Register here</a></p>
+</div>
+
     </div>
 
     <script type="module">
@@ -268,6 +269,8 @@
 	const isTrainerCheckbox = document.getElementById('isTrainer');
     const trainerInfoDiv = document.getElementById('trainerInfo');
 	const headerTitle = document.getElementById('headerTitle');
+	const accountQuestion = document.getElementById('accountQuestion'); // Get the paragraph element
+
 
 	isTrainerCheckbox.addEventListener('change', function() {
       trainerInfoDiv.style.display = isTrainerCheckbox.checked ? 'block' : 'none';
@@ -279,16 +282,20 @@
 
 
       e.preventDefault();
-       if (loginForm.style.display === 'none') {
-            loginForm.style.display = 'block';
-            registrationForm.style.display = 'none';
-            headerTitle.textContent = 'Zaloguj się'; // Set text to Login/Register
-            this.textContent = 'Zarejestruj się';
-        } else {
-            loginForm.style.display = 'none';
-            registrationForm.style.display = 'block';
-            headerTitle.textContent = 'Zarejestruj się'; // Change text to Zarejestruj się
-            this.textContent = 'Zaloguj się';
+    if (loginForm.style.display === 'none') {
+        loginForm.style.display = 'block';
+        registrationForm.style.display = 'none';
+        headerTitle.textContent = 'Login/Register';
+        this.textContent = 'Register here';
+        accountQuestion.textContent = 'Nie masz konta? '; // Reset to original text
+        accountQuestion.appendChild(this); // Re-append the link to the paragraph
+    } else {
+        loginForm.style.display = 'none';
+        registrationForm.style.display = 'block';
+        headerTitle.textContent = 'Zarejestruj się';
+        this.textContent = 'Login here';
+        accountQuestion.textContent = 'Masz konto? '; // Change to new text
+        accountQuestion.appendChild(this); // Re-append the link to the paragraph
     }
 });
 
