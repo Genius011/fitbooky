@@ -307,6 +307,10 @@
     display: none; /* Hide by default */
 }
 
+.time-slot.selected {
+    background-color: #6e8efb;
+    /* inne style, jeśli są potrzebne */
+}
 
 </style>
 
@@ -612,7 +616,7 @@ bookButton.addEventListener('click', async () => {
     let formattedDate = `${selectedDay.getFullYear()}-${(selectedDay.getMonth() + 1).toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
 
     for (let hour = startHour; hour <= endHour; hour++) {
-        let timeString = `${hour.toString().padStart(2, '0')}:00`; // Definicja timeString w zakresie pętli
+        let timeString = `${hour.toString().padStart(2, '0')}:00`;
         let timeSlot = document.createElement('div');
         timeSlot.className = 'time-slot';
         timeSlot.textContent = timeString;
@@ -633,6 +637,7 @@ bookButton.addEventListener('click', async () => {
         container.appendChild(timeSlot);
     }
 }
+
 
 
 
