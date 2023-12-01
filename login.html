@@ -155,6 +155,24 @@
 
         .slider.round:before {
           border-radius: 50%;
+		  
+		   /* Styl dla przełącznika 'Jestem trenerem' */
+        .trainer-switch-container {
+            margin: 20px 0; /* Dodajemy identyczne marginesy dla góry i dołu */
+            text-align: center; /* Wyśrodkowanie tekstu i przełącznika */
+        }
+
+        .trainer-switch-label {
+            margin-right: 10px; /* Odstęp tekstu od przełącznika */
+            font-size: 0.9em; /* Rozmiar tekstu */
+            vertical-align: middle; /* Wyrównanie tekstu do środka względem przełącznika */
+        }
+		
+		/* Poprawione marginesy dla przycisków */
+		.form-button {
+			margin-top: 20px;
+			margin-bottom: 20px; /* Zapewnia identyczne marginesy dla góry i dołu przycisku */
+		}
 
     </style>
 </head>
@@ -191,6 +209,13 @@
         <input type="text" class="form-input" name="postalCode" placeholder="Postal Code">
         <input type="text" class="form-input" name="city" placeholder="City">
     </div>
+	<div class="trainer-switch-container">
+                <label class="trainer-switch-label" for="isTrainer">Jestem trenerem</label>
+                <label class="switch">
+                    <input type="checkbox" id="isTrainer">
+                    <span class="slider round"></span>
+                </label>
+            </div>
     <button type="submit" class="form-button">Register</button>
 </form>
 
