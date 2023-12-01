@@ -238,10 +238,17 @@
     const loginForm = document.getElementById('loginForm');
     const registrationForm = document.getElementById('registrationForm');
     const toggleRegistration = document.getElementById('toggleRegistration');
+	const isTrainerCheckbox = document.getElementById('isTrainer');
+    const trainerInfoDiv = document.getElementById('trainerInfo');
+	
+	isTrainerCheckbox.addEventListener('change', function() {
+      trainerInfoDiv.style.display = isTrainerCheckbox.checked ? 'block' : 'none';
+    });
 
     // Przełączanie między formularzami logowania i rejestracji
     toggleRegistration.addEventListener('click', function(e) {
 	  console.log("Toggle clicked"); // Dodaj tę linię
+
 
       e.preventDefault();
       if (loginForm.style.display === 'none') {
@@ -280,17 +287,29 @@ registrationForm.addEventListener('submit', function(e) {
     const firstName = registrationForm.querySelector('input[type="text"]').value;
     const email = registrationForm.querySelector('input[type="email"]').value;
     const password = registrationForm.querySelector('input[type="password"]').value;
+	 // Dodajemy nowe pola zależne od roli trenera
+      let additionalData = {};
+      if(isTrainerCheckbox.checked) {
+        additionalData = {
+          companyName: registrationForm.querySelector('input[name="companyName"]').value,
+          street: registrationForm.querySelector('input[name="street"]').value,
+          number: registrationForm.querySelector('input[name="number"]').value,
+          postalCode: registrationForm.querySelector('input[name="postalCode"]').value,
+          city: registrationForm.querySelector('input[name="city"]').value,
+          isTrainer: true
+        };
+      }
 
-    createUserWithEmailAndPassword(auth, email, password)
+   createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            const user = userCredential.user;
-            // Zmiana tutaj: użyj 'firstName' zamiast 'userFirstName'
-            setDoc(doc(firestore, "users", user.uid), {
-                uid: user.uid,
-                firstName: firstName, // Używamy 'firstName'
-                email: email
-            })
-            .then(() => {
+          const user = userCredential.user;
+          setDoc(doc(firestore, "users", user.uid), {
+            uid: user.uid,
+            firstName: firstName,
+            email: email,
+            ...additionalData
+          })
+          .then(() => {
                 console.log('User with first name added to Firestore');
                 alert('Registration successful! You can now log in.');
                 window.location.href = 'login.html';
