@@ -269,6 +269,13 @@
       trainerInfoDiv.style.display = isTrainerCheckbox.checked ? 'block' : 'none';
     });
 
+function toggleSwitchDisplay(displayStatus) {
+  const switchContainer = document.querySelector('.trainer-switch-container'); // Znajdź kontener przełącznika
+  if (switchContainer) {
+    switchContainer.style.display = displayStatus; // Ustaw styl display na block lub none
+  }
+}
+
     // Przełączanie między formularzami logowania i rejestracji
     toggleRegistration.addEventListener('click', function(e) {
 	  console.log("Toggle clicked"); // Dodaj tę linię
@@ -373,12 +380,7 @@ registrationForm.addEventListener('submit', function(e) {
 
 });
 });
-function toggleSwitchDisplay(displayStatus) {
-  const switchContainer = document.querySelector('.trainer-switch-container'); // Znajdź kontener przełącznika
-  if (switchContainer) {
-    switchContainer.style.display = displayStatus; // Ustaw styl display na block lub none
-  }
-}
+
 
 
 </script>
