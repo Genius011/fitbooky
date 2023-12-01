@@ -744,6 +744,18 @@ function formatDate(date) {
   return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
 }
 
+function setupWeekNavigation() {
+  document.getElementById('prevWeek').addEventListener('click', function() {
+    let current = new Date(document.querySelectorAll('.date-display')[0].textContent);
+    updateDatesForWeek(new Date(current.setDate(current.getDate() - 7)));
+  });
+
+  document.getElementById('nextWeek').addEventListener('click', function() {
+    let current = new Date(document.querySelectorAll('.date-display')[6].textContent);
+    updateDatesForWeek(new Date(current.setDate(current.getDate() + 1)));
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // ... (Pozostała część kodu, która jest uruchamiana podczas ładowania strony)
 
@@ -762,7 +774,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
   
- 
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
