@@ -158,23 +158,20 @@
 		  
 		   /* Styl dla przełącznika 'Jestem trenerem' */
          .trainer-switch-container {
-        margin: 20px 0; /* zachowujemy identyczne marginesy dla góry i dołu */
-        overflow: hidden; /* zapobiega problemom z układem jeśli wewnątrz są floaty */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px 0; /* Dostosuj marginesy zgodnie z potrzebą */
     }
 
     .trainer-switch-label {
-        margin-right: 10px; /* odstęp tekstu od przełącznika */
+        /* Usunięte style float i display */
         font-size: 0.9em; /* rozmiar tekstu */
-        float: right; /* przesunięcie tekstu do prawej */
-        display: block; /* upewnia się, że etykieta zajmuje całą dostępną szerokość */
     }
 
     .switch {
-        float: right; /* przesunięcie switcha do prawej */
-    }
-
-    .clear-float {
-        clear: both; /* czyszczenie float */
+        /* Usunięte style float */
+        margin-left: auto; /* automatycznie przesuwa switch do prawej strony kontenera */
     }
 
     </style>
