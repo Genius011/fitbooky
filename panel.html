@@ -744,19 +744,25 @@ function formatDate(date) {
   return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
 }
 
-function setupWeekNavigation() {
-  document.getElementById('prevWeek').addEventListener('click', function() {
-    let current = new Date(document.querySelectorAll('.date-display')[0].textContent);
-    updateDatesForWeek(new Date(current.setDate(current.getDate() - 7)));
-  });
+document.addEventListener('DOMContentLoaded', function() {
+    // ... (Pozostała część kodu, która jest uruchamiana podczas ładowania strony)
 
-  document.getElementById('nextWeek').addEventListener('click', function() {
-    let current = new Date(document.querySelectorAll('.date-display')[6].textContent);
-    updateDatesForWeek(new Date(current.setDate(current.getDate() + 1)));
-  });
-}
+    // Rozwijanie i zwijanie sekcji "Wszystkie rezerwacje"
+    document.getElementById('toggleFutureBookingsIcon').addEventListener('click', function() {
+        var section = document.getElementById('bookingManager');
+        var icon = this; // Używamy 'this' zamiast 'document.getElementById('toggleFutureBookingsIcon')', ponieważ 'this' odnosi się do klikniętego elementu
 
-
+        // Przełącz wyświetlanie sekcji i obracanie ikony
+        if (section.style.display === "none") {
+            section.style.display = "block";
+            icon.classList.add('rotate-icon');
+        } else {
+            section.style.display = "none";
+            icon.classList.remove('rotate-icon');
+        }
+    });
+  
+ 
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
