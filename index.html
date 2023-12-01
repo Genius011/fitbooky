@@ -617,22 +617,23 @@ bookButton.addEventListener('click', async () => {
         timeSlot.className = 'time-slot';
         timeSlot.textContent = timeString;
 
-    // Sprawdź dostępność dla treningów indywidualnych
-    isTimeSlotAvailable(formattedDate, timeString, 'personal').then(available => {
-      if (!available) {
-        timeSlot.classList.add('inactive');
-        timeSlot.onclick = null;
-      } else {
-        timeSlot.onclick = function() {
-          container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
-          timeSlot.classList.add('selected');
-        };
-      }
-    });
+        // Sprawdź dostępność dla treningów indywidualnych
+        isTimeSlotAvailable(formattedDate, timeString, 'personal').then(available => {
+            if (!available) {
+                timeSlot.classList.add('inactive');
+                timeSlot.onclick = null;
+            } else {
+                timeSlot.onclick = function() {
+                    container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+                    timeSlot.classList.add('selected');
+                };
+            }
+        });
 
-    container.appendChild(timeSlot);
-  }
+        container.appendChild(timeSlot);
+    }
 }
+
 
 
         function enableAllTimeSlots(popup) {
