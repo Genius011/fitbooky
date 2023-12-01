@@ -328,7 +328,8 @@ registrationForm.addEventListener('submit', function(e) {
             street: registrationForm.querySelector('input[name="street"]').value,
             number: registrationForm.querySelector('input[name="number"]').value,
             postalCode: registrationForm.querySelector('input[name="postalCode"]').value,
-            city: registrationForm.querySelector('input[name="city"]').value
+            city: registrationForm.querySelector('input[name="city"]').value,
+            isTrainer: isTrainer
         };
     }
 
@@ -336,29 +337,39 @@ registrationForm.addEventListener('submit', function(e) {
         .then((userCredential) => {
             const user = userCredential.user;
             // Zapisanie dodatkowych informacji o trenerze w Firestore
-            setDoc(doc(firestore, "users", user.uid), {
+            return setDoc(doc(firestore, "users", user.uid), {
                 uid: user.uid,
                 firstName: firstName,
                 email: email,
-                ...additionalData, // Dodanie dodatkowych danych trenera
-                isTrainer: isTrainer // Dodanie flagi określającej, czy użytkownik jest trenerem
-            })
-            .then(() => {
-                console.log('User with first name and trainer data added to Firestore');
-                alert('Registration successful! You can now log in.');
-                window.location.href = 'login.html'; // Przekierowanie do strony logowania
-            })
-            .catch((error) => {
-                console.error('Error adding user to Firestore:', error);
+                ...additionalData
             });
         })
+        .then(() => {
+            if(isTrainer) {
+                // Tworzenie unikalnego linku dla trenera
+                const uniqueLink = `https://yourapp.com/trainer/${user.uid}`;
+                // Zapisanie unikalnego linku do Firestore
+                return setDoc(doc(firestore, "trainers", user.uid), {
+                    registrationLink: uniqueLink
+                });
+            }
+        })
+        .then(() => {
+            if(isTrainer) {
+                console.log('Trainer registration link added to Firestore');
+                alert('Registration successful! Your unique registration link has been created.');
+            } else {
+                console.log('User added to Firestore');
+                alert('Registration successful! You can now log in.');
+            }
+            window.location.href = 'login.html'; // Przekierowanie do strony logowania
+        })
         .catch((error) => {
-            console.error('Registration error:', error);
+            console.error('Error during registration:', error);
             alert('Error during registration: ' + error.message);
         });
 });
 
-});
 </script>
 
 
