@@ -601,6 +601,11 @@ display: flex;
 #trainerPanelLink {
     display: none; /* Hide by default */
 }
+.stripe-container {
+            position: fixed; /* Utrzymuje element w tej samej pozycji */
+            bottom: 10px;   /* Odstęp od dołu ekranu */
+            right: 10px;    /* Odstęp od prawej strony ekranu */
+            z-index: 1000; 
 
 
     </style>
@@ -903,10 +908,11 @@ display: flex;
   </form>
 </section>
 
-
+<div class="stripe-container">
 <script async
   src="https://js.stripe.com/v3/buy-button.js">
 </script>
+ </div>
 
 <stripe-buy-button
   buy-button-id="buy_btn_1OIRWtC2kA7Qi8tCbpkzVVfH"
