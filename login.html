@@ -259,14 +259,31 @@
     const loginForm = document.getElementById('loginForm');
     const registrationForm = document.getElementById('registrationForm');
     const toggleRegistration = document.getElementById('toggleRegistration');
-	const isTrainerCheckbox = document.getElementById('isTrainer');
+    const isTrainerCheckbox = document.getElementById('isTrainer');
     const trainerInfoDiv = document.getElementById('trainerInfo');
-	const headerTitle = document.getElementById('headerTitle');
-	const accountQuestion = document.getElementById('accountQuestion'); // Get the paragraph element
+    const headerTitle = document.getElementById('headerTitle');
+    const accountQuestion = document.getElementById('accountQuestion');
 
+    // Nowy kod do obsługi parametru 'trainerId' z URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const trainerId = urlParams.get('trainerId');
 
-	isTrainerCheckbox.addEventListener('change', function() {
-      trainerInfoDiv.style.display = isTrainerCheckbox.checked ? 'block' : 'none';
+    if (trainerId) {
+        getDoc(doc(firestore, "users", trainerId)).then(docSnap => {
+            if (docSnap.exists()) {
+                const trainerData = docSnap.data();
+                const trainerName = trainerData.firstName;
+                alert(`Świetnie, że jesteś, do dzieła! Pozdrawiam ${trainerName}`);
+            } else {
+                console.log("Brak danych trenera");
+            }
+        }).catch(error => {
+            console.error("Błąd podczas pobierania danych trenera:", error);
+        });
+    }
+
+    isTrainerCheckbox.addEventListener('change', function() {
+        trainerInfoDiv.style.display = isTrainerCheckbox.checked ? 'block' : 'none';
     });
 
 
