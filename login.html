@@ -157,24 +157,25 @@
           border-radius: 50%;
 		  
 		   /* Styl dla przełącznika 'Jestem trenerem' */
-        .trainer-switch-container {
-            margin: 20px 0; /* zachowujemy identyczne marginesy dla góry i dołu */
-        }
+         .trainer-switch-container {
+        margin: 20px 0; /* zachowujemy identyczne marginesy dla góry i dołu */
+        overflow: hidden; /* zapobiega problemom z układem jeśli wewnątrz są floaty */
+    }
 
-        .trainer-switch-label {
-            margin-right: 10px; /* odstęp tekstu od przełącznika */
-            font-size: 0.9em; /* rozmiar tekstu */
-            float: right; /* przesunięcie tekstu do prawej */
-        }
+    .trainer-switch-label {
+        margin-right: 10px; /* odstęp tekstu od przełącznika */
+        font-size: 0.9em; /* rozmiar tekstu */
+        float: right; /* przesunięcie tekstu do prawej */
+        display: block; /* upewnia się, że etykieta zajmuje całą dostępną szerokość */
+    }
 
-        .switch {
-            float: right; /* przesunięcie switcha do prawej */
-        }
+    .switch {
+        float: right; /* przesunięcie switcha do prawej */
+    }
 
-        /* Czyści float po kontenerach z float */
-        .clear-float {
-            clear: both;
-        }
+    .clear-float {
+        clear: both; /* czyszczenie float */
+    }
 
     </style>
 </head>
