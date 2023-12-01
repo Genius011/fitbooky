@@ -317,11 +317,10 @@ registrationForm.addEventListener('submit', function(e) {
     const firstName = registrationForm.querySelector('input[name="firstName"]').value;
     const email = registrationForm.querySelector('input[name="email"]').value;
     const password = registrationForm.querySelector('input[name="password"]').value;
-    const isTrainer = isTrainerCheckbox.checked; // Sprawdzenie, czy zaznaczono opcję trenera
-    
-    let additionalData = {}; // Obiekt na dodatkowe dane
+    const isTrainer = isTrainerCheckbox.checked;
 
-    // Sprawdzenie, czy rejestrujący się jest trenerem
+    let additionalData = {};
+
     if (isTrainer) {
         additionalData = {
             companyName: registrationForm.querySelector('input[name="companyName"]').value,
@@ -335,31 +334,29 @@ registrationForm.addEventListener('submit', function(e) {
 
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            const user = userCredential.user;
             // Zapisanie dodatkowych informacji o trenerze w Firestore
+            const user = userCredential.user;
             return setDoc(doc(firestore, "users", user.uid), {
                 uid: user.uid,
                 firstName: firstName,
                 email: email,
                 ...additionalData
+            }).then(() => {
+                if(isTrainer) {
+                    // Tworzenie unikalnego linku dla trenera
+                    const uniqueLink = `https://yourapp.com/trainer/${user.uid}`;
+                    // Zapisanie unikalnego linku do Firestore
+                    return setDoc(doc(firestore, "trainers", user.uid), {
+                        registrationLink: uniqueLink
+                    });
+                }
             });
         })
         .then(() => {
+            console.log('User added to Firestore');
             if(isTrainer) {
-                // Tworzenie unikalnego linku dla trenera
-                const uniqueLink = `https://yourapp.com/trainer/${user.uid}`;
-                // Zapisanie unikalnego linku do Firestore
-                return setDoc(doc(firestore, "trainers", user.uid), {
-                    registrationLink: uniqueLink
-                });
-            }
-        })
-        .then(() => {
-            if(isTrainer) {
-                console.log('Trainer registration link added to Firestore');
                 alert('Registration successful! Your unique registration link has been created.');
             } else {
-                console.log('User added to Firestore');
                 alert('Registration successful! You can now log in.');
             }
             window.location.href = 'login.html'; // Przekierowanie do strony logowania
