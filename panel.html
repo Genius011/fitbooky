@@ -18,7 +18,7 @@
 
 /* Styl podstawowy dla wszystkich przycisków */
 button {
-    background-color: black;
+    background-color: #6e8efb;
     color: white;
     border: none;
     padding: 8px 15px;
@@ -34,7 +34,7 @@ button {
 }
 
 button:hover {
-    background-color: black;
+    background-color: #5d7ce2;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -115,7 +115,6 @@ h2 {
 .day-column h3 {
     text-align: center;
     margin-bottom: 10px;
-	
 }
 
 .date-display {
@@ -140,7 +139,7 @@ h2 {
 
 #todayBookingsTable thead,
 #futureBookingsTable thead {
-    background-color: black;
+    background-color: #6e8efb;
     color: white;
 }
 
@@ -602,81 +601,11 @@ display: flex;
 #trainerPanelLink {
     display: none; /* Hide by default */
 }
-.stripe-container {
-            position: fixed; /* Utrzymuje element w tej samej pozycji */
-            bottom: 10px;   /* Odstęp od dołu ekranu */
-            right: 10px;    /* Odstęp od prawej strony ekranu */
-            z-index: 1000;
-
-
-/* Styl specyficzny dla rozwijanego menu profilowego */
-#profileDropdown .dropbtn {
-    background-color: #4c6ef5 !important;
-    color: white !important;
-    padding: 10px 20px !important;
-    font-size: 16px !important;
-    border: none !important;
-    border-radius: 5px !important;
-    cursor: pointer !important;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
-}
-
-/* Zmodyfikowany :hover dla specyficznego przycisku */
-#profileDropdown .dropbtn:hover {
-    background-color: #3658d4 !important;
-}
-
-/* Zmodyfikowane style dla zawartości rozwijanej */
-#profileDropdown .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: 5px;
-}
-
-#profileDropdown .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    background-color: #4c6ef5;
-}
-
-#profileDropdown .dropdown-content a:hover {
-    background-color: #3658d4;
-}
-
-/* Styl dla wyświetlania zawartości rozwijanej po najechaniu */
-#profileDropdown:hover .dropdown-content {
-    display: block;
-}
-
-#profileDropdown:hover .dropbtn {
-    background-color: #3658d4;
-}
-
 
 
     </style>
 </head>
 <body>
-
- <div id="profileDropdown" class="dropdown">
-    <button class="dropbtn">Zalogowany jako Oak</button>
-    <div class="dropdown-content">
-        <a href="#">Profil</a>
-        <a href="#">Panel Trenera</a>
-        <a href="#">Wyloguj</a>
-    </div>
-</div>
-
-
-<script async
-  src="https://js.stripe.com/v3/buy-button.js">
-</script>
 
 
 
@@ -684,9 +613,9 @@ display: flex;
     <h1>Panel Trenera</h1>
     
 	<div class="toggle-today-bookings">
-  <i id="toggleTodayBookingsIcon" class="fas fa-chevron-up"></i> Dzisiejsze rezerwacje
+  <i id="toggleTodayBookingsIcon" class="fas fa-chevron-down"></i>  Dzisiejsze rezerwacje
 </div>
-<section id="todayBookingsManager" class="section" style="display: block;">
+<section id="todayBookingsManager" class="section" style="display: none;">
   <table id="todayBookingsTable">
     <thead>
       <tr>
@@ -704,6 +633,10 @@ display: flex;
     </tbody>
   </table>
 </section>
+	
+	<div class="toggle-availability">
+  <i id="toggleIcon" class="fas fa-chevron-down"></i> Zarządzanie dostępnością
+</div>
 
 
 <!-- Sekcja do zwijania/rozwijania -->
@@ -966,13 +899,7 @@ display: flex;
   </form>
 </section>
 
- <div class="stripe-container">
-        <script src="https://js.stripe.com/v3/buy-button.js"></script>
-        <stripe-buy-button
-          buy-button-id="buy_btn_1OIRWtC2kA7Qi8tCbpkzVVfH"
-          publishable-key="pk_live_51NNFeZC2kA7Qi8tCXkriGEbtu0x9lphUVrDPG3tUEUOlK0wdI6ZqMNRb8NyDOhkO425cMXFscNLVJuQB4bv59GXQ00ldoyg7tV">
-        </stripe-buy-button>
-    </div>
+
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
@@ -985,8 +912,6 @@ import {
   updateDoc, 
   deleteDoc,
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
-
 
 
 const firebaseConfig = {
@@ -1000,13 +925,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
-
-onAuthStateChanged(auth, (user) => {
-  // Twoje działania w przypadku zmiany stanu uwierzytelnienia
-});
-
-
 
 document.addEventListener('DOMContentLoaded', function() {
   
@@ -1265,15 +1183,14 @@ document.getElementById('toggleTodayBookingsIcon').addEventListener('click', fun
   var icon = document.getElementById('toggleTodayBookingsIcon');
   
   // Przełącz wyświetlanie sekcji i obracanie ikony
-  if (section.style.display === "block") {
-    section.style.display = "none";
-    icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
-  } else {
+  if (section.style.display === "none") {
     section.style.display = "block";
-    icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+    icon.classList.add('rotate-icon');
+  } else {
+    section.style.display = "none";
+    icon.classList.remove('rotate-icon');
   }
 });
-
 
 async function deleteBooking(bookingId, event) {
   // Wyświetlenie zapytania o potwierdzenie
