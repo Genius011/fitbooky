@@ -158,21 +158,23 @@
 		  
 		   /* Styl dla przełącznika 'Jestem trenerem' */
         .trainer-switch-container {
-            margin: 20px 0; /* Dodajemy identyczne marginesy dla góry i dołu */
-            text-align: center; /* Wyśrodkowanie tekstu i przełącznika */
+            margin: 20px 0; /* zachowujemy identyczne marginesy dla góry i dołu */
         }
 
         .trainer-switch-label {
-            margin-right: 10px; /* Odstęp tekstu od przełącznika */
-            font-size: 0.9em; /* Rozmiar tekstu */
-            vertical-align: middle; /* Wyrównanie tekstu do środka względem przełącznika */
+            margin-right: 10px; /* odstęp tekstu od przełącznika */
+            font-size: 0.9em; /* rozmiar tekstu */
+            float: right; /* przesunięcie tekstu do prawej */
         }
-		
-		/* Poprawione marginesy dla przycisków */
-		.form-button {
-			margin-top: 20px;
-			margin-bottom: 20px; /* Zapewnia identyczne marginesy dla góry i dołu przycisku */
-		}
+
+        .switch {
+            float: right; /* przesunięcie switcha do prawej */
+        }
+
+        /* Czyści float po kontenerach z float */
+        .clear-float {
+            clear: both;
+        }
 
     </style>
 </head>
@@ -212,7 +214,7 @@
         <input type="text" class="form-input" name="city" placeholder="City">
 		
     </div>
-	
+	  <div class="clear-float"></div>
     <button type="submit" class="form-button">Register</button>
 </form>
 
