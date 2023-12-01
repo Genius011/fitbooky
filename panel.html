@@ -617,9 +617,9 @@ display: flex;
     <h1>Panel Trenera</h1>
     
 	<div class="toggle-today-bookings">
-  <i id="toggleTodayBookingsIcon" class="fas fa-chevron-down"></i>  Dzisiejsze rezerwacje
+  <i id="toggleTodayBookingsIcon" class="fas fa-chevron-up"></i> Dzisiejsze rezerwacje
 </div>
-<section id="todayBookingsManager" class="section" style="display: none;">
+<section id="todayBookingsManager" class="section" style="display: block;">
   <table id="todayBookingsTable">
     <thead>
       <tr>
@@ -1205,14 +1205,15 @@ document.getElementById('toggleTodayBookingsIcon').addEventListener('click', fun
   var icon = document.getElementById('toggleTodayBookingsIcon');
   
   // Przełącz wyświetlanie sekcji i obracanie ikony
-  if (section.style.display === "none") {
-    section.style.display = "block";
-    icon.classList.add('rotate-icon');
-  } else {
+  if (section.style.display === "block") {
     section.style.display = "none";
-    icon.classList.remove('rotate-icon');
+    icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+  } else {
+    section.style.display = "block";
+    icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
   }
 });
+
 
 async function deleteBooking(bookingId, event) {
   // Wyświetlenie zapytania o potwierdzenie
