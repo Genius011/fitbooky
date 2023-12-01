@@ -333,41 +333,40 @@ registrationForm.addEventListener('submit', function(e) {
     }
 
     createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Zapisanie dodatkowych informacji o trenerze w Firestore
-            const user = userCredential.user;
-            return setDoc(doc(firestore, "users", user.uid), {
-                uid: user.uid,
-                firstName: firstName,
-                email: email,
-                ...additionalData
-            }).then(() => {
-                if(isTrainer) {
-                    // Tworzenie unikalnego linku dla trenera
-                    const uniqueLink = `https://honego.pl/trainer/${user.uid}`;
-                    // Zapisanie unikalnego linku do Firestore
-                    return setDoc(doc(firestore, "trainers", user.uid), {
-                        registrationLink: uniqueLink
-                    });
-                }
-            });
-        })
-        .then(() => {
-            console.log('User added to Firestore');
-            if(isTrainer) {
-                alert('Registration successful! Your unique registration link has been created.');
-            } else {
-                alert('Registration successful! You can now log in.');
-            }
-            window.location.href = 'login.html'; // Przekierowanie do strony logowania
-        })
-        .catch((error) => {
-            console.error('Error during registration:', error);
-            alert('Error during registration: ' + error.message);
+    .then((userCredential) => {
+        const user = userCredential.user;
+        console.log('User created:', user.uid); // Log user UID after account creation
+        return setDoc(doc(firestore, "users", user.uid), {
+            uid: user.uid,
+            firstName: firstName,
+            email: email,
+            ...additionalData
         });
+    })
+    .then(() => {
+        if(isTrainer) {
+            const uniqueLink = `https://honego.pl/trainer/${user.uid}`;
+            console.log('Unique link:', uniqueLink); // Log unique link for verification
+            return setDoc(doc(firestore, "trainers", user.uid), {
+                registrationLink: uniqueLink
+            });
+        }
+    })
+    .then(() => {
+        console.log('User and trainer info added to Firestore');
+        if(isTrainer) {
+            alert('Registration successful! Your unique registration link has been created.');
+        } else {
+            alert('Registration successful! You can now log in.');
+        }
+        window.location.href = 'login.html';
+    })
+    .catch((error) => {
+        console.error('Error during registration:', error);
+        alert('Error during registration: ' + error.message);
+    });
 });
 });
-
 </script>
 
 
