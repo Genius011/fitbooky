@@ -269,12 +269,7 @@
       trainerInfoDiv.style.display = isTrainerCheckbox.checked ? 'block' : 'none';
     });
 
-function toggleSwitchDisplay(displayStatus) {
-  const switchContainer = document.querySelector('.trainer-switch-container'); // Znajdź kontener przełącznika
-  if (switchContainer) {
-    switchContainer.style.display = displayStatus; // Ustaw styl display na block lub none
-  }
-}
+
 
     // Przełączanie między formularzami logowania i rejestracji
     toggleRegistration.addEventListener('click', function(e) {
@@ -355,7 +350,7 @@ registrationForm.addEventListener('submit', function(e) {
         return setDoc(doc(firestore, "users", user.uid), userData).then(() => {
             // Jeśli użytkownik jest trenerem, utwórz i zapisz unikalny link
             if(isTrainer) {
-                const uniqueLink = `https://honego.pl/trainer/${user.uid}`;
+                const uniqueLink = `https://honego.pl/login.html?trainerId=${user.uid}`;
                 console.log('Unique link:', uniqueLink); // Log unique link for verification
                 // Zapisanie unikalnego linku do kolekcji 'trainers'
                 return setDoc(doc(firestore, "trainers", user.uid), {
