@@ -172,32 +172,34 @@
                 <input type="password" class="form-input" placeholder="Password" required>
                 <button type="submit" class="form-button">Login</button>
             </form>
+			
             <!-- Registration Form -->
-            <form id="registrationForm" style="display: none;">
-    <input type="text" class="form-input" placeholder="First Name" required>
-    <input type="email" class="form-input" placeholder="Email" required>
-    <input type="password" class="form-input" placeholder="Password" required>
-    <input type="password" class="form-input" placeholder="Confirm Password" required>
-	
-	<label class="switch">
-                    <input type="checkbox" id="isTrainer">
-                    <span class="slider round"></span>
-                </label>
-                <div id="trainerInfo" style="display: none;">
-                    <input type="text" class="form-input" placeholder="Company Name">
-                    <input type="text" class="form-input" placeholder="Street">
-                    <input type="text" class="form-input" placeholder="Number">
-                    <input type="text" class="form-input" placeholder="Postal Code">
-                    <input type="text" class="form-input" placeholder="City">
-                </div>
-                <button type="submit" class="form-button">Register</button>
-            </form>
+<form id="registrationForm" style="display: none;">
+    <input type="text" class="form-input" name="firstName" placeholder="First Name" required>
+    <input type="email" class="form-input" name="email" placeholder="Email" required>
+    <input type="password" class="form-input" name="password" placeholder="Password" required>
+    <input type="password" class="form-input" name="confirmPassword" placeholder="Confirm Password" required>
+    
+    <label class="switch">
+        <input type="checkbox" id="isTrainer">
+        <span class="slider round"></span>
+    </label>
+    <div id="trainerInfo" style="display: none;">
+        <input type="text" class="form-input" name="companyName" placeholder="Company Name">
+        <input type="text" class="form-input" name="street" placeholder="Street">
+        <input type="text" class="form-input" name="number" placeholder="Number">
+        <input type="text" class="form-input" name="postalCode" placeholder="Postal Code">
+        <input type="text" class="form-input" name="city" placeholder="City">
+    </div>
+    <button type="submit" class="form-button">Register</button>
+</form>
+
 	
     
 </form>
         </div>
         <div class="form-footer">
-            <p>Don't have an account? <a href="#" id="toggleRegistration">Register here</a></p>
+            <p>Nie masz konta? <a href="#" id="toggleRegistration">Kliknij</a></p>
         </div>
     </div>
 
@@ -286,35 +288,39 @@
     // Obsługa rejestracji
 registrationForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    const firstName = registrationForm.querySelector('input[type="text"]').value;
-    const email = registrationForm.querySelector('input[type="email"]').value;
-    const password = registrationForm.querySelector('input[type="password"]').value;
-	 // Dodajemy nowe pola zależne od roli trenera
-      let additionalData = {};
-      if(isTrainerCheckbox.checked) {
-        additionalData = {
-          companyName: registrationForm.querySelector('input[name="companyName"]').value,
-          street: registrationForm.querySelector('input[name="street"]').value,
-          number: registrationForm.querySelector('input[name="number"]').value,
-          postalCode: registrationForm.querySelector('input[name="postalCode"]').value,
-          city: registrationForm.querySelector('input[name="city"]').value,
-          isTrainer: true
-        };
-      }
+    const firstName = registrationForm.querySelector('input[name="firstName"]').value;
+    const email = registrationForm.querySelector('input[name="email"]').value;
+    const password = registrationForm.querySelector('input[name="password"]').value;
+    const isTrainer = isTrainerCheckbox.checked; // Sprawdzenie, czy zaznaczono opcję trenera
+    
+    let additionalData = {}; // Obiekt na dodatkowe dane
 
-   createUserWithEmailAndPassword(auth, email, password)
+    // Sprawdzenie, czy rejestrujący się jest trenerem
+    if (isTrainer) {
+        additionalData = {
+            companyName: registrationForm.querySelector('input[name="companyName"]').value,
+            street: registrationForm.querySelector('input[name="street"]').value,
+            number: registrationForm.querySelector('input[name="number"]').value,
+            postalCode: registrationForm.querySelector('input[name="postalCode"]').value,
+            city: registrationForm.querySelector('input[name="city"]').value
+        };
+    }
+
+    createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          const user = userCredential.user;
-          setDoc(doc(firestore, "users", user.uid), {
-            uid: user.uid,
-            firstName: firstName,
-            email: email,
-            ...additionalData
-          })
-          .then(() => {
-                console.log('User with first name added to Firestore');
+            const user = userCredential.user;
+            // Zapisanie dodatkowych informacji o trenerze w Firestore
+            setDoc(doc(firestore, "users", user.uid), {
+                uid: user.uid,
+                firstName: firstName,
+                email: email,
+                ...additionalData, // Dodanie dodatkowych danych trenera
+                isTrainer: isTrainer // Dodanie flagi określającej, czy użytkownik jest trenerem
+            })
+            .then(() => {
+                console.log('User with first name and trainer data added to Firestore');
                 alert('Registration successful! You can now log in.');
-                window.location.href = 'login.html';
+                window.location.href = 'login.html'; // Przekierowanie do strony logowania
             })
             .catch((error) => {
                 console.error('Error adding user to Firestore:', error);
@@ -322,9 +328,10 @@ registrationForm.addEventListener('submit', function(e) {
         })
         .catch((error) => {
             console.error('Registration error:', error);
+            alert('Error during registration: ' + error.message);
         });
 });
-});
+
 
 </script>
 
