@@ -156,24 +156,18 @@
         .slider.round:before {
           border-radius: 50%;
 		  
-	.trainer-switch-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin: 10px 0;
-    width: 100%; /* Dodaj szerokość, aby kontener rozciągnął się na całą dostępną przestrzeń */
+	/* Kontener dla switcha i etykiety */
+.trainer-switch-container {
+  display: flex;
+  justify-content: flex-end; /* Wyrównuje zawartość do prawej strony */
+  align-items: center; /* Centruje zawartość w pionie */
+  gap: 10px; /* Odstęp między etykietą a switchem */
 }
 
+/* Styl dla etykiety */
 .trainer-switch-label {
-    font-size: 0.9em;
-    margin-right: 10px;
+  white-space: nowrap; /* Zapobiega przenoszeniu się tekstu do nowej linii */
 }
-
-
-    .switch {
-        /* Usunięte style float */
-        margin-left: auto; /* automatycznie przesuwa switch do prawej strony kontenera */
-    }
 
     </style>
 </head>
@@ -200,12 +194,13 @@
     <input type="password" class="form-input" name="confirmPassword" placeholder="Potwierdź hasło" required>
     
      <div class="trainer-switch-container">
-        <label class="trainer-switch-label" for="isTrainer">Jestem trenerem</label>
-        <label class="switch">
-            <input type="checkbox" id="isTrainer">
-            <span class="slider round"></span>
-        </label>
-    </div>
+  <label class="trainer-switch-label" for="isTrainer">Jestem trenerem</label>
+  <label class="switch">
+    <input type="checkbox" id="isTrainer">
+    <span class="slider round"></span>
+  </label>
+</div>
+
     
     <div id="trainerInfo" style="display: none;">
         <input type="text" class="form-input" name="companyName" placeholder="Nazwa firmy">
