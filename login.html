@@ -324,6 +324,22 @@ registrationForm.addEventListener('submit', function(e) {
 });
 });
 
+document.getElementById('toggleRegistration').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (loginForm.style.display === 'none') {
+        loginForm.style.display = 'block';
+        registrationForm.style.display = 'none';
+        this.textContent = 'Register here';
+        document.querySelector('.form-button.register').style.display = 'none'; // Ukryj przycisk rejestracji
+    } else {
+        loginForm.style.display = 'none';
+        registrationForm.style.display = 'block';
+        this.textContent = 'Login here';
+        document.querySelector('.form-button.register').style.display = 'block'; // Pokaż przycisk rejestracji
+    }
+});
+
+
 </script>
 
 
