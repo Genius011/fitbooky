@@ -182,7 +182,7 @@
     <div class="login-container">
 	<img src="genius.png" alt="Genius" class="logo-image">
         <div class="login-header">
-            <h1>Zaloguj się</h1>
+    <h1 id="headerTitle">Login/Register</h1>
         </div>
         <div class="login-form">
             <!-- Login Form -->
@@ -267,7 +267,8 @@
     const toggleRegistration = document.getElementById('toggleRegistration');
 	const isTrainerCheckbox = document.getElementById('isTrainer');
     const trainerInfoDiv = document.getElementById('trainerInfo');
-	
+	const headerTitle = document.getElementById('headerTitle');
+
 	isTrainerCheckbox.addEventListener('change', function() {
       trainerInfoDiv.style.display = isTrainerCheckbox.checked ? 'block' : 'none';
     });
