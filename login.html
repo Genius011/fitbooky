@@ -223,7 +223,7 @@
     
 
         </div>
-        <<div class="form-footer">
+        <div class="form-footer">
     <p id="accountQuestion">Nie masz konta? <a href="#" id="toggleRegistration">Register here</a></p>
 </div>
 
@@ -285,15 +285,15 @@
     if (loginForm.style.display === 'none') {
         loginForm.style.display = 'block';
         registrationForm.style.display = 'none';
-        headerTitle.textContent = 'Login/Register';
-        this.textContent = 'Register here';
+        headerTitle.textContent = 'Zaloguj się';
+        this.textContent = 'Zarejestruj się';
         accountQuestion.textContent = 'Nie masz konta? '; // Reset to original text
         accountQuestion.appendChild(this); // Re-append the link to the paragraph
     } else {
         loginForm.style.display = 'none';
         registrationForm.style.display = 'block';
         headerTitle.textContent = 'Zarejestruj się';
-        this.textContent = 'Login here';
+        this.textContent = 'Zaloguj się';
         accountQuestion.textContent = 'Masz konto? '; // Change to new text
         accountQuestion.appendChild(this); // Re-append the link to the paragraph
     }
