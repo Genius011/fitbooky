@@ -344,7 +344,7 @@ registrationForm.addEventListener('submit', function(e) {
             }).then(() => {
                 if(isTrainer) {
                     // Tworzenie unikalnego linku dla trenera
-                    const uniqueLink = `https://yourapp.com/trainer/${user.uid}`;
+                    const uniqueLink = `https://honego.pl/trainer/${user.uid}`;
                     // Zapisanie unikalnego linku do Firestore
                     return setDoc(doc(firestore, "trainers", user.uid), {
                         registrationLink: uniqueLink
