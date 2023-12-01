@@ -217,7 +217,7 @@
 
         </div>
         <div class="form-footer">
-    <p id="accountQuestion">Nie masz konta? <a href="#" id="toggleRegistration">Register here</a></p>
+    <p id="accountQuestion">Nie masz konta? <a href="#" id="toggleRegistration">Zarejestruj się</a></p>
 </div>
 
     </div>
@@ -278,6 +278,7 @@
     if (loginForm.style.display === 'none') {
         loginForm.style.display = 'block';
         registrationForm.style.display = 'none';
+		toggleSwitchDisplay('none'); // Ukryj przełącznik podczas logowania
         headerTitle.textContent = 'Zaloguj się';
         this.textContent = 'Zarejestruj się';
         accountQuestion.textContent = 'Nie masz konta? '; // Reset to original text
@@ -285,6 +286,7 @@
     } else {
         loginForm.style.display = 'none';
         registrationForm.style.display = 'block';
+		toggleSwitchDisplay('block'); // Pokaż przełącznik podczas rejestracji
         headerTitle.textContent = 'Zarejestruj się';
         this.textContent = 'Zaloguj się';
         accountQuestion.textContent = 'Masz konto? '; // Change to new text
