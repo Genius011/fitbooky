@@ -160,7 +160,7 @@
 .trainer-switch-container {
   display: flex;
   justify-content: flex-end; /* Wyrównuje zawartość do prawej strony */
-  align-items: right; /* Centruje zawartość w pionie */
+  align-items: center; /* Centruje zawartość w pionie */
   gap: 10px; /* Odstęp między etykietą a switchem */
 }
 
@@ -193,15 +193,7 @@
     <input type="password" class="form-input" name="password" placeholder="Hasło" required>
     <input type="password" class="form-input" name="confirmPassword" placeholder="Potwierdź hasło" required>
     
-     <div class="trainer-switch-container">
-  <label class="trainer-switch-label" for="isTrainer">Jestem trenerem</label>
-  <label class="switch">
-    <input type="checkbox" id="isTrainer">
-    <span class="slider round"></span>
-  </label>
-</div>
-
-    
+         
     <div id="trainerInfo" style="display: none;">
         <input type="text" class="form-input" name="companyName" placeholder="Nazwa firmy">
         <input type="text" class="form-input" name="street" placeholder="Ulica">
@@ -213,7 +205,13 @@
 	  
     <button type="submit" class="form-button">Zarejestruj się</button>
 </form>
-
+<div class="trainer-switch-container">
+  <label class="trainer-switch-label" for="isTrainer">Jestem trenerem</label>
+  <label class="switch">
+    <input type="checkbox" id="isTrainer">
+    <span class="slider round"></span>
+  </label>
+</div>
 	
     
 
