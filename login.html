@@ -336,21 +336,24 @@ registrationForm.addEventListener('submit', function(e) {
     .then((userCredential) => {
         const user = userCredential.user;
         console.log('User created:', user.uid); // Log user UID after account creation
-        return setDoc(doc(firestore, "users", user.uid), {
+        const userData = {
             uid: user.uid,
             firstName: firstName,
             email: email,
             ...additionalData
+        };
+        // Dodanie użytkownika do kolekcji 'users'
+        return setDoc(doc(firestore, "users", user.uid), userData).then(() => {
+            // Jeśli użytkownik jest trenerem, utwórz i zapisz unikalny link
+            if(isTrainer) {
+                const uniqueLink = `https://honego.pl/trainer/${user.uid}`;
+                console.log('Unique link:', uniqueLink); // Log unique link for verification
+                // Zapisanie unikalnego linku do kolekcji 'trainers'
+                return setDoc(doc(firestore, "trainers", user.uid), {
+                    registrationLink: uniqueLink
+                });
+            }
         });
-    })
-    .then(() => {
-        if(isTrainer) {
-            const uniqueLink = `https://honego.pl/trainer/${user.uid}`;
-            console.log('Unique link:', uniqueLink); // Log unique link for verification
-            return setDoc(doc(firestore, "trainers", user.uid), {
-                registrationLink: uniqueLink
-            });
-        }
     })
     .then(() => {
         console.log('User and trainer info added to Firestore');
@@ -365,6 +368,7 @@ registrationForm.addEventListener('submit', function(e) {
         console.error('Error during registration:', error);
         alert('Error during registration: ' + error.message);
     });
+
 });
 });
 </script>
