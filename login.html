@@ -156,18 +156,18 @@
         .slider.round:before {
           border-radius: 50%;
 		  
-		   /* Styl dla przełącznika 'Jestem trenerem' */
-         .trainer-switch-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 10px 0; /* Dostosuj marginesy zgodnie z potrzebą */
-    }
+		  .trainer-switch-container {
+    display: flex;
+    justify-content: flex-end; /* Aby wyrównać do prawej strony */
+    align-items: center;
+    margin-top: 10px; /* Dostosuj margines górny */
+    margin-bottom: 10px; /* Dostosuj margines dolny */
+}
 
-    .trainer-switch-label {
-        /* Usunięte style float i display */
-        font-size: 0.9em; /* rozmiar tekstu */
-    }
+.trainer-switch-label {
+    margin-right: 10px; /* Dostosuj odstęp między etykietą a przełącznikiem */
+    font-size: 0.9em; /* Rozmiar tekstu */
+}
 
     .switch {
         /* Usunięte style float */
