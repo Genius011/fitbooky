@@ -756,24 +756,7 @@ function setupWeekNavigation() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // ... (Pozostała część kodu, która jest uruchamiana podczas ładowania strony)
 
-    // Rozwijanie i zwijanie sekcji "Wszystkie rezerwacje"
-    document.getElementById('toggleFutureBookingsIcon').addEventListener('click', function() {
-        var section = document.getElementById('bookingManager');
-        var icon = this; // Używamy 'this' zamiast 'document.getElementById('toggleFutureBookingsIcon')', ponieważ 'this' odnosi się do klikniętego elementu
-
-        // Przełącz wyświetlanie sekcji i obracanie ikony
-        if (section.style.display === "none") {
-            section.style.display = "block";
-            icon.classList.add('rotate-icon');
-        } else {
-            section.style.display = "none";
-            icon.classList.remove('rotate-icon');
-        }
-    });
-  
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
