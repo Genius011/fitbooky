@@ -608,33 +608,55 @@ display: flex;
             z-index: 1000;
 
 
-/* Dodatkowa klasa dla przycisków w rozwijanym menu, aby uniknąć konfliktów */
-.dropbtn-custom {
-    background-color: #6e8efb !important; /* Niebieski kolor tła */
+/* Styl specyficzny dla rozwijanego menu profilowego */
+#profileDropdown .dropbtn {
+    background-color: #4c6ef5 !important;
     color: white !important;
-    padding: 10px 20px !important; /* Odpowiednie wypełnienie */
+    padding: 10px 20px !important;
     font-size: 16px !important;
     border: none !important;
-    border-radius: 5px !important; /* Zaokrąglone rogi */
+    border-radius: 5px !important;
     cursor: pointer !important;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important; /* Cień dla przycisku */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Nadpisz hover dla przycisków w rozwijanym menu */
-.dropbtn-custom:hover {
-    background-color: #5d7ce2 !important; /* Ciemniejszy niebieski kolor tła przy najechaniu */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+/* Zmodyfikowany :hover dla specyficznego przycisku */
+#profileDropdown .dropbtn:hover {
+    background-color: #3658d4 !important;
 }
 
-/* Zastosuj te style bezpośrednio do dropdown-content zamiast globalnie dla wszystkich a */
-.dropdown-content a {
-    color: black !important;
-    background-color: #6e8efb !important; /* Niebieski kolor tła dla linków */
+/* Zmodyfikowane style dla zawartości rozwijanej */
+#profileDropdown .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
 }
 
-.dropdown-content a:hover {
-    background-color: #5d7ce2 !important; /* Ciemniejszy niebieski kolor tła dla linków przy najechaniu */
+#profileDropdown .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    background-color: #4c6ef5;
 }
+
+#profileDropdown .dropdown-content a:hover {
+    background-color: #3658d4;
+}
+
+/* Styl dla wyświetlania zawartości rozwijanej po najechaniu */
+#profileDropdown:hover .dropdown-content {
+    display: block;
+}
+
+#profileDropdown:hover .dropbtn {
+    background-color: #3658d4;
+}
+
 
 
 
