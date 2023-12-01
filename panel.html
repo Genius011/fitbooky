@@ -665,40 +665,6 @@ display: flex;
 </div>
 
 
-<!-- Kontener Finanse -->
-
-</div>
-<div id="profileModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>Client`s Profile</h2>
-    <div id="profileDetails">
-      <!-- Dane profilowe zostaną wypełnione tutaj -->
-    </div>
-  </div>
-</div>
-
-<div class="toggle-section toggle-group-training">
-  <i id="toggleGroupTrainingIcon" class="fas fa-chevron-down"></i>
-  <span>Zarządzanie miejscami na trening grupowy</span>
-</div>
-
-<section id="groupTrainingManager" class="section" style="display: none;">
-  <form id="groupTrainingForm">
-    <div class="day-container">
-      <!-- Powtórz poniższą strukturę dla każdego dnia tygodnia -->
-      <div class="day-column">
-        <h3>Poniedziałek</h3>
-        <label for="monday-spots">Miejsca: </label>
-        <input type="number" id="monday-spots" name="monday" min="0">
-      </div>
-      <!-- Dodaj kolejne dni tygodnia tutaj... -->
-    </div>
-    <button type="submit" class="submit-btn">Zapisz zmiany</button>
-  </form>
-</section>
-
-
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
@@ -948,6 +914,21 @@ window.viewProfile = viewProfile;
 
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
+
+document.getElementById('toggleFutureBookingsIcon').addEventListener('click', function() {
+        var section = document.getElementById('bookingManager');
+        var icon = this; // Używamy 'this' zamiast 'document.getElementById('toggleFutureBookingsIcon')', ponieważ 'this' odnosi się do klikniętego elementu
+
+        // Przełącz wyświetlanie sekcji i obracanie ikony
+        if (section.style.display === "none") {
+            section.style.display = "block";
+            icon.classList.add('rotate-icon');
+        } else {
+            section.style.display = "none";
+            icon.classList.remove('rotate-icon');
+        }
+    });
+  
 
 document.getElementById('toggleIcon').addEventListener('click', function() {
   var section = document.getElementById('availabilityManager');
