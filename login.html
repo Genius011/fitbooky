@@ -367,7 +367,7 @@ registrationForm.addEventListener('submit', function(e) {
         return setDoc(doc(firestore, "users", user.uid), userData).then(() => {
             // Jeśli użytkownik jest trenerem, utwórz i zapisz unikalny link
             if(isTrainer) {
-                const uniqueLink = `https://honego.pl/login.html?trainerId=${user.uid}`;
+                const uniqueLink = `https://fitbooky.com/login.html?trainerId=${user.uid}`;
                 console.log('Unique link:', uniqueLink); // Log unique link for verification
                 // Zapisanie unikalnego linku do kolekcji 'trainers'
                 return setDoc(doc(firestore, "trainers", user.uid), {
