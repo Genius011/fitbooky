@@ -393,6 +393,12 @@ registrationForm.addEventListener('submit', function(e) {
 });
 });
 
+function toggleSwitchDisplay(displayValue) {
+    const trainerSwitchContainer = document.querySelector('.trainer-switch-container');
+    if (trainerSwitchContainer) {
+        trainerSwitchContainer.style.display = displayValue;
+    }
+}
 
 
 </script>
