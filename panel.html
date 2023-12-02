@@ -645,70 +645,6 @@ display: flex;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.availability-section {
-  background: #f7f7f7;
-  border-radius: 8px;
-  padding: 20px;
-  margin-top: 20px;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-}
-
-.availability-section h2 {
-  color: #333;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-.availability-section h3 {
-  margin-top: 15px;
-  color: #444;
-}
-
-.day-time-selector {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.day-selector,
-.time-selector,
-.spots-selector {
-  flex: 1 1 200px;
-  margin: 5px;
-  background: #fff;
-  padding: 10px;
-  border-radius: 4px;
-  box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
-}
-
-.day-selector input[type="checkbox"] {
-  margin-right: 5px;
-}
-
-.submit-btn {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-top: 20px;
-  background-color: #6e8efb;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-.submit-btn:hover {
-  background-color: #5d7ce2;
-}
-
-/* Responsywność */
-@media (max-width: 768px) {
-  .day-time-selector {
-    flex-direction: column;
-  }
-}
 
 
     </style>
@@ -791,28 +727,37 @@ display: flex;
     </form>
   </div>
 
- 
   <!-- Dostępność Treningów Grupowych -->
-  <div class="group-training-availability">
-    <h3>Dostępność Treningów Grupowych (max 7 osób)</h3>
-    <p>Proszę wybrać dni, godziny dostępności oraz liczbę miejsc dla treningów grupowych:</p>
-    <div class="day-time-selector">
-      <!-- Checkboxy dla dni tygodnia -->
-      <label class="day-selector"><input type="checkbox" name="groupDays" value="Monday"> Poniedziałek</label>
-      <label class="day-selector"><input type="checkbox" name="groupDays" value="Tuesday"> Wtorek</label>
+<div class="group-training-availability">
+  <h3>Dostępność Treningów Grupowych (max 7 osób)</h3>
+  <p>Proszę wybrać dni, godziny dostępności oraz liczbę miejsc dla treningów grupowych:</p>
+  <form id="groupTrainingForm">
+    <!-- Checkboxy dla dni tygodnia -->
+    <div class="day-selector">
+      <label><input type="checkbox" name="groupDays" value="Monday"> Poniedziałek</label>
+      <label><input type="checkbox" name="groupDays" value="Tuesday"> Wtorek</label>
+	  <label><input type="checkbox" name="groupDays" value="Wednesday"> Środa</label>
+	  <label><input type="checkbox" name="groupDays" value="Thursday"> Czwartek</label>
+	  <label><input type="checkbox" name="groupDays" value="Friday"> Piątek</label>
+	  <label><input type="checkbox" name="groupDays" value="Saturday"> Sobota</label>
+	  <label><input type="checkbox" name="groupDays" value="Sunday"> Niedziela</label>
       <!-- Dodaj kolejne dni tygodnia -->
-      <label class="time-selector">Godzina rozpoczęcia: <input type="time" name="groupStartTime"></label>
-      <label class="time-selector">Godzina zakończenia: <input type="time" name="groupEndTime"></label>
-      <label class="spots-selector">Liczba miejsc: <input type="number" name="groupSpots" min="1" max="7" value="7"></label>
     </div>
-  </div>
+    <!-- Inputy dla godzin -->
+    <label>Godzina rozpoczęcia: <input type="time" name="groupStartTime"></label>
+    <label>Godzina zakończenia: <input type="time" name="groupEndTime"></label>
+    <!-- Pole dla liczby miejsc -->
+    <label>Liczba miejsc: <input type="number" name="groupSpots" min="1" max="7" value="7"></label>
+  </form>
+</div>
 
-  <button class="submit-btn">Aktualizuj Dostępność</button>
+
+  <!-- Przyciski Akcji -->
+  <button class="submit-btn" onclick="submitAvailability()">Aktualizuj Dostępność</button>
 </div>
 
 
 
-  
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
 import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
