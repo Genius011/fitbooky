@@ -1138,6 +1138,26 @@ function updateAvailability() {
   // Tutaj można dodać logikę aktualizacji dostępności, np. wysłanie danych do bazy danych
   console.log('Dostępność zaktualizowana: ', startTime, ' - ', endTime);
 }
+document.addEventListener('DOMContentLoaded', function() {
+  // Reszta kodu, która może być potrzebna do innych funkcji na stronie...
+
+  var toggleAvailabilityIcon = document.getElementById('toggleAvailabilityIcon');
+  if(toggleAvailabilityIcon) {
+    toggleAvailabilityIcon.addEventListener('click', function() {
+      var section = document.getElementById('availabilityManager');
+      var icon = document.getElementById('toggleAvailabilityIcon');
+      
+      // Przełącz wyświetlanie sekcji i obracanie ikony
+      if (section.style.display === "none") {
+        section.style.display = "block";
+        icon.classList.add('rotate-icon');
+      } else {
+        section.style.display = "none";
+        icon.classList.remove('rotate-icon');
+      }
+    });
+  }
+});
 
 
 </script>
