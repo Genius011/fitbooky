@@ -925,13 +925,13 @@ const firebaseConfig = {
             appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
 };
 
-
-
-document.addEventListener('DOMContentLoaded', function() {
-	const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 	const auth = getAuth();
 	const db = getFirestore(app);
 
+
+document.addEventListener('DOMContentLoaded', function() {
+	
   updateDatesForWeek(new Date());
   setupWeekNavigation();
 });
