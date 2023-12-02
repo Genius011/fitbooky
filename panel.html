@@ -708,19 +708,40 @@ display: flex;
   <div class="personal-training-availability">
     <h3>Dostępność Treningów Personalnych</h3>
     <p>Proszę wybrać dni i godziny dostępności dla treningów personalnych:</p>
-    <!-- Tu możesz dodać interfejs do wyboru dni i godzin -->
+    <form id="personalTrainingForm">
+      <!-- Checkboxy dla dni tygodnia -->
+      <div class="day-selector">
+        <label><input type="checkbox" name="personalDays" value="Monday"> Poniedziałek</label>
+        <label><input type="checkbox" name="personalDays" value="Tuesday"> Wtorek</label>
+        <!-- Dodaj kolejne dni tygodnia -->
+      </div>
+      <!-- Inputy dla godzin -->
+      <label>Godzina rozpoczęcia: <input type="time" name="personalStartTime"></label>
+      <label>Godzina zakończenia: <input type="time" name="personalEndTime"></label>
+    </form>
   </div>
 
   <!-- Dostępność Treningów Grupowych -->
   <div class="group-training-availability">
     <h3>Dostępność Treningów Grupowych (max 7 osób)</h3>
     <p>Proszę wybrać dni i godziny dostępności dla treningów grupowych:</p>
-    <!-- Tu możesz dodać interfejs do wyboru dni i godzin -->
+    <form id="groupTrainingForm">
+      <!-- Checkboxy dla dni tygodnia -->
+      <div class="day-selector">
+        <label><input type="checkbox" name="groupDays" value="Monday"> Poniedziałek</label>
+        <label><input type="checkbox" name="groupDays" value="Tuesday"> Wtorek</label>
+        <!-- Dodaj kolejne dni tygodnia -->
+      </div>
+      <!-- Inputy dla godzin -->
+      <label>Godzina rozpoczęcia: <input type="time" name="groupStartTime"></label>
+      <label>Godzina zakończenia: <input type="time" name="groupEndTime"></label>
+    </form>
   </div>
 
   <!-- Przyciski Akcji -->
-  <button class="submit-btn">Aktualizuj Dostępność</button>
+  <button class="submit-btn" onclick="submitAvailability()">Aktualizuj Dostępność</button>
 </div>
+
 
 
 <script type="module">
