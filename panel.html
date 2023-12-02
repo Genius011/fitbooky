@@ -722,21 +722,24 @@ display: flex;
   </div>
 
   <!-- Dostępność Treningów Grupowych -->
-  <div class="group-training-availability">
-    <h3>Dostępność Treningów Grupowych (max 7 osób)</h3>
-    <p>Proszę wybrać dni i godziny dostępności dla treningów grupowych:</p>
-    <form id="groupTrainingForm">
-      <!-- Checkboxy dla dni tygodnia -->
-      <div class="day-selector">
-        <label><input type="checkbox" name="groupDays" value="Monday"> Poniedziałek</label>
-        <label><input type="checkbox" name="groupDays" value="Tuesday"> Wtorek</label>
-        <!-- Dodaj kolejne dni tygodnia -->
-      </div>
-      <!-- Inputy dla godzin -->
-      <label>Godzina rozpoczęcia: <input type="time" name="groupStartTime"></label>
-      <label>Godzina zakończenia: <input type="time" name="groupEndTime"></label>
-    </form>
-  </div>
+<div class="group-training-availability">
+  <h3>Dostępność Treningów Grupowych (max 7 osób)</h3>
+  <p>Proszę wybrać dni, godziny dostępności oraz liczbę miejsc dla treningów grupowych:</p>
+  <form id="groupTrainingForm">
+    <!-- Checkboxy dla dni tygodnia -->
+    <div class="day-selector">
+      <label><input type="checkbox" name="groupDays" value="Monday"> Poniedziałek</label>
+      <label><input type="checkbox" name="groupDays" value="Tuesday"> Wtorek</label>
+      <!-- Dodaj kolejne dni tygodnia -->
+    </div>
+    <!-- Inputy dla godzin -->
+    <label>Godzina rozpoczęcia: <input type="time" name="groupStartTime"></label>
+    <label>Godzina zakończenia: <input type="time" name="groupEndTime"></label>
+    <!-- Pole dla liczby miejsc -->
+    <label>Liczba miejsc: <input type="number" name="groupSpots" min="1" max="7" value="7"></label>
+  </form>
+</div>
+
 
   <!-- Przyciski Akcji -->
   <button class="submit-btn" onclick="submitAvailability()">Aktualizuj Dostępność</button>
