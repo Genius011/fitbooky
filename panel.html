@@ -928,10 +928,9 @@ const firebaseConfig = {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth();
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+	const app = initializeApp(firebaseConfig);
+	const auth = getAuth();
+	const db = getFirestore(app);
 
   updateDatesForWeek(new Date());
   setupWeekNavigation();
