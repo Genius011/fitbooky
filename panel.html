@@ -1237,7 +1237,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-<script>
+
 // Przykład funkcji do pobierania linku z bazy danych
 function fetchUniqueLink() {
     // Tutaj umieść logikę do pobierania linku z bazy danych, na przykład z Firebase
@@ -1248,9 +1248,56 @@ function fetchUniqueLink() {
 
 // Uruchomienie funkcji podczas ładowania strony
 document.addEventListener('DOMContentLoaded', fetchUniqueLink);
-</script>
+
+// Funkcja zapisująca dostępność trenera w bazie danych
+  async function saveAvailability() {
+    const personalTrainingForm = document.getElementById('personalTrainingForm');
+    const groupTrainingForm = document.getElementById('groupTrainingForm');
+
+    // Pobieranie danych z formularzy
+    const personalDays = Array.from(personalTrainingForm['personalDays'])
+                              .filter(input => input.checked)
+                              .map(input => input.value);
+    const personalStartTime = personalTrainingForm['personalStartTime'].value;
+    const personalEndTime = personalTrainingForm['personalEndTime'].value;
+
+    const groupDays = Array.from(groupTrainingForm['groupDays'])
+                           .filter(input => input.checked)
+                           .map(input => input.value);
+    const groupStartTime = groupTrainingForm['groupStartTime'].value;
+    const groupEndTime = groupTrainingForm['groupEndTime'].value;
+    const groupSpots = groupTrainingForm['groupSpots'].value;
+
+    // Przygotowanie danych do zapisu
+    const availabilityData = {
+      personal: {
+        days: personalDays,
+        startTime: personalStartTime,
+        endTime: personalEndTime
+      },
+      group: {
+        days: groupDays,
+        startTime: groupStartTime,
+        endTime: groupEndTime,
+        spots: groupSpots
+      }
+    };
+
+    try {
+      // Zapisywanie danych w bazie Firebase - tutaj zastąp 'trainerId' odpowiednim ID trenera
+      await setDoc(doc(db, 'trainers', 'trainerId'), availabilityData);
+      console.log('Dostępność zapisana pomyślnie!');
+    } catch (error) {
+      console.error('Wystąpił błąd podczas zapisywania dostępności:', error);
+    }
+  }
+
+  // Przypisanie funkcji do przycisku aktualizacji dostępności
+  document.querySelector('.submit-btn').addEventListener('click', saveAvailability);
 
 </script>
+
+
 
 </body>
 </html>
