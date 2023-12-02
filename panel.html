@@ -1296,6 +1296,8 @@ document.addEventListener('DOMContentLoaded', fetchUniqueLink);
   document.querySelector('.submit-btn').addEventListener('click', saveAvailability);
 
 // Funkcja do obsługi zgłoszenia formularza
+window.submitAvailability = async function() {
+
 async function submitAvailability() {
   const personalTrainingForm = document.getElementById('personalTrainingForm');
   const groupTrainingForm = document.getElementById('groupTrainingForm');
@@ -1346,12 +1348,12 @@ async function submitAvailability() {
   }
 }
 
-// Dodanie nasłuchiwacza zdarzeń do przycisku, jeśli wolisz nie używać atrybutu onclick w HTML
-document.addEventListener('DOMContentLoaded', () => {
+/document.addEventListener('DOMContentLoaded', () => {
   const submitButton = document.querySelector('.submit-btn');
-  submitButton.addEventListener('click', submitAvailability);
+  if(submitButton) {
+    submitButton.addEventListener('click', window.submitAvailability);
+  }
 });
-
 
 </script>
 
