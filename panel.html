@@ -658,9 +658,9 @@ display: flex;
     </section>
 	
 	<!-- Sekcja do rozwijania Dostępność -->
-<div class="toggle-section toggle-finances">
-  <i id="toggleFinancesIcon" class="fas fa-chevron-down"></i>
-  <span>Dostępność</span>
+<div class="toggle-section toggle-availability">
+  <i id="toggleAvailabilityIcon" class="fas fa-chevron-down"></i>
+  <span>Zarządzanie dostępnością</span>
 </div>
 
 <section id="availabilityManager" class="section" style="display: none;">
@@ -1116,6 +1116,29 @@ onAuthStateChanged(auth, (user) => {
         // ... existing code ...
     }
 });
+
+document.getElementById('toggleAvailabilityIcon').addEventListener('click', function() {
+  var section = document.getElementById('availabilityManager');
+  var icon = document.getElementById('toggleAvailabilityIcon');
+  
+  // Przełącz wyświetlanie sekcji i obracanie ikony
+  if (section.style.display === "none") {
+    section.style.display = "block";
+    icon.classList.add('rotate-icon');
+  } else {
+    section.style.display = "none";
+    icon.classList.remove('rotate-icon');
+  }
+});
+
+function updateAvailability() {
+  var startTime = document.getElementById('start-time').value;
+  var endTime = document.getElementById('end-time').value;
+  
+  // Tutaj można dodać logikę aktualizacji dostępności, np. wysłanie danych do bazy danych
+  console.log('Dostępność zaktualizowana: ', startTime, ' - ', endTime);
+}
+
 
 </script>
 
