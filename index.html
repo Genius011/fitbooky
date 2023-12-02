@@ -69,11 +69,13 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     transition: box-shadow 0.3s, transform 0.3s;
 }
-
+.calendar-container .time-slot.selected {
+    background-color: #6e8efb !important;
+}
 .day:hover, .time-slot:hover {
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     transform: translateY(-2px);
-	background-color: #6e8efb ;
+	
 }
 
 .inactive, .time-slot.disabled {
@@ -314,9 +316,7 @@
     display: none; /* Hide by default */
 }
 
-.calendar-container .time-slot.selected {
-    background-color: #6e8efb !important;
-}
+
 
 
 </style>
