@@ -638,9 +638,9 @@ bookButton.addEventListener('click', async () => {
                 timeSlot.onclick = function() {
                     container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
                     timeSlot.classList.add('selected');
-                };
-            }
-        });
+                });
+    });
+  });
 
         container.appendChild(timeSlot);
     }
@@ -658,6 +658,7 @@ bookButton.addEventListener('click', async () => {
         slot.classList.add('selected');
                 };
             });
+			
         }
 
         function enableGroupTrainingSlots(popup, selectedDay) {
