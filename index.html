@@ -17,6 +17,9 @@
     height: 100vh;
 }
 
+.time-slot.selected {
+	background: #6e8efb;
+	}
 
 .calendar-container, .popup-content {
     background-color: #fff;
@@ -649,16 +652,16 @@ bookButton.addEventListener('click', async () => {
 
 
 
-      document.addEventListener('DOMContentLoaded', function() {
-    const timeSlots = document.querySelectorAll('.time-slot');
-
-    timeSlots.forEach(slot => {
-      slot.addEventListener('click', function() {
-        timeSlots.forEach(s => s.classList.remove('selected'));
-        slot.classList.add('selected');
-      });
-    });
-  });
+        function enableAllTimeSlots(popup) {
+            const timeSlots = popup.querySelectorAll('.time-slot');
+            timeSlots.forEach(slot => {
+                slot.classList.remove('disabled');
+                slot.onclick = function() {
+                    timeSlots.forEach(s => s.classList.remove('selected'));
+                    slot.classList.add('selected');
+                };
+            });
+        }
 
         function enableGroupTrainingSlots(popup, selectedDay) {
             const timeSlots = popup.querySelectorAll('.time-slot');
@@ -729,7 +732,6 @@ document.getElementById('logout').addEventListener('click', () => {
         console.error('Logout failed', error);
     });
 });
-
 
 	
 </script>
