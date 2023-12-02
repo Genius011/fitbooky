@@ -657,16 +657,25 @@ display: flex;
         </table>
     </section>
 	
-	<!-- Sekcja do rozwijania Finanse -->
+	<!-- Sekcja do rozwijania Dostępność -->
 <div class="toggle-section toggle-finances">
   <i id="toggleFinancesIcon" class="fas fa-chevron-down"></i>
-  <span>Finanse</span>
+  <span>Dostępność</span>
 </div>
 
+<section id="availabilityManager" class="section" style="display: none;">
+  <!-- Tutaj można dodać interfejs zarządzania godzinami pracy -->
+  <p>Tutaj trener może zarządzać swoimi godzinami dostępności.</p>
+  <!-- Przykładowy interfejs z przyciskami i polami tekstowymi -->
+  <div>
+    <label for="start-time">Czas rozpoczęcia:</label>
+    <input type="time" id="start-time" name="start-time">
+    <label for="end-time">Czas zakończenia:</label>
+    <input type="time" id="end-time" name="end-time">
+    <button onclick="updateAvailability()">Aktualizuj</button>
+  </div>
+</section>
 
-<!-- Kontener Finanse -->
-
-</div>
 <div id="profileModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
