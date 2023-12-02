@@ -1295,6 +1295,64 @@ document.addEventListener('DOMContentLoaded', fetchUniqueLink);
   // Przypisanie funkcji do przycisku aktualizacji dostępności
   document.querySelector('.submit-btn').addEventListener('click', saveAvailability);
 
+// Funkcja do obsługi zgłoszenia formularza
+async function submitAvailability() {
+  const personalTrainingForm = document.getElementById('personalTrainingForm');
+  const groupTrainingForm = document.getElementById('groupTrainingForm');
+  
+  // Zbieranie danych o dostępności treningów personalnych
+  const personalDays = Array.from(personalTrainingForm.querySelectorAll("input[name='personalDays']:checked")).map(input => input.value);
+  const personalStartTime = personalTrainingForm['personalStartTime'].value;
+  const personalEndTime = personalTrainingForm['personalEndTime'].value;
+  
+  // Zbieranie danych o dostępności treningów grupowych
+  const groupDays = Array.from(groupTrainingForm.querySelectorAll("input[name='groupDays']:checked")).map(input => input.value);
+  const groupStartTime = groupTrainingForm['groupStartTime'].value;
+  const groupEndTime = groupTrainingForm['groupEndTime'].value;
+  const groupSpots = groupTrainingForm['groupSpots'].value;
+  
+  // Przygotowanie obiektów do zapisania
+  const personalAvailability = {
+    days: personalDays,
+    startTime: personalStartTime,
+    endTime: personalEndTime
+  };
+  
+  const groupAvailability = {
+    days: groupDays,
+    startTime: groupStartTime,
+    endTime: groupEndTime,
+    spots: groupSpots
+  };
+
+  // Tutaj możesz dodać ID trenera lub uzyskać je z sesji użytkownika, jeśli jest zalogowany
+  const trainerId = 'twojeIdTrenera';
+
+  try {
+    // Zapis do bazy danych Firestore
+    const db = firebase.firestore(); // Inicjalizacja Firestore
+    const trainerRef = db.collection('trainers').doc(trainerId);
+    
+    // Aktualizacja dokumentu trenera z nową dostępnością
+    await trainerRef.set({
+      personalAvailability,
+      groupAvailability
+    }, { merge: true });
+
+    alert('Dostępność została zaktualizowana.');
+  } catch (error) {
+    console.error('Błąd przy aktualizacji dostępności:', error);
+    alert('Wystąpił błąd przy aktualizacji dostępności.');
+  }
+}
+
+// Dodanie nasłuchiwacza zdarzeń do przycisku, jeśli wolisz nie używać atrybutu onclick w HTML
+document.addEventListener('DOMContentLoaded', () => {
+  const submitButton = document.querySelector('.submit-btn');
+  submitButton.addEventListener('click', submitAvailability);
+});
+
+
 </script>
 
 
