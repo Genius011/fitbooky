@@ -371,9 +371,13 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
         };
 
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-const db = getFirestore(app);
+	const app = initializeApp(firebaseConfig);
+	const auth = getAuth(app);
+	const db = getFirestore(app);
+	
+	let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
+    let trainerUID = null;
+	
 
      // Logout function
   logoutButton.addEventListener('click', () => {
@@ -406,8 +410,6 @@ function fetchAndSetTrainerUID(userId) {
   });
 }
 	
-	let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
-    let trainerUID = null;
 	
 	onAuthStateChanged(auth, (user) => {
   if (user) {
