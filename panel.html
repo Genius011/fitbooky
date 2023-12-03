@@ -6,7 +6,6 @@
     <title>Panel Trenera</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
 
 	<style>
         body {
@@ -602,90 +601,7 @@ display: flex;
 #trainerPanelLink {
     display: none; /* Hide by default */
 }
-.availability-section {
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-top: 30px;
-}
 
-.availability-section h2 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.availability-section h3 {
-  color: #555;
-  margin-bottom: 10px;
-}
-
-.personal-training-availability,
-.group-training-availability {
-  margin-bottom: 20px;
-}
-
-.submit-btn {
-  background-color: #6e8efb;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  margin: 10px 2px;
-  cursor: pointer;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.submit-btn:hover {
-  background-color: #5d7ce2;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.manager-section {
-        background-color: #f2f2f2;
-        border-radius: 8px;
-        padding: 20px;
-        margin-top: 20px;
-    }
-    .manager-section h2 {
-        color: #333;
-    }
-    .manager-section input[type="email"] {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 4px;
-        border: 1px solid #ddd;
-    }
-    .manager-section button {
-        background-color: #5d7ce2;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-    .manager-section button:hover {
-        background-color: #6e8efb;
-    }
-
- .link-section {
-        margin-top: 20px;
-    }
-    .link-section input[type="text"] {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #ccc;
-        background-color: #e9e9e9;
-        color: #333;
-        cursor: pointer;
-    }
 
     </style>
 </head>
@@ -699,7 +615,7 @@ display: flex;
 	<div class="toggle-today-bookings">
   <i id="toggleTodayBookingsIcon" class="fas fa-chevron-down"></i>  Dzisiejsze rezerwacje
 </div>
-<section id="todayBookingsManager" class="section" style="display: block;">
+<section id="todayBookingsManager" class="section" style="display: none;">
   <table id="todayBookingsTable">
     <thead>
       <tr>
@@ -718,11 +634,213 @@ display: flex;
   </table>
 </section>
 	
+	<div class="toggle-availability">
+  <i id="toggleIcon" class="fas fa-chevron-down"></i> Zarządzanie dostępnością
+</div>
+
+
+<!-- Sekcja do zwijania/rozwijania -->
+<section id="availabilityManager" class="section" style="display: none;">
+        
+        <section id="availabilityManager" class="section">
+    
+    <div class="separator"></div>
+    <div id="dailyAvailability">
+       
+<!-- Navigation Buttons -->
+<div class="week-navigation">
+    <button id="prevWeek">Poprzedni Tydzień</button>
+    <button id="nextWeek">Następny Tydzień</button>
+</div>
+	   
+<div id="availability-wrapper">
+    <!-- Przykład dla poniedziałku, powtórz strukturę dla każdego dnia tygodnia -->
+    <div class="day-column">
+	<h3>Pon</h3>
+	 <div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Monday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="monday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="monday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="monday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="monday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="monday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="monday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="monday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="monday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="monday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="monday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="monday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="monday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="monday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="monday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="monday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="monday-hours" value="21:00"> 21:00</label>
+        </div>
+    </div>
+    <div class="day-column">
+	<h3>Wt</h3>
+	<div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Tuesday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="tuesday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="tuesday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="21:00"> 21:00</label>
+        </div>
+</div>
+<div class="day-column">
+<h3>Śr</h3>
+<div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Wednesday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="wednesday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="wednesday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="21:00"> 21:00</label>
+        </div>
+</div>
+<div class="day-column">
+<h3>Czw</h3>
+<div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Thursday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="thursday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="thursday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="21:00"> 21:00</label>
+        </div>
+</div>
+<div class="day-column">
+<h3>Pt</h3>
+<div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Friday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="friday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="friday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="friday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="friday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="friday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="friday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="friday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="friday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="friday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="friday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="friday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="friday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="friday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="friday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="friday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="friday-hours" value="21:00"> 21:00</label>
+        </div>
+</div>
+<div class="day-column">
+<h3>Sb</h3>
+<div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Saturday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="saturday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="saturday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="21:00"> 21:00</label>
+        </div>
+</div>
+<div class="day-column">
+<h3>Nd</h3>
+<div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Sunday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="sunday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="sunday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="21:00"> 21:00</label>
+        </div>
+</div>
+
+    <button id="updateAvailability" class="submit-btn">Aktualizuj Dostępność</button>
+</section>
+
+    </section>
+
     
         <div class="toggle-future-bookings">
   <i id="toggleFutureBookingsIcon" class="fas fa-chevron-down"></i> Wszystkie rezerwacje
 </div>
-<section id="bookingManager" class="section" style="display: block;">
+<section id="bookingManager" class="section" style="display: none;">
 
         <table id="futureBookingsTable">
             <thead>
@@ -741,87 +859,50 @@ display: flex;
         </table>
     </section>
 	
-	<!-- Sekcja Zarządzania Dostępnością -->
-<div id="availabilitySection" class="availability-section">
-  <h2>Zarządzanie Dostępnością</h2>
+	<!-- Sekcja do rozwijania Finanse -->
+<div class="toggle-section toggle-finances">
+  <i id="toggleFinancesIcon" class="fas fa-chevron-down"></i>
+  <span>Finanse</span>
+</div>
 
-  <div>
-    <span class="date-display"></span>
-    <span class="date-display"></span>
-    <span class="date-display"></span>
-    <!-- Dodaj więcej elementów span z klasą date-display -->
-  </div>
-  
-  <div class="personal-training-availability">
-    <h3>Dostępność Treningów Personalnych</h3>
-    <p>Proszę wybrać dni i godziny dostępności dla treningów personalnych:</p>
-    <form id="personalTrainingForm">
-      <!-- Checkboxy dla dni tygodnia -->
-      <div class="day-selector">
-        <label><input type="checkbox" name="personalDays" value="Monday"> Poniedziałek</label>
-        <label><input type="checkbox" name="personalDays" value="Tuesday"> Wtorek</label>
-		<label><input type="checkbox" name="personalDays" value="Wednesday"> Środa</label>
-		<label><input type="checkbox" name="personalDays" value="Thursday"> Czwartek</label>
-		<label><input type="checkbox" name="personalDays" value="Friday"> Piątek</label>
-		<label><input type="checkbox" name="personalDays" value="Saturday"> Sobota</label>
-		<label><input type="checkbox" name="personalDays" value="Sunday"> Niedziela</label>
-        <!-- Dodaj kolejne dni tygodnia -->
-      </div>
-      <!-- Inputy dla godzin -->
-      <label>Godzina rozpoczęcia: <input type="time" name="personalStartTime"></label>
-      <label>Godzina zakończenia: <input type="time" name="personalEndTime"></label>
-    </form>
-  </div>
 
-  <!-- Dostępność Treningów Grupowych -->
-<div class="group-training-availability">
-  <h3>Dostępność Treningów Grupowych (max 7 osób)</h3>
-  <p>Proszę wybrać dni, godziny dostępności oraz liczbę miejsc dla treningów grupowych:</p>
-  <form id="groupTrainingForm">
-    <!-- Checkboxy dla dni tygodnia -->
-    <div class="day-selector">
-      <label><input type="checkbox" name="groupDays" value="Monday"> Poniedziałek</label>
-      <label><input type="checkbox" name="groupDays" value="Tuesday"> Wtorek</label>
-	  <label><input type="checkbox" name="groupDays" value="Wednesday"> Środa</label>
-	  <label><input type="checkbox" name="groupDays" value="Thursday"> Czwartek</label>
-	  <label><input type="checkbox" name="groupDays" value="Friday"> Piątek</label>
-	  <label><input type="checkbox" name="groupDays" value="Saturday"> Sobota</label>
-	  <label><input type="checkbox" name="groupDays" value="Sunday"> Niedziela</label>
-      <!-- Dodaj kolejne dni tygodnia -->
+<!-- Kontener Finanse -->
+
+</div>
+<div id="profileModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Client`s Profile</h2>
+    <div id="profileDetails">
+      <!-- Dane profilowe zostaną wypełnione tutaj -->
     </div>
-    <!-- Inputy dla godzin -->
-    <label>Godzina rozpoczęcia: <input type="time" name="groupStartTime"></label>
-    <label>Godzina zakończenia: <input type="time" name="groupEndTime"></label>
-    <!-- Pole dla liczby miejsc -->
-    <label>Liczba miejsc: <input type="number" name="groupSpots" min="1" max="7" value="7"></label>
+  </div>
+</div>
+
+<div class="toggle-section toggle-group-training">
+  <i id="toggleGroupTrainingIcon" class="fas fa-chevron-down"></i>
+  <span>Zarządzanie miejscami na trening grupowy</span>
+</div>
+
+<section id="groupTrainingManager" class="section" style="display: none;">
+  <form id="groupTrainingForm">
+    <div class="day-container">
+      <!-- Powtórz poniższą strukturę dla każdego dnia tygodnia -->
+      <div class="day-column">
+        <h3>Poniedziałek</h3>
+        <label for="monday-spots">Miejsca: </label>
+        <input type="number" id="monday-spots" name="monday" min="0">
+      </div>
+      <!-- Dodaj kolejne dni tygodnia tutaj... -->
+    </div>
+    <button type="submit" class="submit-btn">Zapisz zmiany</button>
   </form>
-</div>
-
-
-  <!-- Przyciski Akcji -->
-  <button class="submit-btn" onclick="submitAvailability()">Aktualizuj Dostępność</button>
-</div>
-
-<section class="link-section">
-    <h2>Twój unikalny link</h2>
-    <!-- Pole z linkiem, które będzie zaktualizowane dynamicznie -->
-    <input type="text" value="Pobieranie linku..." id="uniqueLink" readonly>
-    <!-- Przycisk do kopiowania linku -->
-    <button id="copyLinkBtn"><i class="fas fa-copy"></i> Skopiuj</button>
 </section>
 
-
-
-    <h2>Wprowadź mail swojego kierownika</h2>
-    <input type="email" id="managerEmail" placeholder="Email kierownika">
-    <button onclick="submitManagerEmail()">Wyślij</button>
-</section>
 
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
-import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
-
 import { 
   getFirestore, 
   collection, 
@@ -843,12 +924,10 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-	const auth = getAuth();
-	const db = getFirestore(app);
-
+const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', function() {
-	
+  
   updateDatesForWeek(new Date());
   setupWeekNavigation();
 });
@@ -857,12 +936,7 @@ function updateDatesForWeek(current) {
   let currentDay = new Date(current.setDate(current.getDate() - current.getDay() + 1));
   for (let i = 0; i < 7; i++) {
     const dateSpan = document.querySelectorAll('.date-display')[i];
-    if (dateSpan) {
-  dateSpan.textContent = formatDate(currentDay);
-} else {
-  console.error('Element .date-display nie został znaleziony');
-}
-
+    dateSpan.textContent = formatDate(currentDay);
     currentDay.setDate(currentDay.getDate() + 1);
   }
 }
@@ -1253,58 +1327,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-
-// Obsługa kliknięcia przycisku kopiowania
-copyLinkBtn.addEventListener('click', () => {
-    uniqueLinkField.select();
-    document.execCommand('copy');
-    alert('Link został skopiowany do schowka!');
-});
-
-const uniqueLinkField = document.getElementById('uniqueLink');
-
-// Użytkownik jest trenerem (musisz to dostosować do swojej logiki autentyfikacji)
-const isTrainer = true; // Zmień na odpowiedni warunek sprawdzający, czy zalogowany użytkownik jest trenerem
-
-document.addEventListener('DOMContentLoaded', () => {
-  const copyLinkBtn = document.getElementById('copyLinkBtn');
-  if (copyLinkBtn) {
-    copyLinkBtn.addEventListener('click', () => {
-      const uniqueLinkField = document.getElementById('uniqueLink');
-      const linkToCopy = uniqueLinkField.value;
-      if (linkToCopy && linkToCopy !== 'Pobieranie linku...') {
-        navigator.clipboard.writeText(linkToCopy)
-          .then(() => {
-            alert('Link skopiowany do schowka');
-          })
-          .catch((err) => {
-            alert('Błąd podczas kopiowania: ', err);
-          });
-      }
-    });
-  } else {
-    console.error('Element #copyLinkBtn nie został znaleziony');
-  }
-});
-
-
-  // Funkcja do kopiowania linku do schowka
-  copyLinkBtn.addEventListener('click', () => {
-    const linkToCopy = uniqueLinkField.value;
-    if (linkToCopy && linkToCopy !== 'Brak linku') {
-      navigator.clipboard.writeText(linkToCopy).then(() => {
-        alert('Link skopiowany do schowka');
-      }).catch((err) => {
-        alert('Błąd podczas kopiowania: ', err);
-      });
-    }
-  });
-
-
-
 </script>
-
-
 
 </body>
 </html>
