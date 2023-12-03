@@ -877,6 +877,11 @@ display: flex;
   <span>Zarządzanie miejscami na trening grupowy</span>
 </div>
 
+<div id="uniqueLinkSection" class="unique-link-container">
+  <h2>Twój unikalny link</h2>
+  <p id="uniqueLink">Ładowanie linku...</p>
+</div>
+
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
@@ -1279,6 +1284,25 @@ async function savePrice(bookingId) {
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
+// Zakładam, że zmienna 'trainerId' jest już zdefiniowana wcześniej w Twoim skrypcie
+// i zawiera ID zalogowanego trenera.
+
+const uniqueLinkEl = document.getElementById('uniqueLink');
+
+getDoc(doc(db, 'trainers', trainerId))
+  .then(docSnap => {
+    if (docSnap.exists()) {
+      // Pobierz link i ustaw tekst elementu uniqueLinkEl
+      const trainerData = docSnap.data();
+      uniqueLinkEl.textContent = trainerData.registrationLink;
+    } else {
+      uniqueLinkEl.textContent = 'Nie znaleziono linku trenera.';
+    }
+  })
+  .catch(error => {
+    console.error('Błąd podczas pobierania unikalnego linku:', error);
+    uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania linku.';
+  });
 
 
 </script>
