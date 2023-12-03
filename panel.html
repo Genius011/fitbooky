@@ -852,6 +852,9 @@ function updateDatesForWeek(current) {
   for (let i = 0; i < 7; i++) {
     const dateSpan = document.querySelectorAll('.date-display')[i];
     dateSpan.textContent = formatDate(currentDay);
+	} else {
+  console.error('Element .date-display nie został znaleziony');
+}
     currentDay.setDate(currentDay.getDate() + 1);
   }
 }
