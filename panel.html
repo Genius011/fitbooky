@@ -900,6 +900,7 @@ import {
   updateDoc, 
   deleteDoc,
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
 
 
 const firebaseConfig = {
@@ -913,6 +914,33 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // Użytkownik jest zalogowany.
+    const UID = user.uid;
+    // Pobierz link trenera używając UID.
+    getTrainerLink(UID);
+	displayTodayBookings(UID);
+  } else {
+    // Użytkownik nie jest zalogowany, opcjonalnie przekieruj do strony logowania.
+    // window.location.href = '/login.html';
+  }
+});
+
+async function displayTodayBookings(trainerId) {
+  const bookingsRef = collection(db, 'bookings');
+  const todayBookingsTableBody = document.getElementById('todayBookingsTable').querySelector('tbody');
+  const todayFormatted = formatDate(new Date());
+
+  try {
+    const bookingSnapshot = await getDocs(bookingsRef);
+    const bookings = bookingSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -1062,30 +1090,28 @@ async function displayTodayBookings() {
 		  
 		          const priceValue = bookingData.price ? bookingData.price : '';
 
-          bookingRow.innerHTML = `
-          <td>${userData.firstName || ''}</td>
-          <td>${userData.lastName || ''}</td>
-          <td>${bookingData.time}</td>
-          <td>${bookingData.date}</td>
-          <td>${bookingData.trainingType}</td>
-          <td class="price-container">
-            <input type="number" class="trainingPrice" id="price-${bookingData.id}" value="${priceValue}" placeholder="Cena w PLN" />
-            <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
-              <i class="fa fa-check"></i>
-            </button>
-          </td>
-              <td>
-    <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
-      <i class="fas fa-user"></i> <!-- Ikonka profilu -->
-    </button>
-  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
-            <i class="fas fa-times"></i>
-        </button>
-  
-  </td>
+               bookingRow.innerHTML = `
+            <td>${userData.firstName || ''}</td>
+            <td>${userData.lastName || ''}</td>
+            <td>${bookingData.time}</td>
+            <td>${bookingData.date}</td>
+            <td>${bookingData.trainingType}</td>
+            <td class="price-container">
+              <input type="number" class="trainingPrice" id="price-${bookingData.id}" value="${priceValue}" placeholder="Cena w PLN" />
+              <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
+                <i class="fa fa-check"></i>
+              </button>
+            </td>
+            <td>
+              <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
+                <i class="fas fa-user"></i>
+              </button>
+              <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
+                <i class="fas fa-times"></i>
+              </button>
+            </td>
           `;
 
-          // Dodawanie wierszy do tabeli dzisiejszych rezerwacji
           todayBookingsTableBody.appendChild(bookingRow);
         }
       });
@@ -1336,6 +1362,27 @@ getDoc(doc(db, 'trainers', trainerId))
     console.error('Błąd podczas pobierania unikalnego linku:', error);
     uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania linku.';
   });
+
+function getTrainerLink(UID) {
+  const uniqueLinkEl = document.getElementById('uniqueLink');
+
+  getDoc(doc(db, 'trainers', UID))
+    .then(docSnap => {
+      if (docSnap.exists()) {
+        // Pobierz link i ustaw tekst elementu uniqueLinkEl.
+        const trainerData = docSnap.data();
+        uniqueLinkEl.textContent = trainerData.registrationLink;
+      } else {
+        // Nie znaleziono dokumentu dla danego UID.
+        uniqueLinkEl.textContent = 'Nie znaleziono linku trenera.';
+      }
+    })
+    .catch(error => {
+      // Wystąpił błąd podczas pobierania dokumentu.
+      console.error('Błąd podczas pobierania unikalnego linku:', error);
+      uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania linku.';
+    });
+}
 
 
 </script>
