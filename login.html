@@ -335,6 +335,7 @@ loginForm.addEventListener('submit', function(e) {
       getDocs(trainerQuery)
         .then((querySnapshot) => {
           if (!querySnapshot.empty) {
+            // Użytkownik jest trenerem, przekieruj na panel trenera
             const trainerDoc = querySnapshot.docs[0];
             const trainerId = trainerDoc.id;
 
@@ -342,15 +343,13 @@ loginForm.addEventListener('submit', function(e) {
             const redirectUrl = `https://www.fitbooky.com/panel.html?trainerId=${trainerId}`;
             window.location.href = redirectUrl;
           } else {
-            console.error('Nie znaleziono trenera o podanym UID.');
+            // Użytkownik nie jest trenerem, przekieruj go na inną stronę
+            window.location.href = 'index.html'; // Możesz przekierować gdziekolwiek indziej
           }
         })
         .catch((error) => {
           console.error('Błąd podczas pobierania trenera z Firestore:', error);
         });
-
-      alert('Login successful!');
-      window.location.href = 'index.html'; // Przekierowanie do index.html
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -358,6 +357,7 @@ loginForm.addEventListener('submit', function(e) {
       alert('Error: ' + errorMessage);
     });
 });
+
 
 
     // Obsługa rejestracji
