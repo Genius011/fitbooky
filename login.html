@@ -340,7 +340,7 @@ loginForm.addEventListener('submit', function(e) {
             const trainerId = trainerDoc.id;
 
             // Przekierowanie na panel trenera z przekazanym trainerID
-            const redirectUrl = `https://www.fitbooky.com/panel.html?trainerId=${trainerId}`;
+            const redirectUrl = `https://www.fitbooky.com/panel.html?UID=${UID}`;
             window.location.href = redirectUrl;
           } else {
             // Użytkownik nie jest trenerem, przekieruj go na inną stronę
