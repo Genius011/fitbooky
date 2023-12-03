@@ -319,15 +319,15 @@
 });
 
     // Obsługa logowania
-    loginForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const email = loginForm.querySelector('input[type="email"]').value;
-      const password = loginForm.querySelector('input[type="password"]').value;
+loginForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  const email = loginForm.querySelector('input[type="email"]').value;
+  const password = loginForm.querySelector('input[type="password"]').value;
 
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          console.log('Logged in user:', userCredential.user);
-		   const uid = userCredential.user.uid;
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      console.log('Logged in user:', userCredential.user);
+      const uid = userCredential.user.uid;
 
       const trainersRef = collection(firestore, 'trainers');
       const trainerQuery = query(trainersRef, where('UID', '==', uid));
@@ -348,15 +348,17 @@
         .catch((error) => {
           console.error('Błąd podczas pobierania trenera z Firestore:', error);
         });
-          alert('Login successful!');
-          window.location.href = 'index.html'; // Przekierowanie do index.html
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          alert('Error: ' + errorMessage);
-        });
+
+      alert('Login successful!');
+      window.location.href = 'index.html'; // Przekierowanie do index.html
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      alert('Error: ' + errorMessage);
     });
+});
+
 
     // Obsługa rejestracji
 registrationForm.addEventListener('submit', function(e) {
