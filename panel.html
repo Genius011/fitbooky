@@ -1295,12 +1295,7 @@ document.addEventListener('DOMContentLoaded', fetchUniqueLink);
   // Przypisanie funkcji do przycisku aktualizacji dostępności
   document.querySelector('.submit-btn').addEventListener('click', saveAvailability);
 
-document.addEventListener('DOMContentLoaded', () => {
-  const submitButton = document.querySelector('.submit-btn');
-  if(submitButton) {
-    submitButton.addEventListener('click', window.submitAvailability);
-  }
-});
+
 
 // Funkcja do obsługi zgłoszenia formularza
 window.submitAvailability = async function() {
@@ -1353,9 +1348,14 @@ async function submitAvailability() {
     console.error('Błąd przy aktualizacji dostępności:', error);
     alert('Wystąpił błąd przy aktualizacji dostępności.');
   }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const submitButton = document.querySelector('.submit-btn');
+  if(submitButton) {
+    submitButton.addEventListener('click', window.submitAvailability);
+  }
 });
-
-
 
 </script>
 
