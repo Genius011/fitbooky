@@ -395,6 +395,19 @@ const db = getFirestore(app);
 
     let trainerUID = null;
 	
+	// Funkcja, która pobiera i ustawia trainerUID
+function fetchAndSetTrainerUID(userId) {
+  return getDoc(doc(db, 'users', userId)).then(docSnap => {
+    if (docSnap.exists()) {
+      const userData = docSnap.data();
+      trainerUID = userData.UID; // Zapisz UID trenera
+      return trainerUID; // Zwróć UID dla dalszego użycia
+    } else {
+      throw new Error('Nie znaleziono dokumentu użytkownika.');
+    }
+  });
+}
+	
 	onAuthStateChanged(auth, (user) => {
         if (user) {
             currentUserId = user.uid;
