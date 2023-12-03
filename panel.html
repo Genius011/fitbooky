@@ -913,6 +913,33 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', function() {
+
+// Pobranie trainerId z URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const trainerId = urlParams.get('trainerId');
+
+  // Jeśli trainerId istnieje, wykonaj resztę kodu
+  if (trainerId) {
+    const uniqueLinkEl = document.getElementById('uniqueLink');
+
+    getDoc(doc(db, 'trainers', trainerId))
+      .then(docSnap => {
+        if (docSnap.exists()) {
+          // Pobierz link i ustaw tekst elementu uniqueLinkEl
+          const trainerData = docSnap.data();
+          uniqueLinkEl.textContent = trainerData.registrationLink;
+        } else {
+          uniqueLinkEl.textContent = 'Nie znaleziono linku trenera.';
+        }
+      })
+      .catch(error => {
+        console.error('Błąd podczas pobierania unikalnego linku:', error);
+        uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania linku.';
+      });
+  } else {
+    // Możesz chcieć obsłużyć przypadki, gdy trainerId nie jest dostępne
+    console.error('Trainer ID is not defined in the URL parameters.');
+  }
   
   updateDatesForWeek(new Date());
   setupWeekNavigation();
