@@ -805,6 +805,7 @@ display: flex;
 </section>
 
 
+
     <h2>Wprowadź mail swojego kierownika</h2>
     <input type="email" id="managerEmail" placeholder="Email kierownika">
     <button onclick="submitManagerEmail()">Wyślij</button>
@@ -1253,20 +1254,43 @@ const uniqueLinkField = document.getElementById('uniqueLink');
 const copyLinkBtn = document.getElementById('copyLinkBtn');
 
 // Pobierz unikalny link trenera z bazy danych
-if (isTrainer) {
-    const uniqueLinkRef = doc(firestore, 'trainers', user.uid);
-    getDoc(uniqueLinkRef)
-        .then((docSnap) => {
-            if (docSnap.exists()) {
-                const trainerData = docSnap.data();
-                const registrationLink = trainerData.registrationLink;
-                uniqueLinkField.value = registrationLink;
-            }
-        })
-        .catch((error) => {
-            console.error('Błąd podczas pobierania unikalnego linku:', error);
-        });
-}
+document.addEventListener('DOMContentLoaded', (event) => {
+    // Załóżmy, że `isTrainer` i `user` są już zdefiniowane w Twoim kodzie
+    if (isTrainer) {
+        const uniqueLinkField = document.getElementById('uniqueLink');
+        const firestore = firebase.firestore(); // Inicjalizacja firestore, jeśli już nie jest zainicjalizowana
+        const uniqueLinkRef = doc(firestore, 'trainers', user.uid);
+
+        getDoc(uniqueLinkRef)
+            .then((docSnap) => {
+                if (docSnap.exists()) {
+                    const trainerData = docSnap.data();
+                    const registrationLink = trainerData.registrationLink;
+                    uniqueLinkField.value = registrationLink; // Ustawienie wartości w polu input
+                } else {
+                    uniqueLinkField.value = 'Brak linku';
+                }
+            })
+            .catch((error) => {
+                console.error('Błąd podczas pobierania unikalnego linku:', error);
+                uniqueLinkField.value = 'Błąd podczas pobierania linku';
+            });
+    }
+
+    // Funkcja do kopiowania linku do schowka
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
+    copyLinkBtn.addEventListener('click', () => {
+        const linkToCopy = uniqueLinkField.value;
+        if (linkToCopy) {
+            navigator.clipboard.writeText(linkToCopy).then(() => {
+                alert('Link skopiowany do schowka');
+            }).catch((err) => {
+                alert('Błąd podczas kopiowania: ', err);
+            });
+        }
+    });
+});
+
 
 </script>
 
