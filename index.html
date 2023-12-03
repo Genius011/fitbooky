@@ -438,18 +438,8 @@ function fetchAndSetTrainerUID(userId) {
         console.log("Nie znaleziono danych użytkownika w Firestore.");
       }
     });
-   } else {
-        console.error("Nie znaleziono danych użytkownika w Firestore.");
-        // Opcjonalnie przekieruj do strony logowania
-        window.location.href = 'login.html';
-      }
-    }).catch((error) => {
-      console.error("Wystąpił błąd podczas pobierania danych użytkownika: ", error);
-      // Opcjonalnie przekieruj do strony logowania
-      window.location.href = 'login.html';
-    });
   } else {
-    console.error("Nie zalogowano użytkownika, przekierowanie do strony logowania");
+    console.log("Nie zalogowano użytkownika, przekierowanie do strony logowania");
     window.location.href = 'login.html';
   }
 });
