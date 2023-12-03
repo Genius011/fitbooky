@@ -17,6 +17,10 @@
     height: 100vh;
 }
 
+.time-slot.selected {
+	background: #6e8efb;
+	}
+
 .calendar-container, .popup-content {
     background-color: #fff;
     border-radius: 10px;
@@ -69,10 +73,13 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     transition: box-shadow 0.3s, transform 0.3s;
 }
-
-.day:hover, .time-slot:hover, .book-btn:hover {
+.calendar-container .time-slot.selected {
+    background-color: #6e8efb !important;
+}
+.day:hover, .time-slot:hover {
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     transform: translateY(-2px);
+	
 }
 
 .inactive, .time-slot.disabled {
@@ -313,10 +320,8 @@
     display: none; /* Hide by default */
 }
 
-.time-slot.selected {
-    background-color: #6e8efb;
-    /* inne style, jeśli są potrzebne */
-}
+
+
 
 </style>
 
@@ -371,15 +376,9 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
         };
 
   // Initialize Firebase
-	const app = initializeApp(firebaseConfig);
-	const auth = getAuth(app);
-	const db = getFirestore(app);
-	
-	let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
-    let trainerUID = null;
-	
-	
-	
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+const db = getFirestore(app);
 
      // Logout function
   logoutButton.addEventListener('click', () => {
@@ -397,45 +396,43 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
    
     document.addEventListener('DOMContentLoaded', function() {
     const auth = getAuth();
+    let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
+
     
 	
-	// Funkcja, która pobiera i ustawia trainerUID
-  async function fetchAndSetTrainerUID(userId) {
-    const userDoc = await getDoc(doc(db, 'users', userId));
-    if (userDoc.exists()) {
-      const userData = userDoc.data();
-      trainerUID = userData.UID; // Zapisz UID trenera
-      return userData.UID; // Zwróć UID dla dalszego użycia
-    } else {
-      console.error('Nie znaleziono dokumentu użytkownika.');
-      throw new Error('Nie znaleziono dokumentu użytkownika.');
-    }
-  }
+	onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUserId = user.uid;
 
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      currentUserId = user.uid;
-      try {
-        trainerUID = await fetchAndSetTrainerUID(currentUserId);
-        // Pozostała logika aktualizacji interfejsu użytkownika
-        const userDoc = await getDoc(doc(db, 'users', currentUserId));
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          const userFirstName = userData.firstName;
-          // ... aktualizuj interfejs użytkownika ...
+            // Get user document from Firestore
+            const userRef = doc(getFirestore(), 'users', user.uid);
+            getDoc(userRef).then((docSnap) => {
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    const userFirstName = userData.firstName; // Accessing the 'firstName' field from Firestore
+
+                    // Update the logout button text with the user's first name
+                    const logoutButtonText = document.getElementById('logoutButtonText');
+                    if (userFirstName) {
+                        logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
+                    } else {
+                        console.log("User's first name is not defined in the document.");
+                    }
+
+                    // Check if the user is a trainer and show the 'Panel Trenera' link
+                    if (userData.role === 'trener') {
+                        const trainerPanelLink = document.getElementById('trainerPanelLink');
+                        trainerPanelLink.style.display = 'block'; // Show the link if the user is a trainer
+                    }
+                } else {
+                    console.log("User data not found in Firestore.");
+                }
+            });
         } else {
-          console.error('Dokument użytkownika nie istnieje');
+            console.log("No user is logged in, redirecting to login");
+            window.location.href = 'login.html';
         }
-      } catch (error) {
-        console.error(error);
-        // Opcjonalnie przekieruj do strony logowania
-        window.location.href = 'login.html';
-      }
-    } else {
-      console.error("Nie zalogowano użytkownika, przekierowanie do strony logowania");
-      window.location.href = 'login.html';
-    }
-  });
+    });
 
 // Ensure the dropdown content is hidden initially and shown on hover
 const dropdown = document.querySelector('.dropdown');
@@ -508,7 +505,7 @@ document.getElementById('logout').addEventListener('click', () => {
 
 // Poniżej musisz wkleić funkcję openPopup oraz inne pomocnicze funkcje, które współpracują z generateCalendar.
 
-async function saveBooking(userId, date, trainingType, time, trainerUID) {
+		async function saveBooking(userId, date, trainingType, time) {
   if (!userId) {
     alert('Nie jesteś zalogowany!');
     return;
@@ -519,6 +516,7 @@ async function saveBooking(userId, date, trainingType, time, trainerUID) {
     const userRef = doc(getFirestore(), 'users', userId);
     const docSnap = await getDoc(userRef);
 
+    // Jeśli dokument użytkownika istnieje, użyj jego danych
     if (docSnap.exists()) {
       const userData = docSnap.data();
       await addDoc(collection(db, "bookings"), {
@@ -527,8 +525,7 @@ async function saveBooking(userId, date, trainingType, time, trainerUID) {
         trainingType: trainingType,
         time: time,
         email: userData.email, // Dodaj email użytkownika do dokumentu rezerwacji
-        firstName: userData.firstName, // Dodaj firstName użytkownika do dokumentu rezerwacji
-        trainerUID: trainerUID // Dodaj UID trenera do dokumentu rezerwacji
+        firstName: userData.firstName // Dodaj firstName użytkownika do dokumentu rezerwacji
       });
       alert("Rezerwacja została zapisana w Twoim profilu");
     } else {
@@ -539,7 +536,6 @@ async function saveBooking(userId, date, trainingType, time, trainerUID) {
     alert("Wystąpił błąd podczas zapisu rezerwacji");
   }
 }
-
 
 
        async function openPopup(selectedDay) {
@@ -590,7 +586,7 @@ bookButton.addEventListener('click', async () => {
         }
 
         if (cancellationCheckbox.checked) {
-    saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot, trainerUID);
+            saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot);
             popup.remove();
         } else {
             alert("Aby dokonać rezerwacji, musisz zaakceptować warunki anulacji.");
