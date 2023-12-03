@@ -410,13 +410,11 @@ function fetchAndSetTrainerUID(userId) {
 	onAuthStateChanged(auth, (user) => {
   if (user) {
     currentUserId = user.uid;
-
-    // Pobieranie dokumentu użytkownika z Firestore
-    const userRef = doc(getFirestore(), 'users', user.uid);
-    getDoc(userRef).then((docSnap) => {
+    // Pobierz dokument użytkownika z Firestore
+    getDoc(doc(db, 'users', user.uid)).then((docSnap) => {
       if (docSnap.exists()) {
         const userData = docSnap.data();
-        trainerUID = userData.UID; // Przypisanie UID trenera do zmiennej globalnej
+        trainerUID = userData.UID; // Zapewniamy, że userData.UID istnieje i jest przypisane do trainerUID.
 
         const userFirstName = userData.firstName; // Pobieranie imienia użytkownika z Firestore
 
