@@ -505,7 +505,7 @@ document.getElementById('logout').addEventListener('click', () => {
 
 // Poniżej musisz wkleić funkcję openPopup oraz inne pomocnicze funkcje, które współpracują z generateCalendar.
 
-		async function saveBooking(userId, date, trainingType, time) {
+		async function saveBooking(userId, date, trainingType, time, trainerId) {
   if (!userId) {
     alert('Nie jesteś zalogowany!');
     return;
@@ -524,8 +524,9 @@ document.getElementById('logout').addEventListener('click', () => {
         date: date,
         trainingType: trainingType,
         time: time,
-        email: userData.email, // Dodaj email użytkownika do dokumentu rezerwacji
-        firstName: userData.firstName // Dodaj firstName użytkownika do dokumentu rezerwacji
+        email: userData.email,
+        firstName: userData.firstName,
+        trainerId: trainerId // Dodaj trainerId do dokumentu rezerwacji
       });
       alert("Rezerwacja została zapisana w Twoim profilu");
     } else {
@@ -536,6 +537,7 @@ document.getElementById('logout').addEventListener('click', () => {
     alert("Wystąpił błąd podczas zapisu rezerwacji");
   }
 }
+
 
 
        async function openPopup(selectedDay) {
@@ -571,30 +573,40 @@ bookButton.addEventListener('click', async () => {
     const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type');
     const selectedTimeSlot = popup.querySelector('.time-slot.selected')?.textContent;
     const cancellationCheckbox = document.getElementById('cancellationCheckbox');
-
+    
     if (selectedTrainingType && selectedTimeSlot) {
-        let adjustedMonth = selectedDay.getMonth() + 1;
-        let formattedDate = `${selectedDay.getFullYear()}-${adjustedMonth.toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
-
+      let adjustedMonth = selectedDay.getMonth() + 1;
+      let formattedDate = `${selectedDay.getFullYear()}-${adjustedMonth.toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
+      
+      // Pobierz trainerId z danych użytkownika
+      const userRef = doc(getFirestore(), 'users', currentUserId);
+      const docSnap = await getDoc(userRef);
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        const trainerId = userData.trainerId;
+        
         // Sprawdź dostępność dla wybranego slotu czasowego i treningu personalnego
         if (selectedTrainingType === 'personal') {
-            const available = await isTimeSlotAvailable(formattedDate, selectedTimeSlot, selectedTrainingType);
-            if (!available) {
-                alert("Ten termin jest już zajęty. Wybierz inną godzinę.");
-                return;
-            }
+          const available = await isTimeSlotAvailable(formattedDate, selectedTimeSlot, selectedTrainingType);
+          if (!available) {
+            alert("Ten termin jest już zajęty. Wybierz inną godzinę.");
+            return;
+          }
         }
-
+        
         if (cancellationCheckbox.checked) {
-            saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot);
-            popup.remove();
+          saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot, trainerId); // Przekazanie trainerId
+          popup.remove();
         } else {
-            alert("Aby dokonać rezerwacji, musisz zaakceptować warunki anulacji.");
+          alert("Aby dokonać rezerwacji, musisz zaakceptować warunki anulacji.");
         }
+      } else {
+        console.log("Nie znaleziono danych użytkownika.");
+      }
     } else {
-        alert("Proszę wybrać rodzaj treningu i godzinę");
+      alert("Proszę wybrać rodzaj treningu i godzinę");
     }
-});
+  });
 
 
     
