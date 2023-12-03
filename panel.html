@@ -1242,7 +1242,31 @@ onAuthStateChanged(auth, (user) => {
 });
 
 
+// Obsługa kliknięcia przycisku kopiowania
+copyLinkBtn.addEventListener('click', () => {
+    uniqueLinkField.select();
+    document.execCommand('copy');
+    alert('Link został skopiowany do schowka!');
+});
 
+const uniqueLinkField = document.getElementById('uniqueLink');
+const copyLinkBtn = document.getElementById('copyLinkBtn');
+
+// Pobierz unikalny link trenera z bazy danych
+if (isTrainer) {
+    const uniqueLinkRef = doc(firestore, 'trainers', user.uid);
+    getDoc(uniqueLinkRef)
+        .then((docSnap) => {
+            if (docSnap.exists()) {
+                const trainerData = docSnap.data();
+                const registrationLink = trainerData.registrationLink;
+                uniqueLinkField.value = registrationLink;
+            }
+        })
+        .catch((error) => {
+            console.error('Błąd podczas pobierania unikalnego linku:', error);
+        });
+}
 
 </script>
 
