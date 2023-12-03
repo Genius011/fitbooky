@@ -378,6 +378,8 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
 	let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
     let trainerUID = null;
 	
+	
+	
 
      // Logout function
   logoutButton.addEventListener('click', () => {
@@ -398,7 +400,7 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
     
 	
 	// Funkcja, która pobiera i ustawia trainerUID
-function fetchAndSetTrainerUID(userId) {
+  async function fetchAndSetTrainerUID(userId) {
   return getDoc(doc(db, 'users', userId)).then(docSnap => {
     if (docSnap.exists()) {
       const userData = docSnap.data();
