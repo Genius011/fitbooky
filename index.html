@@ -393,7 +393,7 @@ const db = getFirestore(app);
     const auth = getAuth();
     let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
 
-    
+    let trainerUID = null;
 	
 	onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -404,6 +404,8 @@ const db = getFirestore(app);
             getDoc(userRef).then((docSnap) => {
                 if (docSnap.exists()) {
                     const userData = docSnap.data();
+					        trainerUID = userData.UID;
+
                     const userFirstName = userData.firstName; // Accessing the 'firstName' field from Firestore
 
                     // Update the logout button text with the user's first name
@@ -500,7 +502,7 @@ document.getElementById('logout').addEventListener('click', () => {
 
 // Poniżej musisz wkleić funkcję openPopup oraz inne pomocnicze funkcje, które współpracują z generateCalendar.
 
-		async function saveBooking(userId, date, trainingType, time, trainerUID) {
+async function saveBooking(userId, date, trainingType, time, trainerUID) {
   if (!userId) {
     alert('Nie jesteś zalogowany!');
     return;
@@ -582,7 +584,7 @@ bookButton.addEventListener('click', async () => {
         }
 
         if (cancellationCheckbox.checked) {
-saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot, trainerUID);
+    saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot, trainerUID);
             popup.remove();
         } else {
             alert("Aby dokonać rezerwacji, musisz zaakceptować warunki anulacji.");
