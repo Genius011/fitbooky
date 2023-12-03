@@ -339,8 +339,12 @@ loginForm.addEventListener('submit', function(e) {
             const trainerDoc = querySnapshot.docs[0];
             const trainerId = trainerDoc.id;
 
+            // Przed przekierowaniem
+            console.log('uid:', uid);
+            console.log('trainerId:', trainerId);
+
             // Przekierowanie na panel trenera z przekazanym trainerID
-            const redirectUrl = `https://www.fitbooky.com/panel.html?UID=${UID}`;
+            const redirectUrl = `https://www.fitbooky.com/panel.html?trainerId=${trainerId}`;
             window.location.href = redirectUrl;
           } else {
             // Użytkownik nie jest trenerem, przekieruj go na inną stronę
@@ -357,6 +361,7 @@ loginForm.addEventListener('submit', function(e) {
       alert('Error: ' + errorMessage);
     });
 });
+
 
 
 
