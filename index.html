@@ -411,42 +411,31 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
       throw new Error('Nie znaleziono dokumentu użytkownika.');
     }
   }
-	
-	
-	onAuthStateChanged(auth, (user) => {
-  if (user) {
-    const currentUserId = user.uid;
-    // Pobierz dokument użytkownika z Firestore
-    getDoc(doc(db, 'users', currentUserId)).then((docSnap) => {
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        // Upewnij się, że userData.UID istnieje przed przypisaniem
-        trainerUID = userData.UID || 'default-trainer-UID';
 
-        const userFirstName = userData.firstName; // Pobieranie imienia użytkownika z Firestore
-
-        // Aktualizacja tekstu przycisku wylogowania o imię użytkownika
-        const logoutButtonText = document.getElementById('logoutButtonText');
-        if (userFirstName) {
-          logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      currentUserId = user.uid;
+      try {
+        trainerUID = await fetchAndSetTrainerUID(currentUserId);
+        // Pozostała logika aktualizacji interfejsu użytkownika
+        const userDoc = await getDoc(doc(db, 'users', currentUserId));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const userFirstName = userData.firstName;
+          // ... aktualizuj interfejs użytkownika ...
         } else {
-          console.log("Imię użytkownika nie jest zdefiniowane w dokumencie.");
+          console.error('Dokument użytkownika nie istnieje');
         }
-
-        // Sprawdzenie, czy użytkownik jest trenerem i wyświetlenie linku do 'Panelu Trenera'
-        if (userData.role === 'trener') {
-          const trainerPanelLink = document.getElementById('trainerPanelLink');
-          trainerPanelLink.style.display = 'block'; // Wyświetlenie linku, jeśli użytkownik jest trenerem
-        }
-      } else {
-        console.log("Nie znaleziono danych użytkownika w Firestore.");
+      } catch (error) {
+        console.error(error);
+        // Opcjonalnie przekieruj do strony logowania
+        window.location.href = 'login.html';
       }
-    });
-  } else {
-    console.log("Nie zalogowano użytkownika, przekierowanie do strony logowania");
-    window.location.href = 'login.html';
-  }
-});
+    } else {
+      console.error("Nie zalogowano użytkownika, przekierowanie do strony logowania");
+      window.location.href = 'login.html';
+    }
+  });
 
 // Ensure the dropdown content is hidden initially and shown on hover
 const dropdown = document.querySelector('.dropdown');
@@ -519,11 +508,15 @@ document.getElementById('logout').addEventListener('click', () => {
 
 // Poniżej musisz wkleić funkcję openPopup oraz inne pomocnicze funkcje, które współpracują z generateCalendar.
 
-async function saveBooking(userId, date, trainingType, time) {
+async function saveBooking(userId, date, trainingType, time, trainerUID) {
   if (!userId) {
-    alert('Nie jesteś zalogowany!');
-    return;
-  }
+      alert('Nie jesteś zalogowany!');
+      return;
+    }
+    if (!trainerUID) {
+      alert('Brak przypisanego trenera.');
+      return;
+    }
 
   try {
     // Pobranie dodatkowych informacji o użytkowniku
