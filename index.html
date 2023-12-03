@@ -437,6 +437,21 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
     }
   });
 
+        // Sprawdzenie, czy użytkownik jest trenerem i wyświetlenie linku do 'Panelu Trenera'
+        if (userData.role === 'trener') {
+          const trainerPanelLink = document.getElementById('trainerPanelLink');
+          trainerPanelLink.style.display = 'block'; // Wyświetlenie linku, jeśli użytkownik jest trenerem
+        }
+      } else {
+        console.log("Nie znaleziono danych użytkownika w Firestore.");
+      }
+    });
+  } else {
+    console.log("Nie zalogowano użytkownika, przekierowanie do strony logowania");
+    window.location.href = 'login.html';
+  }
+});
+
 // Ensure the dropdown content is hidden initially and shown on hover
 const dropdown = document.querySelector('.dropdown');
 dropdown.addEventListener('mouseover', () => {
