@@ -972,11 +972,19 @@ function setupWeekNavigation() {
   });
 }
 
+let trainerId = null;
+
+
 // Funkcja do pobierania trainerId zalogowanego trenera (dodaj ją w odpowiednim miejscu w swoim kodzie)
 function getTrainerId() {
   // Tutaj dodaj kod do pobrania trainerId, na przykład z autoryzacji użytkownika
   // lub inny sposób dostępu do identyfikatora zalogowanego trenera
+    return 'twój-trainer-id'; // Przykład wartości zalogowanego trenera
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Pobierz trainerId przy użyciu funkcji getTrainerId()
+  trainerId = getTrainerId();
 
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
