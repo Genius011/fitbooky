@@ -833,31 +833,6 @@ const app = initializeApp(firebaseConfig);
 	const db = getFirestore(app);
 
 
-document.addEventListener('DOMContentLoaded', function() {
-	
-  updateDatesForWeek(new Date());
-  setupWeekNavigation();
-});
-
-function updateDatesForWeek(current) {
-  let currentDay = new Date(current.setDate(current.getDate() - current.getDay() + 1));
-  for (let i = 0; i < 7; i++) {
-    const dateSpan = document.querySelectorAll('.date-display')[i];
-    if (dateSpan) {
-  dateSpan.textContent = formatDate(currentDay);
-} else {
-  console.error('Element .date-display nie został znaleziony');
-}
-
-    currentDay.setDate(currentDay.getDate() + 1);
-  }
-}
-
-function formatDate(date) {
-  return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
-}
-
-
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
@@ -984,15 +959,7 @@ document.addEventListener('DOMContentLoaded', function() {
   displayTodayBookings();
   
  
-  // Aktualizacja dat na stronie zgodnie z aktualnym tygodniem
-  updateDatesForWeek(new Date());
   
-  // Ustawienie nawigacji tygodniowej
-  setupWeekNavigation();
-  
-  // Reszta kodu, która może być potrzebna do innych funkcji na stronie...
-});
-
 
 function viewProfile(userId) {
   const modal = document.getElementById('profileModal');
