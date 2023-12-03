@@ -352,6 +352,12 @@ registrationForm.addEventListener('submit', function(e) {
             city: registrationForm.querySelector('input[name="city"]').value,
             isTrainer: isTrainer
         };
+    } else {
+        // Jeśli użytkownik rejestruje się za pomocą unikalnego linku trenera, dodaj UID trenera do jego danych
+        const trainerIdFromUrl = urlParams.get('trainerId');
+        if (trainerIdFromUrl) {
+            additionalData.trainerId = trainerIdFromUrl;
+        }
     }
 
     createUserWithEmailAndPassword(auth, email, password)
