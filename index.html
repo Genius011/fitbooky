@@ -391,8 +391,7 @@ const db = getFirestore(app);
    
     document.addEventListener('DOMContentLoaded', function() {
     const auth = getAuth();
-    let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
-    let trainerUID = null;
+    
 	
 	// Funkcja, która pobiera i ustawia trainerUID
 function fetchAndSetTrainerUID(userId) {
@@ -406,6 +405,9 @@ function fetchAndSetTrainerUID(userId) {
     }
   });
 }
+	
+	let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
+    let trainerUID = null;
 	
 	onAuthStateChanged(auth, (user) => {
   if (user) {
