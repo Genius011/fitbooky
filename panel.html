@@ -1278,6 +1278,19 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+  // Funkcja do kopiowania linku do schowka
+  copyLinkBtn.addEventListener('click', () => {
+    const linkToCopy = uniqueLinkField.value;
+    if (linkToCopy && linkToCopy !== 'Brak linku') {
+      navigator.clipboard.writeText(linkToCopy).then(() => {
+        alert('Link skopiowany do schowka');
+      }).catch((err) => {
+        alert('Błąd podczas kopiowania: ', err);
+      });
+    }
+  });
+});
+
 
 
 </script>
