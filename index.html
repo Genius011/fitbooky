@@ -411,12 +411,13 @@ function fetchAndSetTrainerUID(userId) {
 	
 	onAuthStateChanged(auth, (user) => {
   if (user) {
-    currentUserId = user.uid;
+    const currentUserId = user.uid;
     // Pobierz dokument użytkownika z Firestore
-    getDoc(doc(db, 'users', user.uid)).then((docSnap) => {
+    getDoc(doc(db, 'users', currentUserId)).then((docSnap) => {
       if (docSnap.exists()) {
         const userData = docSnap.data();
-        trainerUID = userData.UID; // Zapewniamy, że userData.UID istnieje i jest przypisane do trainerUID.
+        // Upewnij się, że userData.UID istnieje przed przypisaniem
+        trainerUID = userData.UID || 'default-trainer-UID';
 
         const userFirstName = userData.firstName; // Pobieranie imienia użytkownika z Firestore
 
@@ -437,8 +438,18 @@ function fetchAndSetTrainerUID(userId) {
         console.log("Nie znaleziono danych użytkownika w Firestore.");
       }
     });
+   } else {
+        console.error("Nie znaleziono danych użytkownika w Firestore.");
+        // Opcjonalnie przekieruj do strony logowania
+        window.location.href = 'login.html';
+      }
+    }).catch((error) => {
+      console.error("Wystąpił błąd podczas pobierania danych użytkownika: ", error);
+      // Opcjonalnie przekieruj do strony logowania
+      window.location.href = 'login.html';
+    });
   } else {
-    console.log("Nie zalogowano użytkownika, przekierowanie do strony logowania");
+    console.error("Nie zalogowano użytkownika, przekierowanie do strony logowania");
     window.location.href = 'login.html';
   }
 });
