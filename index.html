@@ -401,16 +401,16 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
 	
 	// Funkcja, która pobiera i ustawia trainerUID
   async function fetchAndSetTrainerUID(userId) {
-  return getDoc(doc(db, 'users', userId)).then(docSnap => {
-    if (docSnap.exists()) {
-      const userData = docSnap.data();
+    const userDoc = await getDoc(doc(db, 'users', userId));
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
       trainerUID = userData.UID; // Zapisz UID trenera
-      return trainerUID; // Zwróć UID dla dalszego użycia
+      return userData.UID; // Zwróć UID dla dalszego użycia
     } else {
+      console.error('Nie znaleziono dokumentu użytkownika.');
       throw new Error('Nie znaleziono dokumentu użytkownika.');
     }
-  });
-}
+  }
 	
 	
 	onAuthStateChanged(auth, (user) => {
