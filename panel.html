@@ -899,6 +899,7 @@ import {
   getDoc, 
   updateDoc, 
   deleteDoc,
+  
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
 
@@ -985,6 +986,9 @@ function getTrainerId() {
 document.addEventListener('DOMContentLoaded', function() {
   // Pobierz trainerId przy użyciu funkcji getTrainerId()
   trainerId = getTrainerId();
+
+  window.addEventListener('beforeunload', function (e) {
+
 
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
