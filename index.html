@@ -392,7 +392,6 @@ const db = getFirestore(app);
     document.addEventListener('DOMContentLoaded', function() {
     const auth = getAuth();
     let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
-
     let trainerUID = null;
 	
 	// Funkcja, która pobiera i ustawia trainerUID
@@ -409,40 +408,40 @@ function fetchAndSetTrainerUID(userId) {
 }
 	
 	onAuthStateChanged(auth, (user) => {
-        if (user) {
-            currentUserId = user.uid;
+  if (user) {
+    currentUserId = user.uid;
 
-            // Get user document from Firestore
-            const userRef = doc(getFirestore(), 'users', user.uid);
-            getDoc(userRef).then((docSnap) => {
-                if (docSnap.exists()) {
-                    const userData = docSnap.data();
-					        trainerUID = userData.UID;
+    // Pobieranie dokumentu użytkownika z Firestore
+    const userRef = doc(getFirestore(), 'users', user.uid);
+    getDoc(userRef).then((docSnap) => {
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        trainerUID = userData.UID; // Przypisanie UID trenera do zmiennej globalnej
 
-                    const userFirstName = userData.firstName; // Accessing the 'firstName' field from Firestore
+        const userFirstName = userData.firstName; // Pobieranie imienia użytkownika z Firestore
 
-                    // Update the logout button text with the user's first name
-                    const logoutButtonText = document.getElementById('logoutButtonText');
-                    if (userFirstName) {
-                        logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
-                    } else {
-                        console.log("User's first name is not defined in the document.");
-                    }
-
-                    // Check if the user is a trainer and show the 'Panel Trenera' link
-                    if (userData.role === 'trener') {
-                        const trainerPanelLink = document.getElementById('trainerPanelLink');
-                        trainerPanelLink.style.display = 'block'; // Show the link if the user is a trainer
-                    }
-                } else {
-                    console.log("User data not found in Firestore.");
-                }
-            });
+        // Aktualizacja tekstu przycisku wylogowania o imię użytkownika
+        const logoutButtonText = document.getElementById('logoutButtonText');
+        if (userFirstName) {
+          logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
         } else {
-            console.log("No user is logged in, redirecting to login");
-            window.location.href = 'login.html';
+          console.log("Imię użytkownika nie jest zdefiniowane w dokumencie.");
         }
+
+        // Sprawdzenie, czy użytkownik jest trenerem i wyświetlenie linku do 'Panelu Trenera'
+        if (userData.role === 'trener') {
+          const trainerPanelLink = document.getElementById('trainerPanelLink');
+          trainerPanelLink.style.display = 'block'; // Wyświetlenie linku, jeśli użytkownik jest trenerem
+        }
+      } else {
+        console.log("Nie znaleziono danych użytkownika w Firestore.");
+      }
     });
+  } else {
+    console.log("Nie zalogowano użytkownika, przekierowanie do strony logowania");
+    window.location.href = 'login.html';
+  }
+});
 
 // Ensure the dropdown content is hidden initially and shown on hover
 const dropdown = document.querySelector('.dropdown');
