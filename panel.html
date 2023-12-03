@@ -857,18 +857,6 @@ function formatDate(date) {
   return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
 }
 
-function setupWeekNavigation() {
-  document.getElementById('prevWeek').addEventListener('click', function() {
-    let current = new Date(document.querySelectorAll('.date-display')[0].textContent);
-    updateDatesForWeek(new Date(current.setDate(current.getDate() - 7)));
-  });
-
-  document.getElementById('nextWeek').addEventListener('click', function() {
-    let current = new Date(document.querySelectorAll('.date-display')[6].textContent);
-    updateDatesForWeek(new Date(current.setDate(current.getDate() + 1)));
-  });
-}
-
 
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
@@ -1062,19 +1050,6 @@ window.viewProfile = viewProfile;
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
 
-document.getElementById('toggleIcon').addEventListener('click', function() {
-  var section = document.getElementById('availabilityManager');
-  var icon = document.getElementById('toggleIcon');
-  
-  // Przełącz wyświetlanie sekcji i obracanie ikony
-  if (section.style.display === "none") {
-    section.style.display = "block";
-    icon.classList.add('rotate-icon');
-  } else {
-    section.style.display = "none";
-    icon.classList.remove('rotate-icon');
-  }
-});
 
 document.getElementById('toggleFutureBookingsIcon').addEventListener('click', function() {
   var section = document.getElementById('bookingManager');
