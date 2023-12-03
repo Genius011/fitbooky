@@ -519,7 +519,7 @@ document.getElementById('logout').addEventListener('click', () => {
 
 // Poniżej musisz wkleić funkcję openPopup oraz inne pomocnicze funkcje, które współpracują z generateCalendar.
 
-async function saveBooking(userId, date, trainingType, time, trainerUID) {
+async function saveBooking(userId, date, trainingType, time) {
   if (!userId) {
     alert('Nie jesteś zalogowany!');
     return;
