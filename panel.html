@@ -900,7 +900,6 @@ import {
   updateDoc, 
   deleteDoc,
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
 
 
 const firebaseConfig = {
@@ -914,37 +913,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // Użytkownik jest zalogowany.
-    const UID = user.uid;
-    // Pobierz link trenera używając UID.
-    getTrainerLink(UID);
-	displayTodayBookings(UID);
-  } else {
-    // Użytkownik nie jest zalogowany, opcjonalnie przekieruj do strony logowania.
-    // window.location.href = '/login.html';
-  }
-});
-
-async function displayTodayBookings(trainerId) {
-  const bookingsRef = collection(db, 'bookings');
-  const todayBookingsTableBody = document.getElementById('todayBookingsTable').querySelector('tbody');
-  const todayFormatted = formatDate(new Date());
-
-  try {
-    const bookingSnapshot = await getDocs(bookingsRef);
-    const bookings = bookingSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-
 
 document.addEventListener('DOMContentLoaded', function() {
 
-// Pobranie trainerId z URL
+  // Pobranie trainerId z URL
   const urlParams = new URLSearchParams(window.location.search);
   const trainerId = urlParams.get('trainerId');
 
@@ -1000,11 +972,17 @@ function setupWeekNavigation() {
   });
 }
 
+// Funkcja do pobierania trainerId zalogowanego trenera (dodaj ją w odpowiednim miejscu w swoim kodzie)
+function getTrainerId() {
+  // Tutaj dodaj kod do pobrania trainerId, na przykład z autoryzacji użytkownika
+  // lub inny sposób dostępu do identyfikatora zalogowanego trenera
+}
 
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
   const todayFormatted = formatDate(new Date()); // Używamy funkcji formatDate, aby uzyskać dzisiejszą datę w odpowiednim formacie
+  const trainerId = getTrainerId(); // Pobierz trainerId (przyjmuję, że masz funkcję getTrainerId())
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
@@ -1024,45 +1002,48 @@ async function displayFutureBookings() {
     bookingsTableBody.innerHTML = '';
 
     bookings.forEach(bookingData => {
-      const userRef = doc(db, 'users', bookingData.userId);
-      getDoc(userRef).then(userSnap => {
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-          const bookingRow = document.createElement('tr');
+      if (bookingData.trainerID === trainerId) { // Sprawdź, czy rezerwacja należy do zalogowanego trenera
+        const userRef = doc(db, 'users', bookingData.userId);
+        getDoc(userRef).then(userSnap => {
+          if (userSnap.exists()) {
+            const userData = userSnap.data();
+            const bookingRow = document.createElement('tr');
 
-          // Jeśli data rezerwacji jest dzisiejszą datą, dodajemy klasę .highlighted
-          if (bookingData.date === todayFormatted) {
-            bookingRow.classList.add('highlighted');
+            // Jeśli data rezerwacji jest dzisiejszą datą, dodajemy klasę .highlighted
+            if (bookingData.date === todayFormatted) {
+              bookingRow.classList.add('highlighted');
+            }
+
+            bookingRow.innerHTML = `
+              <td>${userData.firstName || ''}</td>
+              <td>${userData.lastName || ''}</td>
+              <td>${bookingData.time}</td>
+              <td>${bookingData.date}</td>
+              <td>${bookingData.trainingType}</td>
+              <td>
+                <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
+                  <i class="fas fa-user"></i>
+                </button>
+                <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
+                  <i class="fas fa-times"></i>
+                </button>
+              </td>
+            `;
+            bookingsTableBody.appendChild(bookingRow);
           }
-
-          bookingRow.innerHTML = `
-            <td>${userData.firstName || ''}</td>
-            <td>${userData.lastName || ''}</td>
-            <td>${bookingData.time}</td>
-            <td>${bookingData.date}</td>
-            <td>${bookingData.trainingType}</td>
-			         <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
-      <i class="fas fa-user"></i> <!-- Ikonka profilu -->
-    </button>
-  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
-            <i class="fas fa-times"></i>
-        </button>
-  </td>
-          `;
-          bookingsTableBody.appendChild(bookingRow);
-        }
-      });
+        });
+      }
     });
   } catch (error) {
     console.error("Error fetching bookings:", error);
   }
 }
 
-
 async function displayTodayBookings() {
   const bookingsRef = collection(db, 'bookings');
   const todayBookingsTableBody = document.getElementById('todayBookingsTable').querySelector('tbody');
   const todayFormatted = formatDate(new Date());
+  const trainerId = getTrainerId(); // Pobierz trainerId (przyjmuję, że masz funkcję getTrainerId())
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
@@ -1071,26 +1052,25 @@ async function displayTodayBookings() {
       ...doc.data()
     }));
 
-    // Filtrowanie dzisiejszych rezerwacji
-    const todayBookings = bookings.filter(booking => booking.date === todayFormatted);
+    // Filtrowanie dzisiejszych rezerwacji tylko dla zalogowanego trenera
+    const todayBookings = bookings.filter(booking => booking.date === todayFormatted && booking.trainerID === trainerId);
     todayBookingsTableBody.innerHTML = ''; // Czyści istniejące wiersze tabeli
 
     todayBookings.forEach(bookingData => {
-    const userRef = doc(db, 'users', bookingData.userId);
-    getDoc(userRef).then(userSnap => {
-      if (userSnap.exists()) {
-        const userData = userSnap.data();
-        const bookingRow = document.createElement('tr');
-          
+      const userRef = doc(db, 'users', bookingData.userId);
+      getDoc(userRef).then(userSnap => {
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          const bookingRow = document.createElement('tr');
+
           // Dodaj klasę .highlighted, jeśli to konieczne
           if (bookingData.date === todayFormatted) {
             bookingRow.classList.add('highlighted');
           }
-          
-		  
-		          const priceValue = bookingData.price ? bookingData.price : '';
 
-               bookingRow.innerHTML = `
+          const priceValue = bookingData.price ? bookingData.price : '';
+
+          bookingRow.innerHTML = `
             <td>${userData.firstName || ''}</td>
             <td>${userData.lastName || ''}</td>
             <td>${bookingData.time}</td>
@@ -1112,6 +1092,7 @@ async function displayTodayBookings() {
             </td>
           `;
 
+          // Dodawanie wierszy do tabeli dzisiejszych rezerwacji
           todayBookingsTableBody.appendChild(bookingRow);
         }
       });
@@ -1120,11 +1101,11 @@ async function displayTodayBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
+
 document.addEventListener('DOMContentLoaded', function() {
   // Wywołanie funkcji do wyświetlenia dzisiejszych rezerwacji
   displayTodayBookings();
   
- 
   // Aktualizacja dat na stronie zgodnie z aktualnym tygodniem
   updateDatesForWeek(new Date());
   
@@ -1362,27 +1343,6 @@ getDoc(doc(db, 'trainers', trainerId))
     console.error('Błąd podczas pobierania unikalnego linku:', error);
     uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania linku.';
   });
-
-function getTrainerLink(UID) {
-  const uniqueLinkEl = document.getElementById('uniqueLink');
-
-  getDoc(doc(db, 'trainers', UID))
-    .then(docSnap => {
-      if (docSnap.exists()) {
-        // Pobierz link i ustaw tekst elementu uniqueLinkEl.
-        const trainerData = docSnap.data();
-        uniqueLinkEl.textContent = trainerData.registrationLink;
-      } else {
-        // Nie znaleziono dokumentu dla danego UID.
-        uniqueLinkEl.textContent = 'Nie znaleziono linku trenera.';
-      }
-    })
-    .catch(error => {
-      // Wystąpił błąd podczas pobierania dokumentu.
-      console.error('Błąd podczas pobierania unikalnego linku:', error);
-      uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania linku.';
-    });
-}
 
 
 </script>
