@@ -17,10 +17,6 @@
     height: 100vh;
 }
 
-.time-slot.selected {
-	background: #6e8efb;
-	}
-
 .calendar-container, .popup-content {
     background-color: #fff;
     border-radius: 10px;
@@ -73,13 +69,10 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     transition: box-shadow 0.3s, transform 0.3s;
 }
-.calendar-container .time-slot.selected {
-    background-color: #6e8efb !important;
-}
-.day:hover, .time-slot:hover {
+
+.day:hover, .time-slot:hover, .book-btn:hover {
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     transform: translateY(-2px);
-	
 }
 
 .inactive, .time-slot.disabled {
@@ -320,8 +313,10 @@
     display: none; /* Hide by default */
 }
 
-
-
+.time-slot.selected {
+    background-color: #6e8efb;
+    /* inne style, jeśli są potrzebne */
+}
 
 </style>
 
@@ -505,7 +500,7 @@ document.getElementById('logout').addEventListener('click', () => {
 
 // Poniżej musisz wkleić funkcję openPopup oraz inne pomocnicze funkcje, które współpracują z generateCalendar.
 
-		async function saveBooking(userId, date, trainingType, time) {
+		async function saveBooking(userId, date, trainingType, time, trainerUID) {
   if (!userId) {
     alert('Nie jesteś zalogowany!');
     return;
@@ -516,7 +511,6 @@ document.getElementById('logout').addEventListener('click', () => {
     const userRef = doc(getFirestore(), 'users', userId);
     const docSnap = await getDoc(userRef);
 
-    // Jeśli dokument użytkownika istnieje, użyj jego danych
     if (docSnap.exists()) {
       const userData = docSnap.data();
       await addDoc(collection(db, "bookings"), {
@@ -525,7 +519,8 @@ document.getElementById('logout').addEventListener('click', () => {
         trainingType: trainingType,
         time: time,
         email: userData.email, // Dodaj email użytkownika do dokumentu rezerwacji
-        firstName: userData.firstName // Dodaj firstName użytkownika do dokumentu rezerwacji
+        firstName: userData.firstName, // Dodaj firstName użytkownika do dokumentu rezerwacji
+        trainerUID: trainerUID // Dodaj UID trenera do dokumentu rezerwacji
       });
       alert("Rezerwacja została zapisana w Twoim profilu");
     } else {
@@ -536,6 +531,7 @@ document.getElementById('logout').addEventListener('click', () => {
     alert("Wystąpił błąd podczas zapisu rezerwacji");
   }
 }
+
 
 
        async function openPopup(selectedDay) {
@@ -586,7 +582,7 @@ bookButton.addEventListener('click', async () => {
         }
 
         if (cancellationCheckbox.checked) {
-            saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot);
+saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot, trainerUID);
             popup.remove();
         } else {
             alert("Aby dokonać rezerwacji, musisz zaakceptować warunki anulacji.");
