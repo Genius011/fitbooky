@@ -332,8 +332,12 @@ loginForm.addEventListener('submit', function(e) {
       const trainersRef = collection(firestore, 'trainers');
       const trainerQuery = query(trainersRef, where('UID', '==', uid));
 
+      console.log('Before getDocs'); // Dodaj tę linię
+
       getDocs(trainerQuery)
         .then((querySnapshot) => {
+          console.log('Inside getDocs'); // Dodaj tę linię
+
           if (!querySnapshot.empty) {
             // Użytkownik jest trenerem, przekieruj na panel trenera
             const trainerDoc = querySnapshot.docs[0];
@@ -361,6 +365,7 @@ loginForm.addEventListener('submit', function(e) {
       alert('Error: ' + errorMessage);
     });
 });
+
 
 
 
