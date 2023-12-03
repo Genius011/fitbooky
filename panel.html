@@ -987,9 +987,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // Pobierz trainerId przy użyciu funkcji getTrainerId()
   trainerId = getTrainerId();
 
-  window.addEventListener('beforeunload', function (e) {
-
-
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
