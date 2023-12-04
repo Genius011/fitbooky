@@ -912,17 +912,7 @@ function getTrainerUid() {
 const auth = getAuth(app);
 
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // Użytkownik jest zalogowany, `uid` jest dostępne
-    const trainerUid = user.uid;
-    // Teraz możesz wykonać swoje operacje związane z `uid`, na przykład:
-    // getTrainerData(trainerUid);
-  } else {
-    // Użytkownik jest wylogowany, `uid` nie jest dostępne
-    console.error('Użytkownik nie jest zalogowany.');
-  }
-});
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
@@ -935,6 +925,18 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // Użytkownik jest zalogowany, `uid` jest dostępne
+    const trainerUid = user.uid;
+    // Teraz możesz wykonać swoje operacje związane z `uid`, na przykład:
+    // getTrainerData(trainerUid);
+  } else {
+    // Użytkownik jest wylogowany, `uid` nie jest dostępne
+    console.error('Użytkownik nie jest zalogowany.');
+  }
+});
 
 document.addEventListener('DOMContentLoaded', function() {
   const trainerUid = getTrainerUid();
