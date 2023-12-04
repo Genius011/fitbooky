@@ -909,6 +909,9 @@ function getTrainerUid() {
   return user ? user.uid : null;
 }
 
+const auth = getAuth(app);
+
+
 onAuthStateChanged(auth, (user) => {
   if (user) {
     // Użytkownik jest zalogowany, `uid` jest dostępne
