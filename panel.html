@@ -909,10 +909,6 @@ function getTrainerUid() {
   return user ? user.uid : null;
 }
 
-const auth = getAuth(app);
-
-
-
 
 const firebaseConfig = {
     apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
@@ -923,6 +919,7 @@ const firebaseConfig = {
             appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
 };
 
+const auth = getAuth(app);
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
