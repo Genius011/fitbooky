@@ -921,7 +921,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Pobranie trainerId z URL
   const urlParams = new URLSearchParams(window.location.search);
   const trainerId = urlParams.get('trainerId');
-trainerId = trainerId;
+ globalTrainerId = trainerId;
+ 
 // Deklaracja funkcji wewnątrz event listenera
   function someFunctionUsingTrainerId(trainerId) {
     getDoc(doc(db, 'trainers', trainerId))
@@ -931,7 +932,7 @@ trainerId = trainerId;
   }
 
   // Jeśli trainerId istnieje, wykonaj resztę kodu
-  if (trainerId) {
+  if (globalTrainerId) {
     const uniqueLinkEl = document.getElementById('uniqueLink');
 
     getDoc(doc(db, 'trainers', globaltrainerId))
