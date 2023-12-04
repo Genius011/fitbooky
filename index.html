@@ -420,7 +420,7 @@ const db = getFirestore(app);
                     }
 
                     // Check if the user is a trainer and show the 'Panel Trenera' link
-                    if (userData.role === 'trener') {
+						if (userData.isTrainer) {
                         const trainerPanelLink = document.getElementById('trainerPanelLink');
                         trainerPanelLink.style.display = 'block'; // Show the link if the user is a trainer
                     }
