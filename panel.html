@@ -915,7 +915,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
 
   // Pobranie trainerId z URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -926,23 +926,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const uniqueLinkEl = document.getElementById('uniqueLink');
 
     getDoc(doc(db, 'trainers', trainerId))
-      .then(docSnap => {
-        if (docSnap.exists()) {
-          // Pobierz link i ustaw tekst elementu uniqueLinkEl
-          const trainerData = docSnap.data();
-          uniqueLinkEl.textContent = trainerData.registrationLink;
-        } else {
-          uniqueLinkEl.textContent = 'Nie znaleziono linku trenera.';
-        }
-      })
-      .catch(error => {
-        console.error('Błąd podczas pobierania unikalnego linku:', error);
-        uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania linku.';
-      });
+    .then(docSnap => {
+      if (docSnap.exists()) {
+        const trainerData = docSnap.data();
+        uniqueLinkEl.textContent = trainerData.registrationLink;
+      } else {
+        uniqueLinkEl.textContent = 'Nie znaleziono linku trenera.';
+      }
+    })
+    .catch(error => {
+      console.error('Błąd podczas pobierania unikalnego linku:', error);
+      uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania linku.';
+    });
   } else {
     // Możesz chcieć obsłużyć przypadki, gdy trainerId nie jest dostępne
     console.error('Trainer ID is not defined in the URL parameters.');
   }
+  
+    function getTrainerId() {
+return 'twój-trainer-id'; // Przykład wartości zalogowanego trenera
+  }
+    const loggedInTrainerId = getTrainerId();
+
   
   updateDatesForWeek(new Date());
   setupWeekNavigation();
@@ -1062,7 +1067,7 @@ async function displayTodayBookings() {
     }));
 
     // Filtrowanie dzisiejszych rezerwacji tylko dla zalogowanego trenera
-    const todayBookings = bookings.filter(booking => booking.date === todayFormatted && booking.trainerID === trainerId);
+    const todayBookings = bookings.filter(booking => booking.date === todayFormatted && booking.trainerID === loggedInTrainerId);
     todayBookingsTableBody.innerHTML = ''; // Czyści istniejące wiersze tabeli
 
     todayBookings.forEach(bookingData => {
