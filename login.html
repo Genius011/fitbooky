@@ -252,18 +252,12 @@
     appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
   };
 
-  // Inicjalizacja Firebase App i Auth
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+ // Inicjalizacja Firebase App i Auth
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-  // Inicjalizacja Firestore
-  const firestore = getFirestore(app);
-  
-  firebase.initializeApp(firebaseConfig);
-
-  
-  // Zarejestrowanie nowego użytkownika
-firebase.auth().createUserWithEmailAndPassword(email, password)
+// Zarejestrowanie nowego użytkownika
+auth.createUserWithEmailAndPassword(email, password)
   .then((userCredential) => {
     // Po udanej rejestracji, wyślij e-mail weryfikacyjny do użytkownika
     return userCredential.user.sendEmailVerification();
@@ -276,6 +270,7 @@ firebase.auth().createUserWithEmailAndPassword(email, password)
     // Obsługa błędów
     console.error("Błąd podczas rejestracji użytkownika:", error);
   });
+
 
   document.addEventListener('DOMContentLoaded', function() {
 
