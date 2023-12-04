@@ -1013,6 +1013,18 @@ document.addEventListener('DOMContentLoaded', function() {
   // Pobierz trainerId przy użyciu funkcji getTrainerId()
   trainerId = getTrainerId();
 
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // Użytkownik jest zalogowany, uid jest dostępne
+    const trainerUid = user.uid;
+    // Możesz teraz wywołać funkcję displayFutureBookings i przekazać do niej trainerUid
+    displayFutureBookings(trainerUid);
+  } else {
+    // Użytkownik jest wylogowany, uid nie jest dostępne
+    console.error('Użytkownik nie jest zalogowany.');
+  }
+});
+
 async function displayFutureBookings(trainerUid) {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
@@ -1072,16 +1084,6 @@ async function displayFutureBookings(trainerUid) {
     console.error("Error fetching bookings:", error);
   }
 }
-
-// W funkcji onAuthStateChanged, po zalogowaniu użytkownika, wywołujesz displayFutureBookings
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // Użytkownik jest zalogowany, wyświetl jego rezerwacje
-    displayFutureBookings(user.uid);
-  } else {
-    console.error('Użytkownik nie jest zalogowany.');
-  }
-});
 
 async function displayTodayBookings() {
   const bookingsRef = collection(db, 'bookings');
