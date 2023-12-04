@@ -914,11 +914,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+let globalTrainerId = null;
+
 document.addEventListener('DOMContentLoaded', function() {
 
 // Pobranie trainerId z URL
   const urlParams = new URLSearchParams(window.location.search);
   const trainerId = urlParams.get('trainerId');
+globalTrainerId = trainerId;
 
   // Jeśli trainerId istnieje, wykonaj resztę kodu
   if (trainerId) {
@@ -946,6 +949,12 @@ document.addEventListener('DOMContentLoaded', function() {
   updateDatesForWeek(new Date());
   setupWeekNavigation();
 });
+
+async function displayFutureBookings() {
+  if (!globalTrainerId) {
+    console.error('Trainer ID is not defined.');
+    return;
+  }
 
 function updateDatesForWeek(current) {
   let currentDay = new Date(current.setDate(current.getDate() - current.getDay() + 1));
