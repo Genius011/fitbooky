@@ -901,6 +901,13 @@ import {
   deleteDoc,
   
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
+
+function getTrainerUid() {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  return user ? user.uid : null;
+}
 
 
 const firebaseConfig = {
@@ -916,32 +923,29 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', async function() {
-
-  // Pobranie trainerId z URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const trainerId = urlParams.get('trainerId');
-
-  // Jeśli trainerId istnieje, wykonaj resztę kodu
-  if (trainerId) {
+  const trainerUid = getTrainerUid();
+  if (trainerUid) {
     const uniqueLinkEl = document.getElementById('uniqueLink');
-
-    getDoc(doc(db, 'trainers', trainerId))
-    .then(docSnap => {
-      if (docSnap.exists()) {
-        const trainerData = docSnap.data();
-        uniqueLinkEl.textContent = trainerData.registrationLink;
-      } else {
-        uniqueLinkEl.textContent = 'Nie znaleziono linku trenera.';
-      }
-    })
-    .catch(error => {
-      console.error('Błąd podczas pobierania unikalnego linku:', error);
-      uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania linku.';
-    });
+    // Zmieniono ścieżkę do dokumentu na 'users' zamiast 'trainers'
+    getDoc(doc(db, 'users', trainerUid))
+      .then(docSnap => {
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          // Teraz używamy userData.registrationLink, zakładając, że przechowujesz link rejestracyjny w danych użytkownika
+          uniqueLinkEl.textContent = userData.registrationLink || 'Nie znaleziono linku trenera.';
+        } else {
+          uniqueLinkEl.textContent = 'Nie znaleziono danych trenera.';
+        }
+      })
+      .catch(error => {
+        console.error('Błąd podczas pobierania danych trenera:', error);
+        uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania danych.';
+      });
   } else {
-    // Możesz chcieć obsłużyć przypadki, gdy trainerId nie jest dostępne
-    console.error('Trainer ID is not defined in the URL parameters.');
+    console.error('UID trenera nie jest zdefiniowane.');
   }
+});
+
   
     function getTrainerId() {
 return 'twój-trainer-id'; // Przykład wartości zalogowanego trenera
