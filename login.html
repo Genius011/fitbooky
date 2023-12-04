@@ -385,65 +385,67 @@ loginForm.addEventListener('submit', function(e) {
 
 
     // Obsługa rejestracji
-registrationForm.addEventListener('submit', function(e) {
+  registrationForm.addEventListener('submit', function(e) {
     e.preventDefault();
     const firstName = registrationForm.querySelector('input[name="firstName"]').value;
-    const email = registrationForm.querySelector('input[name="email"]').value;
+    const email = registrationForm.querySelector('input[name="email"]').value; // Pobierz wartość e-maila z formularza
     const password = registrationForm.querySelector('input[name="password"]').value;
     const isTrainer = isTrainerCheckbox.checked;
 
     let additionalData = {};
 
     if (isTrainer) {
-        additionalData = {
-            companyName: registrationForm.querySelector('input[name="companyName"]').value,
-            street: registrationForm.querySelector('input[name="street"]').value,
-            number: registrationForm.querySelector('input[name="number"]').value,
-            postalCode: registrationForm.querySelector('input[name="postalCode"]').value,
-            city: registrationForm.querySelector('input[name="city"]').value,
-            isTrainer: isTrainer
-        };
+      additionalData = {
+        companyName: registrationForm.querySelector('input[name="companyName"]').value,
+        street: registrationForm.querySelector('input[name="street"]').value,
+        number: registrationForm.querySelector('input[name="number"]').value,
+        postalCode: registrationForm.querySelector('input[name="postalCode"]').value,
+        city: registrationForm.querySelector('input[name="city"]').value,
+        isTrainer: isTrainer
+      };
     } else {
-        // Jeśli użytkownik rejestruje się za pomocą unikalnego linku trenera, dodaj UID trenera do jego danych
-        const trainerIdFromUrl = urlParams.get('trainerId');
-        if (trainerIdFromUrl) {
-            additionalData.trainerId = trainerIdFromUrl;
-        }
+      // Jeśli użytkownik rejestruje się za pomocą unikalnego linku trenera, dodaj UID trenera do jego danych
+      const trainerIdFromUrl = urlParams.get('trainerId');
+      if (trainerIdFromUrl) {
+        additionalData.trainerId = trainerIdFromUrl;
+      }
     }
 
-    createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+
+    // Rejestracja użytkownika w Firebase
+    auth.createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
         const user = userCredential.user;
         console.log('User created:', user.uid); // Log user UID after account creation
         const userData = {
-            uid: user.uid,
-            firstName: firstName,
-            email: email,
-            ...additionalData
+          uid: user.uid,
+          firstName: firstName,
+          email: email,
+          ...additionalData
         };
         // Dodanie użytkownika do kolekcji 'users'
         return setDoc(doc(firestore, "users", user.uid), userData).then(() => {
-            // Jeśli użytkownik jest trenerem, utwórz i zapisz unikalny link
-            if(isTrainer) {
-                const uniqueLink = `https://fitbooky.com/login.html?trainerId=${user.uid}`;
-                console.log('Unique link:', uniqueLink); // Log unique link for verification
-                // Zapisanie unikalnego linku do kolekcji 'trainers'
-                return setDoc(doc(firestore, "trainers", user.uid), {
-                    registrationLink: uniqueLink
-                });
-            }
+          // Jeśli użytkownik jest trenerem, utwórz i zapisz unikalny link
+          if (isTrainer) {
+            const uniqueLink = `https://fitbooky.com/login.html?trainerId=${user.uid}`;
+            console.log('Unique link:', uniqueLink); // Log unique link for verification
+            // Zapisanie unikalnego linku do kolekcji 'trainers'
+            return setDoc(doc(firestore, "trainers", user.uid), {
+              registrationLink: uniqueLink
+            });
+          }
         });
-    })
+      })
     .then(() => {
         console.log('User and trainer info added to Firestore');
-        if(isTrainer) {
-            alert('Registration successful! Your unique registration link has been created.');
+        if (isTrainer) {
+          alert('Registration successful! Your unique registration link has been created.');
         } else {
-            alert('Registration successful! You can now log in.');
+          alert('Registration successful! You can now log in.');
         }
         window.location.href = 'login.html';
-    })
-    .catch((error) => {
+      })
+      .catch((error) => {
         console.error('Error during registration:', error);
         alert('Error during registration: ' + error.message);
     });
