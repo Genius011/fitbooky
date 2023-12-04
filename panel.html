@@ -914,14 +914,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let globalTrainerId = null; // Deklaracja zmiennej globalnej
-
 document.addEventListener('DOMContentLoaded', function() {
 
 // Pobranie trainerId z URL
   const urlParams = new URLSearchParams(window.location.search);
   const trainerId = urlParams.get('trainerId');
-  globalTrainerId = urlParams.get('trainerId');
  
 // Deklaracja funkcji wewnątrz event listenera
   function someFunctionUsingTrainerId(trainerId) {
@@ -932,7 +929,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Jeśli trainerId istnieje, wykonaj resztę kodu
-  if (globalTrainerId) {
+  if (trainerId) {
+      displayTrainerData(trainerId);
+
+function displayTrainerData(trainerId) {
+
     const uniqueLinkEl = document.getElementById('uniqueLink');
 
     getDoc(doc(db, 'trainers', globalTrainerId))
@@ -957,6 +958,7 @@ document.addEventListener('DOMContentLoaded', function() {
   updateDatesForWeek(new Date());
   setupWeekNavigation();
 });
+
 
 
 
