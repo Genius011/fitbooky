@@ -890,67 +890,60 @@ display: flex;
 
 
 <script type="module">
+
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
 import { 
   getFirestore, 
-  collection, 
-  getDocs, 
   doc, 
-  getDoc, 
-  updateDoc, 
-  deleteDoc,
-  
+  getDoc,
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
-import { getAuth } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
 
-function getTrainerUid() {
-  const auth = getAuth();
-  const user = auth.currentUser;
-  return user ? user.uid : null;
-}
-
-
+// Konfiguracja Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-            authDomain: "genius-f6a78.firebaseapp.com",
-            projectId: "genius-f6a78",
-            storageBucket: "genius-f6a78.appspot.com",
-            messagingSenderId: "4413237203",
-            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+  apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+  authDomain: "genius-f6a78.firebaseapp.com",
+  projectId: "genius-f6a78",
+  storageBucket: "genius-f6a78.appspot.com",
+  messagingSenderId: "4413237203",
+  appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
 };
 
+// Inicjalizacja aplikacji Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-document.addEventListener('DOMContentLoaded', function() {
-  const trainerUid = getTrainerUid();
-  if (trainerUid) {
-    const uniqueLinkEl = document.getElementById('uniqueLink');
-    // Zmieniono ścieżkę do dokumentu na 'users' zamiast 'trainers'
-    getDoc(doc(db, 'users', trainerUid))
-      .then(docSnap => {
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          // Teraz używamy userData.registrationLink, zakładając, że przechowujesz link rejestracyjny w danych użytkownika
-          uniqueLinkEl.textContent = userData.registrationLink || 'Nie znaleziono linku trenera.';
-        } else {
-          uniqueLinkEl.textContent = 'Nie znaleziono danych trenera.';
-        }
-      })
-      .catch(error => {
-        console.error('Błąd podczas pobierania danych trenera:', error);
-        uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania danych.';
-      });
+// Referencja do autentykacji Firebase
+const auth = getAuth();
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // UID jest dostępne gdy użytkownik jest zalogowany
+    const trainerUid = user.uid;
+    // Pobranie i obsługa danych trenera
+    getTrainerData(trainerUid);
   } else {
-    console.error('UID trenera nie jest zdefiniowane.');
+    // Użytkownik jest wylogowany
+    console.error('Użytkownik nie jest zalogowany.');
   }
+});
 
-
-  
-    function getTrainerId() {
-return 'twój-trainer-id'; // Przykład wartości zalogowanego trenera
-  }
-    const loggedInTrainerId = getTrainerId();
+function getTrainerData(trainerUid) {
+  const uniqueLinkEl = document.getElementById('uniqueLink');
+  getDoc(doc(db, 'users', trainerUid))
+    .then(docSnap => {
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        uniqueLinkEl.textContent = userData.registrationLink || 'Nie znaleziono linku trenera.';
+      } else {
+        uniqueLinkEl.textContent = 'Nie znaleziono danych trenera.';
+      }
+    })
+    .catch(error => {
+      console.error('Błąd podczas pobierania danych trenera:', error);
+      uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania danych.';
+    });
+}
 
   
   updateDatesForWeek(new Date());
