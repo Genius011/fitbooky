@@ -915,20 +915,20 @@ const firebaseConfig = {
             appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
 };
 
+// Inicjalizacja aplikacji Firebase
 const app = initializeApp(firebaseConfig);
-
-
-const auth = getAuth(app);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
+// Obsługa zmiany stanu autentykacji
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    // Użytkownik jest zalogowany, `uid` jest dostępne
+    // Użytkownik jest zalogowany, uid jest dostępne
     const trainerUid = user.uid;
-    // Teraz możesz wykonać swoje operacje związane z `uid`, na przykład:
-    // getTrainerData(trainerUid);
+    displayFutureBookings(trainerUid);
+    displayTodayBookings(trainerUid);
   } else {
-    // Użytkownik jest wylogowany, `uid` nie jest dostępne
+    // Użytkownik jest wylogowany
     console.error('Użytkownik nie jest zalogowany.');
   }
 });
@@ -1002,9 +1002,17 @@ function setupWeekNavigation() {
 let trainerId = null;
 
 
+// Funkcja do pobierania trainerId zalogowanego trenera (dodaj ją w odpowiednim miejscu w swoim kodzie)
+function getTrainerId() {
+  // Tutaj dodaj kod do pobrania trainerId, na przykład z autoryzacji użytkownika
+  // lub inny sposób dostępu do identyfikatora zalogowanego trenera
+    return 'twój-trainer-id'; // Przykład wartości zalogowanego trenera
+}
 
 document.addEventListener('DOMContentLoaded', function() {
-  
+  // Pobierz trainerId przy użyciu funkcji getTrainerId()
+  trainerId = getTrainerId();
+
 onAuthStateChanged(auth, (user) => {
   if (user) {
     // Użytkownik jest zalogowany, uid jest dostępne
