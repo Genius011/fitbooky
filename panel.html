@@ -922,7 +922,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', function() {
   const trainerUid = getTrainerUid();
   if (trainerUid) {
     const uniqueLinkEl = document.getElementById('uniqueLink');
