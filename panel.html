@@ -942,8 +942,10 @@ function displayTrainerData(trainerId) {
           // Pobierz link i ustaw tekst elementu uniqueLinkEl
           const trainerData = docSnap.data();
           uniqueLinkEl.textContent = trainerData.registrationLink;
-        
-      }
+        } else {
+          uniqueLinkEl.textContent = 'Nie znaleziono linku trenera.';
+        }
+      })
       .catch(error => {
         console.error('Błąd podczas pobierania unikalnego linku:', error);
         uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania linku.';
