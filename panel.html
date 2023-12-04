@@ -919,24 +919,12 @@ document.addEventListener('DOMContentLoaded', function() {
 // Pobranie trainerId z URL
   const urlParams = new URLSearchParams(window.location.search);
   const trainerId = urlParams.get('trainerId');
- 
-// Deklaracja funkcji wewnątrz event listenera
-  function someFunctionUsingTrainerId(trainerId) {
-    getDoc(doc(db, 'trainers', trainerId))
-      .then(docSnap => {
-        // reszta Twojego kodu
-      });
-  }
 
   // Jeśli trainerId istnieje, wykonaj resztę kodu
   if (trainerId) {
-      displayTrainerData(trainerId);
-
-function displayTrainerData(trainerId) {
-
     const uniqueLinkEl = document.getElementById('uniqueLink');
 
-    getDoc(doc(db, 'trainers', globalTrainerId))
+    getDoc(doc(db, 'trainers', trainerId))
       .then(docSnap => {
         if (docSnap.exists()) {
           // Pobierz link i ustaw tekst elementu uniqueLinkEl
@@ -950,13 +938,14 @@ function displayTrainerData(trainerId) {
         console.error('Błąd podczas pobierania unikalnego linku:', error);
         uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania linku.';
       });
-	  }
- 
- 
+  } else {
+    // Możesz chcieć obsłużyć przypadki, gdy trainerId nie jest dostępne
+    console.error('Trainer ID is not defined in the URL parameters.');
+  }
+  
+  updateDatesForWeek(new Date());
+  setupWeekNavigation();
 });
-
-
-
 
 function updateDatesForWeek(current) {
   let currentDay = new Date(current.setDate(current.getDate() - current.getDay() + 1));
