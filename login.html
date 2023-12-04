@@ -258,6 +258,21 @@
 
   // Inicjalizacja Firestore
   const firestore = getFirestore(app);
+  
+  // Zarejestrowanie nowego użytkownika
+firebase.auth().createUserWithEmailAndPassword(email, password)
+  .then((userCredential) => {
+    // Po udanej rejestracji, wyślij e-mail weryfikacyjny do użytkownika
+    return userCredential.user.sendEmailVerification();
+  })
+  .then(() => {
+    // E-mail weryfikacyjny został wysłany
+    console.log("E-mail weryfikacyjny został wysłany.");
+  })
+  .catch((error) => {
+    // Obsługa błędów
+    console.error("Błąd podczas rejestracji użytkownika:", error);
+  });
 
   document.addEventListener('DOMContentLoaded', function() {
 
