@@ -950,11 +950,7 @@ globalTrainerId = trainerId;
   setupWeekNavigation();
 });
 
-async function displayFutureBookings() {
-  if (!globalTrainerId) {
-    console.error('Trainer ID is not defined.');
-    return;
-  }
+
 
 function updateDatesForWeek(current) {
   let currentDay = new Date(current.setDate(current.getDate() - current.getDay() + 1));
