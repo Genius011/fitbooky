@@ -935,7 +935,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (globalTrainerId) {
     const uniqueLinkEl = document.getElementById('uniqueLink');
 
-    getDoc(doc(db, 'trainers', globaltrainerId))
+    getDoc(doc(db, 'trainers', globalTrainerId))
       .then(docSnap => {
         if (docSnap.exists()) {
           // Pobierz link i ustaw tekst elementu uniqueLinkEl
