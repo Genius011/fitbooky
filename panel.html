@@ -914,20 +914,27 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let globalTrainerId = null;
+let globalTrainerId = null; // Deklaracja zmiennej globalnej
 
 document.addEventListener('DOMContentLoaded', function() {
 
 // Pobranie trainerId z URL
   const urlParams = new URLSearchParams(window.location.search);
   const trainerId = urlParams.get('trainerId');
-globalTrainerId = trainerId;
+trainerId = trainerId;
+// Deklaracja funkcji wewnątrz event listenera
+  function someFunctionUsingTrainerId(trainerId) {
+    getDoc(doc(db, 'trainers', trainerId))
+      .then(docSnap => {
+        // reszta Twojego kodu
+      });
+  }
 
   // Jeśli trainerId istnieje, wykonaj resztę kodu
   if (trainerId) {
     const uniqueLinkEl = document.getElementById('uniqueLink');
 
-    getDoc(doc(db, 'trainers', trainerId))
+    getDoc(doc(db, 'trainers', globaltrainerId))
       .then(docSnap => {
         if (docSnap.exists()) {
           // Pobierz link i ustaw tekst elementu uniqueLinkEl
