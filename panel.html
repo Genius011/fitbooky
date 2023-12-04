@@ -921,7 +921,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Pobranie trainerId z URL
   const urlParams = new URLSearchParams(window.location.search);
   const trainerId = urlParams.get('trainerId');
- globalTrainerId = trainerId;
+  globalTrainerId = urlParams.get('trainerId');
  
 // Deklaracja funkcji wewnątrz event listenera
   function someFunctionUsingTrainerId(trainerId) {
