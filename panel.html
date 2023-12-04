@@ -903,6 +903,9 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
 
+
+
+
 const firebaseConfig = {
     apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
             authDomain: "genius-f6a78.firebaseapp.com",
@@ -927,6 +930,12 @@ onAuthStateChanged(auth, (user) => {
     console.error('Użytkownik nie jest zalogowany.');
   }
 });
+
+function getTrainerUid() {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  return user ? user.uid : null;
+}
 
 document.addEventListener('DOMContentLoaded', function() {
   const trainerUid = getTrainerUid();
