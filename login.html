@@ -252,31 +252,14 @@
     appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
   };
 
- // Inicjalizacja Firebase App i Auth
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-// Zarejestrowanie nowego użytkownika
-auth.createUserWithEmailAndPassword(email, password)
-  .then((userCredential) => {
-    // Po udanej rejestracji, wyślij e-mail weryfikacyjny do użytkownika
-    return userCredential.user.sendEmailVerification();
-  })
-  .then(() => {
-    // E-mail weryfikacyjny został wysłany
-    console.log("E-mail weryfikacyjny został wysłany.");
-  })
-  .catch((error) => {
-    // Obsługa błędów
-    console.error("Błąd podczas rejestracji użytkownika:", error);
-  });
-
+  // Inicjalizacja Firebase App i Auth
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
   document.addEventListener('DOMContentLoaded', function() {
 
     const loginForm = document.getElementById('loginForm');
     const registrationForm = document.getElementById('registrationForm');
-    const toggleRegistration = document.getElementById('toggleRegistration');
     const isTrainerCheckbox = document.getElementById('isTrainer');
     const trainerInfoDiv = document.getElementById('trainerInfo');
     const headerTitle = document.getElementById('headerTitle');
@@ -304,158 +287,146 @@ auth.createUserWithEmailAndPassword(email, password)
         trainerInfoDiv.style.display = isTrainerCheckbox.checked ? 'block' : 'none';
     });
 
-
-
     // Przełączanie między formularzami logowania i rejestracji
     toggleRegistration.addEventListener('click', function(e) {
-	  console.log("Toggle clicked"); // Dodaj tę linię
-
+      console.log("Toggle clicked");
 
       e.preventDefault();
-    if (loginForm.style.display === 'none') {
-        loginForm.style.display = 'block';
-        registrationForm.style.display = 'none';
-		toggleSwitchDisplay('none'); // Ukryj przełącznik podczas logowania
-        headerTitle.textContent = 'Zaloguj się';
-        this.textContent = 'Zarejestruj się';
-        accountQuestion.textContent = 'Nie masz konta? '; // Reset to original text
-        accountQuestion.appendChild(this); // Re-append the link to the paragraph
-    } else {
-        loginForm.style.display = 'none';
-        registrationForm.style.display = 'block';
-		toggleSwitchDisplay('block'); // Pokaż przełącznik podczas rejestracji
-        headerTitle.textContent = 'Zarejestruj się';
-        this.textContent = 'Zaloguj się';
-        accountQuestion.textContent = 'Masz konto? '; // Change to new text
-        accountQuestion.appendChild(this); // Re-append the link to the paragraph
-    }
-});
+      if (loginForm.style.display === 'none') {
+          loginForm.style.display = 'block';
+          registrationForm.style.display = 'none';
+          toggleSwitchDisplay('none'); 
+          headerTitle.textContent = 'Zaloguj się';
+          this.textContent = 'Zarejestruj się';
+          accountQuestion.textContent = 'Nie masz konta? ';
+          accountQuestion.appendChild(this); 
+      } else {
+          loginForm.style.display = 'none';
+          registrationForm.style.display = 'block';
+          toggleSwitchDisplay('block'); 
+          headerTitle.textContent = 'Zarejestruj się';
+          this.textContent = 'Zaloguj się';
+          accountQuestion.textContent = 'Masz konto? '; 
+          accountQuestion.appendChild(this); 
+      }
+    });
 
     // Obsługa logowania
-loginForm.addEventListener('submit', function(e) {
-  e.preventDefault();
-  const email = loginForm.querySelector('input[type="email"]').value;
-  const password = loginForm.querySelector('input[type="password"]').value;
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = loginForm.querySelector('input[type="email"]').value;
+      const password = loginForm.querySelector('input[type="password"]').value;
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      console.log('Logged in user:', userCredential.user);
-      const uid = userCredential.user.uid;
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          console.log('Logged in user:', userCredential.user);
+          const uid = userCredential.user.uid;
 
-      const trainersRef = collection(firestore, 'trainers');
-      const trainerQuery = query(trainersRef, where('UID', '==', uid));
+          const trainersRef = collection(firestore, 'trainers');
+          const trainerQuery = query(trainersRef, where('UID', '==', uid));
 
-      console.log('Before getDocs'); // Dodaj tę linię
+          console.log('Before getDocs');
 
-      getDocs(trainerQuery)
-        .then((querySnapshot) => {
-          console.log('Inside getDocs'); // Dodaj tę linię
+          getDocs(trainerQuery)
+            .then((querySnapshot) => {
+              console.log('Inside getDocs');
 
-          if (!querySnapshot.empty) {
-            // Użytkownik jest trenerem, przekieruj na panel trenera
-            const trainerDoc = querySnapshot.docs[0];
-            const trainerId = trainerDoc.id;
+              if (!querySnapshot.empty) {
+                const trainerDoc = querySnapshot.docs[0];
+                const trainerId = trainerDoc.id;
 
-            // Dodaj te linie, aby sprawdzić wartości uid i trainerId
-            console.log('uid:', uid);
-            console.log('trainerId:', trainerId);
+                console.log('uid:', uid);
+                console.log('trainerId:', trainerId);
 
-            // Przekierowanie na panel trenera z przekazanym trainerID
-            const redirectUrl = `https://www.fitbooky.com/panel.html?trainerId=${trainerId}`;
-            window.location.href = redirectUrl;
-          } else {
-            // Użytkownik nie jest trenerem, przekieruj go na inną stronę
-            window.location.href = 'index.html'; // Możesz przekierować gdziekolwiek indziej
-          }
+                const redirectUrl = `https://www.fitbooky.com/panel.html?trainerId=${trainerId}`;
+                window.location.href = redirectUrl;
+              } else {
+                window.location.href = 'index.html'; 
+              }
+            })
+            .catch((error) => {
+              console.error('Błąd podczas pobierania trenera z Firestore:', error);
+            });
         })
         .catch((error) => {
-          console.error('Błąd podczas pobierania trenera z Firestore:', error);
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          alert('Error: ' + errorMessage);
         });
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      alert('Error: ' + errorMessage);
     });
-});
 
+    // Obsługa rejestracji
+    registrationForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const firstName = registrationForm.querySelector('input[name="firstName"]').value;
+        const email = registrationForm.querySelector('input[name="email"]').value; 
+        const password = registrationForm.querySelector('input[name="password"]').value;
+        const isTrainer = isTrainerCheckbox.checked;
 
-   // Obsługa rejestracji
-registrationForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const firstName = registrationForm.querySelector('input[name="firstName"]').value;
-    const email = registrationForm.querySelector('input[name="email"]').value; // Pobierz wartość e-maila z formularza
-    const password = registrationForm.querySelector('input[name="password"]').value;
-    const isTrainer = isTrainerCheckbox.checked;
+        let additionalData = {};
 
-    let additionalData = {};
+        if (isTrainer) {
+            additionalData = {
+                companyName: registrationForm.querySelector('input[name="companyName"]').value,
+                street: registrationForm.querySelector('input[name="street"]').value,
+                number: registrationForm.querySelector('input[name="number"]').value,
+                postalCode: registrationForm.querySelector('input[name="postalCode"]').value,
+                city: registrationForm.querySelector('input[name="city"]').value,
+                isTrainer: isTrainer
+            };
+        } else {
+            const trainerIdFromUrl = urlParams.get('trainerId');
+            if (trainerIdFromUrl) {
+                additionalData.trainerId = trainerIdFromUrl;
+            }
+        }
 
-    if (isTrainer) {
-        additionalData = {
-            companyName: registrationForm.querySelector('input[name="companyName"]').value,
-            street: registrationForm.querySelector('input[name="street"]').value,
-            number: registrationForm.querySelector('input[name="number"]').value,
-            postalCode: registrationForm.querySelector('input[name="postalCode"]').value,
-            city: registrationForm.querySelector('input[name="city"]').value,
-            isTrainer: isTrainer
-        };
-    } else {
-        // Jeśli użytkownik rejestruje się za pomocą unikalnego linku trenera, dodaj UID trenera do jego danych
-        const trainerIdFromUrl = urlParams.get('trainerId');
-        if (trainerIdFromUrl) {
-            additionalData.trainerId = trainerIdFromUrl;
+        auth.createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                console.log('User created:', user.uid);
+                const userData = {
+                    uid: user.uid,
+                    firstName: firstName,
+                    email: email,
+                    ...additionalData
+                };
+                return setDoc(doc(firestore, "users", user.uid), userData).then(() => {
+                    if (isTrainer) {
+                        const uniqueLink = `https://fitbooky.com/login.html?trainerId=${user.uid}`;
+                        console.log('Unique link:', uniqueLink);
+                        return setDoc(doc(firestore, "trainers", user.uid), {
+                            registrationLink: uniqueLink
+                        });
+                    }
+                });
+            })
+            .then(() => {
+                console.log('User and trainer info added to Firestore');
+                if (isTrainer) {
+                    alert('Registration successful! Your unique registration link has been created.');
+                } else {
+                    alert('Registration successful! You can now log in.');
+                }
+                window.location.href = 'login.html';
+            })
+            .catch((error) => {
+                console.error('Error during registration:', error);
+                alert('Error during registration: ' + error.message);
+            });
+    });
+
+    function toggleSwitchDisplay(displayValue) {
+        const trainerSwitchContainer = document.querySelector('.trainer-switch-container');
+        if (trainerSwitchContainer) {
+            trainerSwitchContainer.style.display = displayValue;
         }
     }
 
-    // Teraz wywołanie funkcji createUserWithEmailAndPassword z poprawnie zdefiniowanym emailem
-    auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            console.log('User created:', user.uid); // Log user UID after account creation
-            const userData = {
-                uid: user.uid,
-                firstName: firstName,
-                email: email,
-                ...additionalData
-            };
-            // Dodanie użytkownika do kolekcji 'users'
-            return setDoc(doc(firestore, "users", user.uid), userData).then(() => {
-                // Jeśli użytkownik jest trenerem, utwórz i zapisz unikalny link
-                if (isTrainer) {
-                    const uniqueLink = `https://fitbooky.com/login.html?trainerId=${user.uid}`;
-                    console.log('Unique link:', uniqueLink); // Log unique link for verification
-                    // Zapisanie unikalnego linku do kolekcji 'trainers'
-                    return setDoc(doc(firestore, "trainers", user.uid), {
-                        registrationLink: uniqueLink
-                    });
-                }
-            });
-        })
-        .then(() => {
-            console.log('User and trainer info added to Firestore');
-            if (isTrainer) {
-                alert('Registration successful! Your unique registration link has been created.');
-            } else {
-                alert('Registration successful! You can now log in.');
-            }
-            window.location.href = 'login.html';
-        })
-        .catch((error) => {
-            console.error('Error during registration:', error);
-            alert('Error during registration: ' + error.message);
-        });
-});
-});
-
-function toggleSwitchDisplay(displayValue) {
-    const trainerSwitchContainer = document.querySelector('.trainer-switch-container');
-    if (trainerSwitchContainer) {
-        trainerSwitchContainer.style.display = displayValue;
-    }
-}
-
+  });
 
 </script>
+
 
 
 
