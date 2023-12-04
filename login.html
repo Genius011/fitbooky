@@ -259,6 +259,9 @@
   // Inicjalizacja Firestore
   const firestore = getFirestore(app);
   
+  firebase.initializeApp(firebaseConfig);
+
+  
   // Zarejestrowanie nowego użytkownika
 firebase.auth().createUserWithEmailAndPassword(email, password)
   .then((userCredential) => {
