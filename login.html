@@ -373,6 +373,8 @@ registrationForm.addEventListener('submit', function(e) {
                 // Zapisanie unikalnego linku do kolekcji 'trainers'
                 return setDoc(doc(firestore, "trainers", user.uid), {
                     registrationLink: uniqueLink
+					                    trainerId: user.uid // Przypisanie UID jako trainerId
+
                 });
             }
         });
