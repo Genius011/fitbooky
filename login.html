@@ -384,7 +384,7 @@ loginForm.addEventListener('submit', function(e) {
 
 
 
-    // Obsługa rejestracji
+   // Obsługa rejestracji
 registrationForm.addEventListener('submit', function(e) {
     e.preventDefault();
     const firstName = registrationForm.querySelector('input[name="firstName"]').value;
@@ -411,6 +411,15 @@ registrationForm.addEventListener('submit', function(e) {
         }
     }
 
+    // Teraz wywołanie funkcji createUserWithEmailAndPassword z poprawnie zdefiniowanym emailem
+    auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Reszta kodu obsługującego rejestrację...
+        })
+        .catch((error) => {
+            // Obsługa błędu rejestracji...
+        });
+});
 
      // Rejestracja użytkownika w Firebase
     auth.createUserWithEmailAndPassword(email, password)
