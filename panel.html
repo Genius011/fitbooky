@@ -890,60 +890,78 @@ display: flex;
 
 
 <script type="module">
-
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
 import { 
   getFirestore, 
+  collection, 
+  getDocs, 
   doc, 
-  getDoc,
+  getDoc, 
+  updateDoc, 
+  deleteDoc,
+  
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
 
-// Konfiguracja Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
-  authDomain: "genius-f6a78.firebaseapp.com",
-  projectId: "genius-f6a78",
-  storageBucket: "genius-f6a78.appspot.com",
-  messagingSenderId: "4413237203",
-  appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
-};
-
-// Inicjalizacja aplikacji Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Referencja do autentykacji Firebase
-const auth = getAuth();
+function getTrainerUid() {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  return user ? user.uid : null;
+}
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    // UID jest dostępne gdy użytkownik jest zalogowany
+    // Użytkownik jest zalogowany, `uid` jest dostępne
     const trainerUid = user.uid;
-    // Pobranie i obsługa danych trenera
-    getTrainerData(trainerUid);
+    // Teraz możesz wykonać swoje operacje związane z `uid`, na przykład:
+    // getTrainerData(trainerUid);
   } else {
-    // Użytkownik jest wylogowany
+    // Użytkownik jest wylogowany, `uid` nie jest dostępne
     console.error('Użytkownik nie jest zalogowany.');
   }
 });
 
-function getTrainerData(trainerUid) {
-  const uniqueLinkEl = document.getElementById('uniqueLink');
-  getDoc(doc(db, 'users', trainerUid))
-    .then(docSnap => {
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        uniqueLinkEl.textContent = userData.registrationLink || 'Nie znaleziono linku trenera.';
-      } else {
-        uniqueLinkEl.textContent = 'Nie znaleziono danych trenera.';
-      }
-    })
-    .catch(error => {
-      console.error('Błąd podczas pobierania danych trenera:', error);
-      uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania danych.';
-    
-}
+const firebaseConfig = {
+    apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
+            authDomain: "genius-f6a78.firebaseapp.com",
+            projectId: "genius-f6a78",
+            storageBucket: "genius-f6a78.appspot.com",
+            messagingSenderId: "4413237203",
+            appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.addEventListener('DOMContentLoaded', function() {
+  const trainerUid = getTrainerUid();
+  if (trainerUid) {
+    const uniqueLinkEl = document.getElementById('uniqueLink');
+    // Zmieniono ścieżkę do dokumentu na 'users' zamiast 'trainers'
+    getDoc(doc(db, 'users', trainerUid))
+      .then(docSnap => {
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          // Teraz używamy userData.registrationLink, zakładając, że przechowujesz link rejestracyjny w danych użytkownika
+          uniqueLinkEl.textContent = userData.registrationLink || 'Nie znaleziono linku trenera.';
+        } else {
+          uniqueLinkEl.textContent = 'Nie znaleziono danych trenera.';
+        }
+      })
+      .catch(error => {
+        console.error('Błąd podczas pobierania danych trenera:', error);
+        uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania danych.';
+      });
+  } else {
+    console.error('UID trenera nie jest zdefiniowane.');
+  }
+
+
+  
+    function getTrainerId() {
+return 'twój-trainer-id'; // Przykład wartości zalogowanego trenera
+  }
+    const loggedInTrainerId = getTrainerId();
 
   
   updateDatesForWeek(new Date());
@@ -989,18 +1007,17 @@ document.addEventListener('DOMContentLoaded', function() {
   // Pobierz trainerId przy użyciu funkcji getTrainerId()
   trainerId = getTrainerId();
 
-async function displayFutureBookings() {
+async function displayFutureBookings(trainerUid) {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
-  const todayFormatted = formatDate(new Date()); // Używamy funkcji formatDate, aby uzyskać dzisiejszą datę w odpowiednim formacie
-  const trainerId = getTrainerId(); // Pobierz trainerId (przyjmuję, że masz funkcję getTrainerId())
+  const todayFormatted = formatDate(new Date());
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
     const bookings = bookingSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    }));
+    })).filter(booking => booking.trainerID === trainerUid); // Filtruj rezerwacje dla trenera
 
     // Sort bookings by date and time, starting from the current day.
     bookings.sort((a, b) => {
@@ -1049,6 +1066,16 @@ async function displayFutureBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
+
+// W funkcji onAuthStateChanged, po zalogowaniu użytkownika, wywołujesz displayFutureBookings
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // Użytkownik jest zalogowany, wyświetl jego rezerwacje
+    displayFutureBookings(user.uid);
+  } else {
+    console.error('Użytkownik nie jest zalogowany.');
+  }
+});
 
 async function displayTodayBookings() {
   const bookingsRef = collection(db, 'bookings');
