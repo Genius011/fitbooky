@@ -895,7 +895,6 @@ display: flex;
 
 
 <script type="module">
-import { getAuth } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
 import { 
   getFirestore, 
@@ -921,21 +920,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', function() {
-
-const auth = getAuth(app);
-  const user = auth.currentUser;
-
-  if (user) {
-    // UID zalogowanego trenera
-    const trainerUID = user.uid;
-
-    // Wywołaj funkcje wyświetlania rezerwacji z UID trenera
-    displayFutureBookings(trainerUID);
-    displayTodayBookings(trainerUID);
-  } else {
-    // Użytkownik nie jest zalogowany, przekieruj go do strony logowania
-    window.location.href = 'login.html';
-  }
   
   updateDatesForWeek(new Date());
   setupWeekNavigation();
@@ -967,7 +951,7 @@ function setupWeekNavigation() {
 }
 
 
-async function displayFutureBookings(trainerUID) {
+async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
   const todayFormatted = formatDate(new Date()); // Używamy funkcji formatDate, aby uzyskać dzisiejszą datę w odpowiednim formacie
@@ -977,15 +961,7 @@ async function displayFutureBookings(trainerUID) {
     const bookings = bookingSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    })).filter(booking => booking.trainerId === trainerUID); // Tylko rezerwacje tego trenera
-
-    // Tutaj powinien znajdować się reszta kodu, który zajmuje się wyświetlaniem rezerwacji
-  } catch (error) {
-    console.error("Error fetching bookings:", error);
-  }
-}
-
-	
+    }));
 
     // Sort bookings by date and time, starting from the current day.
     bookings.sort((a, b) => {
@@ -1027,7 +1003,10 @@ async function displayFutureBookings(trainerUID) {
         }
       });
     });
- 
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+  }
+}
 
 
 async function displayTodayBookings(trainerUID) {
