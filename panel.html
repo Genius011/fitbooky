@@ -905,7 +905,10 @@ import {
   updateDoc, 
   deleteDoc,
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
-import { getAuth } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js'; // Import Firebase Authentication
+import { 
+  getAuth, 
+  onAuthStateChanged 
+} from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
 
 
 
@@ -920,21 +923,26 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth();
-let currentUser = null;
+const auth = getAuth(app);
 
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    currentUser = user; // Set the current user
-    // Call your functions here to display bookings, etc.
-    displayTodayBookings();
-    displayFutureBookings();
-  } else {
-    currentUser = null; // No user is logged in
-  }
-});
 
 document.addEventListener('DOMContentLoaded', function() {
+
+ onAuthStateChanged(auth, user => {
+    if (user) {
+      // Użytkownik jest zalogowany
+      console.log('Użytkownik zalogowany:', user);
+      // Tutaj możesz wywołać funkcje, które powinny być dostępne tylko dla zalogowanych użytkowników
+      displayTodayBookings();
+      displayFutureBookings();
+      // ... inne funkcje
+    } else {
+      // Użytkownik jest wylogowany lub niezalogowany
+      console.log('Użytkownik nie jest zalogowany');
+      // Możesz przekierować na stronę logowania lub wyświetlić komunikat
+    }
+  });
+});
   
   updateDatesForWeek(new Date());
   setupWeekNavigation();
@@ -967,15 +975,9 @@ function setupWeekNavigation() {
 
 
 async function displayFutureBookings() {
-  if (!currentUser) {
-    console.error('No user is logged in.');
-    return;
-  }
-
-  // Only show bookings where the userId matches the current user's UID
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
-  const todayFormatted = formatDate(new Date());
+  const todayFormatted = formatDate(new Date()); // Używamy funkcji formatDate, aby uzyskać dzisiejszą datę w odpowiednim formacie
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
@@ -984,11 +986,8 @@ async function displayFutureBookings() {
       ...doc.data()
     }));
 
-    // Filter bookings to include only those with a matching userId
-    const filteredBookings = bookings.filter(booking => booking.userId === currentUser.uid);
-
-    // Sort filteredBookings by date and time
-    filteredBookings.sort((a, b) => {
+    // Sort bookings by date and time, starting from the current day.
+    bookings.sort((a, b) => {
       const dateA = new Date(`${a.date} ${a.time}`);
       const dateB = new Date(`${b.date} ${b.time}`);
       return dateA - dateB;
@@ -997,14 +996,14 @@ async function displayFutureBookings() {
     // Clear previous bookings and display sorted bookings.
     bookingsTableBody.innerHTML = '';
 
-    filteredBookings.forEach(bookingData => {
+    bookings.forEach(bookingData => {
       const userRef = doc(db, 'users', bookingData.userId);
       getDoc(userRef).then(userSnap => {
         if (userSnap.exists()) {
           const userData = userSnap.data();
           const bookingRow = document.createElement('tr');
 
-          // If the booking date is today, add the 'highlighted' class
+          // Jeśli data rezerwacji jest dzisiejszą datą, dodajemy klasę .highlighted
           if (bookingData.date === todayFormatted) {
             bookingRow.classList.add('highlighted');
           }
@@ -1015,14 +1014,13 @@ async function displayFutureBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
-            <td>
-              <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
-                <i class="fas fa-user"></i> <!-- Profile icon -->
-              </button>
-              <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
-                <i class="fas fa-times"></i>
-              </button>
-            </td>
+			         <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
+      <i class="fas fa-user"></i> <!-- Ikonka profilu -->
+    </button>
+  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
+            <i class="fas fa-times"></i>
+        </button>
+  </td>
           `;
           bookingsTableBody.appendChild(bookingRow);
         }
@@ -1032,7 +1030,6 @@ async function displayFutureBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
-
 
 
 async function displayTodayBookings() {
