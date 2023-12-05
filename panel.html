@@ -1042,6 +1042,7 @@ if (!loggedInUserId) {
 }
 
 
+document.addEventListener('DOMContentLoaded', function() {
 
 
 async function displayTodayBookings() {
@@ -1117,7 +1118,6 @@ async function displayTodayBookings() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
   displayTodayBookings();
   // ... reszta twojego kodu ...
 
