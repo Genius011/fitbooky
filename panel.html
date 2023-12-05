@@ -984,7 +984,11 @@ async function displayFutureBookings() {
       ...doc.data()
     }));
 
+    console.log('Bookings:', bookings);
+
     const filteredBookings = bookings.filter(booking => booking.userId === currentUser.uid);
+
+    console.log('Filtered Bookings:', filteredBookings);
 
     // Sort filteredBookings by date and time, starting from the current day.
     filteredBookings.sort((a, b) => {
@@ -992,6 +996,8 @@ async function displayFutureBookings() {
       const dateB = new Date(`${b.date} ${b.time}`);
       return dateA - dateB;
     });
+
+    console.log('Sorted Bookings:', filteredBookings);
 
     // Rest of your code to display filteredBookings...
   } catch (error) {
