@@ -986,6 +986,8 @@ async function displayFutureBookings() {
 
     // Filter bookings to include only those with a matching userId
     const filteredBookings = bookings.filter(booking => booking.userId === currentUser.uid);
+	
+	
 
     // Sort filteredBookings by date and time
     filteredBookings.sort((a, b) => {
@@ -1010,14 +1012,14 @@ async function displayFutureBookings() {
     // Clear previous bookings and display sorted bookings.
     bookingsTableBody.innerHTML = '';
 
-    bookings.forEach(bookingData => {
+     filteredBookings.forEach(bookingData => {
       const userRef = doc(db, 'users', bookingData.userId);
       getDoc(userRef).then(userSnap => {
         if (userSnap.exists()) {
           const userData = userSnap.data();
           const bookingRow = document.createElement('tr');
 
-          // Jeśli data rezerwacji jest dzisiejszą datą, dodajemy klasę .highlighted
+          // If the booking date is today, add the 'highlighted' class
           if (bookingData.date === todayFormatted) {
             bookingRow.classList.add('highlighted');
           }
@@ -1028,13 +1030,13 @@ async function displayFutureBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
-			         <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
-      <i class="fas fa-user"></i> <!-- Ikonka profilu -->
-    </button>
-  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
-            <i class="fas fa-times"></i>
-        </button>
-  </td>
+            <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
+              <i class="fas fa-user"></i> <!-- Profile icon -->
+            </button>
+            <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
+              <i class="fas fa-times"></i>
+            </button>
+          </td>
           `;
           bookingsTableBody.appendChild(bookingRow);
         }
