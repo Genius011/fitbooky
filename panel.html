@@ -932,6 +932,7 @@ let loggedInUserId = null;
 
  onAuthStateChanged(auth, user => {
     if (user) {
+	loggedInUserId = user.uid;
       // Użytkownik jest zalogowany
       console.log('Użytkownik zalogowany:', user);
       // Tutaj możesz wywołać funkcje, które powinny być dostępne tylko dla zalogowanych użytkowników
@@ -939,6 +940,7 @@ let loggedInUserId = null;
       displayFutureBookings();
       // ... inne funkcje
     } else {
+	loggedInUserId = null;
       // Użytkownik jest wylogowany lub niezalogowany
       console.log('Użytkownik nie jest zalogowany');
       // Możesz przekierować na stronę logowania lub wyświetlić komunikat
