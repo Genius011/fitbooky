@@ -977,12 +977,14 @@ async function displayFutureBookings(trainerUID) {
     const bookings = bookingSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-	      })).filter(booking => booking.trainerId === trainerUID); // Tylko rezerwacje tego trenera
-} catch (error) {
+    })).filter(booking => booking.trainerId === trainerUID); // Tylko rezerwacje tego trenera
+
+    // Tutaj powinien znajdować się reszta kodu, który zajmuje się wyświetlaniem rezerwacji
+  } catch (error) {
     console.error("Error fetching bookings:", error);
   }
 }
-    }));
+
 	
 
     // Sort bookings by date and time, starting from the current day.
