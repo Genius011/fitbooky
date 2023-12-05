@@ -936,6 +936,7 @@ console.log("onAuthStateChanged called");
   console.log("User ID (inside onAuthStateChanged):", user.uid);
     loggedInUserId = user.uid; // Aktualizacja ID zalogowanego użytkownika
 	displayFutureBookings();
+	displayTodayBookings();
     // Użytkownik jest zalogowany
     console.log('Użytkownik zalogowany:', user);
     // Wywołanie funkcji, które powinny być dostępne tylko dla zalogowanych użytkowników
@@ -1042,7 +1043,6 @@ if (!loggedInUserId) {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
 
 
 async function displayTodayBookings() {
@@ -1118,6 +1118,7 @@ async function displayTodayBookings() {
   }
 }
 
+document.addEventListener('DOMContentLoaded', function() {
   displayTodayBookings();
   // ... reszta twojego kodu ...
 
