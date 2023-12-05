@@ -925,11 +925,12 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+// Globalna zmienna do przechowywania UID zalogowanego użytkownika
+let loggedInUserId = null;
 
 document.addEventListener('DOMContentLoaded', function() {
 
-// Globalna zmienna do przechowywania UID zalogowanego użytkownika
-let loggedInUserId = null;
+
 
 onAuthStateChanged(auth, user => {
 console.log("onAuthStateChanged called");
