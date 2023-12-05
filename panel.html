@@ -668,7 +668,14 @@ display: flex;
         </table>
     </section>
 	
-	
+	<!-- Sekcja do rozwijania Finanse -->
+<div class="toggle-section toggle-finances">
+  <i id="toggleFinancesIcon" class="fas fa-chevron-down"></i>
+  <span>Finanse</span>
+</div>
+
+
+<!-- Kontener Finanse -->
 
 </div>
 <div id="profileModal" class="modal">
@@ -1057,6 +1064,22 @@ async function savePrice(bookingId) {
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
+async function displayTrainerInfo(userId) {
+    const trainerRef = doc(db, 'trainers', userId);
+    try {
+        const docSnap = await getDoc(trainerRef);
+        if (docSnap.exists()) {
+            const trainerData = docSnap.data();
+            document.getElementById('trainerEmail').textContent = trainerData.email || 'Not available';
+            document.getElementById('trainerUID').textContent = userId;
+            document.getElementById('trainerLink').textContent = trainerData.uniqueLink || 'Not available';
+        } else {
+            console.log("No such document!");
+        }
+    } catch (error) {
+        console.log("Error getting document:", error);
+    }
+}
 
 </script>
 
