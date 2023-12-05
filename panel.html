@@ -6,6 +6,7 @@
     <title>Panel Trenera</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
 
 	<style>
         body {
@@ -608,6 +609,76 @@ display: flex;
     margin: 5px 0;
 }
 
+.table-container {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.table-modern {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    min-width: 600px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-modern thead {
+    background-color: #6e8efb;
+    color: white;
+}
+
+.table-modern th, .table-modern td {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: normal;
+}
+
+.table-modern tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.table-modern tbody tr:last-child {
+    border-bottom: 0;
+}
+
+.table-modern tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.table-modern th {
+    position: sticky;
+    top: 0;
+}
+
+/* Responsive table */
+@media (max-width: 640px) {
+    .table-modern {
+        display: block;
+    }
+    .table-modern thead {
+        display: none;
+    }
+    .table-modern tbody tr {
+        display: block;
+        margin-bottom: .625rem;
+    }
+    .table-modern tbody tr td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: .625rem;
+        text-align: right;
+    }
+    .table-modern tbody tr td::before {
+        content: attr(data-label);
+        flex-basis: 50%;
+        text-align: left;
+        font-weight: bold;
+    }
+}
 
     </style>
 </head>
