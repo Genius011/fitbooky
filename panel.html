@@ -1055,6 +1055,8 @@ async function displayTodayBookings() {
   const bookingsRef = collection(db, 'bookings');
   const todayBookingsTableBody = document.getElementById('todayBookingsTable').querySelector('tbody');
   const todayFormatted = formatDate(new Date());
+  console.log("Today's date:", todayFormatted); // Log 1: Sprawdzanie daty
+
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
@@ -1062,10 +1064,15 @@ async function displayTodayBookings() {
       id: doc.id,
       ...doc.data()
     }));
+    console.log("Logged in User ID:", loggedInUserId); // Log 2: Sprawdzanie UID użytkownika
+
 
     // Filtrowanie dzisiejszych rezerwacji przypisanych do zalogowanego trenera
     const todayBookings = bookings.filter(booking => booking.date === todayFormatted && booking.trainerId === loggedInUserId);
-    todayBookingsTableBody.innerHTML = '';
+        console.log("Filtered bookings:", todayBookings); // Log 3: Sprawdzanie przefiltrowanych rezerwacji
+
+	
+	todayBookingsTableBody.innerHTML = '';
 
     todayBookings.forEach(bookingData => {
     const userRef = doc(db, 'users', bookingData.userId);
