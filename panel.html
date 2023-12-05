@@ -928,6 +928,8 @@ const auth = getAuth(app);
 
 document.addEventListener('DOMContentLoaded', function() {
 
+let loggedInUserId = null;
+
  onAuthStateChanged(auth, user => {
     if (user) {
       // Użytkownik jest zalogowany
@@ -986,7 +988,7 @@ async function displayFutureBookings() {
     const bookings = bookingSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    }));
+    })).filter(booking => booking.trainerId === loggedInUserId); // Filtruj rezerwacje dla zalogowanego trenera
 
     // Sort bookings by date and time, starting from the current day.
     bookings.sort((a, b) => {
@@ -1032,6 +1034,7 @@ async function displayFutureBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
+
 
 
 async function displayTodayBookings() {
