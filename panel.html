@@ -986,8 +986,6 @@ async function displayFutureBookings() {
 
     // Filter bookings to include only those with a matching userId
     const filteredBookings = bookings.filter(booking => booking.userId === currentUser.uid);
-	
-	
 
     // Sort filteredBookings by date and time
     filteredBookings.sort((a, b) => {
@@ -996,23 +994,10 @@ async function displayFutureBookings() {
       return dateA - dateB;
     });
 
-    // Continue with the rest of your code to display filteredBookings...
-    // Add your code here
-
-  } catch (error) {
-    console.error("Error fetching bookings:", error);
-  }
-}
-
-
-
-
-    
-
     // Clear previous bookings and display sorted bookings.
     bookingsTableBody.innerHTML = '';
 
-     filteredBookings.forEach(bookingData => {
+    filteredBookings.forEach(bookingData => {
       const userRef = doc(db, 'users', bookingData.userId);
       getDoc(userRef).then(userSnap => {
         if (userSnap.exists()) {
@@ -1030,13 +1015,14 @@ async function displayFutureBookings() {
             <td>${bookingData.time}</td>
             <td>${bookingData.date}</td>
             <td>${bookingData.trainingType}</td>
-            <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
-              <i class="fas fa-user"></i> <!-- Profile icon -->
-            </button>
-            <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
-              <i class="fas fa-times"></i>
-            </button>
-          </td>
+            <td>
+              <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
+                <i class="fas fa-user"></i> <!-- Profile icon -->
+              </button>
+              <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
+                <i class="fas fa-times"></i>
+              </button>
+            </td>
           `;
           bookingsTableBody.appendChild(bookingRow);
         }
@@ -1046,6 +1032,7 @@ async function displayFutureBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
+
 
 
 async function displayTodayBookings() {
