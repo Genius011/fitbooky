@@ -981,6 +981,10 @@ function setupWeekNavigation() {
 
 
 async function displayFutureBookings() {
+if (!loggedInUserId) {
+    console.log("Użytkownik nie jest zalogowany.");
+    return;
+  }
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
   const todayFormatted = formatDate(new Date());
