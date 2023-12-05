@@ -603,7 +603,6 @@ display: flex;
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
-	color: white;
 }
 #trainerInfo p {
     margin: 5px 0;
@@ -614,12 +613,7 @@ display: flex;
 </head>
 <body>
 
-<!-- Trainer Info Section -->
-    <div id="trainerInfo">
-        <p>Email: <span id="trainerEmail"></span></p>
-        <p>UID: <span id="trainerUID"></span></p>
-        <p>Unique Link: <span id="trainerLink"></span></p>
-    </div>
+
 
 <div id="adminPanel" class="admin-panel">
     <h1>Panel Trenera</h1>
@@ -911,7 +905,12 @@ display: flex;
   </form>
 </section>
 
-
+<!-- Trainer Info Section -->
+    <div id="trainerInfo">
+        <p>Email: <span id="trainerEmail"></span></p>
+        <p>UID: <span id="trainerUID"></span></p>
+        <p>Unique Link: <span id="trainerLink"></span></p>
+    </div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
