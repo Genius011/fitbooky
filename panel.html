@@ -1047,9 +1047,16 @@ if (!loggedInUserId) {
 
 
 async function displayTodayBookings() {
+  console.log("displayTodayBookings called"); // Dodaj ten log
+  if (!loggedInUserId) {
+    console.log("Użytkownik nie jest zalogowany.");
+    return;
+  }
+
   const bookingsRef = collection(db, 'bookings');
   const todayBookingsTableBody = document.getElementById('todayBookingsTable').querySelector('tbody');
   const todayFormatted = formatDate(new Date());
+  console.log("Today's date:", todayFormatted); // Log 1: Sprawdzanie daty
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
@@ -1057,27 +1064,24 @@ async function displayTodayBookings() {
       id: doc.id,
       ...doc.data()
     }));
+    console.log("Logged in User ID:", loggedInUserId); // Log 2: Sprawdzanie UID użytkownika
 
-    // Filtrowanie dzisiejszych rezerwacji
-    const todayBookings = bookings.filter(booking => booking.date === todayFormatted);
-    todayBookingsTableBody.innerHTML = ''; // Czyści istniejące wiersze tabeli
+    // Filtrowanie dzisiejszych rezerwacji przypisanych do zalogowanego trenera
+    const todayBookings = bookings.filter(booking => booking.date === todayFormatted && booking.trainerId === loggedInUserId);
+    console.log("Filtered bookings:", todayBookings); // Log 3: Sprawdzanie przefiltrowanych rezerwacji
 
-    todayBookings.forEach(bookingData => {
-    const userRef = doc(db, 'users', bookingData.userId);
-    getDoc(userRef).then(userSnap => {
+    todayBookingsTableBody.innerHTML = '';
+
+    const bookingElements = await Promise.all(todayBookings.map(async (bookingData) => {
+      const userSnap = await getDoc(doc(db, 'users', bookingData.userId));
       if (userSnap.exists()) {
         const userData = userSnap.data();
         const bookingRow = document.createElement('tr');
-          
-          // Dodaj klasę .highlighted, jeśli to konieczne
-          if (bookingData.date === todayFormatted) {
-            bookingRow.classList.add('highlighted');
-          }
-          
-		  
-		          const priceValue = bookingData.price ? bookingData.price : '';
-
-          bookingRow.innerHTML = `
+        if (bookingData.date === todayFormatted) {
+          bookingRow.classList.add('highlighted');
+        }
+        const priceValue = bookingData.price ? bookingData.price : '';
+        bookingRow.innerHTML = `
           <td>${userData.firstName || ''}</td>
           <td>${userData.lastName || ''}</td>
           <td>${bookingData.time}</td>
@@ -1089,29 +1093,37 @@ async function displayTodayBookings() {
               <i class="fa fa-check"></i>
             </button>
           </td>
-              <td>
-    <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
-      <i class="fas fa-user"></i> <!-- Ikonka profilu -->
-    </button>
-  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
-            <i class="fas fa-times"></i>
-        </button>
-  
-  </td>
-          `;
+          <td>
+            <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
+              <i class="fas fa-user"></i>
+            </button>
+            <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
+              <i class="fas fa-times"></i>
+            </button>
+          </td>
+        `;
+        return bookingRow;
+      } else {
+        return null;
+      }
+    }));
 
-          // Dodawanie wierszy do tabeli dzisiejszych rezerwacji
-          todayBookingsTableBody.appendChild(bookingRow);
-        }
-      });
+    bookingElements.forEach((element) => {
+      if (element) {
+        todayBookingsTableBody.appendChild(element);
+      }
     });
+
   } catch (error) {
     console.error("Error fetching bookings:", error);
   }
 }
+
 document.addEventListener('DOMContentLoaded', function() {
-  // Wywołanie funkcji do wyświetlenia dzisiejszych rezerwacji
   displayTodayBookings();
+  // ... reszta twojego kodu ...
+
+
   
  
   // Aktualizacja dat na stronie zgodnie z aktualnym tygodniem
