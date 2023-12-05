@@ -928,27 +928,27 @@ const auth = getAuth(app);
 
 document.addEventListener('DOMContentLoaded', function() {
 
+// Globalna zmienna do przechowywania UID zalogowanego użytkownika
 let loggedInUserId = null;
 
- onAuthStateChanged(auth, user => {
-    if (user) {
-	loggedInUserId = user.uid;
-      // Użytkownik jest zalogowany
-      console.log('Użytkownik zalogowany:', user);
-      // Tutaj możesz wywołać funkcje, które powinny być dostępne tylko dla zalogowanych użytkowników
-      displayTodayBookings();
-      displayFutureBookings();
-      // ... inne funkcje
-    } else {
-	loggedInUserId = null;
-      // Użytkownik jest wylogowany lub niezalogowany
-      console.log('Użytkownik nie jest zalogowany');
-      // Możesz przekierować na stronę logowania lub wyświetlić komunikat
-	  window.location.href = 'login.html';
-	  
-    }
-	
-  });
+onAuthStateChanged(auth, user => {
+  if (user) {
+    loggedInUserId = user.uid; // Aktualizacja ID zalogowanego użytkownika
+    // Użytkownik jest zalogowany
+    console.log('Użytkownik zalogowany:', user);
+    // Wywołanie funkcji, które powinny być dostępne tylko dla zalogowanych użytkowników
+    displayTodayBookings();
+    displayFutureBookings();
+    // ... inne funkcje
+  } else {
+    loggedInUserId = null; // Zresetuj ID przy wylogowaniu
+    // Użytkownik jest wylogowany lub niezalogowany
+    console.log('Użytkownik nie jest zalogowany');
+    // Przekierowanie na stronę logowania
+    window.location.href = 'login.html';
+  }
+});
+
   
   updateDatesForWeek(new Date());
   setupWeekNavigation();
@@ -983,7 +983,7 @@ function setupWeekNavigation() {
 async function displayFutureBookings() {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
-  const todayFormatted = formatDate(new Date()); // Używamy funkcji formatDate, aby uzyskać dzisiejszą datę w odpowiednim formacie
+  const todayFormatted = formatDate(new Date());
 
   try {
     const bookingSnapshot = await getDocs(bookingsRef);
@@ -992,14 +992,12 @@ async function displayFutureBookings() {
       ...doc.data()
     })).filter(booking => booking.trainerId === loggedInUserId); // Filtruj rezerwacje dla zalogowanego trenera
 
-    // Sort bookings by date and time, starting from the current day.
     bookings.sort((a, b) => {
       const dateA = new Date(`${a.date} ${a.time}`);
       const dateB = new Date(`${b.date} ${b.time}`);
       return dateA - dateB;
     });
 
-    // Clear previous bookings and display sorted bookings.
     bookingsTableBody.innerHTML = '';
 
     bookings.forEach(bookingData => {
@@ -1009,7 +1007,6 @@ async function displayFutureBookings() {
           const userData = userSnap.data();
           const bookingRow = document.createElement('tr');
 
-          // Jeśli data rezerwacji jest dzisiejszą datą, dodajemy klasę .highlighted
           if (bookingData.date === todayFormatted) {
             bookingRow.classList.add('highlighted');
           }
@@ -1036,6 +1033,7 @@ async function displayFutureBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
+
 
 
 
