@@ -1045,7 +1045,12 @@ async function displayTodayBookings(trainerUID) {
       ...doc.data()
     })).filter(booking => booking.date === todayFormatted && booking.trainerId === trainerUID); // Tylko dzisiejsze rezerwacje tego trenera
 
-    }));
+    // Tutaj powinien znajdować się reszta kodu, który zajmuje się wyświetlaniem rezerwacji
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+  }
+}
+
 
     // Filtrowanie dzisiejszych rezerwacji
     const todayBookings = bookings.filter(booking => booking.date === todayFormatted);
