@@ -335,7 +335,7 @@
 
         <div class="dropdown-content" style="display: none;">
             <a href="profile.html">Profil</a>
-            <a href="panel.html" id="trainerPanelLink">Panel Trenera</a>
+<a id="trainerPanelLink" href="/trainer-panel" style="display: none;">Panel Trenera</a>
             <a href="#" id="logout">Wyloguj</a>
         </div>
     </div>
@@ -391,48 +391,34 @@ const db = getFirestore(app);
     });
   });
   
-  
-  
-   
+     
     document.addEventListener('DOMContentLoaded', function() {
     const auth = getAuth();
     let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
 
     
 	
-	onAuthStateChanged(auth, (user) => {
-        if (user) {
-            currentUserId = user.uid;
-
-            // Get user document from Firestore
-            const userRef = doc(getFirestore(), 'users', user.uid);
-            getDoc(userRef).then((docSnap) => {
-                if (docSnap.exists()) {
-                    const userData = docSnap.data();
-                    const userFirstName = userData.firstName; // Accessing the 'firstName' field from Firestore
-
-                    // Update the logout button text with the user's first name
-                    const logoutButtonText = document.getElementById('logoutButtonText');
-                    if (userFirstName) {
-                        logoutButtonText.textContent = `Zalogowany jako ${userFirstName}`;
-                    } else {
-                        console.log("User's first name is not defined in the document.");
-                    }
-
-                    // Check if the user is a trainer and show the 'Panel Trenera' link
-						if (userData.isTrainer) {
-                        const trainerPanelLink = document.getElementById('trainerPanelLink');
-                        trainerPanelLink.style.display = 'block'; // Show the link if the user is a trainer
-                    }
-                } else {
-                    console.log("User data not found in Firestore.");
-                }
-            });
+	onAuthStateChanged(auth, async (user) => {  // Make this callback async
+    if (user) {
+      currentUserId = user.uid;
+      const userRef = doc(getFirestore(), 'users', user.uid);
+      try {
+        const docSnap = await getDoc(userRef);  // Use await to wait for the promise to resolve
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          const trainerPanelLink = document.getElementById('trainerPanelLink');
+          trainerPanelLink.style.display = userData.isTrainer ? 'block' : 'none';
         } else {
-            console.log("No user is logged in, redirecting to login");
-            window.location.href = 'login.html';
+          console.log("User data not found in Firestore.");
         }
-    });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    } else {
+      console.log("No user is logged in, redirecting to login");
+      window.location.href = 'login.html';
+    }
+  });
 
 // Ensure the dropdown content is hidden initially and shown on hover
 const dropdown = document.querySelector('.dropdown');
