@@ -932,7 +932,9 @@ document.addEventListener('DOMContentLoaded', function() {
 let loggedInUserId = null;
 
 onAuthStateChanged(auth, user => {
+console.log("onAuthStateChanged called");
   if (user) {
+  console.log("User ID (inside onAuthStateChanged):", user.uid);
     loggedInUserId = user.uid; // Aktualizacja ID zalogowanego użytkownika
     // Użytkownik jest zalogowany
     console.log('Użytkownik zalogowany:', user);
@@ -981,6 +983,8 @@ function setupWeekNavigation() {
 
 
 async function displayFutureBookings() {
+	console.log("displayFutureBookings called"); // Sprawdź, czy funkcja jest wywoływana
+	console.log("Logged in User ID (inside displayFutureBookings):", loggedInUserId); // Sprawdź wartość loggedInUserId
 if (!loggedInUserId) {
     console.log("Użytkownik nie jest zalogowany.");
     return;
