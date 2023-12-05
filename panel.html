@@ -1047,6 +1047,11 @@ if (!loggedInUserId) {
 
 
 async function displayTodayBookings() {
+  if (!loggedInUserId) {
+    console.log("Użytkownik nie jest zalogowany.");
+    return;
+  }
+
   const bookingsRef = collection(db, 'bookings');
   const todayBookingsTableBody = document.getElementById('todayBookingsTable').querySelector('tbody');
   const todayFormatted = formatDate(new Date());
@@ -1058,9 +1063,9 @@ async function displayTodayBookings() {
       ...doc.data()
     }));
 
-    // Filtrowanie dzisiejszych rezerwacji
-    const todayBookings = bookings.filter(booking => booking.date === todayFormatted);
-    todayBookingsTableBody.innerHTML = ''; // Czyści istniejące wiersze tabeli
+    // Filtrowanie dzisiejszych rezerwacji przypisanych do zalogowanego trenera
+    const todayBookings = bookings.filter(booking => booking.date === todayFormatted && booking.trainerId === loggedInUserId);
+    todayBookingsTableBody.innerHTML = '';
 
     todayBookings.forEach(bookingData => {
     const userRef = doc(db, 'users', bookingData.userId);
