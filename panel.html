@@ -756,9 +756,15 @@ console.log("onAuthStateChanged called");
 	displayTodayBookings();
     // Użytkownik jest zalogowany
     console.log('Użytkownik zalogowany:', user);
-    // Wywołanie funkcji, które powinny być dostępne tylko dla zalogowanych użytkowników
+    const userRef = doc(db, 'users', user.uid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      const userData = docSnap.data();
     
-    // ... inne funkcje
+    document.getElementById('logoutButtonText').textContent = `Cześć ${userData.firstName}`;
+    } else {
+      console.error("User data not found in Firestore.");
+    }
   } else {
     loggedInUserId = null; // Zresetuj ID przy wylogowaniu
     // Użytkownik jest wylogowany lub niezalogowany
@@ -1186,6 +1192,14 @@ document.getElementById('logout').addEventListener('click', () => {
   });
 });
 
+// Logout function
+document.getElementById('logout').addEventListener('click', () => {
+  signOut(auth).then(() => {
+    window.location.href = 'login.html'; // Redirect to login after successful logout
+  }).catch((error) => {
+    console.error('Logout failed', error);
+  });
+});
 
 </script>
 
