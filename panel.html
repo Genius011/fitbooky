@@ -1047,6 +1047,7 @@ if (!loggedInUserId) {
 
 
 async function displayTodayBookings() {
+  console.log("displayTodayBookings called"); // Dodaj ten log
   if (!loggedInUserId) {
     console.log("Użytkownik nie jest zalogowany.");
     return;
