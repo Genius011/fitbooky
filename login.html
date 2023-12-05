@@ -237,6 +237,8 @@
     setDoc,
 	getDoc
   } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+  import { sendEmailVerification } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
+
 
   // Konfiguracja Firebase
   const firebaseConfig = {
@@ -364,6 +366,7 @@ registrationForm.addEventListener('submit', function(e) {
             email: email,
             ...additionalData
         };
+
         // Dodanie użytkownika do kolekcji 'users'
         return setDoc(doc(firestore, "users", user.uid), userData).then(() => {
             // Jeśli użytkownik jest trenerem, utwórz i zapisz unikalny link oraz trainerId
@@ -376,16 +379,19 @@ registrationForm.addEventListener('submit', function(e) {
                     trainerId: user.uid // Przypisanie UID jako trainerId
                 });
             }
+        }).then(() => {
+            // Wysyłanie e-maila z potwierdzeniem
+            return sendEmailVerification(user);
         });
     })
     .then(() => {
-        console.log('User and trainer info added to Firestore');
+        console.log('User and trainer info added to Firestore, email verification sent');
         if(isTrainer) {
-            alert('Registration successful! Your unique registration link has been created.');
+            alert('Registration successful! Your unique registration link has been created. Please check your email to verify your account.');
         } else {
-            alert('Registration successful! You can now log in.');
+            alert('Registration successful! Please check your email to verify your account.');
         }
-        window.location.href = 'login.html';
+        window.location.href = 'login.html'; // Przekierowanie do login.html
     })
     .catch((error) => {
         console.error('Error during registration:', error);
@@ -393,6 +399,7 @@ registrationForm.addEventListener('submit', function(e) {
     });
 
 });
+
 
 });
 
