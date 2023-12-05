@@ -978,12 +978,12 @@ async function displayFutureBookings(trainerUID) {
       id: doc.id,
       ...doc.data()
 	      })).filter(booking => booking.trainerId === trainerUID); // Tylko rezerwacje tego trenera
-
-    }));
-	} catch (error) {
+} catch (error) {
     console.error("Error fetching bookings:", error);
   }
 }
+    }));
+	
 
     // Sort bookings by date and time, starting from the current day.
     bookings.sort((a, b) => {
