@@ -895,6 +895,7 @@ display: flex;
 
 
 <script type="module">
+import { getAuth } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
 import { 
   getFirestore, 
@@ -920,6 +921,21 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', function() {
+
+const auth = getAuth(app);
+  const user = auth.currentUser;
+
+  if (user) {
+    // UID zalogowanego trenera
+    const trainerUID = user.uid;
+
+    // Wywołaj funkcje wyświetlania rezerwacji z UID trenera
+    displayFutureBookings(trainerUID);
+    displayTodayBookings(trainerUID);
+  } else {
+    // Użytkownik nie jest zalogowany, przekieruj go do strony logowania
+    window.location.href = 'login.html';
+  }
   
   updateDatesForWeek(new Date());
   setupWeekNavigation();
@@ -951,7 +967,7 @@ function setupWeekNavigation() {
 }
 
 
-async function displayFutureBookings() {
+async function displayFutureBookings(trainerUID) {
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
   const todayFormatted = formatDate(new Date()); // Używamy funkcji formatDate, aby uzyskać dzisiejszą datę w odpowiednim formacie
@@ -961,6 +977,8 @@ async function displayFutureBookings() {
     const bookings = bookingSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
+	      })).filter(booking => booking.trainerId === trainerUID); // Tylko rezerwacje tego trenera
+
     }));
 
     // Sort bookings by date and time, starting from the current day.
@@ -1009,7 +1027,7 @@ async function displayFutureBookings() {
 }
 
 
-async function displayTodayBookings() {
+async function displayTodayBookings(trainerUID) {
   const bookingsRef = collection(db, 'bookings');
   const todayBookingsTableBody = document.getElementById('todayBookingsTable').querySelector('tbody');
   const todayFormatted = formatDate(new Date());
@@ -1019,6 +1037,8 @@ async function displayTodayBookings() {
     const bookings = bookingSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
+    })).filter(booking => booking.date === todayFormatted && booking.trainerId === trainerUID); // Tylko dzisiejsze rezerwacje tego trenera
+
     }));
 
     // Filtrowanie dzisiejszych rezerwacji
