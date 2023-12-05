@@ -616,16 +616,17 @@ display: flex;
 
 <div class="button-container">
     <div class="dropdown">
-        <button id="logoutButton">
+        <button id="logoutButton" class="dropdown-toggle">
             <span id="logoutButtonText">Zaloguj</span> <span class="arrow-down">&#9660;</span>
         </button>
-        <div class="dropdown-content" style="display: none;">
+        <div class="dropdown-content">
             <a href="profile.html">Profil</a>
-            <a href="panel.html" id="trainerPanelLink" style="display: none;">Panel Trenera</a>
+            <a href="Konto.html" id="account" style="display: block;">Konto</a>
             <a href="#" id="logout">Wyloguj</a>
         </div>
     </div>
 </div>
+
 
 
 
@@ -1185,6 +1186,33 @@ document.getElementById('logout').addEventListener('click', () => {
     console.error('Logout failed', error);
   });
 });
+
+
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Select the dropdown toggle button
+    const dropdownToggle = document.querySelector('.dropdown-toggle');
+    const dropdownContent = document.querySelector('.dropdown-content');
+
+    // Listen for a click event on the dropdown toggle button
+    dropdownToggle.addEventListener('click', function() {
+        // Toggle the display of the dropdown content
+        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Close the dropdown menu if the user clicks outside of it
+    window.addEventListener('click', function(event) {
+        if (!event.target.matches('.dropdown-toggle')) {
+            dropdownContent.style.display = 'none';
+        }
+    });
+
+    // Logout function, if needed here
+    document.getElementById('logout').addEventListener('click', function() {
+        // ... your logout code ...
+    });
+});
+
 
 // Logout function
 document.getElementById('logout').addEventListener('click', () => {
