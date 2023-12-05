@@ -1032,6 +1032,21 @@ async function calculateAndDisplayFinances() {
     }));
 
     
+// Event listener dla przycisku rozwijania sekcji Finanse
+document.getElementById('toggleFinancesIcon').addEventListener('click', function() {
+  const section = document.getElementById('financesManager');
+  const icon = document.getElementById('toggleFinancesIcon');
+  
+  // Przełącz wyświetlanie sekcji i obracanie ikony
+  if (section.style.display === "none") {
+    section.style.display = "block";
+    icon.classList.add('rotate-icon');
+    calculateAndDisplayFinances(); // Wywołanie funkcji obliczającej finanse po rozwinięciu sekcji
+  } else {
+    section.style.display = "none";
+    icon.classList.remove('rotate-icon');
+  }
+});
 
 async function savePrice(bookingId) {
   const priceInput = document.getElementById(`price-${bookingId}`);
