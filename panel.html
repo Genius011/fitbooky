@@ -940,7 +940,10 @@ document.addEventListener('DOMContentLoaded', function() {
       // Użytkownik jest wylogowany lub niezalogowany
       console.log('Użytkownik nie jest zalogowany');
       // Możesz przekierować na stronę logowania lub wyświetlić komunikat
+	  window.location.href = 'login.html';
+	  
     }
+	});
   });
   
   updateDatesForWeek(new Date());
