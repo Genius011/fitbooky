@@ -756,10 +756,7 @@ console.log("onAuthStateChanged called");
 	displayTodayBookings();
     // Użytkownik jest zalogowany
     console.log('Użytkownik zalogowany:', user);
-    const userRef = doc(db, 'users', user.uid);
-    const docSnap = await getDoc(userRef);
-    if (docSnap.exists()) {
-      const userData = docSnap.data();
+    
     
     document.getElementById('logoutButtonText').textContent = `Cześć ${userData.firstName}`;
     } else {
