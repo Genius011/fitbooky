@@ -598,9 +598,27 @@ display: flex;
     margin-bottom: 20px;
 }
 
+#trainerInfo {
+    background-color: #f3f3f3;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+#trainerInfo p {
+    margin: 5px 0;
+}
+
+
     </style>
 </head>
 <body>
+
+<!-- Trainer Info Section -->
+    <div id="trainerInfo">
+        <p>Email: <span id="trainerEmail"></span></p>
+        <p>UID: <span id="trainerUID"></span></p>
+        <p>Unique Link: <span id="trainerLink"></span></p>
+    </div>
 
 <div id="adminPanel" class="admin-panel">
     <h1>Panel Trenera</h1>
@@ -1344,7 +1362,22 @@ async function savePrice(bookingId) {
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
-
+async function displayTrainerInfo(userId) {
+    const trainerRef = doc(db, 'trainers', userId);
+    try {
+        const docSnap = await getDoc(trainerRef);
+        if (docSnap.exists()) {
+            const trainerData = docSnap.data();
+            document.getElementById('trainerEmail').textContent = trainerData.email || 'Not available';
+            document.getElementById('trainerUID').textContent = userId;
+            document.getElementById('trainerLink').textContent = trainerData.uniqueLink || 'Not available';
+        } else {
+            console.log("No such document!");
+        }
+    } catch (error) {
+        console.log("Error getting document:", error);
+    }
+}
 
 </script>
 
