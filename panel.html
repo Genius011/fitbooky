@@ -628,6 +628,7 @@ display: flex;
 </div>
 
 
+
 <div id="adminPanel" class="admin-panel">
     <h1>Panel Trenera</h1>
     
@@ -1175,6 +1176,16 @@ async function displayTrainerInfo(userId) {
         console.log("Error getting document:", error);
     }
 }
+
+// Logout function
+document.getElementById('logout').addEventListener('click', () => {
+  signOut(auth).then(() => {
+    window.location.href = 'login.html'; // Redirect to login after successful logout
+  }).catch((error) => {
+    console.error('Logout failed', error);
+  });
+});
+
 
 </script>
 
