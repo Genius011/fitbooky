@@ -1060,7 +1060,7 @@ async function displayTodayBookings() {
     }));
 
     // Filtrowanie dzisiejszych rezerwacji
-    const todayBookings = bookings.filter(booking => booking.date === todayFormatted);
+const todayBookings = bookings.filter(booking => booking.date === todayFormatted && booking.trainerId === loggedInUserId);
     todayBookingsTableBody.innerHTML = ''; // Czyści istniejące wiersze tabeli
 
     todayBookings.forEach(bookingData => {
