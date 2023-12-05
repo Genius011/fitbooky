@@ -604,16 +604,11 @@ display: flex;
 
 <div id="adminPanel" class="admin-panel">
     <h1>Panel Trenera</h1>
-	
-	<div id="uniqueLinkSection" class="unique-link-container">
-  <h2>Twój unikalny link</h2>
-  <p id="uniqueLink">Ładowanie linku...</p>
-</div>
     
 	<div class="toggle-today-bookings">
   <i id="toggleTodayBookingsIcon" class="fas fa-chevron-down"></i>  Dzisiejsze rezerwacje
 </div>
-<section id="todayBookingsManager" class="section" style="display: block;">
+<section id="todayBookingsManager" class="section" style="display: none;">
   <table id="todayBookingsTable">
     <thead>
       <tr>
@@ -838,7 +833,7 @@ display: flex;
         <div class="toggle-future-bookings">
   <i id="toggleFutureBookingsIcon" class="fas fa-chevron-down"></i> Wszystkie rezerwacje
 </div>
-<section id="bookingManager" class="section" style="display: block;">
+<section id="bookingManager" class="section" style="display: none;">
 
         <table id="futureBookingsTable">
             <thead>
@@ -875,17 +870,27 @@ display: flex;
       <!-- Dane profilowe zostaną wypełnione tutaj -->
     </div>
   </div>
-  
-  
 </div>
-
-
 
 <div class="toggle-section toggle-group-training">
   <i id="toggleGroupTrainingIcon" class="fas fa-chevron-down"></i>
   <span>Zarządzanie miejscami na trening grupowy</span>
 </div>
 
+<section id="groupTrainingManager" class="section" style="display: none;">
+  <form id="groupTrainingForm">
+    <div class="day-container">
+      <!-- Powtórz poniższą strukturę dla każdego dnia tygodnia -->
+      <div class="day-column">
+        <h3>Poniedziałek</h3>
+        <label for="monday-spots">Miejsca: </label>
+        <input type="number" id="monday-spots" name="monday" min="0">
+      </div>
+      <!-- Dodaj kolejne dni tygodnia tutaj... -->
+    </div>
+    <button type="submit" class="submit-btn">Zapisz zmiany</button>
+  </form>
+</section>
 
 
 
@@ -915,33 +920,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', function() {
-
-// Pobranie trainerId z URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const trainerId = urlParams.get('trainerId');
-
-  // Jeśli trainerId istnieje, wykonaj resztę kodu
-  if (trainerId) {
-    const uniqueLinkEl = document.getElementById('uniqueLink');
-
-    getDoc(doc(db, 'trainers', trainerId))
-      .then(docSnap => {
-        if (docSnap.exists()) {
-          // Pobierz link i ustaw tekst elementu uniqueLinkEl
-          const trainerData = docSnap.data();
-          uniqueLinkEl.textContent = trainerData.registrationLink;
-        } else {
-          uniqueLinkEl.textContent = 'Nie znaleziono linku trenera.';
-        }
-      })
-      .catch(error => {
-        console.error('Błąd podczas pobierania unikalnego linku:', error);
-        uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania linku.';
-      });
-  } else {
-    // Możesz chcieć obsłużyć przypadki, gdy trainerId nie jest dostępne
-    console.error('Trainer ID is not defined in the URL parameters.');
-  }
   
   updateDatesForWeek(new Date());
   setupWeekNavigation();
@@ -1317,25 +1295,6 @@ async function savePrice(bookingId) {
 
 window.savePrice = savePrice; // Umożliwi to wywołanie tej funkcji z poziomu onclick w HTML
 
-// Zakładam, że zmienna 'trainerId' jest już zdefiniowana wcześniej w Twoim skrypcie
-// i zawiera ID zalogowanego trenera.
-
-const uniqueLinkEl = document.getElementById('uniqueLink');
-
-getDoc(doc(db, 'trainers', trainerId))
-  .then(docSnap => {
-    if (docSnap.exists()) {
-      // Pobierz link i ustaw tekst elementu uniqueLinkEl
-      const trainerData = docSnap.data();
-      uniqueLinkEl.textContent = trainerData.registrationLink;
-    } else {
-      uniqueLinkEl.textContent = 'Nie znaleziono linku trenera.';
-    }
-  })
-  .catch(error => {
-    console.error('Błąd podczas pobierania unikalnego linku:', error);
-    uniqueLinkEl.textContent = 'Wystąpił błąd podczas ładowania linku.';
-  });
 
 
 </script>
