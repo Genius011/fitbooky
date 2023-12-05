@@ -938,6 +938,7 @@ console.log("onAuthStateChanged called");
   console.log("User ID (inside onAuthStateChanged):", user.uid);
     loggedInUserId = user.uid; // Aktualizacja ID zalogowanego użytkownika
 	displayFutureBookings();
+	displayTodayBookings();
     // Użytkownik jest zalogowany
     console.log('Użytkownik zalogowany:', user);
     // Wywołanie funkcji, które powinny być dostępne tylko dla zalogowanych użytkowników
@@ -1058,46 +1059,44 @@ async function displayTodayBookings() {
       ...doc.data()
     }));
 
-    // Filtrowanie dzisiejszych rezerwacji
-    const todayBookings = bookings.filter(booking => booking.date === todayFormatted);
+    // Filtrowanie dzisiejszych rezerwacji tylko dla zalogowanego trenera
+    const todayBookings = bookings.filter(booking => booking.date === todayFormatted && booking.trainerId === loggedInUserId);
     todayBookingsTableBody.innerHTML = ''; // Czyści istniejące wiersze tabeli
 
     todayBookings.forEach(bookingData => {
-    const userRef = doc(db, 'users', bookingData.userId);
-    getDoc(userRef).then(userSnap => {
-      if (userSnap.exists()) {
-        const userData = userSnap.data();
-        const bookingRow = document.createElement('tr');
-          
+      const userRef = doc(db, 'users', bookingData.userId);
+      getDoc(userRef).then(userSnap => {
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          const bookingRow = document.createElement('tr');
+
           // Dodaj klasę .highlighted, jeśli to konieczne
           if (bookingData.date === todayFormatted) {
             bookingRow.classList.add('highlighted');
           }
-          
-		  
-		          const priceValue = bookingData.price ? bookingData.price : '';
+
+          const priceValue = bookingData.price ? bookingData.price : '';
 
           bookingRow.innerHTML = `
-          <td>${userData.firstName || ''}</td>
-          <td>${userData.lastName || ''}</td>
-          <td>${bookingData.time}</td>
-          <td>${bookingData.date}</td>
-          <td>${bookingData.trainingType}</td>
-          <td class="price-container">
-            <input type="number" class="trainingPrice" id="price-${bookingData.id}" value="${priceValue}" placeholder="Cena w PLN" />
-            <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
-              <i class="fa fa-check"></i>
-            </button>
-          </td>
-              <td>
-    <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
-      <i class="fas fa-user"></i> <!-- Ikonka profilu -->
-    </button>
-  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
-            <i class="fas fa-times"></i>
-        </button>
-  
-  </td>
+            <td>${userData.firstName || ''}</td>
+            <td>${userData.lastName || ''}</td>
+            <td>${bookingData.time}</td>
+            <td>${bookingData.date}</td>
+            <td>${bookingData.trainingType}</td>
+            <td class="price-container">
+              <input type="number" class="trainingPrice" id="price-${bookingData.id}" value="${priceValue}" placeholder="Cena w PLN" />
+              <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
+                <i class="fa fa-check"></i>
+              </button>
+            </td>
+            <td>
+              <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
+                <i class="fas fa-user"></i> <!-- Ikonka profilu -->
+              </button>
+              <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
+                <i class="fas fa-times"></i>
+              </button>
+            </td>
           `;
 
           // Dodawanie wierszy do tabeli dzisiejszych rezerwacji
@@ -1109,9 +1108,14 @@ async function displayTodayBookings() {
     console.error("Error fetching bookings:", error);
   }
 }
-document.addEventListener('DOMContentLoaded', function() {
-  // Wywołanie funkcji do wyświetlenia dzisiejszych rezerwacji
+
+// Call the function when the DOM is ready
+document.addEventListener('DOMContentLoaded', function () {
   displayTodayBookings();
+});
+
+
+
   
  
   // Aktualizacja dat na stronie zgodnie z aktualnym tygodniem
