@@ -1491,8 +1491,9 @@ async function updateTableFromFirestore() {
             console.log('Snapshot rezerwacji:', reservationsSnapshot.docs);
 
             // Pobierz dane z Firestore, np. ceny
-            const prices = await getDocs(collection(db, 'prices'));
-            console.log('Dane cen:', prices.docs);
+            const prices = await getDocs(doc(db, 'prices', 'price'));
+
+            console.log('Dane cen:', price.docs);
 
             // Oblicz przychody na podstawie pobranych rezerwacji i cen
             const todayIncome = calculateTodayIncome(reservationsSnapshot, prices);
