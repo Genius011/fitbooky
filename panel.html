@@ -1518,6 +1518,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('availabilityMgr');
     const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
 
+ document.getElementById('toggle-availability').addEventListener('click', function() {
+            var availabilityForm = document.getElementById('availability-form');
+            if (availabilityForm.style.display === 'none' || availabilityForm.style.display === '') {
+                availabilityForm.style.display = 'block';
+            } else {
+                availabilityForm.style.display = 'none';
+            }
+        });
+
     days.forEach(day => {
         let dayDiv = document.createElement('div');
         dayDiv.classList.add('day-availability');
