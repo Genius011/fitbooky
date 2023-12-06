@@ -1407,18 +1407,7 @@ async function setRegistrationLink() {
 }
 
 
-    // Funkcja do kopiowania linka do schowka
-function copyToClipboard() {
-  const copyText = document.getElementById('registrationLink');
-  copyText.select();
-  copyText.setSelectionRange(0, 99999); // Dla urządzeń mobilnych
-  document.execCommand('copy'); // Skopiuj zaznaczony tekst do schowka
-  alert("Link skopiowany: " + copyText.value);
-}
-
-// Wywołaj funkcję setRegistrationLink po załadowaniu strony
-window.onload = setRegistrationLink;
-	
+    	
 	async function pobierzUnikalnyLinkTrenera(userId) {
   const trainerRef = doc(db, 'trainers', userId);
   try {
