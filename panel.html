@@ -1396,12 +1396,16 @@ async function displayTrainerInfo(userId) {
     }
 }
 
-// Function to set the trainer's registration link
-    function setRegistrationLink() {
-      // Replace with the actual code to fetch the link from your database
-      var registrationLink = 'Your method to fetch registration link here';
-      document.getElementById('registrationLink').value = registrationLink;
-    }
+// Funkcja do ustawiania linka rejestracyjnego trenera
+async function setRegistrationLink() {
+  // Pobierz unikalny link rejestracyjny z bazy danych
+  const unikalnyLink = await pobierzUnikalnyLinkTrenera(loggedInUserId);
+  
+  // Ustaw wartość pola input z linkiem rejestracyjnym
+  const registrationLinkInput = document.getElementById('registrationLink');
+  registrationLinkInput.value = unikalnyLink;
+}
+
 
     // Function to copy the link to clipboard
     function copyToClipboard() {
@@ -1435,9 +1439,6 @@ async function displayTrainerInfo(userId) {
     return 'Błąd pobierania linka';
   }
 }
-
-
-
 
 
 </script>
