@@ -1476,52 +1476,48 @@ auth.onAuthStateChanged((user) => {
   setRegistrationLink();
 });
 
- // Funkcja do pobierania danych z Firestore i aktualizacji tabeli
-async function updateTableFromFirestore() {
+ async function updateTableFromFirestore() {
     try {
-        // Pobierz UID zalogowanego użytkownika z Firebase (jeśli jesteś zalogowany)
         const user = auth.currentUser;
         if (user) {
             const loggedInUserId = user.uid;
             console.log('Zalogowany UID:', loggedInUserId);
 
             // Zapytanie do Firestore, aby pobrać rezerwacje zgodne z UID użytkownika
-            const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', loggedInUserId));
+            const bookingsQuery = query(collection(db, 'bookings'), where('trainerId', '==', loggedInUserId));
             const bookingsSnapshot = await getDocs(bookingsQuery);
             console.log('Snapshot rezerwacji:', bookingsSnapshot.docs);
 
             // Oblicz przychody na podstawie pobranych rezerwacji
-            let todayIncome = 0; // Tutaj powinna być definicja funkcji obliczającej
+            let todayIncome = bookingsSnapshot.docs
+                .filter(doc => doc.data().date === formatDate(new Date()))
+                .reduce((sum, doc) => {
+                    const price = Number(doc.data().price); // Ensure the price is a number
+                    return sum + price;
+                }, 0);
+
             let thisWeekIncome = 0; // Tutaj powinna być definicja funkcji obliczającej
             let thisMonthIncome = 0; // Tutaj powinna być definicja funkcji obliczającej
 
-            // Przykładowe obliczenie przychodu na podstawie danych z rezerwacji
-            bookingsSnapshot.forEach(doc => {
-    const booking = doc.data();
-    console.log(booking); // To pokaże dane w konsoli przeglądarki.
-    const price = booking.price;
-                // Tutaj dodaj logikę do obliczania przychodu
-            });
-
             console.log('Dzienny przychód:', todayIncome);
-            console.log('Tygodniowy przychód:', thisWeekIncome);
-            console.log('Miesięczny przychód:', thisMonthIncome);
+            // ... (more code for calculating thisWeekIncome and thisMonthIncome)
 
             // Aktualizuj tabelę finansową
-            document.getElementById('todayIncome').textContent = todayIncome.toFixed(2);
-            document.getElementById('thisWeekIncome').textContent = thisWeekIncome.toFixed(2);
-            document.getElementById('thisMonthIncome').textContent = thisMonthIncome.toFixed(2);
+            document.getElementById('todayIncome').textContent = todayIncome.toFixed(2) + ' zł';
+            document.getElementById('thisWeekIncome').textContent = thisWeekIncome.toFixed(2) + ' zł';
+            document.getElementById('thisMonthIncome').textContent = thisMonthIncome.toFixed(2) + ' zł';
 
             const totalIncome = todayIncome + thisWeekIncome + thisMonthIncome;
-            document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
+            document.getElementById('totalIncome').textContent = totalIncome.toFixed(2) + ' zł';
         }
     } catch (error) {
         console.error("Błąd podczas pobierania danych z Firestore:", error);
     }
 }
 
-window.onload = function() {
-    updateTableFromFirestore();
+
+window.addEventListener('load', updateTableFromFirestore);
+
 };
 
 
