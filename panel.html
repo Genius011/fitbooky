@@ -1422,6 +1422,8 @@ function copyToClipboard() {
   alert("Link skopiowany: " + copyText.value);
 }
 
+console.log('Before setting onload function');
+
 // Call setRegistrationLink on page load
 window.onload = setRegistrationLink;
 
