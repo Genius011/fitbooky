@@ -1476,13 +1476,13 @@ auth.onAuthStateChanged((user) => {
   setRegistrationLink();
 });
 
-// Funkcja do pobierania danych z Firestore i aktualizacji tabeli
+ // Funkcja do pobierania danych z Firestore i aktualizacji tabeli
         async function updateTableFromFirestore() {
             try {
                 // Pobierz dane z Firestore, np. rezerwacje i ceny
                 // Przykładowo:
-                const reservations = await db.collection('reservations').get();
-                const prices = await db.collection('prices').get();
+                const reservations = await getDocs(collection(db, 'reservations'));
+                const prices = await getDocs(collection(db, 'prices'));
 
                 // Oblicz przychody na podstawie danych z Firestore
                 // Przykładowo:
