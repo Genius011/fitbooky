@@ -609,24 +609,9 @@ display: flex;
 }
 
 
-
     </style>
 </head>
 <body>
-
-<div class="button-container">
-    <div class="dropdown">
-        <button id="logoutButton" class="dropdown-toggle">
-            <span id="logoutButtonText">Zaloguj</span> <span class="arrow-down">&#9660;</span>
-        </button>
-        <div class="dropdown-content">
-            <a href="profile.html">Profil</a>
-            <a href="Konto.html" id="account" style="display: block;">Konto</a>
-            <a href="#" id="logout">Wyloguj</a>
-        </div>
-    </div>
-</div>
-
 
 
 
@@ -655,10 +640,207 @@ display: flex;
   </table>
 </section>
 	
-	
+	<div class="toggle-availability">
+  <i id="toggleIcon" class="fas fa-chevron-down"></i> Zarządzanie dostępnością
+</div>
 
 
+<!-- Sekcja do zwijania/rozwijania -->
+<section id="availabilityManager" class="section" style="display: none;">
+        
+        <section id="availabilityManager" class="section">
+    
+    <div class="separator"></div>
+    <div id="dailyAvailability">
+       
+<!-- Navigation Buttons -->
+<div class="week-navigation">
+    <button id="prevWeek">Poprzedni Tydzień</button>
+    <button id="nextWeek">Następny Tydzień</button>
+</div>
+	   
+<div id="availability-wrapper">
+    <!-- Przykład dla poniedziałku, powtórz strukturę dla każdego dnia tygodnia -->
+    <div class="day-column">
+	<h3>Pon</h3>
+	 <div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Monday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="monday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="monday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="monday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="monday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="monday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="monday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="monday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="monday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="monday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="monday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="monday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="monday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="monday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="monday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="monday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="monday-hours" value="21:00"> 21:00</label>
+        </div>
+    </div>
+    <div class="day-column">
+	<h3>Wt</h3>
+	<div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Tuesday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="tuesday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="tuesday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="tuesday-hours" value="21:00"> 21:00</label>
+        </div>
+</div>
+<div class="day-column">
+<h3>Śr</h3>
+<div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Wednesday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="wednesday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="wednesday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="wednesday-hours" value="21:00"> 21:00</label>
+        </div>
+</div>
+<div class="day-column">
+<h3>Czw</h3>
+<div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Thursday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="thursday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="thursday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="thursday-hours" value="21:00"> 21:00</label>
+        </div>
+</div>
+<div class="day-column">
+<h3>Pt</h3>
+<div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Friday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="friday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="friday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="friday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="friday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="friday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="friday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="friday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="friday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="friday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="friday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="friday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="friday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="friday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="friday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="friday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="friday-hours" value="21:00"> 21:00</label>
+        </div>
+</div>
+<div class="day-column">
+<h3>Sb</h3>
+<div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Saturday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="saturday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="saturday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="saturday-hours" value="21:00"> 21:00</label>
+        </div>
+</div>
+<div class="day-column">
+<h3>Nd</h3>
+<div class="date-display"></div>
+        
+        <button type="button" class="toggle-day" data-day="Sunday">Z/O</button>
+        <div class="hour-list">
+            <!-- Checkboxy dla godzin, powtórz dla każdej godziny -->
+            <label><input type="checkbox" name="sunday-hours" value="6:00"> 6:00</label>
+            <label><input type="checkbox" name="sunday-hours" value="7:00"> 7:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="8:00"> 8:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="9:00"> 9:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="10:00"> 10:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="11:00"> 11:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="12:00"> 12:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="13:00"> 13:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="14:00"> 14:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="15:00"> 15:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="16:00"> 16:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="17:00"> 17:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="18:00"> 18:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="19:00"> 19:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="20:00"> 20:00</label>
+			<label><input type="checkbox" name="sunday-hours" value="21:00"> 21:00</label>
+        </div>
+</div>
 
+    <button id="updateAvailability" class="submit-btn">Aktualizuj Dostępność</button>
+</section>
+
+    </section>
 
     
         <div class="toggle-future-bookings">
@@ -906,7 +1088,7 @@ async function displayTodayBookings() {
           <td>${bookingData.trainingType}</td>
           <td class="price-container">
             <input type="number" class="trainingPrice" id="price-${bookingData.id}" value="${priceValue}" placeholder="Cena w PLN" />
-            <button class="savePriceButton" data-id="${bookingData.id}">Zapisz cene</button>
+            <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
               <i class="fa fa-check"></i>
             </button>
           </td>
@@ -1141,10 +1323,15 @@ async function savePrice(bookingId) {
   }
 
   try {
-    await updateDoc(bookingRef, { price: price });
+    // Aktualizacja ceny w Firestore
+    await updateDoc(bookingRef, {
+      price: price
+    });
     alert('Cena została zaktualizowana.');
-    displayTodayBookings(); // Ensure this function is defined in the same scope
-    // displayFutureBookings(); // Uncomment if you have this function
+    // Odśwież widok tabeli, aby pokazać nową cenę
+    displayTodayBookings();
+    // Jeśli masz osobną funkcję do wyświetlania przyszłych rezerwacji, wywołaj ją tutaj również
+    // displayFutureBookings();
   } catch (error) {
     console.error('Błąd przy aktualizacji ceny:', error);
     alert('Wystąpił błąd przy aktualizacji ceny.');
@@ -1172,51 +1359,6 @@ async function displayTrainerInfo(userId) {
         console.log("Error getting document:", error);
     }
 }
-
-// Logout function
-document.getElementById('logout').addEventListener('click', () => {
-  signOut(auth).then(() => {
-    window.location.href = 'login.html'; // Redirect to login after successful logout
-  }).catch((error) => {
-    console.error('Logout failed', error);
-  });
-});
-
-
-// Wait for the DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Select the dropdown toggle button
-    const dropdownToggle = document.querySelector('.dropdown-toggle');
-    const dropdownContent = document.querySelector('.dropdown-content');
-
-    // Listen for a click event on the dropdown toggle button
-    dropdownToggle.addEventListener('click', function() {
-        // Toggle the display of the dropdown content
-        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-    });
-
-    // Close the dropdown menu if the user clicks outside of it
-    window.addEventListener('click', function(event) {
-        if (!event.target.matches('.dropdown-toggle')) {
-            dropdownContent.style.display = 'none';
-        }
-    });
-
-    // Logout function, if needed here
-    document.getElementById('logout').addEventListener('click', function() {
-        // ... your logout code ...
-    });
-});
-
-
-// Logout function
-document.getElementById('logout').addEventListener('click', () => {
-  signOut(auth).then(() => {
-    window.location.href = 'login.html'; // Redirect to login after successful logout
-  }).catch((error) => {
-    console.error('Logout failed', error);
-  });
-});
 
 </script>
 
