@@ -1485,20 +1485,22 @@ async function updateTableFromFirestore() {
             const loggedInUserId = user.uid;
             console.log('Zalogowany UID:', loggedInUserId);
 
-            // Zapytanie do Firestore, aby pobrać rezerwacje zgodne z UID trenera
-            const reservationsQuery = query(collection(db, 'reservations'), where('trainerUid', '==', loggedInUserId));
-            const reservationsSnapshot = await getDocs(reservationsQuery);
-            console.log('Snapshot rezerwacji:', reservationsSnapshot.docs);
+            // Zapytanie do Firestore, aby pobrać rezerwacje zgodne z UID użytkownika
+            const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', loggedInUserId));
+            const bookingsSnapshot = await getDocs(bookingsQuery);
+            console.log('Snapshot rezerwacji:', bookingsSnapshot.docs);
 
-            // Pobierz dane z Firestore, np. ceny
-            const prices = await getDocs(doc(db, 'prices', 'price'));
+            // Oblicz przychody na podstawie pobranych rezerwacji
+            let todayIncome = 0; // Tutaj powinna być definicja funkcji obliczającej
+            let thisWeekIncome = 0; // Tutaj powinna być definicja funkcji obliczającej
+            let thisMonthIncome = 0; // Tutaj powinna być definicja funkcji obliczającej
 
-            console.log('Dane cen:', price.docs);
-
-            // Oblicz przychody na podstawie pobranych rezerwacji i cen
-            const todayIncome = calculateTodayIncome(reservationsSnapshot, prices);
-            const thisWeekIncome = calculateThisWeekIncome(reservationsSnapshot, prices);
-            const thisMonthIncome = calculateThisMonthIncome(reservationsSnapshot, prices);
+            // Przykładowe obliczenie przychodu na podstawie danych z rezerwacji
+            bookingsSnapshot.forEach(doc => {
+                const booking = doc.data();
+                const price = booking.price;
+                // Tutaj dodaj logikę do obliczania przychodu
+            });
 
             console.log('Dzienny przychód:', todayIncome);
             console.log('Tygodniowy przychód:', thisWeekIncome);
@@ -1516,6 +1518,7 @@ async function updateTableFromFirestore() {
         console.error("Błąd podczas pobierania danych z Firestore:", error);
     }
 }
+
 
 
 		
