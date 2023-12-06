@@ -1415,7 +1415,28 @@ async function displayTrainerInfo(userId) {
     // Call setRegistrationLink on page load
     window.onload = setRegistrationLink;
 	
-	
+	// Funkcja do pobierania unikalnego linku rejestracyjnego trenera
+async function pobierzUnikalnyLinkTrenera(userId) {
+  const trainerRef = doc(db, 'trainers', userId); // Zakładam, że unikalny link jest przechowywany w kolekcji "trainers"
+  
+  try {
+    const docSnap = await getDoc(trainerRef);
+    if (docSnap.exists()) {
+      const trainerData = docSnap.data();
+      const unikalnyLinkTrenera = trainerData.registrationLink || 'Brak dostępnego linku'; // Pobierz link lub zastąp go tekstem "Brak dostępnego linku", jeśli nie istnieje
+      return unikalnyLinkTrenera;
+    } else {
+      console.log("Brak dokumentu!");
+      return 'Brak dostępnego linku';
+    }
+  } catch (error) {
+    console.error("Błąd podczas pobierania dokumentu:", error);
+    return 'Błąd podczas pobierania linku';
+  }
+}
+
+aktualizujLinkRejestracyjny(); // Wywołaj tę funkcję po załadowaniu strony lub w odpowiednich momentach, aby zaktualizować link
+
 
 </script>
 
