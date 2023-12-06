@@ -998,8 +998,6 @@ import {
   collection, 
   getDocs, 
   doc, 
-  query,
-  where,
   getDoc, 
   updateDoc, 
   deleteDoc,
@@ -1518,7 +1516,9 @@ auth.onAuthStateChanged((user) => {
 }
 
 
+window.addEventListener('load', updateTableFromFirestore);
 
+};
 
 
 		
