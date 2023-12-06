@@ -668,11 +668,7 @@ display: flex;
     </tbody>
   </table>
 </section>
-	
-	<div class="toggle-availability">
-  <i id="toggleIcon" class="fas fa-chevron-down"></i> Zarządzanie dostępnością
-</div>
-   
+	   
         <div class="toggle-future-bookings">
   <i id="toggleFutureBookingsIcon" class="fas fa-chevron-down"></i> Wszystkie rezerwacje
 </div>
@@ -781,11 +777,6 @@ console.log("onAuthStateChanged called");
 });
 
   
-  updateDatesForWeek(new Date());
-  setupWeekNavigation();
-});
-
-
 async function displayFutureBookings() {
 	console.log("displayFutureBookings called"); // Sprawdź, czy funkcja jest wywoływana
 	console.log("Logged in User ID (inside displayFutureBookings):", loggedInUserId); // Sprawdź wartość loggedInUserId
