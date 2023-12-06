@@ -1415,25 +1415,22 @@ async function displayTrainerInfo(userId) {
     // Call setRegistrationLink on page load
     window.onload = setRegistrationLink;
 	
-	// Funkcja do pobierania unikalnego linku rejestracyjnego trenera
-async function pobierzUnikalnyLinkTrenera(userId) {
-  const trainerRef = doc(db, 'trainers', userId); // Zakładam, że unikalny link jest przechowywany w kolekcji "trainers"
+	// Funkcja do aktualizacji pola input z unikalnym linkiem
+async function aktualizujLinkRejestracyjny() {
+  const elementLinkaRejestracyjnego = document.getElementById('registrationLink');
   
-  try {
-    const docSnap = await getDoc(trainerRef);
-    if (docSnap.exists()) {
-      const trainerData = docSnap.data();
-      const unikalnyLinkTrenera = trainerData.registrationLink || 'Brak dostępnego linku'; // Pobierz link lub zastąp go tekstem "Brak dostępnego linku", jeśli nie istnieje
-      return unikalnyLinkTrenera;
-    } else {
-      console.log("Brak dokumentu!");
-      return 'Brak dostępnego linku';
-    }
-  } catch (error) {
-    console.error("Błąd podczas pobierania dokumentu:", error);
-    return 'Błąd podczas pobierania linku';
+  // Sprawdź, czy użytkownik jest zalogowany
+  if (loggedInUserId) {
+    const unikalnyLinkTrenera = await pobierzUnikalnyLinkTrenera(loggedInUserId); // Pobierz link dla zalogowanego trenera
+    elementLinkaRejestracyjnego.value = unikalnyLinkTrenera; // Zaktualizuj pole input z linkiem
+  } else {
+    elementLinkaRejestracyjnego.value = 'Użytkownik nie jest zalogowany'; // Opcjonalny komunikat, gdy użytkownik nie jest zalogowany
   }
 }
+
+// Wywołaj tę funkcję po załadowaniu strony lub w odpowiednich momentach, aby zaktualizować link
+aktualizujLinkRejestracyjny();
+
 
 // Definicja funkcji aktualizującej link rejestracyjny
 async function aktualizujLinkRejestracyjny() {
