@@ -975,19 +975,7 @@ window.viewProfile = viewProfile;
 
 document.addEventListener('DOMContentLoaded', displayFutureBookings);
 
-document.getElementById('toggleIcon').addEventListener('click', function() {
-  var section = document.getElementById('availabilityManager');
-  var icon = document.getElementById('toggleIcon');
-  
-  // Przełącz wyświetlanie sekcji i obracanie ikony
-  if (section.style.display === "none") {
-    section.style.display = "block";
-    icon.classList.add('rotate-icon');
-  } else {
-    section.style.display = "none";
-    icon.classList.remove('rotate-icon');
-  }
-});
+
 
 document.getElementById('toggleFutureBookingsIcon').addEventListener('click', function() {
   var section = document.getElementById('bookingManager');
