@@ -613,7 +613,12 @@ display: flex;
 </head>
 <body>
 
-
+ <!-- New section for the unique trainer link -->
+    <div id="trainerLinkContainer" class="section">
+      <label for="trainerLink">Twój unikalny link:</label>
+      <input type="text" id="trainerLink" value="" readonly onclick="this.select();">
+      <button onclick="copyToClipboard()">Kopiuj link</button>
+    </div>
 
 <div id="adminPanel" class="admin-panel">
     <h1>Panel Trenera</h1>
