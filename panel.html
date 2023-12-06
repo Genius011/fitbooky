@@ -1450,6 +1450,19 @@ async function pobierzUnikalnyLinkTrenera(userId) {
   }
 }
 
+// Zarejestruj funkcję zwrotną dla zdarzenia onAuthStateChanged
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    // Jeśli użytkownik jest zalogowany, przypisz jego UID do localStorage
+    localStorage.setItem('loggedInUserId', user.uid);
+  } else {
+    // Jeśli użytkownik jest wylogowany, wyczyść loggedInUserId z localStorage
+    localStorage.removeItem('loggedInUserId');
+  }
+
+  // Wywołaj setRegistrationLink po zmianach w stanie uwierzytelnienia
+  setRegistrationLink();
+});
 
 
 </script>
