@@ -1483,18 +1483,25 @@ async function updateTableFromFirestore() {
         const user = auth.currentUser;
         if (user) {
             const loggedInUserId = user.uid;
+            console.log('Zalogowany UID:', loggedInUserId);
 
             // Zapytanie do Firestore, aby pobrać rezerwacje zgodne z UID trenera
             const reservationsQuery = query(collection(db, 'reservations'), where('trainerUid', '==', loggedInUserId));
             const reservationsSnapshot = await getDocs(reservationsQuery);
+            console.log('Snapshot rezerwacji:', reservationsSnapshot.docs);
 
             // Pobierz dane z Firestore, np. ceny
             const prices = await getDocs(collection(db, 'prices'));
+            console.log('Dane cen:', prices.docs);
 
             // Oblicz przychody na podstawie pobranych rezerwacji i cen
             const todayIncome = calculateTodayIncome(reservationsSnapshot, prices);
             const thisWeekIncome = calculateThisWeekIncome(reservationsSnapshot, prices);
             const thisMonthIncome = calculateThisMonthIncome(reservationsSnapshot, prices);
+
+            console.log('Dzienny przychód:', todayIncome);
+            console.log('Tygodniowy przychód:', thisWeekIncome);
+            console.log('Miesięczny przychód:', thisMonthIncome);
 
             // Aktualizuj tabelę finansową
             document.getElementById('todayIncome').textContent = todayIncome.toFixed(2);
@@ -1508,6 +1515,7 @@ async function updateTableFromFirestore() {
         console.error("Błąd podczas pobierania danych z Firestore:", error);
     }
 }
+
 
 		
     </script>
