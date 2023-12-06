@@ -906,7 +906,7 @@ async function displayTodayBookings() {
           <td>${bookingData.trainingType}</td>
           <td class="price-container">
             <input type="number" class="trainingPrice" id="price-${bookingData.id}" value="${priceValue}" placeholder="Cena w PLN" />
-            <button class="savePriceButton" aria-label="Zapisz cenę" onclick="savePrice('${bookingData.id}')">
+            <button class="savePriceButton" data-id="${bookingData.id}">Zapisz cene</button>
               <i class="fa fa-check"></i>
             </button>
           </td>
@@ -1132,25 +1132,24 @@ document.getElementById('toggleFinancesIcon').addEventListener('click', function
 
 async function savePrice(bookingId) {
   const priceInput = document.getElementById(`price-${bookingId}`);
-  const newPrice = Number(priceInput.value);
+  const price = Number(priceInput.value);
+  const bookingRef = doc(db, 'bookings', bookingId);
 
-  if (newPrice <= 0) {
+  if (price <= 0) {
     alert('Proszę wprowadzić poprawną cenę.');
     return;
   }
 
   try {
-    const bookingRef = doc(db, 'bookings', bookingId);
-    await updateDoc(bookingRef, {
-      price: newPrice
-    });
+    await updateDoc(bookingRef, { price: price });
     alert('Cena została zaktualizowana.');
+    displayTodayBookings(); // Ensure this function is defined in the same scope
+    // displayFutureBookings(); // Uncomment if you have this function
   } catch (error) {
     console.error('Błąd przy aktualizacji ceny:', error);
     alert('Wystąpił błąd przy aktualizacji ceny.');
   }
 }
-
 
 // Upewnij się, że funkcje displayTodayBookings i displayFutureBookings są wywoływane po załadowaniu strony, aby odświeżyć dane
 
