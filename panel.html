@@ -1435,8 +1435,15 @@ async function pobierzUnikalnyLinkTrenera(userId) {
   }
 }
 
-aktualizujLinkRejestracyjny(); // Wywołaj tę funkcję po załadowaniu strony lub w odpowiednich momentach, aby zaktualizować link
+// Definicja funkcji aktualizującej link rejestracyjny
+async function aktualizujLinkRejestracyjny() {
+  const elementLinkaRejestracyjnego = document.getElementById('registrationLink');
+  const unikalnyLinkTrenera = await pobierzUnikalnyLinkTrenera(loggedInUserId); // Pobierz link dla zalogowanego trenera
+  elementLinkaRejestracyjnego.value = unikalnyLinkTrenera; // Zaktualizuj pole input z linkiem
+}
 
+// Wywołaj tę funkcję po załadowaniu strony lub w odpowiednich momentach, aby zaktualizować link
+aktualizujLinkRejestracyjny();
 
 </script>
 
