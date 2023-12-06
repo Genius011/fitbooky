@@ -1415,23 +1415,26 @@ async function displayTrainerInfo(userId) {
     // Call setRegistrationLink on page load
     window.onload = setRegistrationLink;
 	
-	// Funkcja do aktualizacji pola input z unikalnym linkiem
-async function aktualizujLinkRejestracyjny() {
-  const elementLinkaRejestracyjnego = document.getElementById('registrationLink');
-  
-  // Sprawdź, czy użytkownik jest zalogowany
-  console.log('loggedInUserId:', loggedInUserId); // Dodaj ten log
-  if (loggedInUserId) {
-    const unikalnyLinkTrenera = await pobierzUnikalnyLinkTrenera(loggedInUserId); // Pobierz link dla zalogowanego trenera
-    console.log('Pobrany unikalny link:', unikalnyLinkTrenera); // Dodaj ten log
-    elementLinkaRejestracyjnego.value = unikalnyLinkTrenera; // Zaktualizuj pole input z linkiem
-  } else {
-    elementLinkaRejestracyjnego.value = 'Użytkownik nie jest zalogowany'; // Opcjonalny komunikat, gdy użytkownik nie jest zalogowany
+	async function pobierzUnikalnyLinkTrenera(userId) {
+  const trainerRef = doc(db, 'trainers', userId);
+  try {
+    const docSnap = await getDoc(trainerRef);
+    if (docSnap.exists()) {
+      const trainerData = docSnap.data();
+      // Sprawdź, czy pole 'registrationLink' istnieje w dokumencie trenera
+      if (trainerData.hasOwnProperty('registrationLink')) {
+        return trainerData.registrationLink;
+      } else {
+        return 'Brak linka rejestracyjnego';
+      }
+    } else {
+      return 'Brak danych trenera';
+    }
+  } catch (error) {
+    console.error("Błąd podczas pobierania linka rejestracyjnego:", error);
+    return 'Błąd pobierania linka';
   }
 }
-
-// Wywołaj tę funkcję po załadowaniu strony lub w odpowiednich momentach, aby zaktualizować link
-aktualizujLinkRejestracyjny();
 
 
 
