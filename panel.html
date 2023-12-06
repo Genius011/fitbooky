@@ -1476,23 +1476,54 @@ auth.onAuthStateChanged((user) => {
   setRegistrationLink();
 });
 
-// Funkcja do aktualizacji tabeli finansowej
-        function updateFinancesTable(todayIncome, thisWeekIncome, thisMonthIncome) {
-            document.getElementById('todayIncome').textContent = todayIncome.toFixed(2);
-            document.getElementById('thisWeekIncome').textContent = thisWeekIncome.toFixed(2);
-            document.getElementById('thisMonthIncome').textContent = thisMonthIncome.toFixed(2);
+// Funkcja do pobierania danych z Firestore i aktualizacji tabeli
+        async function updateTableFromFirestore() {
+            try {
+                // Pobierz dane z Firestore, np. rezerwacje i ceny
+                // Przykładowo:
+                const reservations = await db.collection('reservations').get();
+                const prices = await db.collection('prices').get();
 
-            const totalIncome = todayIncome + thisWeekIncome + thisMonthIncome;
-            document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
+                // Oblicz przychody na podstawie danych z Firestore
+                // Przykładowo:
+                const todayIncome = calculateTodayIncome(reservations, prices);
+                const thisWeekIncome = calculateThisWeekIncome(reservations, prices);
+                const thisMonthIncome = calculateThisMonthIncome(reservations, prices);
+
+                // Aktualizuj tabelę finansową
+                document.getElementById('todayIncome').textContent = todayIncome.toFixed(2);
+                document.getElementById('thisWeekIncome').textContent = thisWeekIncome.toFixed(2);
+                document.getElementById('thisMonthIncome').textContent = thisMonthIncome.toFixed(2);
+
+                const totalIncome = todayIncome + thisWeekIncome + thisMonthIncome;
+                document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
+            } catch (error) {
+                console.error("Błąd podczas pobierania danych z Firestore:", error);
+            }
         }
 
-        // Przykładowe dane (możesz dostosować je do swoich potrzeb)
-        const todayIncome = 50.00;
-        const thisWeekIncome = 200.00;
-        const thisMonthIncome = 800.00;
+        // Przykładowe funkcje do obliczania przychodów
+        function calculateTodayIncome(reservations, prices) {
+            // Implementuj logikę obliczania przychodów na podstawie rezerwacji i cen
+            // Zwróć odpowiednią wartość
+            return 0.00;
+        }
 
-        // Wywołaj funkcję, aby uzupełnić tabelę danymi
-        updateFinancesTable(todayIncome, thisWeekIncome, thisMonthIncome);
+        function calculateThisWeekIncome(reservations, prices) {
+            // Implementuj logikę obliczania przychodów na podstawie rezerwacji i cen
+            // Zwróć odpowiednią wartość
+            return 0.00;
+        }
+
+        function calculateThisMonthIncome(reservations, prices) {
+            // Implementuj logikę obliczania przychodów na podstawie rezerwacji i cen
+            // Zwróć odpowiednią wartość
+            return 0.00;
+        }
+
+        // Wywołaj funkcję aktualizacji tabeli na początku
+        updateTableFromFirestore();
+		
     </script>
 
 </body>
