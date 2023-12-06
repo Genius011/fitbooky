@@ -676,6 +676,41 @@ tfoot td {
   font-weight: bold;
 }
 
+/* CSS for the rotate-icon */
+.rotate-icon {
+    transform: rotate(180deg);
+}
+
+/* CSS for the form section */
+#availability-form {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.day-availability {
+    margin-bottom: 10px;
+}
+
+.hour-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.hour-list label {
+    display: flex;
+    align-items: center;
+    margin-right: 5px;
+}
+
+input[type="submit"] {
+    margin-top: 10px;
+    cursor: pointer;
+}
+
 
     </style>
 </head>
@@ -956,40 +991,27 @@ tfoot td {
   </form>
 </section>
 
+ <div id="toggle-availability" class="toggle-availability">
+        <i class="fas fa-chevron-down"></i> Zarządzanie dostępnością
+    </div>
 
-  <span>Finanse</span>
-  <div class="finances-table">
-    <table>
-      <thead>
-        <tr>
-          <th>Okres</th>
-          <th>Przychód</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Dzisiaj</td>
-          <td><span id="todayIncome">0</span> zł</td>
-        </tr>
-        <tr>
-          <td>Ten tydzień</td>
-          <td><span id="thisWeekIncome">0</span> zł</td>
-        </tr>
-        <tr>
-          <td>Ten miesiąc</td>
-          <td><span id="thisMonthIncome">0</span> zł</td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td>Suma</td>
-          <td><span id="totalIncome">0</span> zł</td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-</div>
+    <section id="availability-form" class="section" style="display: none;">
+        <form id="availabilityManager">
+            <!-- Loop through the days of the week -->
+            <div class="day-availability">
+                <h3>Poniedziałek</h3>
+                <!-- Loop through the hours -->
+                <div class="hour-list">
+                    <!-- Generated checkboxes for each hour -->
+                    <!-- Repeat this for each day of the week -->
+                </div>
+            </div>
+            <!-- ... Repeat blocks for other days ... -->
+            <input type="submit" value="Zapisz dostępność">
+        </form>
+    </section>
 
+  
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
@@ -1476,54 +1498,36 @@ auth.onAuthStateChanged((user) => {
   setRegistrationLink();
 });
 
- // Funkcja do pobierania danych z Firestore i aktualizacji tabeli
-async function updateTableFromFirestore() {
-    try {
-        // Pobierz UID zalogowanego użytkownika z Firebase (jeśli jesteś zalogowany)
-        const user = auth.currentUser;
-        if (user) {
-            const loggedInUserId = user.uid;
-            console.log('Zalogowany UID:', loggedInUserId);
+document.getElementById('toggle-availability').addEventListener('click', function() {
+    var formSection = document.getElementById('availability-form');
+    var icon = this.querySelector('i');
+    formSection.style.display = formSection.style.display === 'none' ? 'block' : 'none';
+    icon.classList.toggle('rotate-icon');
+});
 
-            // Zapytanie do Firestore, aby pobrać rezerwacje zgodne z UID użytkownika
-            const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', loggedInUserId));
-            const bookingsSnapshot = await getDocs(bookingsQuery);
-            console.log('Snapshot rezerwacji:', bookingsSnapshot.docs);
+// Generate checkboxes for each hour
+const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
+const form = document.getElementById('availabilityManager');
 
-            // Oblicz przychody na podstawie pobranych rezerwacji
-            let todayIncome = 0; // Tutaj powinna być definicja funkcji obliczającej
-            let thisWeekIncome = 0; // Tutaj powinna być definicja funkcji obliczającej
-            let thisMonthIncome = 0; // Tutaj powinna być definicja funkcji obliczającej
-
-            // Przykładowe obliczenie przychodu na podstawie danych z rezerwacji
-            bookingsSnapshot.forEach(doc => {
-    const booking = doc.data();
-    console.log(booking); // To pokaże dane w konsoli przeglądarki.
-    const price = booking.price;
-                // Tutaj dodaj logikę do obliczania przychodu
-            });
-
-            console.log('Dzienny przychód:', todayIncome);
-            console.log('Tygodniowy przychód:', thisWeekIncome);
-            console.log('Miesięczny przychód:', thisMonthIncome);
-
-            // Aktualizuj tabelę finansową
-            document.getElementById('todayIncome').textContent = todayIncome.toFixed(2);
-            document.getElementById('thisWeekIncome').textContent = thisWeekIncome.toFixed(2);
-            document.getElementById('thisMonthIncome').textContent = thisMonthIncome.toFixed(2);
-
-            const totalIncome = todayIncome + thisWeekIncome + thisMonthIncome;
-            document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
-        }
-    } catch (error) {
-        console.error("Błąd podczas pobierania danych z Firestore:", error);
+days.forEach(day => {
+    let dayDiv = document.createElement('div');
+    dayDiv.classList.add('day-availability');
+    dayDiv.innerHTML = `<h3>${day}</h3>`;
+    let hourListDiv = document.createElement('div');
+    hourListDiv.classList.add('hour-list');
+    
+    for (let hour = 6; hour <= 21; hour++) {
+        let hourLabel = document.createElement('label');
+        hourLabel.innerHTML = `
+            <input type="checkbox" name="${day.toLowerCase()}-hours" value="${hour}:00"> ${hour}:00
+        `;
+        hourListDiv.appendChild(hourLabel);
     }
-}
 
-window.onload = function() {
-    updateTableFromFirestore();
-};
-
+    dayDiv.appendChild(hourListDiv);
+    form.appendChild(dayDiv);
+});
+ 
 
 		
     </script>
