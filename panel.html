@@ -1537,7 +1537,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         for (let hour = 6; hour <= 21; hour++) {
             let hourLabel = document.createElement('label');
-            hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-hours" value="${hour}:00" checked> &#10006; ${hour}:00`; // Dodane &#10006; oznacza krzyżyk
+            hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-hours" value="${hour}:00"> &#10006; ${hour}:00`; // Używamy &#10006; dla krzyżyka
             hourListDiv.appendChild(hourLabel);
         }
 
@@ -1547,20 +1547,20 @@ document.addEventListener('DOMContentLoaded', function() {
         let trainingTypeDiv = document.createElement('div');
         trainingTypeDiv.classList.add('training-type-selector');
 
-        // Personal training type radio button
+        // Personal training type checkbox
         let personalTypeInput = document.createElement('input');
-        personalTypeInput.setAttribute('type', 'radio');
+        personalTypeInput.setAttribute('type', 'checkbox');
         personalTypeInput.setAttribute('name', `${day.toLowerCase()}-type`);
         personalTypeInput.setAttribute('value', 'personal');
-        personalTypeInput.checked = true; // domyślnie wybrane
+        personalTypeInput.checked = true; // domyślnie zaznaczone
 
         let personalTypeLabel = document.createElement('label');
         personalTypeLabel.textContent = ' Personalny (1 miejsce)';
         personalTypeLabel.insertBefore(personalTypeInput, personalTypeLabel.firstChild);
 
-        // Group training type radio button
+        // Group training type checkbox
         let groupTypeInput = document.createElement('input');
-        groupTypeInput.setAttribute('type', 'radio');
+        groupTypeInput.setAttribute('type', 'checkbox');
         groupTypeInput.setAttribute('name', `${day.toLowerCase()}-type`);
         groupTypeInput.setAttribute('value', 'group');
 
@@ -1586,12 +1586,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     form.addEventListener('change', function(event) {
-        if (event.target.type === 'radio' && event.target.value === 'group') {
+        if (event.target.type === 'checkbox' && event.target.name.endsWith('-type')) {
             let spotsInputName = event.target.name.replace('-type', '-spots');
-            document.getElementsByName(spotsInputName)[0].disabled = false;
-        } else if (event.target.type === 'radio' && event.target.value === 'personal') {
-            let spotsInputName = event.target.name.replace('-type', '-spots');
-            document.getElementsByName(spotsInputName)[0].disabled = true;
+            let spotsInput = document.getElementsByName(spotsInputName)[0];
+            if (event.target.checked) {
+                spotsInput.disabled = false;
+            } else {
+                spotsInput.disabled = true;
+            }
         }
     });
 
@@ -1604,7 +1606,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     form.appendChild(submitButton);
 });
-
 
 
 
