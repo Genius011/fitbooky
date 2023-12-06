@@ -1497,8 +1497,9 @@ async function updateTableFromFirestore() {
 
             // Przykładowe obliczenie przychodu na podstawie danych z rezerwacji
             bookingsSnapshot.forEach(doc => {
-                const booking = doc.data();
-                const price = booking.price;
+    const booking = doc.data();
+    console.log(booking); // To pokaże dane w konsoli przeglądarki.
+    const price = booking.price;
                 // Tutaj dodaj logikę do obliczania przychodu
             });
 
@@ -1519,6 +1520,9 @@ async function updateTableFromFirestore() {
     }
 }
 
+window.onload = function() {
+    updateTableFromFirestore();
+};
 
 
 		
