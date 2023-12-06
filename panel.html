@@ -1478,6 +1478,24 @@ auth.onAuthStateChanged((user) => {
   setRegistrationLink();
 });
 
+// Funkcja do aktualizacji tabeli finansowej
+function updateFinancesTable(todayIncome, thisWeekIncome, thisMonthIncome) {
+  document.getElementById('todayIncome').textContent = todayIncome.toFixed(2);
+  document.getElementById('thisWeekIncome').textContent = thisWeekIncome.toFixed(2);
+  document.getElementById('thisMonthIncome').textContent = thisMonthIncome.toFixed(2);
+  
+  const totalIncome = todayIncome + thisWeekIncome + thisMonthIncome;
+  document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
+}
+
+// Przykładowe dane (możesz dostosować je do swoich potrzeb)
+const todayIncome = 50.00;
+const thisWeekIncome = 200.00;
+const thisMonthIncome = 800.00;
+
+// Wywołaj funkcję, aby uzupełnić tabelę danymi
+updateFinancesTable(todayIncome, thisWeekIncome, thisMonthIncome);
+
 
 </script>
 
