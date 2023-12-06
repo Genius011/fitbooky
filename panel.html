@@ -1396,15 +1396,20 @@ async function displayTrainerInfo(userId) {
     }
 }
 
-/// Funkcja do ustawiania linka rejestracyjnego trenera
+// Funkcja do ustawiania linka rejestracyjnego trenera
 async function setRegistrationLink() {
-  // Pobierz unikalny link rejestracyjny z bazy danych
-  const unikalnyLink = await pobierzUnikalnyLinkTrenera(loggedInUserId);
-  console.log('Pobrany unikalny link:', unikalnyLink); // Dodaj ten log
-  
-  // Ustaw wartość pola input z linkiem rejestracyjnym
-  const registrationLinkInput = document.getElementById('registrationLink');
-  registrationLinkInput.value = unikalnyLink;
+  // Sprawdź, czy loggedInUserId jest zdefiniowane
+  if (loggedInUserId) {
+    // Pobierz unikalny link rejestracyjny z bazy danych
+    const unikalnyLink = await pobierzUnikalnyLinkTrenera(loggedInUserId);
+    console.log('Pobrany unikalny link:', unikalnyLink);
+    
+    // Ustaw wartość pola input z linkiem rejestracyjnym
+    const registrationLinkInput = document.getElementById('registrationLink');
+    registrationLinkInput.value = unikalnyLink;
+  } else {
+    console.log('loggedInUserId nie jest zdefiniowane.');
+  }
 }
 
 
@@ -1421,8 +1426,6 @@ function copyToClipboard() {
 window.onload = setRegistrationLink;
 
 
-    // Call setRegistrationLink on page load
-    window.onload = setRegistrationLink;
 	
 	async function pobierzUnikalnyLinkTrenera(userId) {
   const trainerRef = doc(db, 'trainers', userId);
