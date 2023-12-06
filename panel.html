@@ -1518,14 +1518,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('availabilityMgr');
     const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
 
- document.getElementById('toggle-availability').addEventListener('click', function() {
-            var availabilityForm = document.getElementById('availability-form');
-            if (availabilityForm.style.display === 'none' || availabilityForm.style.display === '') {
-                availabilityForm.style.display = 'block';
-            } else {
-                availabilityForm.style.display = 'none';
-            }
-        });
+    document.getElementById('toggle-availability').addEventListener('click', function() {
+        var availabilityForm = document.getElementById('availability-form');
+        if (availabilityForm.style.display === 'none' || availabilityForm.style.display === '') {
+            availabilityForm.style.display = 'block';
+        } else {
+            availabilityForm.style.display = 'none';
+        }
+    });
 
     days.forEach(day => {
         let dayDiv = document.createElement('div');
@@ -1537,7 +1537,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         for (let hour = 6; hour <= 21; hour++) {
             let hourLabel = document.createElement('label');
-            hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-hours" value="${hour}:00"> ${hour}:00`;
+            hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-hours" value="${hour}:00" checked> &#10006; ${hour}:00`; // Dodane &#10006; oznacza krzyżyk
             hourListDiv.appendChild(hourLabel);
         }
 
@@ -1552,7 +1552,7 @@ document.addEventListener('DOMContentLoaded', function() {
         personalTypeInput.setAttribute('type', 'radio');
         personalTypeInput.setAttribute('name', `${day.toLowerCase()}-type`);
         personalTypeInput.setAttribute('value', 'personal');
-        personalTypeInput.checked = true; // default selected
+        personalTypeInput.checked = true; // domyślnie wybrane
 
         let personalTypeLabel = document.createElement('label');
         personalTypeLabel.textContent = ' Personalny (1 miejsce)';
@@ -1568,13 +1568,13 @@ document.addEventListener('DOMContentLoaded', function() {
         groupTypeLabel.textContent = ' Grupowy ';
         groupTypeLabel.insertBefore(groupTypeInput, groupTypeLabel.firstChild);
 
-        // Number of spots for group training
+        // Liczba miejsc dla treningu grupowego
         let groupSpotsInput = document.createElement('input');
         groupSpotsInput.setAttribute('type', 'number');
         groupSpotsInput.setAttribute('name', `${day.toLowerCase()}-spots`);
         groupSpotsInput.setAttribute('min', '1');
         groupSpotsInput.setAttribute('value', '1');
-        groupSpotsInput.disabled = true; // disabled by default
+        groupSpotsInput.disabled = true; // domyślnie wyłączone
         groupSpotsInput.style.width = '50px';
 
         groupTypeLabel.appendChild(groupSpotsInput);
@@ -1599,12 +1599,12 @@ document.addEventListener('DOMContentLoaded', function() {
     submitButton.type = 'button';
     submitButton.textContent = 'Zapisz dostępność';
     submitButton.addEventListener('click', function() {
-        // Logic for handling form submission
-        console.log('Form submitted!'); // Placeholder for actual submission logic
-        // Here you would typically gather form data and perform an action, such as updating a database
+        // Logika obsługi przesyłania formularza
+        console.log('Formularz przesłany!'); // Miejsce na rzeczywistą logikę przesyłania, np. aktualizację bazy danych
     });
     form.appendChild(submitButton);
 });
+
 
 
 
