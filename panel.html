@@ -957,13 +957,6 @@ tr:hover {
   </div>
 
 
-
-<!-- Container for the unique trainer link with customized styling -->
-<div id="trainerLinkContainer" class="toggle-today-bookings" style="padding: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
-  <label for="registrationLink" style="display: block; margin-bottom: 5px;">Twój unikalny link rejestracyjny:</label>
-  <input type="text" id="registrationLink" value="" readonly style="width: 70%; padding: 5px; margin-right: 10px;" onclick="this.select();">
-  <span id="copyLinkButton" style="cursor: pointer;"><i class="fa-light fa-copy"></i></span>
-</div>
 <!-- Kontener Finanse -->
 
 </div>
@@ -983,7 +976,12 @@ tr:hover {
   </form>
 </section>
 
-
+<!-- Container for the unique trainer link with customized styling -->
+<div id="trainerLinkContainer" class="toggle-today-bookings" style="padding: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
+  <label for="registrationLink" style="display: block; margin-bottom: 5px;">Twój unikalny link rejestracyjny:</label>
+  <input type="text" id="registrationLink" value="" readonly style="width: 70%; padding: 5px; margin-right: 10px;" onclick="this.select();">
+  <span id="copyLinkButton" style="cursor: pointer;">📋</span>
+</div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
