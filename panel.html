@@ -894,12 +894,7 @@ display: flex;
         </table>
     </section>
 	
-	<!-- Sekcja do rozwijania Finanse -->
-<div class="toggle-section toggle-finances">
-  <i id="toggleFinancesIcon" class="fas fa-chevron-down"></i>
-  <span>Finanse</span>
-</div>
-
+	
 <!-- Container for the unique trainer link with customized styling -->
 <div id="trainerLinkContainer" class="toggle-today-bookings" style="padding: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
   <label for="registrationLink" style="display: block; margin-bottom: 5px;">Twój unikalny link rejestracyjny:</label>
@@ -907,10 +902,6 @@ display: flex;
   <span id="copyLinkButton" style="cursor: pointer;">📋</span>
 </div>
 
-
-<!-- Kontener Finanse -->
-
-</div>
 <div id="profileModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
@@ -1291,63 +1282,7 @@ async function deleteBooking(bookingId, event) {
 
 window.deleteBooking = deleteBooking;
 
-// Funkcja do obliczania i wyświetlania finansów
-async function calculateAndDisplayFinances() {
-  const bookingsRef = collection(db, 'bookings');
-  const financesTableBody = document.getElementById('financesTable').querySelector('tbody');
-  let dailyTotal = 0;
-  let monthlyTotal = 0;
 
-  try {
-    const bookingSnapshot = await getDocs(bookingsRef);
-    const financesData = bookingSnapshot.docs.map(doc => ({
-      ...doc.data(),
-      date: new Date(doc.data().date) // Przekształcenie stringa na obiekt daty
-    }));
-
-    // Resetowanie tabeli
-    financesTableBody.innerHTML = '';
-
-    financesData.forEach(({ date, price }) => {
-      // Tworzenie i dodawanie wierszy do tabeli
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${date.toLocaleDateString()}</td>
-        <td>1</td> <!-- Zakładamy, że każdy wpis to jedna rezerwacja -->
-        <td>${price} PLN</td>
-      `;
-      financesTableBody.appendChild(row);
-
-      // Dodawanie do sum
-      dailyTotal += price;
-      if (date.getMonth() === new Date().getMonth()) {
-        monthlyTotal += price;
-      }
-    });
-
-    // Aktualizacja podsumowań
-    document.getElementById('dailyTotal').textContent = `${dailyTotal} PLN`;
-    document.getElementById('monthlyTotal').textContent = `${monthlyTotal} PLN`;
-  } catch (error) {
-    console.error("Error fetching finances:", error);
-  }
-}
-
-// Event listener dla przycisku rozwijania sekcji Finanse
-document.getElementById('toggleFinancesIcon').addEventListener('click', function() {
-  const section = document.getElementById('financesManager');
-  const icon = document.getElementById('toggleFinancesIcon');
-  
-  // Przełącz wyświetlanie sekcji i obracanie ikony
-  if (section.style.display === "none") {
-    section.style.display = "block";
-    icon.classList.add('rotate-icon');
-    calculateAndDisplayFinances(); // Wywołanie funkcji obliczającej finanse po rozwinięciu sekcji
-  } else {
-    section.style.display = "none";
-    icon.classList.remove('rotate-icon');
-  }
-});
 
 async function savePrice(bookingId) {
   const priceInput = document.getElementById(`price-${bookingId}`);
