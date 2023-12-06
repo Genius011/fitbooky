@@ -1407,17 +1407,17 @@ async function setRegistrationLink() {
 }
 
 
-    // Function to copy the link to clipboard
-    function copyToClipboard() {
-      var copyText = document.getElementById('registrationLink');
-      copyText.select();
-      copyText.setSelectionRange(0, 99999); // For mobile devices
-      navigator.clipboard.writeText(copyText.value);
-      alert("Link skopiowany: " + copyText.value);
-    }
+    // Funkcja do kopiowania linka do schowka
+function copyToClipboard() {
+  const copyText = document.getElementById('registrationLink');
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); // Dla urządzeń mobilnych
+  document.execCommand('copy'); // Skopiuj zaznaczony tekst do schowka
+  alert("Link skopiowany: " + copyText.value);
+}
 
-    // Call setRegistrationLink on page load
-    window.onload = setRegistrationLink;
+// Wywołaj funkcję setRegistrationLink po załadowaniu strony
+window.onload = setRegistrationLink;
 	
 	async function pobierzUnikalnyLinkTrenera(userId) {
   const trainerRef = doc(db, 'trainers', userId);
