@@ -1383,6 +1383,19 @@ async function displayTrainerInfo(userId) {
 
     // Call setRegistrationLink on page load
     window.onload = setRegistrationLink;
+	
+	// Funkcja do kopiowania linku do schowka
+function skopiujDoSchowka() {
+  const elementLinkaRejestracyjnego = document.getElementById('registrationLink');
+  elementLinkaRejestracyjnego.select();
+  document.execCommand('copy');
+  alert('Link skopiowany do schowka: ' + elementLinkaRejestracyjnego.value);
+}
+
+// Dodaj nasłuchiwanie na przycisk lub element, który ma uruchamiać funkcję kopiowania
+const przyciskKopiowania = document.getElementById('przyciskKopiowania'); // Zastąp to rzeczywistym identyfikatorem przycisku lub elementu
+przyciskKopiowania.addEventListener('click', skopiujDoSchowka);
+
 
 </script>
 
