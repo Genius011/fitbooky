@@ -1515,98 +1515,96 @@ auth.onAuthStateChanged((user) => {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('availabilityMgr');
-    const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
+            const form = document.getElementById('availabilityMgr');
+            const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
 
- document.getElementById('toggle-availability').addEventListener('click', function() {
-            var availabilityForm = document.getElementById('availability-form');
-            if (availabilityForm.style.display === 'none' || availabilityForm.style.display === '') {
-                availabilityForm.style.display = 'block';
-            } else {
-                availabilityForm.style.display = 'none';
-            }
+            document.getElementById('toggle-availability').addEventListener('click', function() {
+                var availabilityForm = document.getElementById('availability-form');
+                if (availabilityForm.style.display === 'none' || availabilityForm.style.display === '') {
+                    availabilityForm.style.display = 'block';
+                } else {
+                    availabilityForm.style.display = 'none';
+                }
+            });
+
+            days.forEach(day => {
+                let dayDiv = document.createElement('div');
+                dayDiv.classList.add('day-availability');
+                dayDiv.innerHTML = `<h3>${day}</h3>`;
+
+                let hourListDiv = document.createElement('div');
+                hourListDiv.classList.add('hour-list');
+
+                for (let hour = 6; hour <= 21; hour++) {
+                    let hourLabel = document.createElement('label');
+                    hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-hours" value="${hour}:00">`; // Removed the text here
+                    hourListDiv.appendChild(hourLabel);
+                }
+
+                dayDiv.appendChild(hourListDiv);
+
+                // Training type selector
+                let trainingTypeDiv = document.createElement('div');
+                trainingTypeDiv.classList.add('training-type-selector');
+
+                // Personal training type radio button
+                let personalTypeInput = document.createElement('input');
+                personalTypeInput.setAttribute('type', 'radio');
+                personalTypeInput.setAttribute('name', `${day.toLowerCase()}-type`);
+                personalTypeInput.setAttribute('value', 'personal');
+                personalTypeInput.checked = true; // default selected
+
+                let personalTypeLabel = document.createElement('label');
+                personalTypeLabel.textContent = ' Personalny (1 miejsce)';
+                personalTypeLabel.insertBefore(personalTypeInput, personalTypeLabel.firstChild);
+
+                // Group training type radio button
+                let groupTypeInput = document.createElement('input');
+                groupTypeInput.setAttribute('type', 'radio');
+                groupTypeInput.setAttribute('name', `${day.toLowerCase()}-type`);
+                groupTypeInput.setAttribute('value', 'group');
+
+                let groupTypeLabel = document.createElement('label');
+                groupTypeLabel.textContent = ' Grupowy ';
+                groupTypeLabel.insertBefore(groupTypeInput, groupTypeLabel.firstChild);
+
+                // Number of spots for group training
+                let groupSpotsInput = document.createElement('input');
+                groupSpotsInput.setAttribute('type', 'number');
+                groupSpotsInput.setAttribute('name', `${day.toLowerCase()}-spots`);
+                groupSpotsInput.setAttribute('min', '1');
+                groupSpotsInput.setAttribute('value', '1');
+                groupSpotsInput.disabled = true; // disabled by default
+                groupSpotsInput.style.width = '50px';
+
+                groupTypeLabel.appendChild(groupSpotsInput);
+                trainingTypeDiv.appendChild(personalTypeLabel);
+                trainingTypeDiv.appendChild(groupTypeLabel);
+                dayDiv.appendChild(trainingTypeDiv);
+
+                form.appendChild(dayDiv);
+            });
+
+            form.addEventListener('change', function(event) {
+                if (event.target.type === 'radio' && event.target.value === 'group') {
+                    let spotsInputName = event.target.name.replace('-type', '-spots');
+                    document.getElementsByName(spotsInputName)[0].disabled = false;
+                } else if (event.target.type === 'radio' && event.target.value === 'personal') {
+                    let spotsInputName = event.target.name.replace('-type', '-spots');
+                    document.getElementsByName(spotsInputName)[0].disabled = true;
+                }
+            });
+
+            let submitButton = document.createElement('button');
+            submitButton.type = 'button';
+            submitButton.textContent = 'Zapisz dostępność';
+            submitButton.addEventListener('click', function() {
+                // Logic for handling form submission
+                console.log('Form submitted!'); // Placeholder for actual submission logic
+                // Here you would typically gather form data and perform an action, such as updating a database
+            });
+            form.appendChild(submitButton);
         });
-
-    days.forEach(day => {
-        let dayDiv = document.createElement('div');
-        dayDiv.classList.add('day-availability');
-        dayDiv.innerHTML = `<h3>${day}</h3>`;
-
-        let hourListDiv = document.createElement('div');
-        hourListDiv.classList.add('hour-list');
-
-        for (let hour = 6; hour <= 21; hour++) {
-            let hourLabel = document.createElement('label');
-            hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-hours" value="${hour}:00"> ${hour}:00`;
-            hourListDiv.appendChild(hourLabel);
-        }
-
-        dayDiv.appendChild(hourListDiv);
-
-        // Training type selector
-        let trainingTypeDiv = document.createElement('div');
-        trainingTypeDiv.classList.add('training-type-selector');
-
-        // Personal training type radio button
-        let personalTypeInput = document.createElement('input');
-        personalTypeInput.setAttribute('type', 'radio');
-        personalTypeInput.setAttribute('name', `${day.toLowerCase()}-type`);
-        personalTypeInput.setAttribute('value', 'personal');
-        personalTypeInput.checked = true; // default selected
-
-        let personalTypeLabel = document.createElement('label');
-        personalTypeLabel.textContent = ' Personalny (1 miejsce)';
-        personalTypeLabel.insertBefore(personalTypeInput, personalTypeLabel.firstChild);
-
-        // Group training type radio button
-        let groupTypeInput = document.createElement('input');
-        groupTypeInput.setAttribute('type', 'radio');
-        groupTypeInput.setAttribute('name', `${day.toLowerCase()}-type`);
-        groupTypeInput.setAttribute('value', 'group');
-
-        let groupTypeLabel = document.createElement('label');
-        groupTypeLabel.textContent = ' Grupowy ';
-        groupTypeLabel.insertBefore(groupTypeInput, groupTypeLabel.firstChild);
-
-        // Number of spots for group training
-        let groupSpotsInput = document.createElement('input');
-        groupSpotsInput.setAttribute('type', 'number');
-        groupSpotsInput.setAttribute('name', `${day.toLowerCase()}-spots`);
-        groupSpotsInput.setAttribute('min', '1');
-        groupSpotsInput.setAttribute('value', '1');
-        groupSpotsInput.disabled = true; // disabled by default
-        groupSpotsInput.style.width = '50px';
-
-        groupTypeLabel.appendChild(groupSpotsInput);
-        trainingTypeDiv.appendChild(personalTypeLabel);
-        trainingTypeDiv.appendChild(groupTypeLabel);
-        dayDiv.appendChild(trainingTypeDiv);
-
-        form.appendChild(dayDiv);
-    });
-
-    form.addEventListener('change', function(event) {
-        if (event.target.type === 'radio' && event.target.value === 'group') {
-            let spotsInputName = event.target.name.replace('-type', '-spots');
-            document.getElementsByName(spotsInputName)[0].disabled = false;
-        } else if (event.target.type === 'radio' && event.target.value === 'personal') {
-            let spotsInputName = event.target.name.replace('-type', '-spots');
-            document.getElementsByName(spotsInputName)[0].disabled = true;
-        }
-    });
-
-    let submitButton = document.createElement('button');
-    submitButton.type = 'button';
-    submitButton.textContent = 'Zapisz dostępność';
-    submitButton.addEventListener('click', function() {
-        // Logic for handling form submission
-        console.log('Form submitted!'); // Placeholder for actual submission logic
-        // Here you would typically gather form data and perform an action, such as updating a database
-    });
-    form.appendChild(submitButton);
-});
-
-
 
 		
     </script>
