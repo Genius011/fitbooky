@@ -904,7 +904,7 @@ display: flex;
 <div id="trainerLinkContainer" class="toggle-today-bookings" style="padding: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
   <label for="registrationLink" style="display: block; margin-bottom: 5px;">Twój unikalny link rejestracyjny:</label>
   <input type="text" id="registrationLink" value="" readonly style="width: 70%; padding: 5px; margin-right: 10px;" onclick="this.select();">
-  <button onclick="copyToClipboard()" style="padding: 5px 10px;">Kopiuj link</button>
+  <button onclick="copyToClipboard()">Kopiuj</button>
 </div>
 
 <!-- Kontener Finanse -->
@@ -1414,22 +1414,18 @@ async function setRegistrationLink() {
 }
 
 // Function to copy the link to clipboard
-function copyToClipboard() {
-  var copyText = document.getElementById('registrationLink');
-  copyText.select();
-  copyText.setSelectionRange(0, 99999); // For mobile devices
-  try {
-    var successful = document.execCommand('copy');
-    var msg = successful ? 'Skopiowano link do schowka' : 'Nie udało się skopiować linka';
-    alert(msg);
-  } catch (err) {
-    console.error('Błąd podczas kopiowania linka:', err);
-  }
-}
-
-
-// Call setRegistrationLink on page load
-window.onload = setRegistrationLink;
+    function copyToClipboard() {
+      var copyText = document.getElementById('registrationLink');
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); // For mobile devices
+      try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'Skopiowano link do schowka' : 'Nie udało się skopiować linka';
+        alert(msg);
+      } catch (err) {
+        console.error('Błąd podczas kopiowania linka:', err);
+      }
+    }
 
 
 	
