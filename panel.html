@@ -638,6 +638,35 @@ display: flex;
   background-color: #0056b3; /* Kolor tła po najechaniu myszką */
 }
 
+.finances-table {
+  margin-top: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #f9f9f9;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+th {
+  background-color: #333;
+  color: white;
+}
+
+td {
+  background-color: white;
+}
+
+tr:hover {
+  background-color: #f2f2f2;
+}
+
 
     </style>
 </head>
@@ -894,20 +923,47 @@ display: flex;
         </table>
     </section>
 	
-	<!-- Sekcja do rozwijania Finanse -->
+<!-- Sekcja do rozwijania Finanse -->
 <div class="toggle-section toggle-finances">
   <i id="toggleFinancesIcon" class="fas fa-chevron-down"></i>
   <span>Finanse</span>
-</div>
+  <div class="finances-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Okres</th>
+          <th>Przychód</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dzisiaj</td>
+          <td><span id="todayIncome">0</span> zł</td>
+        </tr>
+        <tr>
+          <td>Wczoraj</td>
+          <td><span id="yesterdayIncome">0</span> zł</td>
+        </tr>
+        <tr>
+          <td>Ten tydzień</td>
+          <td><span id="thisWeekIncome">0</span> zł</td>
+        </tr>
+        <tr>
+          <td>Ten miesiąc</td>
+          <td><span id="thisMonthIncome">0</span> zł</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
 
 <!-- Container for the unique trainer link with customized styling -->
 <div id="trainerLinkContainer" class="toggle-today-bookings" style="padding: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
   <label for="registrationLink" style="display: block; margin-bottom: 5px;">Twój unikalny link rejestracyjny:</label>
   <input type="text" id="registrationLink" value="" readonly style="width: 70%; padding: 5px; margin-right: 10px;" onclick="this.select();">
-  <span id="copyLinkButton" style="cursor: pointer;">📋</span>
+  <span id="copyLinkButton" style="cursor: pointer;"><i class="fa-light fa-copy"></i></span>
 </div>
-
-
 <!-- Kontener Finanse -->
 
 </div>
