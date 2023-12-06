@@ -1415,14 +1415,20 @@ async function displayTrainerInfo(userId) {
     // Call setRegistrationLink on page load
     window.onload = setRegistrationLink;
 	
-	/// Funkcja do aktualizacji pola input z unikalnym linkiem
+	// Funkcja do aktualizacji pola input z unikalnym linkiem
 async function aktualizujLinkRejestracyjny() {
   const elementLinkaRejestracyjnego = document.getElementById('registrationLink');
   
   // Sprawdź, czy użytkownik jest zalogowany
   if (loggedInUserId) {
-    const unikalnyLinkTrenera = await pobierzUnikalnyLinkTrenera(loggedInUserId); // Pobierz link dla zalogowanego trenera
-    elementLinkaRejestracyjnego.value = unikalnyLinkTrenera; // Zaktualizuj pole input z linkiem
+    try {
+      const unikalnyLinkTrenera = await pobierzUnikalnyLinkTrenera(loggedInUserId); // Pobierz link dla zalogowanego trenera
+      console.log('Pobrany unikalny link:', unikalnyLinkTrenera); // Dodaj ten log
+      elementLinkaRejestracyjnego.value = unikalnyLinkTrenera; // Zaktualizuj pole input z linkiem
+    } catch (error) {
+      console.error('Błąd podczas pobierania linka:', error); // Dodaj ten log
+      elementLinkaRejestracyjnego.value = 'Błąd podczas pobierania linka'; // Ustaw komunikat błędu
+    }
   } else {
     elementLinkaRejestracyjnego.value = 'Użytkownik nie jest zalogowany'; // Opcjonalny komunikat, gdy użytkownik nie jest zalogowany
   }
@@ -1430,6 +1436,7 @@ async function aktualizujLinkRejestracyjny() {
 
 // Wywołaj tę funkcję po załadowaniu strony lub w odpowiednich momentach, aby zaktualizować link
 aktualizujLinkRejestracyjny();
+
 
 
 
