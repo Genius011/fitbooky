@@ -1486,7 +1486,7 @@ async function updateTableFromFirestore() {
             console.log('Zalogowany UID:', loggedInUserId);
 
             // Zapytanie do Firestore, aby pobrać rezerwacje zgodne z UID użytkownika
-            const bookingsQuery = query(collection(db, 'bookings'), where('trainerId', '==', loggedInUserId));
+            const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', loggedInUserId));
             const bookingsSnapshot = await getDocs(bookingsQuery);
             console.log('Snapshot rezerwacji:', bookingsSnapshot.docs);
 
@@ -1520,8 +1520,8 @@ async function updateTableFromFirestore() {
     }
 }
 
-window.addEventListener('load', updateTableFromFirestore);
-
+window.onload = function() {
+    updateTableFromFirestore();
 };
 
 
