@@ -638,6 +638,44 @@ display: flex;
   background-color: #0056b3; /* Kolor tła po najechaniu myszką */
 }
 
+.finances-table {
+  margin-top: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #f9f9f9;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+th {
+  background-color: #333;
+  color: white;
+}
+
+td {
+  background-color: white;
+}
+
+tr:hover {
+  background-color: #f2f2f2;
+}
+
+tfoot {
+  background-color: #333;
+  color: white;
+}
+
+tfoot td {
+  font-weight: bold;
+}
+
 
     </style>
 </head>
@@ -918,6 +956,41 @@ display: flex;
   </form>
 </section>
 
+<!-- Sekcja do rozwijania Finanse -->
+<div class="toggle-section toggle-finances">
+  <i id="toggleFinancesIcon" class="fas fa-chevron-down"></i>
+  <span>Finanse</span>
+  <div class="finances-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Okres</th>
+          <th>Przychód</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dzisiaj</td>
+          <td><span id="todayIncome">0</span> zł</td>
+        </tr>
+        <tr>
+          <td>Ten tydzień</td>
+          <td><span id="thisWeekIncome">0</span> zł</td>
+        </tr>
+        <tr>
+          <td>Ten miesiąc</td>
+          <td><span id="thisMonthIncome">0</span> zł</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>Suma</td>
+          <td><span id="totalIncome">0</span> zł</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
 
 
 <script type="module">
