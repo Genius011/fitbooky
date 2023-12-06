@@ -613,11 +613,11 @@ display: flex;
 </head>
 <body>
 
- <!-- New section for the unique trainer link -->
-    <div id="trainerLinkContainer" class="section">
-      <label for="trainerLink">Twój unikalny link:</label>
-      <input type="text" id="trainerLink" value="" readonly onclick="this.select();">
-      <button onclick="copyToClipboard()">Kopiuj link</button>
+  <!-- Container for the unique trainer link, styled similarly to the bookings section -->
+    <div id="trainerLinkContainer" class="toggle-today-bookings" style="padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; background-color: #f9f9f9;">
+      <label for="registrationLink" style="display: block; margin-bottom: 5px;">Twój unikalny link rejestracyjny:</label>
+      <input type="text" id="registrationLink" value="" readonly style="width: 70%; padding: 5px; margin-right: 10px;" onclick="this.select();">
+      <button onclick="copyToClipboard()" style="padding: 5px 10px;">Kopiuj link</button>
     </div>
 
 <div id="adminPanel" class="admin-panel">
