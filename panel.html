@@ -956,9 +956,7 @@ tfoot td {
   </form>
 </section>
 
-<!-- Sekcja do rozwijania Finanse -->
-<div class="toggle-section toggle-finances">
-  <i id="toggleFinancesIcon" class="fas fa-chevron-down"></i>
+
   <span>Finanse</span>
   <div class="finances-table">
     <table>
@@ -1479,25 +1477,23 @@ auth.onAuthStateChanged((user) => {
 });
 
 // Funkcja do aktualizacji tabeli finansowej
-function updateFinancesTable(todayIncome, thisWeekIncome, thisMonthIncome) {
-  document.getElementById('todayIncome').textContent = todayIncome.toFixed(2);
-  document.getElementById('thisWeekIncome').textContent = thisWeekIncome.toFixed(2);
-  document.getElementById('thisMonthIncome').textContent = thisMonthIncome.toFixed(2);
-  
-  const totalIncome = todayIncome + thisWeekIncome + thisMonthIncome;
-  document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
-}
+        function updateFinancesTable(todayIncome, thisWeekIncome, thisMonthIncome) {
+            document.getElementById('todayIncome').textContent = todayIncome.toFixed(2);
+            document.getElementById('thisWeekIncome').textContent = thisWeekIncome.toFixed(2);
+            document.getElementById('thisMonthIncome').textContent = thisMonthIncome.toFixed(2);
 
-// Przykładowe dane (możesz dostosować je do swoich potrzeb)
-const todayIncome = 50.00;
-const thisWeekIncome = 200.00;
-const thisMonthIncome = 800.00;
+            const totalIncome = todayIncome + thisWeekIncome + thisMonthIncome;
+            document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
+        }
 
-// Wywołaj funkcję, aby uzupełnić tabelę danymi
-updateFinancesTable(todayIncome, thisWeekIncome, thisMonthIncome);
+        // Przykładowe dane (możesz dostosować je do swoich potrzeb)
+        const todayIncome = 50.00;
+        const thisWeekIncome = 200.00;
+        const thisMonthIncome = 800.00;
 
-
-</script>
+        // Wywołaj funkcję, aby uzupełnić tabelę danymi
+        updateFinancesTable(todayIncome, thisWeekIncome, thisMonthIncome);
+    </script>
 
 </body>
 </html>
