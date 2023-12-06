@@ -1396,10 +1396,11 @@ async function displayTrainerInfo(userId) {
     }
 }
 
-// Funkcja do ustawiania linka rejestracyjnego trenera
+/// Funkcja do ustawiania linka rejestracyjnego trenera
 async function setRegistrationLink() {
   // Pobierz unikalny link rejestracyjny z bazy danych
   const unikalnyLink = await pobierzUnikalnyLinkTrenera(loggedInUserId);
+  console.log('Pobrany unikalny link:', unikalnyLink); // Dodaj ten log
   
   // Ustaw wartość pola input z linkiem rejestracyjnym
   const registrationLinkInput = document.getElementById('registrationLink');
@@ -1407,14 +1408,18 @@ async function setRegistrationLink() {
 }
 
 
-    // Function to copy the link to clipboard
-    function copyToClipboard() {
-      var copyText = document.getElementById('registrationLink');
-      copyText.select();
-      copyText.setSelectionRange(0, 99999); // For mobile devices
-      navigator.clipboard.writeText(copyText.value);
-      alert("Link skopiowany: " + copyText.value);
-    }
+// Function to copy the link to clipboard
+function copyToClipboard() {
+  var copyText = document.getElementById('registrationLink');
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); // For mobile devices
+  navigator.clipboard.writeText(copyText.value);
+  alert("Link skopiowany: " + copyText.value);
+}
+
+// Call setRegistrationLink on page load
+window.onload = setRegistrationLink;
+
 
     // Call setRegistrationLink on page load
     window.onload = setRegistrationLink;
