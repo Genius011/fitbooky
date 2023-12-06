@@ -1518,14 +1518,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('availabilityMgr');
     const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
 
-    document.getElementById('toggle-availability').addEventListener('click', function() {
-        var availabilityForm = document.getElementById('availability-form');
-        if (availabilityForm.style.display === 'none' || availabilityForm.style.display === '') {
-            availabilityForm.style.display = 'block';
-        } else {
-            availabilityForm.style.display = 'none';
-        }
-    });
+
 
     days.forEach(day => {
         let dayDiv = document.createElement('div');
@@ -1537,7 +1530,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         for (let hour = 6; hour <= 21; hour++) {
             let hourLabel = document.createElement('label');
-            hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-hours" value="${hour}:00"> &#10006; ${hour}:00`; // Używamy &#10006; dla krzyżyka
+            hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-hours" value="${hour}:00"> ${hour}:00`;
             hourListDiv.appendChild(hourLabel);
         }
 
@@ -1547,20 +1540,20 @@ document.addEventListener('DOMContentLoaded', function() {
         let trainingTypeDiv = document.createElement('div');
         trainingTypeDiv.classList.add('training-type-selector');
 
-        // Personal training type checkbox
+        // Personal training type radio button
         let personalTypeInput = document.createElement('input');
-        personalTypeInput.setAttribute('type', 'checkbox');
+        personalTypeInput.setAttribute('type', 'radio');
         personalTypeInput.setAttribute('name', `${day.toLowerCase()}-type`);
         personalTypeInput.setAttribute('value', 'personal');
-        personalTypeInput.checked = true; // domyślnie zaznaczone
+        personalTypeInput.checked = true; // default selected
 
         let personalTypeLabel = document.createElement('label');
         personalTypeLabel.textContent = ' Personalny (1 miejsce)';
         personalTypeLabel.insertBefore(personalTypeInput, personalTypeLabel.firstChild);
 
-        // Group training type checkbox
+        // Group training type radio button
         let groupTypeInput = document.createElement('input');
-        groupTypeInput.setAttribute('type', 'checkbox');
+        groupTypeInput.setAttribute('type', 'radio');
         groupTypeInput.setAttribute('name', `${day.toLowerCase()}-type`);
         groupTypeInput.setAttribute('value', 'group');
 
@@ -1568,13 +1561,13 @@ document.addEventListener('DOMContentLoaded', function() {
         groupTypeLabel.textContent = ' Grupowy ';
         groupTypeLabel.insertBefore(groupTypeInput, groupTypeLabel.firstChild);
 
-        // Liczba miejsc dla treningu grupowego
+        // Number of spots for group training
         let groupSpotsInput = document.createElement('input');
         groupSpotsInput.setAttribute('type', 'number');
         groupSpotsInput.setAttribute('name', `${day.toLowerCase()}-spots`);
         groupSpotsInput.setAttribute('min', '1');
         groupSpotsInput.setAttribute('value', '1');
-        groupSpotsInput.disabled = true; // domyślnie wyłączone
+        groupSpotsInput.disabled = true; // disabled by default
         groupSpotsInput.style.width = '50px';
 
         groupTypeLabel.appendChild(groupSpotsInput);
@@ -1586,14 +1579,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     form.addEventListener('change', function(event) {
-        if (event.target.type === 'checkbox' && event.target.name.endsWith('-type')) {
+        if (event.target.type === 'radio' && event.target.value === 'group') {
             let spotsInputName = event.target.name.replace('-type', '-spots');
-            let spotsInput = document.getElementsByName(spotsInputName)[0];
-            if (event.target.checked) {
-                spotsInput.disabled = false;
-            } else {
-                spotsInput.disabled = true;
-            }
+            document.getElementsByName(spotsInputName)[0].disabled = false;
+        } else if (event.target.type === 'radio' && event.target.value === 'personal') {
+            let spotsInputName = event.target.name.replace('-type', '-spots');
+            document.getElementsByName(spotsInputName)[0].disabled = true;
         }
     });
 
@@ -1601,8 +1592,9 @@ document.addEventListener('DOMContentLoaded', function() {
     submitButton.type = 'button';
     submitButton.textContent = 'Zapisz dostępność';
     submitButton.addEventListener('click', function() {
-        // Logika obsługi przesyłania formularza
-        console.log('Formularz przesłany!'); // Miejsce na rzeczywistą logikę przesyłania, np. aktualizację bazy danych
+        // Logic for handling form submission
+        console.log('Form submitted!'); // Placeholder for actual submission logic
+        // Here you would typically gather form data and perform an action, such as updating a database
     });
     form.appendChild(submitButton);
 });
