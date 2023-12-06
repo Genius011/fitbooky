@@ -1498,42 +1498,48 @@ auth.onAuthStateChanged((user) => {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('toggle-availability').addEventListener('click', function() {
-                var formSection = document.getElementById('availability-form');
-                var icon = this.querySelector('i');
-                formSection.style.display = formSection.style.display === 'none' ? 'block' : 'none';
-                icon.classList.toggle('fa-chevron-down');
-                icon.classList.toggle('fa-chevron-up');
-            });
+    document.getElementById('toggle-availability').addEventListener('click', function() {
+        var formSection = document.getElementById('availability-form');
+        var icon = this.querySelector('i');
+        formSection.style.display = formSection.style.display === 'none' ? 'block' : 'none';
+        icon.classList.toggle('fa-chevron-down');
+        icon.classList.toggle('fa-chevron-up');
+    });
 
-            const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
-            const form = document.getElementById('availabilityManager');
+    const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
+    const form = document.getElementById('availabilityManager');
 
-            days.forEach(day => {
-                let dayDiv = document.createElement('div');
-                dayDiv.classList.add('day-availability');
-                dayDiv.innerHTML = `<h3>${day}</h3>`;
-                let hourListDiv = document.createElement('div');
-                hourListDiv.classList.add('hour-list');
-                
-                for (let hour = 6; hour <= 21; hour++) {
-                    let hourLabel = document.createElement('label');
-                    hourLabel.innerHTML = `
-                        <input type="checkbox" name="${day.toLowerCase()}-hours" value="${hour}:00"> ${hour}:00
-                    `;
-                    hourListDiv.appendChild(hourLabel);
-                }
+    days.forEach(day => {
+        let dayDiv = document.createElement('div');
+        dayDiv.classList.add('day-availability');
+        dayDiv.innerHTML = `<h3>${day}</h3>`;
+        let hourListDiv = document.createElement('div');
+        hourListDiv.classList.add('hour-list');
+        
+        for (let hour = 6; hour <= 21; hour++) {
+            let hourLabel = document.createElement('label');
+            hourLabel.innerHTML = `
+                <input type="checkbox" name="${day.toLowerCase()}-hours" value="${hour}:00"> ${hour}:00
+            `;
+            hourListDiv.appendChild(hourLabel);
+        }
 
-                dayDiv.appendChild(hourListDiv);
-                form.appendChild(dayDiv);
-            });
+        dayDiv.appendChild(hourListDiv);
+        form.appendChild(dayDiv);
+    });
 
-            // Submit button for the form
-            let submitButton = document.createElement('input');
-            submitButton.type = 'submit';
-            submitButton.value = 'Zapisz dostępność';
-            form.appendChild(submitButton);
-        });
+    console.log('Availability form should now be populated with days and hours.');
+
+    // Submit button for the form
+    let submitButton = document.createElement('button');
+    submitButton.type = 'button'; // Changed to 'button' to prevent page reload
+    submitButton.textContent = 'Zapisz dostępność';
+    submitButton.addEventListener('click', function() {
+        console.log('Form submitted!'); // Placeholder for form submission logic
+        // Here you would typically gather form data and perform an action
+    });
+    form.appendChild(submitButton);
+});
 
 
 		
