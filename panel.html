@@ -1141,15 +1141,10 @@ async function savePrice(bookingId) {
   }
 
   try {
-    // Aktualizacja ceny w Firestore
-    await updateDoc(bookingRef, {
-      price: price
-    });
+    await updateDoc(bookingRef, { price: price });
     alert('Cena została zaktualizowana.');
-    // Odśwież widok tabeli, aby pokazać nową cenę
-    displayTodayBookings();
-    // Jeśli masz osobną funkcję do wyświetlania przyszłych rezerwacji, wywołaj ją tutaj również
-    // displayFutureBookings();
+    displayTodayBookings(); // Ensure this function is defined in the same scope
+    // displayFutureBookings(); // Uncomment if you have this function
   } catch (error) {
     console.error('Błąd przy aktualizacji ceny:', error);
     alert('Wystąpił błąd przy aktualizacji ceny.');
