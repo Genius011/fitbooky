@@ -894,44 +894,23 @@ display: flex;
         </table>
     </section>
 	
-<!-- Sekcja do rozwijania Finanse -->
+	<!-- Sekcja do rozwijania Finanse -->
 <div class="toggle-section toggle-finances">
   <i id="toggleFinancesIcon" class="fas fa-chevron-down"></i>
   <span>Finanse</span>
-  <div class="finances-table">
-    <table>
-      <thead>
-        <tr>
-          <th>Okres</th>
-          <th>Przychód</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Dzisiaj</td>
-          <td><span id="todayIncome">0</span> zł</td>
-        </tr>
-        <tr>
-          <td>Wczoraj</td>
-          <td><span id="yesterdayIncome">0</span> zł</td>
-        </tr>
-        <tr>
-          <td>Ten tydzień</td>
-          <td><span id="thisWeekIncome">0</span> zł</td>
-        </tr>
-        <tr>
-          <td>Ten miesiąc</td>
-          <td><span id="thisMonthIncome">0</span> zł</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 </div>
+
+<!-- Container for the unique trainer link with customized styling -->
+<div id="trainerLinkContainer" class="toggle-today-bookings" style="padding: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
+  <label for="registrationLink" style="display: block; margin-bottom: 5px;">Twój unikalny link rejestracyjny:</label>
+  <input type="text" id="registrationLink" value="" readonly style="width: 70%; padding: 5px; margin-right: 10px;" onclick="this.select();">
+  <span id="copyLinkButton" style="cursor: pointer;">📋</span>
 </div>
+
 
 <!-- Kontener Finanse -->
 
-
+</div>
 <div id="profileModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
@@ -948,12 +927,7 @@ display: flex;
   </form>
 </section>
 
-<!-- Container for the unique trainer link with customized styling -->
-<div id="trainerLinkContainer" class="toggle-today-bookings" style="padding: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
-  <label for="registrationLink" style="display: block; margin-bottom: 5px;">Twój unikalny link rejestracyjny:</label>
-  <input type="text" id="registrationLink" value="" readonly style="width: 70%; padding: 5px; margin-right: 10px;" onclick="this.select();">
-  <span id="copyLinkButton" style="cursor: pointer;">📋</span>
-</div>
+
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
