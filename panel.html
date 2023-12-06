@@ -613,11 +613,13 @@ display: flex;
 </head>
 <body>
 
-  <!-- Container for the unique trainer link, styled similarly to the bookings section -->
-    <div id="trainerLinkContainer" class="toggle-today-bookings" style="padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; background-color: #f9f9f9;">
-      <label for="registrationLink" style="display: block; margin-bottom: 5px;">Twój unikalny link rejestracyjny:</label>
-      <input type="text" id="registrationLink" value="" readonly style="width: 70%; padding: 5px; margin-right: 10px;" onclick="this.select();">
-      <button onclick="copyToClipboard()" style="padding: 5px 10px;">Kopiuj link</button>
+ <!-- Unique trainer link section, styled to fit within the white area -->
+    <div id="trainerLinkContainer" style="background-color: #fff; padding: 15px; margin: 20px 0; border-radius: 4px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+      <label for="registrationLink">Twój unikalny link rejestracyjny:</label>
+      <div style="display: flex; align-items: center; margin-top: 10px;">
+        <input type="text" id="registrationLink" value="" readonly style="flex-grow: 1; padding: 10px; margin-right: 10px; border: 1px solid #ccd0d5; border-radius: 4px;" onclick="this.select();">
+        <button onclick="copyToClipboard()" style="padding: 10px 15px; border: none; border-radius: 4px; background-color: #007bff; color: white; cursor: pointer;">Kopiuj link</button>
+      </div>
     </div>
 
 <div id="adminPanel" class="admin-panel">
@@ -1364,6 +1366,25 @@ async function displayTrainerInfo(userId) {
         console.log("Error getting document:", error);
     }
 }
+
+// Function to set the trainer's registration link
+    function setRegistrationLink() {
+      // Replace with the actual code to fetch the link from your database
+      var registrationLink = 'Your method to fetch registration link here';
+      document.getElementById('registrationLink').value = registrationLink;
+    }
+
+    // Function to copy the link to clipboard
+    function copyToClipboard() {
+      var copyText = document.getElementById('registrationLink');
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); // For mobile devices
+      navigator.clipboard.writeText(copyText.value);
+      alert("Link skopiowany: " + copyText.value);
+    }
+
+    // Call setRegistrationLink on page load
+    window.onload = setRegistrationLink;
 
 </script>
 
