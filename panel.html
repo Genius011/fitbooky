@@ -608,6 +608,36 @@ display: flex;
     margin: 5px 0;
 }
 
+/* Stylizacja kontenera dla unikalnego linku trenera */
+#trainerLinkContainer {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  border: none; /* Usunięcie obramowania */
+  border-radius: 5px; /* Opcjonalnie, zaokrąglonych rogów */
+}
+
+/* Stylizacja etykiety */
+#trainerLinkContainer label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Stylizacja przycisku "Kopiuj link" */
+#trainerLinkContainer button {
+  padding: 5px 10px;
+  background-color: #007bff; /* Kolor tła */
+  color: #fff; /* Kolor tekstu */
+  border: none; /* Usunięcie obramowania */
+  border-radius: 5px; /* Opcjonalnie, zaokrąglonych rogów */
+  cursor: pointer;
+}
+
+/* Stylizacja przycisku "Kopiuj link" po najechaniu myszką (hover) */
+#trainerLinkContainer button:hover {
+  background-color: #0056b3; /* Kolor tła po najechaniu myszką */
+}
+
 
     </style>
 </head>
@@ -870,12 +900,13 @@ display: flex;
   <span>Finanse</span>
 </div>
 
-<!-- Container for the unique trainer link, styled similarly to the bookings section -->
-    <div id="trainerLinkContainer" class="toggle-today-bookings" style="padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; background-color: #f9f9f9;">
-      <label for="registrationLink" style="display: block; margin-bottom: 5px;">Twój unikalny link rejestracyjny:</label>
-      <input type="text" id="registrationLink" value="" readonly style="width: 70%; padding: 5px; margin-right: 10px;" onclick="this.select();">
-      <button onclick="copyToClipboard()" style="padding: 5px 10px;">Kopiuj link</button>
-    </div>
+<!-- Container for the unique trainer link with customized styling -->
+<div id="trainerLinkContainer" class="toggle-today-bookings" style="padding: 10px; margin-bottom: 10px; background-color: #f9f9f9;">
+  <label for="registrationLink" style="display: block; margin-bottom: 5px;">Twój unikalny link rejestracyjny:</label>
+  <input type="text" id="registrationLink" value="" readonly style="width: 70%; padding: 5px; margin-right: 10px;" onclick="this.select();">
+  <button onclick="copyToClipboard()" style="padding: 5px 10px;">Kopiuj link</button>
+</div>
+
 <!-- Kontener Finanse -->
 
 </div>
