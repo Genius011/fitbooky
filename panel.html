@@ -1418,14 +1418,15 @@ function copyToClipboard() {
   var copyText = document.getElementById('registrationLink');
   copyText.select();
   copyText.setSelectionRange(0, 99999); // For mobile devices
-  navigator.clipboard.writeText(copyText.value);
-  alert("Link skopiowany: " + copyText.value);
+  try {
+    var successful = document.execCommand('copy');
+    var msg = successful ? 'Skopiowano link do schowka' : 'Nie udało się skopiować linka';
+    alert(msg);
+  } catch (err) {
+    console.error('Błąd podczas kopiowania linka:', err);
+  }
 }
 
-console.log('Before setting onload function');
-
-// Call setRegistrationLink on page load
-window.onload = setRegistrationLink;
 
 
 	
