@@ -1527,38 +1527,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Godziny treningu indywidualnego
-    const individualHours = [];
-    for (let hour = 6; hour <= 21; hour++) {
-        individualHours.push(hour);
-    }
-
     days.forEach(day => {
         let dayDiv = document.createElement('div');
         dayDiv.classList.add('day-availability');
         dayDiv.innerHTML = `<h3>${day}</h3>`;
 
-        // Godziny dla treningów indywidualnych
+        // Godziny treningu indywidualnego
         let individualHourListDiv = document.createElement('div');
         individualHourListDiv.classList.add('hour-list');
 
-        individualHours.forEach(hour => {
+        for (let hour = 6; hour <= 21; hour++) {
             let hourLabel = document.createElement('label');
             hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-individual-hours" value="${hour}:00"> ${hour}:00 (Indywidualny)`;
             individualHourListDiv.appendChild(hourLabel);
-        });
+        }
 
         dayDiv.appendChild(individualHourListDiv);
 
-        // Godziny dla treningów grupowych
+        // Godziny treningu grupowego
         let groupHourListDiv = document.createElement('div');
         groupHourListDiv.classList.add('hour-list');
 
-        individualHours.forEach(hour => {
+        for (let hour = 6; hour <= 21; hour++) {
             let hourLabel = document.createElement('label');
             hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-group-hours" value="${hour}:00"> ${hour}:00 (Grupowy)`;
             groupHourListDiv.appendChild(hourLabel);
-        });
+        }
 
         dayDiv.appendChild(groupHourListDiv);
 
@@ -1574,6 +1568,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     form.appendChild(submitButton);
 });
+
 
 
 		
