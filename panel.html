@@ -1624,68 +1624,7 @@ document.addEventListener('DOMContentLoaded', function() {
         displayCurrentWeek(); // Wyświetl aktualny tydzień po zmianach w formularzu
     }
 
-    // Dodaj przyciski do przesuwania tygodnia
-    let prevWeekButton = document.createElement('button');
-    prevWeekButton.type = 'button';
-    prevWeekButton.textContent = 'Poprzedni Tydzień';
-    prevWeekButton.addEventListener('click', function() {
-        currentWeek--;
-        generateForm(); // Generuj formularz na podstawie aktualnego tygodnia
-    });
-
-    let nextWeekButton = document.createElement('button');
-    nextWeekButton.type = 'button';
-    nextWeekButton.textContent = 'Następny Tydzień';
-    nextWeekButton.addEventListener('click', function() {
-        currentWeek++;
-        generateForm(); // Generuj formularz na podstawie aktualnego tygodnia
-    });
-
-    // Pole tekstowe do wyświetlania aktualnego tygodnia
-    let weekDisplay = document.createElement('p');
-    weekDisplay.setAttribute('id', 'current-week');
-
-    form.appendChild(prevWeekButton);
-    form.appendChild(weekDisplay);
-    form.appendChild(nextWeekButton);
-
-    generateForm(); // Generuj formularz na początku
-});
-
-let form; // Deklaracja zmiennej form na poziomie globalnym
-
-document.addEventListener('DOMContentLoaded', function() {
-    form = document.getElementById('availabilityMgr'); // Przypisanie zmiennej form w funkcji obsługującej zdarzenie DOMContentLoaded
-
-    // Pozostała część kodu
-    // ...
-
-    generateForm(); // Generuj formularz na początku
-});
-
-// Dodaj przyciski do przesuwania dni tygodnia
-let prevDayButton = document.createElement('button');
-prevDayButton.type = 'button';
-prevDayButton.textContent = 'Poprzedni Dzień';
-prevDayButton.addEventListener('click', function() {
-    currentWeek--; // Przesuń o jeden tydzień do tyłu
-    generateForm(); // Zaktualizuj formularz
-});
-
-let nextDayButton = document.createElement('button');
-nextDayButton.type = 'button';
-nextDayButton.textContent = 'Następny Dzień';
-nextDayButton.addEventListener('click', function() {
-    currentWeek++; // Przesuń o jeden tydzień do przodu
-    generateForm(); // Zaktualizuj formularz
-});
-
-// Dodaj przyciski do formularza
-form.appendChild(prevDayButton);
-form.appendChild(nextDayButton);
-
-
-
+    
 
 		
     </script>
