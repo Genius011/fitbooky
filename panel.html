@@ -1127,12 +1127,13 @@ function setupWeekNavigation() {
 
 
 async function displayFutureBookings() {
-	console.log("displayFutureBookings called"); // Sprawdź, czy funkcja jest wywoływana
-	console.log("Logged in User ID (inside displayFutureBookings):", loggedInUserId); // Sprawdź wartość loggedInUserId
-if (!loggedInUserId) {
+  console.log("displayFutureBookings called"); // Sprawdź, czy funkcja jest wywoływana
+  console.log("Logged in User ID (inside displayFutureBookings):", loggedInUserId); // Sprawdź wartość loggedInUserId
+  if (!loggedInUserId) {
     console.log("Użytkownik nie jest zalogowany.");
     return;
   }
+  
   const bookingsRef = collection(db, 'bookings');
   const bookingsTableBody = document.getElementById('futureBookingsTable').querySelector('tbody');
   const todayFormatted = formatDate(new Date());
@@ -1142,10 +1143,9 @@ if (!loggedInUserId) {
     const bookings = bookingSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    })).filter(booking => booking.trainerId === loggedInUserId); // Filtruj rezerwacje dla zalogowanego trenera
-return booking.userId === loggedInUserId;
+    })).filter(booking => {
+      return booking.userId === loggedInUserId || booking.trainerId === loggedInUserId;
     });
-
 
     bookings.sort((a, b) => {
       const dateA = new Date(`${a.date} ${a.time}`);
@@ -1155,35 +1155,36 @@ return booking.userId === loggedInUserId;
 
     bookingsTableBody.innerHTML = '';
 
-    bookings.forEach(bookingData => {
+    for (const bookingData of bookings) {
       const userRef = doc(db, 'users', bookingData.userId);
-      getDoc(userRef).then(userSnap => {
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-          const bookingRow = document.createElement('tr');
+      const userSnap = await getDoc(userRef);
 
-          if (bookingData.date === todayFormatted) {
-            bookingRow.classList.add('highlighted');
-          }
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        const bookingRow = document.createElement('tr');
 
-          bookingRow.innerHTML = `
-            <td>${userData.firstName || ''}</td>
-            <td>${userData.lastName || ''}</td>
-            <td>${bookingData.time}</td>
-            <td>${bookingData.date}</td>
-            <td>${bookingData.trainingType}</td>
-			         <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
-      <i class="fas fa-user"></i> <!-- Ikonka profilu -->
-    </button>
-  <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
-            <i class="fas fa-times"></i>
-        </button>
-  </td>
-          `;
-          bookingsTableBody.appendChild(bookingRow);
+        if (bookingData.date === todayFormatted) {
+          bookingRow.classList.add('highlighted');
         }
-      });
-    });
+
+        bookingRow.innerHTML = `
+          <td>${userData.firstName || ''}</td>
+          <td>${userData.lastName || ''}</td>
+          <td>${bookingData.time}</td>
+          <td>${bookingData.date}</td>
+          <td>${bookingData.trainingType}</td>
+          <td>
+            <button class="profileButton" onclick="viewProfile('${bookingData.userId}')">
+              <i class="fas fa-user"></i> <!-- Ikonka profilu -->
+            </button>
+            <button class="deleteButton" data-booking-id="${bookingData.id}" onclick="deleteBooking('${bookingData.id}', event)">
+              <i class="fas fa-times"></i>
+            </button>
+          </td>
+        `;
+        bookingsTableBody.appendChild(bookingRow);
+      }
+    }
   } catch (error) {
     console.error("Error fetching bookings:", error);
   }
@@ -1209,23 +1210,26 @@ async function displayTodayBookings() {
     const bookings = bookingSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    }));
-    console.log("Logged in User ID:", loggedInUserId); // Log 2: Sprawdzanie UID użytkownika
+    })).filter(booking => {
+      return booking.date === todayFormatted && (booking.userId === loggedInUserId || booking.trainerId === loggedInUserId);
+    });
 
-    // Filtrowanie dzisiejszych rezerwacji przypisanych do zalogowanego trenera
-    const todayBookings = bookings.filter(booking => booking.date === todayFormatted && booking.trainerId === loggedInUserId);
-    console.log("Filtered bookings:", todayBookings); // Log 3: Sprawdzanie przefiltrowanych rezerwacji
+    console.log("Logged in User ID:", loggedInUserId); // Log 2: Sprawdzanie UID użytkownika
 
     todayBookingsTableBody.innerHTML = '';
 
-    const bookingElements = await Promise.all(todayBookings.map(async (bookingData) => {
-      const userSnap = await getDoc(doc(db, 'users', bookingData.userId));
+    for (const bookingData of bookings) {
+      const userRef = doc(db, 'users', bookingData.userId);
+      const userSnap = await getDoc(userRef);
+
       if (userSnap.exists()) {
         const userData = userSnap.data();
         const bookingRow = document.createElement('tr');
+
         if (bookingData.date === todayFormatted) {
           bookingRow.classList.add('highlighted');
         }
+
         const priceValue = bookingData.price ? bookingData.price : '';
         bookingRow.innerHTML = `
           <td>${userData.firstName || ''}</td>
@@ -1248,18 +1252,9 @@ async function displayTodayBookings() {
             </button>
           </td>
         `;
-        return bookingRow;
-      } else {
-        return null;
+        todayBookingsTableBody.appendChild(bookingRow);
       }
-    }));
-
-    bookingElements.forEach((element) => {
-      if (element) {
-        todayBookingsTableBody.appendChild(element);
-      }
-    });
-
+    }
   } catch (error) {
     console.error("Error fetching bookings:", error);
   }
