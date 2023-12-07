@@ -1626,44 +1626,51 @@ document.addEventListener('DOMContentLoaded', function() {
         displayCurrentWeek(); // Wyświetl aktualny tydzień po zmianach w formularzu
     }
 
-    // Funkcja do obliczania daty dla danego dnia tygodnia na podstawie aktualnego tygodnia
-    function obliczDateDlaDniaTygodnia(aktualnyTydzien, dzienTygodnia) {
-        // Pobierz aktualną datę
-        let today = new Date();
+  // Funkcja do obliczania daty dla danego dnia tygodnia na podstawie aktualnego tygodnia
+function obliczDateDlaDniaTygodnia(aktualnyTydzien, dzienTygodnia) {
+    // Pobierz aktualną datę
+    let today = new Date();
+    
+    // Oblicz datę początkową wybranego tygodnia
+    let startDate = getStartDate(aktualnyTydzien, today.getFullYear());
 
-        // Oblicz datę początkową wybranego tygodnia
-        let startDate = getStartDate(aktualnyTydzien, today.getFullYear());
-
-        // Dodaj dni odpowiadające danemu dniowi tygodnia
-        switch (dzienTygodnia) {
-            case 'Poniedziałek':
-                startDate.setDate(startDate.getDate());
-                break;
-            case 'Wtorek':
-                startDate.setDate(startDate.getDate() + 1);
-                break;
-            case 'Środa':
-                startDate.setDate(startDate.getDate() + 2);
-                break;
-            case 'Czwartek':
-                startDate.setDate(startDate.getDate() + 3);
-                break;
-            case 'Piątek':
-                startDate.setDate(startDate.getDate() + 4);
-                break;
-            case 'Sobota':
-                startDate.setDate(startDate.getDate() + 5);
-                break;
-            case 'Niedziela':
-                startDate.setDate(startDate.getDate() + 6);
-                break;
-        }
-
-        // Formatuj datę jako string
-        const formattedDate = startDate.toLocaleDateString();
-
-        return formattedDate;
+    // Znajdź poniedziałek dla aktualnej daty tygodnia
+    while (startDate.getDay() !== 1) {
+        startDate.setDate(startDate.getDate() - 1);
     }
+
+    // Przesuń datę początkową o odpowiednią ilość dni, aby uzyskać datę dla danego dnia tygodnia
+    switch (dzienTygodnia) {
+        case 'Poniedziałek':
+            // Data dla poniedziałku pozostaje niezmieniona
+            break;
+        case 'Wtorek':
+            startDate.setDate(startDate.getDate() + 1);
+            break;
+        case 'Środa':
+            startDate.setDate(startDate.getDate() + 2);
+            break;
+        case 'Czwartek':
+            startDate.setDate(startDate.getDate() + 3);
+            break;
+        case 'Piątek':
+            startDate.setDate(startDate.getDate() + 4);
+            break;
+        case 'Sobota':
+            startDate.setDate(startDate.getDate() + 5);
+            break;
+        case 'Niedziela':
+            startDate.setDate(startDate.getDate() + 6);
+            break;
+    }
+
+    // Formatuj datę jako string
+    const formattedDate = startDate.toLocaleDateString();
+
+    return formattedDate;
+}
+
+
 
     // Funkcja do wyświetlania aktualnego tygodnia od poniedziałku do niedzieli
     function displayCurrentWeek() {
@@ -1723,66 +1730,74 @@ let currentWeek = 1;
 
 // Funkcja do zapisywania informacji o zamkniętej dostępności do Firestore
 async function saveClosedAvailability() {
-  const closedAvailability = {}; // Obiekt do przechowywania informacji o zamkniętej dostępności
+    const closedAvailability = {}; // Obiekt do przechowywania informacji o zamkniętej dostępności
 
-  // Pobierz aktualną datę jako tekst
-  const currentDate = new Date().toLocaleDateString();
+    // Pobierz aktualną datę jako tekst
+    const currentDate = new Date().toLocaleDateString();
 
-  // Iteracja przez dni tygodnia
-  days.forEach(day => {
-    // Pobierz zaznaczone godziny treningu indywidualnego
-    const individualHours = Array.from(document.querySelectorAll(`input[name="${day.toLowerCase()}-individual-hours-week${currentWeek}"]:checked`))
-      .map(input => input.value);
-    
-    // Pobierz zaznaczone godziny treningu grupowego
-    const groupHours = Array.from(document.querySelectorAll(`input[name="${day.toLowerCase()}-group-hours-week${currentWeek}"]:checked`))
-      .map(input => input.value);
-    
-    // Pobierz dostępność miejsc dla treningów grupowych
-    const groupSpotsInput = document.querySelector(`input[name="${day.toLowerCase()}-group-spots-week${currentWeek}"]`);
-    const groupSpots = parseInt(groupSpotsInput.value, 10);
+    // Iteracja przez dni tygodnia
+    days.forEach(day => {
+        // Pobierz zaznaczone godziny treningu indywidualnego
+        const individualHours = Array.from(document.querySelectorAll(`input[name="${day.toLowerCase()}-individual-hours-week${currentWeek}"]:checked`))
+            .map(input => input.value);
 
-    // Jeśli jakiekolwiek dane zostały zaznaczone lub wprowadzone, zapisz je do obiektu
-    if (individualHours.length > 0 || groupHours.length > 0 || !isNaN(groupSpots)) {
-      closedAvailability[day.toLowerCase()] = {
-        individualHours,
-        groupHours,
-        groupSpots,
-        date: currentDate, // Dodaj aktualną datę jako tekst
-      };
+        // Pobierz zaznaczone godziny treningu grupowego
+        const groupHours = Array.from(document.querySelectorAll(`input[name="${day.toLowerCase()}-group-hours-week${currentWeek}"]:checked`))
+            .map(input => input.value);
+
+        // Pobierz dostępność miejsc dla treningów grupowych
+        const groupSpotsInput = document.querySelector(`input[name="${day.toLowerCase()}-group-spots-week${currentWeek}"]`);
+        const groupSpots = parseInt(groupSpotsInput.value, 10);
+		        const dateForDay = obliczDateDlaDniaTygodnia(currentWeek, day);
+
+
+        // Jeśli jakiekolwiek dane zostały zaznaczone lub wprowadzone, zapisz je do obiektu
+        if (individualHours.length > 0 || groupHours.length > 0 || !isNaN(groupSpots)) {
+            closedAvailability[day.toLowerCase()] = {
+                individualHours,
+                groupHours,
+                groupSpots,
+                date: currentDate, // Dodaj aktualną datę jako tekst
+            };
+        }
+    });
+
+    if (Object.keys(closedAvailability).length === 0) {
+        alert('Proszę wybrać co najmniej jedną godzinę lub wprowadzić dostępność miejsc dla treningów grupowych.');
+        return;
     }
-  });
 
-  if (Object.keys(closedAvailability).length === 0) {
-    alert('Proszę wybrać co najmniej jedną godzinę lub wprowadzić dostępność miejsc dla treningów grupowych.');
-    return;
-  }
+    // Przygotuj dane do zapisania w Firestore
+    const dataToSave = {
+        trainerId: loggedInUserId,
+        week: currentWeek,
+        closedAvailability,
+    };
 
-  // Przygotuj dane do zapisania w Firestore
-  const dataToSave = {
-    trainerId: loggedInUserId,
-    week: currentWeek,
-    closedAvailability,
-  };
+    const closedAvailabilityRef = collection(db, 'closedAvailability'); // Zmień na odpowiednią kolekcję w swojej bazie danych
 
-  const closedAvailabilityRef = collection(db, 'closedAvailability'); // Zmień na odpowiednią kolekcję w swojej bazie danych
+    try {
+        // Dodaj dokument z zamkniętą dostępnością do Firestore
+        const docRef = await addDoc(closedAvailabilityRef, dataToSave);
+        console.log('Zamknięta dostępność została zapisana do Firestore z ID:', docRef.id);
 
-  try {
-    // Dodaj dokument z zamkniętą dostępnością do Firestore
-    const docRef = await addDoc(closedAvailabilityRef, dataToSave);
-    console.log('Zamknięta dostępność została zapisana do Firestore z ID:', docRef.id);
-    
-    // Opcjonalnie, możesz odświeżyć widok lub wykonać inne akcje po zapisaniu danych
-    // ...
-  } catch (error) {
-    console.error('Błąd podczas zapisywania zamkniętej dostępności do Firestore:', error);
-  }
+        // Opcjonalnie, możesz odświeżyć widok lub wykonać inne akcje po zapisaniu danych
+        // ...
+    } catch (error) {
+        console.error('Błąd podczas zapisywania zamkniętej dostępności do Firestore:', error);
+    }
 }
 
 // Dodaj obsługę kliknięcia przycisku "Zamknij dostępność"
 const closeAvailabilityButton = document.getElementById('close-availability');
-closeAvailabilityButton.addEventListener('click', saveClosedAvailability);
-
+closeAvailabilityButton.addEventListener('click', function() {
+    if (confirm('Czy na pewno chcesz zamknąć dostępność dla wybranych dat?')) {
+        saveClosedAvailability(); // Jeśli użytkownik potwierdzi, wywołaj funkcję zapisywania dostępności
+        alert('Wybrane daty zostały zamknięte.'); // Wyświetl informację po zapisaniu
+    } else {
+        // Użytkownik anulował operację, nie rób nic
+    }
+});
 
 		
     </script>
