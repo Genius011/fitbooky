@@ -1667,6 +1667,11 @@ function displayCurrentWeek() {
     generateForm(); // Generuj formularz na początku
 });
 
+// ZAPISYWANIE DOSTEPNOSCI!!
+
+// Globalna zmienna do przechowywania dni tygodnia
+const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
+
 // Funkcja do zapisywania informacji o zamkniętej dostępności do Firestore
 async function saveClosedAvailability() {
   const closedAvailability = {}; // Obiekt do przechowywania informacji o zamkniętej dostępności
@@ -1725,7 +1730,7 @@ async function saveClosedAvailability() {
 const closeAvailabilityButton = document.getElementById('close-availability');
 closeAvailabilityButton.addEventListener('click', saveClosedAvailability);
 
-// ...
+
 		
     </script>
 
