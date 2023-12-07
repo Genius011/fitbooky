@@ -1585,9 +1585,38 @@ document.addEventListener('DOMContentLoaded', function() {
             dayDiv.appendChild(groupSpotsLabel);
 
             form.appendChild(dayDiv);
-        
+        });
 
-        
+        displayCurrentWeek(); // Wyświetl aktualny tydzień po zmianach w formularzu
+    }
+
+    // Dodaj przyciski do przesuwania tygodnia
+    let prevWeekButton = document.createElement('button');
+    prevWeekButton.type = 'button';
+    prevWeekButton.textContent = 'Poprzedni Tydzień';
+    prevWeekButton.addEventListener('click', function() {
+        currentWeek--;
+        generateForm(); // Generuj formularz na podstawie aktualnego tygodnia
+    });
+
+    let nextWeekButton = document.createElement('button');
+    nextWeekButton.type = 'button';
+    nextWeekButton.textContent = 'Następny Tydzień';
+    nextWeekButton.addEventListener('click', function() {
+        currentWeek++;
+        generateForm(); // Generuj formularz na podstawie aktualnego tygodnia
+    });
+
+    // Pole tekstowe do wyświetlania aktualnego tygodnia
+    let weekDisplay = document.createElement('p');
+    weekDisplay.setAttribute('id', 'current-week');
+
+    form.appendChild(prevWeekButton);
+    form.appendChild(weekDisplay);
+    form.appendChild(nextWeekButton);
+
+    generateForm(); // Generuj formularz na początku
+});
 
 
 		
