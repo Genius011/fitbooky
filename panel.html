@@ -1551,15 +1551,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Oblicz pierwszy poniedziałek roku
         let firstMonday = new Date(year, 0, 4 + (1 - dayOfWeek));
 
-        
+        // Oblicz datę początkową wybranego tygodnia
+        let startDate = new Date(firstMonday.getTime() + ((weekNumber - 1) * 7) * 24 * 60 * 60 * 1000);
+		
 		// Dodaj dni odpowiadające danemu dniowi tygodnia
-		// Pobierz aktualną datę
-    let today = new Date();
-
-    // Oblicz datę początkową wybranego tygodnia
-    let startDate = getStartDate(aktualnyTydzien, today.getFullYear());
-
-    // Dodaj dni odpowiadające danemu dniowi tygodnia
     switch (dzienTygodnia) {
         case 'Poniedziałek':
             startDate.setDate(startDate.getDate());
