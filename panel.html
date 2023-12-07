@@ -1741,10 +1741,14 @@ async function saveClosedAvailability() {
 
     // Jeśli jakiekolwiek dane zostały zaznaczone lub wprowadzone, zapisz je do obiektu
     if (individualHours.length > 0 || groupHours.length > 0 || !isNaN(groupSpots)) {
+      // Utwórz obiekt z aktualną datą
+      const currentDate = new Date().toISOString();
+
       closedAvailability[day.toLowerCase()] = {
         individualHours,
         groupHours,
         groupSpots,
+        date: currentDate, // Dodaj aktualną datę
       };
     }
   });
