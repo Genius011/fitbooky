@@ -1727,6 +1727,21 @@ const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobot
 // Globalna zmienna do przechowywania aktualnego tygodnia
 let currentWeek = 1;
 
+// Funkcja do obliczania daty początkowej wybranego tygodnia
+function getStartDate(weekNumber, year) {
+    let januaryFourth = new Date(year, 0, 4); // 4 stycznia danego roku
+    let dayOfWeek = januaryFourth.getDay(); // Dzień tygodnia 4 stycznia (0 - niedziela, 1 - poniedziałek, ..., 6 - sobota)
+    dayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek; // Konwersja niedzieli na 7 (ISO 8601)
+
+    // Oblicz pierwszy poniedziałek roku
+    let firstMonday = new Date(year, 0, 4 + (1 - dayOfWeek));
+
+    // Oblicz datę początkową wybranego tygodnia
+    let startDate = new Date(firstMonday.getTime() + ((weekNumber - 1) * 7) * 24 * 60 * 60 * 1000);
+
+    return startDate;
+}
+
 // Funkcja do zapisywania informacji o zamkniętej dostępności do Firestore
 async function saveClosedAvailability() {
     const closedAvailability = {}; // Obiekt do przechowywania informacji o zamkniętej dostępności
@@ -1820,7 +1835,7 @@ function getDateForDayOfWeek(weekNumber, dayOfWeek) {
             break;
     }
 
-    return startDate;
+    return startDate.toLocaleDateString();
 }
 
 // Dodaj obsługę kliknięcia przycisku "Zamknij dostępność"
@@ -1833,7 +1848,6 @@ closeAvailabilityButton.addEventListener('click', function () {
         // Użytkownik anulował operację, nie rób nic
     }
 });
-
 
 		
     </script>
