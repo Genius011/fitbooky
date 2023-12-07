@@ -1725,6 +1725,9 @@ let currentWeek = 1;
 async function saveClosedAvailability() {
   const closedAvailability = {}; // Obiekt do przechowywania informacji o zamkniętej dostępności
 
+  // Pobierz aktualną datę jako tekst
+  const currentDate = new Date().toLocaleDateString();
+
   // Iteracja przez dni tygodnia
   days.forEach(day => {
     // Pobierz zaznaczone godziny treningu indywidualnego
@@ -1745,6 +1748,7 @@ async function saveClosedAvailability() {
         individualHours,
         groupHours,
         groupSpots,
+        date: currentDate, // Dodaj aktualną datę jako tekst
       };
     }
   });
