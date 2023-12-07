@@ -1666,7 +1666,25 @@ function displayCurrentWeek() {
     generateForm(); // Generuj formularz na początku
 });
 
+// Przycisk "Zamknij dostępność"
+    let closeAvailabilityButton = document.createElement('button');
+    closeAvailabilityButton.type = 'button';
+    closeAvailabilityButton.textContent = 'Zamknij dostępność';
+    closeAvailabilityButton.addEventListener('click', function() {
+        availabilityForm.style.display = 'none'; // Zwijanie sekcji dostępności
+    });
 
+    // Pole tekstowe do wyświetlania aktualnego tygodnia
+    let weekDisplay = document.createElement('p');
+    weekDisplay.setAttribute('id', 'current-week');
+
+    form.appendChild(prevWeekButton);
+    form.appendChild(weekDisplay);
+    form.appendChild(nextWeekButton);
+    form.appendChild(closeAvailabilityButton); // Dodaj przycisk "Zamknij dostępność"
+
+    generateForm(); // Generuj formularz na początku
+});
 		
     </script>
 
