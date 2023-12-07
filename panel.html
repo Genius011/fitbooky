@@ -1553,8 +1553,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Oblicz datę początkową wybranego tygodnia
         let startDate = new Date(firstMonday.getTime() + ((weekNumber - 1) * 7) * 24 * 60 * 60 * 1000);
-        return startDate;
+		
+		// Dodaj dni odpowiadające danemu dniowi tygodnia
+    switch (dzienTygodnia) {
+        case 'Poniedziałek':
+            startDate.setDate(startDate.getDate());
+            break;
+        case 'Wtorek':
+            startDate.setDate(startDate.getDate() + 1);
+            break;
+        case 'Środa':
+            startDate.setDate(startDate.getDate() + 2);
+            break;
+        case 'Czwartek':
+            startDate.setDate(startDate.getDate() + 3);
+            break;
+        case 'Piątek':
+            startDate.setDate(startDate.getDate() + 4);
+            break;
+        case 'Sobota':
+            startDate.setDate(startDate.getDate() + 5);
+            break;
+        case 'Niedziela':
+            startDate.setDate(startDate.getDate() + 6);
+            break;
     }
+
+    // Formatuj datę jako string
+    const formattedDate = startDate.toLocaleDateString();
+
+    return formattedDate;
+}
+	
 
     // Funkcja do wyświetlania aktualnego tygodnia od poniedziałku do niedzieli
 function displayCurrentWeek() {
@@ -1681,30 +1711,25 @@ async function saveClosedAvailability() {
   const closedAvailability = {}; // Obiekt do przechowywania informacji o zamkniętej dostępności
 
   // Iteracja przez dni tygodnia
-  days.forEach(async (day) => {
+  days.forEach(day => {
     // Pobierz zaznaczone godziny treningu indywidualnego
     const individualHours = Array.from(document.querySelectorAll(`input[name="${day.toLowerCase()}-individual-hours-week${currentWeek}"]:checked`))
-      .map((input) => input.value);
-
+      .map(input => input.value);
+    
     // Pobierz zaznaczone godziny treningu grupowego
     const groupHours = Array.from(document.querySelectorAll(`input[name="${day.toLowerCase()}-group-hours-week${currentWeek}"]:checked`))
-      .map((input) => input.value);
-
+      .map(input => input.value);
+    
     // Pobierz dostępność miejsc dla treningów grupowych
     const groupSpotsInput = document.querySelector(`input[name="${day.toLowerCase()}-group-spots-week${currentWeek}"]`);
     const groupSpots = parseInt(groupSpotsInput.value, 10);
 
     // Jeśli jakiekolwiek dane zostały zaznaczone lub wprowadzone, zapisz je do obiektu
     if (individualHours.length > 0 || groupHours.length > 0 || !isNaN(groupSpots)) {
-      // Oblicz datę na podstawie aktualnego tygodnia i dnia tygodnia
-      const currentDate = obliczDateDlaDniaTygodnia(currentWeek, day);
-
       closedAvailability[day.toLowerCase()] = {
-        data: currentDate,
-        godzinyIndywidualne: individualHours,
-        godzinyGrupowe: groupHours,
-        miejscaGrupowe: groupSpots,
-        trainerID: loggedInUserId, // Dodaj trainerID
+        individualHours,
+        groupHours,
+        groupSpots,
       };
     }
   });
@@ -1727,7 +1752,7 @@ async function saveClosedAvailability() {
     // Dodaj dokument z zamkniętą dostępnością do Firestore
     const docRef = await addDoc(closedAvailabilityRef, dataToSave);
     console.log('Zamknięta dostępność została zapisana do Firestore z ID:', docRef.id);
-
+    
     // Opcjonalnie, możesz odświeżyć widok lub wykonać inne akcje po zapisaniu danych
     // ...
   } catch (error) {
@@ -1735,14 +1760,10 @@ async function saveClosedAvailability() {
   }
 }
 
-// Funkcja do obliczania daty na podstawie aktualnego tygodnia i dnia tygodnia
-function obliczDateDlaDniaTygodnia(aktualnyTydzien, dzienTygodnia) {
-  // Tutaj dodaj kod do obliczania daty
-}
-
 // Dodaj obsługę kliknięcia przycisku "Zamknij dostępność"
 const closeAvailabilityButton = document.getElementById('close-availability');
 closeAvailabilityButton.addEventListener('click', saveClosedAvailability);
+
 
 		
     </script>
