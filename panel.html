@@ -1609,12 +1609,20 @@ function displayCurrentWeek() {
 
     // Funkcja do generowania formularza na podstawie aktualnego tygodnia
     function generateForm() {
-        form.innerHTML = ''; // Wyczyść formularz przed dodaniem nowych elementów
+    form.innerHTML = ''; // Wyczyść formularz przed dodaniem nowych elementów
 
-        days.forEach(day => {
-            let dayDiv = document.createElement('div');
-            dayDiv.classList.add('day-availability');
-            dayDiv.innerHTML = `<h3>${day}</h3>`;
+    days.forEach(day => {
+        let dayDiv = document.createElement('div');
+        dayDiv.classList.add('day-availability');
+        dayDiv.innerHTML = `<h3>${day}</h3>`;
+
+        // Oblicz aktualną datę dla danego dnia tygodnia
+        let currentDate = obliczDateDlaDniaTygodnia(currentWeek, day);
+
+        // Dodaj aktualną datę do formularza
+        let dateDisplay = document.createElement('p');
+        dateDisplay.textContent = `Data: ${currentDate}`;
+        dayDiv.appendChild(dateDisplay);
 
             // Opis treningu indywidualnego
             let individualDescription = document.createElement('p');
@@ -1669,6 +1677,45 @@ function displayCurrentWeek() {
 
         displayCurrentWeek(); // Wyświetl aktualny tydzień po zmianach w formularzu
     }
+	
+	// Funkcja do obliczania daty dla danego dnia tygodnia na podstawie aktualnego tygodnia
+function obliczDateDlaDniaTygodnia(aktualnyTydzien, dzienTygodnia) {
+    // Pobierz aktualną datę
+    let today = new Date();
+
+    // Oblicz datę początkową wybranego tygodnia
+    let startDate = getStartDate(aktualnyTydzien, today.getFullYear());
+
+    // Dodaj dni odpowiadające danemu dniowi tygodnia
+    switch (dzienTygodnia) {
+        case 'Poniedziałek':
+            startDate.setDate(startDate.getDate());
+            break;
+        case 'Wtorek':
+            startDate.setDate(startDate.getDate() + 1);
+            break;
+        case 'Środa':
+            startDate.setDate(startDate.getDate() + 2);
+            break;
+        case 'Czwartek':
+            startDate.setDate(startDate.getDate() + 3);
+            break;
+        case 'Piątek':
+            startDate.setDate(startDate.getDate() + 4);
+            break;
+        case 'Sobota':
+            startDate.setDate(startDate.getDate() + 5);
+            break;
+        case 'Niedziela':
+            startDate.setDate(startDate.getDate() + 6);
+            break;
+    }
+
+    // Formatuj datę jako string
+    const formattedDate = startDate.toLocaleDateString();
+
+    return formattedDate;
+}
 
     // Dodaj przyciski do przesuwania tygodnia
     let prevWeekButton = document.createElement('button');
