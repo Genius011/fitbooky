@@ -1514,35 +1514,15 @@ auth.onAuthStateChanged((user) => {
   setRegistrationLink();
 });
 
-//DOSTEPNOSC!!
-
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('availabilityMgr');
     const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
-    let currentDate = new Date(); // Początkowa data - aktualna data
-    let currentWeek = 1; // Aktualny tydzień
+    let currentWeek = 1; // Zmienna do śledzenia aktualnego tygodnia
 
-    // Funkcja do obliczania daty początkowej wybranego tygodnia
-    function getStartDate(weekNumber, year) {
-        let januaryFourth = new Date(year, 0, 4); // 4 stycznia danego roku
-        let dayOfWeek = januaryFourth.getDay(); // Dzień tygodnia 4 stycznia (0 - niedziela, 1 - poniedziałek, ..., 6 - sobota)
-        dayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek; // Konwersja niedzieli na 7 (ISO 8601)
-
-        // Oblicz pierwszy poniedziałek roku
-        let firstMonday = new Date(year, 0, 4 + (1 - dayOfWeek));
-
-        // Oblicz datę początkową wybranego tygodnia
-        let startDate = new Date(firstMonday.getTime() + ((weekNumber - 1) * 7) * 24 * 60 * 60 * 1000);
-        return startDate;
-    }
-
-    // Funkcja do wyświetlania aktualnej daty od poniedziałku do niedzieli
+    // Funkcja do wyświetlania aktualnego tygodnia
     function displayCurrentWeek() {
-        let startDate = getStartDate(currentWeek, currentDate.getFullYear());
-        let endDate = new Date(startDate.getTime() + 6 * 24 * 60 * 60 * 1000); // Data końcowa - niedziela
-
         const weekDisplay = document.getElementById('current-week');
-        weekDisplay.textContent = `Tydzień ${currentWeek}: ${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
+        weekDisplay.textContent = `Tydzień ${currentWeek}`;
     }
 
     // Funkcja do generowania formularza na podstawie aktualnego tygodnia
@@ -1605,9 +1585,37 @@ document.addEventListener('DOMContentLoaded', function() {
             form.appendChild(dayDiv);
         });
 
-        
+        displayCurrentWeek(); // Wyświetl aktualny tydzień po zmianach w formularzu
+    }
 
-    
+    // Dodaj przyciski do przesuwania tygodnia
+    let prevWeekButton = document.createElement('button');
+    prevWeekButton.type = 'button';
+    prevWeekButton.textContent = 'Poprzedni Tydzień';
+    prevWeekButton.addEventListener('click', function() {
+        currentWeek--;
+        generateForm(); // Generuj formularz na podstawie aktualnego tygodnia
+    });
+
+    let nextWeekButton = document.createElement('button');
+    nextWeekButton.type = 'button';
+    nextWeekButton.textContent = 'Następny Tydzień';
+    nextWeekButton.addEventListener('click', function() {
+        currentWeek++;
+        generateForm(); // Generuj formularz na podstawie aktualnego tygodnia
+    });
+
+    // Pole tekstowe do wyświetlania aktualnego tygodnia
+    let weekDisplay = document.createElement('p');
+    weekDisplay.setAttribute('id', 'current-week');
+
+    form.appendChild(prevWeekButton);
+    form.appendChild(weekDisplay);
+    form.appendChild(nextWeekButton);
+
+    generateForm(); // Generuj formularz na początku
+});
+
 
 		
     </script>
