@@ -1672,6 +1672,9 @@ function displayCurrentWeek() {
 // Globalna zmienna do przechowywania dni tygodnia
 const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
 
+// Globalna zmienna do przechowywania aktualnego tygodnia
+let currentWeek = 1;
+
 // Funkcja do zapisywania informacji o zamkniętej dostępności do Firestore
 async function saveClosedAvailability() {
   const closedAvailability = {}; // Obiekt do przechowywania informacji o zamkniętej dostępności
