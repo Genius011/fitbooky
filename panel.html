@@ -1731,9 +1731,6 @@ let currentWeek = 1;
 async function saveClosedAvailability() {
     const closedAvailability = {}; // Obiekt do przechowywania informacji o zamkniętej dostępności
 
-    // Pobierz aktualną datę
-    const currentDate = new Date();
-
     // Iteracja przez dni tygodnia
     days.forEach(day => {
         // Pobierz zaznaczone godziny treningu indywidualnego
@@ -1754,7 +1751,7 @@ async function saveClosedAvailability() {
                 individualHours,
                 groupHours,
                 groupSpots,
-                date: currentDate, // Dodaj aktualną datę jako obiekt daty
+                date: getDateForDayOfWeek(currentWeek, day), // Użyj funkcji do uzyskania daty dla danego dnia tygodnia
             };
         }
     });
@@ -1783,6 +1780,47 @@ async function saveClosedAvailability() {
     } catch (error) {
         console.error('Błąd podczas zapisywania zamkniętej dostępności do Firestore:', error);
     }
+}
+
+// Funkcja do obliczania daty dla danego dnia tygodnia na podstawie aktualnego tygodnia
+function getDateForDayOfWeek(weekNumber, dayOfWeek) {
+    // Pobierz aktualną datę
+    let today = new Date();
+
+    // Oblicz datę początkową wybranego tygodnia
+    let startDate = getStartDate(weekNumber, today.getFullYear());
+
+    // Znajdź poniedziałek dla aktualnej daty tygodnia
+    while (startDate.getDay() !== 1) {
+        startDate.setDate(startDate.getDate() - 1);
+    }
+
+    // Przesuń datę początkową o odpowiednią ilość dni, aby uzyskać datę dla danego dnia tygodnia
+    switch (dayOfWeek) {
+        case 'Poniedziałek':
+            startDate.setDate(startDate.getDate());
+            break;
+        case 'Wtorek':
+            startDate.setDate(startDate.getDate() + 1);
+            break;
+        case 'Środa':
+            startDate.setDate(startDate.getDate() + 2);
+            break;
+        case 'Czwartek':
+            startDate.setDate(startDate.getDate() + 3);
+            break;
+        case 'Piątek':
+            startDate.setDate(startDate.getDate() + 4);
+            break;
+        case 'Sobota':
+            startDate.setDate(startDate.getDate() + 5);
+            break;
+        case 'Niedziela':
+            startDate.setDate(startDate.getDate() + 6);
+            break;
+    }
+
+    return startDate;
 }
 
 // Dodaj obsługę kliknięcia przycisku "Zamknij dostępność"
