@@ -1652,6 +1652,17 @@ document.addEventListener('DOMContentLoaded', function() {
     generateForm(); // Generuj formularz na początku
 });
 
+let form; // Deklaracja zmiennej form na poziomie globalnym
+
+document.addEventListener('DOMContentLoaded', function() {
+    form = document.getElementById('availabilityMgr'); // Przypisanie zmiennej form w funkcji obsługującej zdarzenie DOMContentLoaded
+
+    // Pozostała część kodu
+    // ...
+
+    generateForm(); // Generuj formularz na początku
+});
+
 // Dodaj przyciski do przesuwania dni tygodnia
 let prevDayButton = document.createElement('button');
 prevDayButton.type = 'button';
@@ -1672,6 +1683,7 @@ nextDayButton.addEventListener('click', function() {
 // Dodaj przyciski do formularza
 form.appendChild(prevDayButton);
 form.appendChild(nextDayButton);
+
 
 
 
