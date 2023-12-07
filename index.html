@@ -720,11 +720,43 @@ bookButton.addEventListener('click', async () => {
     return date < today;
 }
 
-async function isTimeSlotAvailable(date, time, trainingType) {
+async function isTimeSlotAvailable(dayOfWeek, time, trainingType) {
+  // Pobierz aktualny tydzień
+  const currentWeek = 1; // Możesz dostosować to do swoich potrzeb
+
+  // Sprawdź, czy jest zapisana zamknięta dostępność dla danego dnia tygodnia i danego tygodnia
+  const closedAvailabilityRef = doc(db, 'closedAvailability', dayOfWeek);
+  const closedAvailabilityDoc = await getDoc(closedAvailabilityRef);
+
+  if (closedAvailabilityDoc.exists()) {
+    const closedAvailabilityData = closedAvailabilityDoc.data();
+    
+    // Sprawdź, czy dostępność jest zapisana dla bieżącego tygodnia
+    if (closedAvailabilityData.week === currentWeek) {
+      const individualHours = closedAvailabilityData.closedAvailability[dayOfWeek.toLowerCase()].individualHours || [];
+      const groupHours = closedAvailabilityData.closedAvailability[dayOfWeek.toLowerCase()].groupHours || [];
+
+      // Jeśli godzina jest zamknięta dla treningów indywidualnych lub grupowych, zwróć false
+      if ((trainingType === 'personal' && individualHours.includes(time)) ||
+          (trainingType === 'group' && (individualHours.includes(time) || groupHours.includes(time)))) {
+        return false;
+      }
+    }
+  }
+
+  // Sprawdź, czy jest dokonana rezerwacja na ten termin
   const bookingsRef = collection(db, "bookings");
-  const querySnapshot = await getDocs(query(bookingsRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
-  return querySnapshot.empty; // Zwróć true jeśli nie ma rezerwacji, false w przeciwnym wypadku
+  const querySnapshot = await getDocs(query(bookingsRef, where("dayOfWeek", "==", dayOfWeek), where("time", "==", time), where("trainingType", "==", trainingType)));
+
+  // Jeśli istnieje co najmniej jedna rezerwacja na ten termin, zwróć false
+  if (!querySnapshot.empty) {
+    return false;
+  }
+
+  // Jeśli nie ma ani zamkniętej dostępności, ani rezerwacji, godzina jest dostępna
+  return true;
 }
+
 
 document.getElementById('logout').addEventListener('click', () => {
     signOut(auth).then(() => {
