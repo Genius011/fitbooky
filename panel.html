@@ -1643,7 +1643,7 @@ function obliczDateDlaDniaTygodnia(aktualnyTydzien, dzienTygodnia) {
     // Przesuń datę początkową o odpowiednią ilość dni, aby uzyskać datę dla danego dnia tygodnia
     switch (dzienTygodnia) {
         case 'Poniedziałek':
-            startDate.setDate(startDate.getDate() + 0);
+            startDate.setDate(startDate.getDate());
             break;
         case 'Wtorek':
             startDate.setDate(startDate.getDate() + 1);
