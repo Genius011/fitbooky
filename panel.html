@@ -1608,7 +1608,7 @@ function displayCurrentWeek() {
 
 
     // Funkcja do generowania formularza na podstawie aktualnego tygodnia
-    function generateForm() {
+function generateForm() {
     form.innerHTML = ''; // Wyczyść formularz przed dodaniem nowych elementów
 
     days.forEach(day => {
@@ -1684,7 +1684,16 @@ function obliczDateDlaDniaTygodnia(aktualnyTydzien, dzienTygodnia) {
     let today = new Date();
 
     // Oblicz datę początkową wybranego tygodnia
-    let startDate = getStartDate(aktualnyTydzien, today.getFullYear());
+    let startDate = getStartDate(aktualnyTydzien, today.getFullYear(), dzienTygodnia);
+
+    // Formatuj datę jako string
+    const formattedDate = startDate.toLocaleDateString();
+
+    return formattedDate;
+}
+
+// Funkcja do obliczania daty początkowej wybranego tygodnia
+function getStartDate(weekNumber, year, dzienTygodnia) {
 
     // Dodaj dni odpowiadające danemu dniowi tygodnia
     switch (dzienTygodnia) {
