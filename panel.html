@@ -1618,19 +1618,8 @@ document.addEventListener('DOMContentLoaded', function() {
             form.appendChild(dayDiv);
         });
 
-        // Funkcja do wyświetlania aktualnej daty od poniedziałku do niedzieli
-function displayCurrentWeek() {
-    let startDate = getStartDate(currentWeek, currentDate.getFullYear());
-    let endDate = new Date(startDate.getTime() + 6 * 24 * 60 * 60 * 1000); // Data końcowa - niedziela
-
-    const weekDisplay = document.getElementById('current-week');
-    const weekNumber = currentWeek;
-    const weekStartDate = startDate.toLocaleDateString();
-    const weekEndDate = endDate.toLocaleDateString();
-
-    weekDisplay.textContent = `Tydzień ${weekNumber}: ${weekStartDate} - ${weekEndDate}`;
-}
-
+        displayCurrentWeek(); // Wyświetl aktualny tydzień po zmianach w formularzu
+    }
 
     // Dodaj przyciski do przesuwania tygodnia
     let prevWeekButton = document.createElement('button');
