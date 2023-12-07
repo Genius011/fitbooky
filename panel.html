@@ -1566,6 +1566,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         dayDiv.appendChild(groupHourListDiv);
 
+        // Dostępność miejsc dla treningów grupowych
+        let groupSpotsInput = document.createElement('input');
+        groupSpotsInput.setAttribute('type', 'number');
+        groupSpotsInput.setAttribute('name', `${day.toLowerCase()}-group-spots`);
+        groupSpotsInput.setAttribute('min', '0');
+        groupSpotsInput.setAttribute('value', '0');
+        groupSpotsInput.style.width = '50px';
+
+        let groupSpotsLabel = document.createElement('label');
+        groupSpotsLabel.textContent = ' Miejsc dostępnych: ';
+        groupSpotsLabel.appendChild(groupSpotsInput);
+
+        dayDiv.appendChild(groupSpotsLabel);
+
         form.appendChild(dayDiv);
     });
 
@@ -1578,6 +1592,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     form.appendChild(submitButton);
 });
+
 
 
 		
