@@ -1667,7 +1667,65 @@ function displayCurrentWeek() {
     generateForm(); // Generuj formularz na początku
 });
 
+// Funkcja do zapisywania informacji o zamkniętej dostępności do Firestore
+async function saveClosedAvailability() {
+  const closedAvailability = {}; // Obiekt do przechowywania informacji o zamkniętej dostępności
 
+  // Iteracja przez dni tygodnia
+  days.forEach(day => {
+    // Pobierz zaznaczone godziny treningu indywidualnego
+    const individualHours = Array.from(document.querySelectorAll(`input[name="${day.toLowerCase()}-individual-hours-week${currentWeek}"]:checked`))
+      .map(input => input.value);
+    
+    // Pobierz zaznaczone godziny treningu grupowego
+    const groupHours = Array.from(document.querySelectorAll(`input[name="${day.toLowerCase()}-group-hours-week${currentWeek}"]:checked`))
+      .map(input => input.value);
+    
+    // Pobierz dostępność miejsc dla treningów grupowych
+    const groupSpotsInput = document.querySelector(`input[name="${day.toLowerCase()}-group-spots-week${currentWeek}"]`);
+    const groupSpots = parseInt(groupSpotsInput.value, 10);
+
+    // Jeśli jakiekolwiek dane zostały zaznaczone lub wprowadzone, zapisz je do obiektu
+    if (individualHours.length > 0 || groupHours.length > 0 || !isNaN(groupSpots)) {
+      closedAvailability[day.toLowerCase()] = {
+        individualHours,
+        groupHours,
+        groupSpots,
+      };
+    }
+  });
+
+  if (Object.keys(closedAvailability).length === 0) {
+    alert('Proszę wybrać co najmniej jedną godzinę lub wprowadzić dostępność miejsc dla treningów grupowych.');
+    return;
+  }
+
+  // Przygotuj dane do zapisania w Firestore
+  const dataToSave = {
+    trainerId: loggedInUserId,
+    week: currentWeek,
+    closedAvailability,
+  };
+
+  const closedAvailabilityRef = collection(db, 'closedAvailability'); // Zmień na odpowiednią kolekcję w swojej bazie danych
+
+  try {
+    // Dodaj dokument z zamkniętą dostępnością do Firestore
+    const docRef = await addDoc(closedAvailabilityRef, dataToSave);
+    console.log('Zamknięta dostępność została zapisana do Firestore z ID:', docRef.id);
+    
+    // Opcjonalnie, możesz odświeżyć widok lub wykonać inne akcje po zapisaniu danych
+    // ...
+  } catch (error) {
+    console.error('Błąd podczas zapisywania zamkniętej dostępności do Firestore:', error);
+  }
+}
+
+// Dodaj obsługę kliknięcia przycisku "Zamknij dostępność"
+const closeAvailabilityButton = document.getElementById('close-availability');
+closeAvailabilityButton.addEventListener('click', saveClosedAvailability);
+
+// ...
 		
     </script>
 
