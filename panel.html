@@ -1532,17 +1532,27 @@ document.addEventListener('DOMContentLoaded', function() {
         dayDiv.classList.add('day-availability');
         dayDiv.innerHTML = `<h3>${day}</h3>`;
 
+        // Opis treningu indywidualnego
+        let individualDescription = document.createElement('p');
+        individualDescription.textContent = 'Trening indywidualny';
+        dayDiv.appendChild(individualDescription);
+
         // Godziny treningu indywidualnego
         let individualHourListDiv = document.createElement('div');
         individualHourListDiv.classList.add('hour-list');
 
         for (let hour = 6; hour <= 21; hour++) {
             let hourLabel = document.createElement('label');
-            hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-individual-hours" value="${hour}:00"> ${hour}:00 (Indywidualny)`;
+            hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-individual-hours" value="${hour}:00"> ${hour}:00`;
             individualHourListDiv.appendChild(hourLabel);
         }
 
         dayDiv.appendChild(individualHourListDiv);
+
+        // Opis treningu grupowego
+        let groupDescription = document.createElement('p');
+        groupDescription.textContent = 'Trening grupowy';
+        dayDiv.appendChild(groupDescription);
 
         // Godziny treningu grupowego
         let groupHourListDiv = document.createElement('div');
@@ -1550,7 +1560,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         for (let hour = 6; hour <= 21; hour++) {
             let hourLabel = document.createElement('label');
-            hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-group-hours" value="${hour}:00"> ${hour}:00 (Grupowy)`;
+            hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-group-hours" value="${hour}:00"> ${hour}:00`;
             groupHourListDiv.appendChild(hourLabel);
         }
 
@@ -1568,7 +1578,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     form.appendChild(submitButton);
 });
-
 
 
 		
