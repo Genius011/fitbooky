@@ -1555,6 +1555,13 @@ document.addEventListener('DOMContentLoaded', function() {
         let startDate = new Date(firstMonday.getTime() + ((weekNumber - 1) * 7) * 24 * 60 * 60 * 1000);
 		
 		// Dodaj dni odpowiadające danemu dniowi tygodnia
+		// Pobierz aktualną datę
+    let today = new Date();
+
+    // Oblicz datę początkową wybranego tygodnia
+    let startDate = getStartDate(aktualnyTydzien, today.getFullYear());
+
+    // Dodaj dni odpowiadające danemu dniowi tygodnia
     switch (dzienTygodnia) {
         case 'Poniedziałek':
             startDate.setDate(startDate.getDate());
@@ -1612,6 +1619,18 @@ function displayCurrentWeek() {
         form.innerHTML = ''; // Wyczyść formularz przed dodaniem nowych elementów
 
         days.forEach(day => {
+		 let dayDiv = document.createElement('div');
+        dayDiv.classList.add('day-availability');
+        dayDiv.innerHTML = `<h3>${day}</h3>`;
+
+        // Oblicz aktualną datę dla danego dnia tygodnia
+        let currentDate = obliczDateDlaDniaTygodnia(currentWeek, day);
+
+        // Dodaj aktualną datę do formularza
+        let dateDisplay = document.createElement('p');
+        dateDisplay.textContent = `Data: ${currentDate}`;
+        dayDiv.appendChild(dateDisplay);
+		
             let dayDiv = document.createElement('div');
             dayDiv.classList.add('day-availability');
             dayDiv.innerHTML = `<h3>${day}</h3>`;
