@@ -1572,6 +1572,7 @@ document.addEventListener('DOMContentLoaded', function() {
         groupSpotsInput.setAttribute('name', `${day.toLowerCase()}-group-spots`);
         groupSpotsInput.setAttribute('min', '0');
         groupSpotsInput.setAttribute('value', '0');
+        groupSpotsInput.style.width = '50px';
 
         let groupSpotsLabel = document.createElement('label');
         groupSpotsLabel.textContent = ' Miejsc dostępnych: ';
