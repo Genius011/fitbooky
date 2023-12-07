@@ -1612,18 +1612,6 @@ function displayCurrentWeek() {
         form.innerHTML = ''; // Wyczyść formularz przed dodaniem nowych elementów
 
         days.forEach(day => {
-		 let dayDiv = document.createElement('div');
-        dayDiv.classList.add('day-availability');
-        dayDiv.innerHTML = `<h3>${day}</h3>`;
-
-        // Oblicz aktualną datę dla danego dnia tygodnia
-        let currentDate = obliczDateDlaDniaTygodnia(currentWeek, day);
-
-        // Dodaj aktualną datę do formularza
-        let dateDisplay = document.createElement('p');
-        dateDisplay.textContent = `Data: ${currentDate}`;
-        dayDiv.appendChild(dateDisplay);
-		
             let dayDiv = document.createElement('div');
             dayDiv.classList.add('day-availability');
             dayDiv.innerHTML = `<h3>${day}</h3>`;
