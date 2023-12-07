@@ -1626,11 +1626,11 @@ document.addEventListener('DOMContentLoaded', function() {
         displayCurrentWeek(); // Wyświetl aktualny tydzień po zmianach w formularzu
     }
 
-  // Funkcja do obliczania daty dla danego dnia tygodnia na podstawie aktualnego tygodnia
+   // Funkcja do obliczania daty dla danego dnia tygodnia na podstawie aktualnego tygodnia
 function obliczDateDlaDniaTygodnia(aktualnyTydzien, dzienTygodnia) {
     // Pobierz aktualną datę
     let today = new Date();
-    
+
     // Oblicz datę początkową wybranego tygodnia
     let startDate = getStartDate(aktualnyTydzien, today.getFullYear());
 
@@ -1642,7 +1642,7 @@ function obliczDateDlaDniaTygodnia(aktualnyTydzien, dzienTygodnia) {
     // Przesuń datę początkową o odpowiednią ilość dni, aby uzyskać datę dla danego dnia tygodnia
     switch (dzienTygodnia) {
         case 'Poniedziałek':
-            // Data dla poniedziałku pozostaje niezmieniona
+            startDate.setDate(startDate.getDate() + 0);
             break;
         case 'Wtorek':
             startDate.setDate(startDate.getDate() + 1);
@@ -1669,8 +1669,6 @@ function obliczDateDlaDniaTygodnia(aktualnyTydzien, dzienTygodnia) {
 
     return formattedDate;
 }
-
-
 
     // Funkcja do wyświetlania aktualnego tygodnia od poniedziałku do niedzieli
     function displayCurrentWeek() {
@@ -1748,8 +1746,6 @@ async function saveClosedAvailability() {
         // Pobierz dostępność miejsc dla treningów grupowych
         const groupSpotsInput = document.querySelector(`input[name="${day.toLowerCase()}-group-spots-week${currentWeek}"]`);
         const groupSpots = parseInt(groupSpotsInput.value, 10);
-		        const dateForDay = obliczDateDlaDniaTygodnia(currentWeek, day);
-
 
         // Jeśli jakiekolwiek dane zostały zaznaczone lub wprowadzone, zapisz je do obiektu
         if (individualHours.length > 0 || groupHours.length > 0 || !isNaN(groupSpots)) {
