@@ -1554,18 +1554,25 @@ document.addEventListener('DOMContentLoaded', function() {
         return startDate;
     }
 
-    // Funkcja do wyświetlania aktualnej daty od poniedziałku do niedzieli
+    // Funkcja do wyświetlania aktualnego tygodnia od poniedziałku do niedzieli
 function displayCurrentWeek() {
-    let startDate = getStartDate(currentWeek, currentDate.getFullYear());
-    let endDate = new Date(startDate.getTime() + 6 * 24 * 60 * 60 * 1000); // Data końcowa - niedziela
+    let today = new Date(); // Pobierz aktualną datę
+    let currentDay = today.getDay(); // Pobierz dzień tygodnia (0 - niedziela, 1 - poniedziałek, ..., 6 - sobota)
+
+    // Oblicz datę początkową (poniedziałek) i datę końcową (niedziela) aktualnego tygodnia
+    let startDate = new Date(today);
+    startDate.setDate(today.getDate() - currentDay + 1); // Ustaw na poniedziałek
+
+    let endDate = new Date(today);
+    endDate.setDate(today.getDate() + (7 - currentDay)); // Ustaw na niedzielę
 
     const weekDisplay = document.getElementById('current-week');
-    const weekNumber = currentWeek;
     const weekStartDate = startDate.toLocaleDateString();
     const weekEndDate = endDate.toLocaleDateString();
 
-    weekDisplay.textContent = `Tydzień ${weekNumber}: ${weekStartDate} - ${weekEndDate}`;
+    weekDisplay.textContent = `Aktualny tydzień: ${weekStartDate} - ${weekEndDate}`;
 }
+
 
 
     // Funkcja do generowania formularza na podstawie aktualnego tygodnia
