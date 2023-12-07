@@ -1731,8 +1731,8 @@ let currentWeek = 1;
 async function saveClosedAvailability() {
     const closedAvailability = {}; // Obiekt do przechowywania informacji o zamkniętej dostępności
 
-    // Pobierz aktualną datę jako tekst
-    const currentDate = new Date().toLocaleDateString();
+    // Pobierz aktualną datę
+    const currentDate = new Date();
 
     // Iteracja przez dni tygodnia
     days.forEach(day => {
@@ -1754,7 +1754,7 @@ async function saveClosedAvailability() {
                 individualHours,
                 groupHours,
                 groupSpots,
-                date: currentDate, // Dodaj aktualną datę jako tekst
+                date: currentDate, // Dodaj aktualną datę jako obiekt daty
             };
         }
     });
@@ -1787,7 +1787,7 @@ async function saveClosedAvailability() {
 
 // Dodaj obsługę kliknięcia przycisku "Zamknij dostępność"
 const closeAvailabilityButton = document.getElementById('close-availability');
-closeAvailabilityButton.addEventListener('click', function() {
+closeAvailabilityButton.addEventListener('click', function () {
     if (confirm('Czy na pewno chcesz zamknąć dostępność dla wybranych dat?')) {
         saveClosedAvailability(); // Jeśli użytkownik potwierdzi, wywołaj funkcję zapisywania dostępności
         alert('Wybrane daty zostały zamknięte.'); // Wyświetl informację po zapisaniu
@@ -1795,6 +1795,7 @@ closeAvailabilityButton.addEventListener('click', function() {
         // Użytkownik anulował operację, nie rób nic
     }
 });
+
 
 		
     </script>
