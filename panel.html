@@ -1517,82 +1517,104 @@ auth.onAuthStateChanged((user) => {
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('availabilityMgr');
     const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
+    let currentWeek = 1; // Zmienna do śledzenia aktualnego tygodnia
 
-    document.getElementById('toggle-availability').addEventListener('click', function() {
-        var availabilityForm = document.getElementById('availability-form');
-        if (availabilityForm.style.display === 'none' || availabilityForm.style.display === '') {
-            availabilityForm.style.display = 'block';
-        } else {
-            availabilityForm.style.display = 'none';
-        }
+    // Funkcja do wyświetlania aktualnego tygodnia
+    function displayCurrentWeek() {
+        const weekDisplay = document.getElementById('current-week');
+        weekDisplay.textContent = `Tydzień ${currentWeek}`;
+    }
+
+    // Funkcja do generowania formularza na podstawie aktualnego tygodnia
+    function generateForm() {
+        form.innerHTML = ''; // Wyczyść formularz przed dodaniem nowych elementów
+
+        days.forEach(day => {
+            let dayDiv = document.createElement('div');
+            dayDiv.classList.add('day-availability');
+            dayDiv.innerHTML = `<h3>${day}</h3>`;
+
+            // Opis treningu indywidualnego
+            let individualDescription = document.createElement('p');
+            individualDescription.textContent = 'Trening indywidualny';
+            dayDiv.appendChild(individualDescription);
+
+            // Godziny treningu indywidualnego
+            let individualHourListDiv = document.createElement('div');
+            individualHourListDiv.classList.add('hour-list');
+
+            for (let hour = 6; hour <= 21; hour++) {
+                let hourLabel = document.createElement('label');
+                hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-individual-hours-week${currentWeek}" value="${hour}:00"> ${hour}:00`;
+                individualHourListDiv.appendChild(hourLabel);
+            }
+
+            dayDiv.appendChild(individualHourListDiv);
+
+            // Opis treningu grupowego
+            let groupDescription = document.createElement('p');
+            groupDescription.textContent = 'Trening grupowy';
+            dayDiv.appendChild(groupDescription);
+
+            // Godziny treningu grupowego
+            let groupHourListDiv = document.createElement('div');
+            groupHourListDiv.classList.add('hour-list');
+
+            for (let hour = 6; hour <= 21; hour++) {
+                let hourLabel = document.createElement('label');
+                hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-group-hours-week${currentWeek}" value="${hour}:00"> ${hour}:00`;
+                groupHourListDiv.appendChild(hourLabel);
+            }
+
+            dayDiv.appendChild(groupHourListDiv);
+
+            // Dostępność miejsc dla treningów grupowych
+            let groupSpotsInput = document.createElement('input');
+            groupSpotsInput.setAttribute('type', 'number');
+            groupSpotsInput.setAttribute('name', `${day.toLowerCase()}-group-spots-week${currentWeek}`);
+            groupSpotsInput.setAttribute('min', '0');
+            groupSpotsInput.setAttribute('value', '0');
+            groupSpotsInput.style.width = '50px';
+
+            let groupSpotsLabel = document.createElement('label');
+            groupSpotsLabel.textContent = ' Miejsc dostępnych: ';
+            groupSpotsLabel.appendChild(groupSpotsInput);
+
+            dayDiv.appendChild(groupSpotsLabel);
+
+            form.appendChild(dayDiv);
+        });
+
+        displayCurrentWeek(); // Wyświetl aktualny tydzień po zmianach w formularzu
+    }
+
+    // Dodaj przyciski do przesuwania tygodnia
+    let prevWeekButton = document.createElement('button');
+    prevWeekButton.type = 'button';
+    prevWeekButton.textContent = 'Poprzedni Tydzień';
+    prevWeekButton.addEventListener('click', function() {
+        currentWeek--;
+        generateForm(); // Generuj formularz na podstawie aktualnego tygodnia
     });
 
-    days.forEach(day => {
-        let dayDiv = document.createElement('div');
-        dayDiv.classList.add('day-availability');
-        dayDiv.innerHTML = `<h3>${day}</h3>`;
-
-        // Opis treningu indywidualnego
-        let individualDescription = document.createElement('p');
-        individualDescription.textContent = 'Trening indywidualny';
-        dayDiv.appendChild(individualDescription);
-
-        // Godziny treningu indywidualnego
-        let individualHourListDiv = document.createElement('div');
-        individualHourListDiv.classList.add('hour-list');
-
-        for (let hour = 6; hour <= 21; hour++) {
-            let hourLabel = document.createElement('label');
-            hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-individual-hours" value="${hour}:00"> ${hour}:00`;
-            individualHourListDiv.appendChild(hourLabel);
-        }
-
-        dayDiv.appendChild(individualHourListDiv);
-
-        // Opis treningu grupowego
-        let groupDescription = document.createElement('p');
-        groupDescription.textContent = 'Trening grupowy';
-        dayDiv.appendChild(groupDescription);
-
-        // Godziny treningu grupowego
-        let groupHourListDiv = document.createElement('div');
-        groupHourListDiv.classList.add('hour-list');
-
-        for (let hour = 6; hour <= 21; hour++) {
-            let hourLabel = document.createElement('label');
-            hourLabel.innerHTML = `<input type="checkbox" name="${day.toLowerCase()}-group-hours" value="${hour}:00"> ${hour}:00`;
-            groupHourListDiv.appendChild(hourLabel);
-        }
-
-        dayDiv.appendChild(groupHourListDiv);
-
-        // Dostępność miejsc dla treningów grupowych
-        let groupSpotsInput = document.createElement('input');
-        groupSpotsInput.setAttribute('type', 'number');
-        groupSpotsInput.setAttribute('name', `${day.toLowerCase()}-group-spots`);
-        groupSpotsInput.setAttribute('min', '0');
-        groupSpotsInput.setAttribute('value', '0');
-        groupSpotsInput.style.width = '50px';
-
-        let groupSpotsLabel = document.createElement('label');
-        groupSpotsLabel.textContent = ' Miejsc dostępnych: ';
-        groupSpotsLabel.appendChild(groupSpotsInput);
-
-        dayDiv.appendChild(groupSpotsLabel);
-
-        form.appendChild(dayDiv);
+    let nextWeekButton = document.createElement('button');
+    nextWeekButton.type = 'button';
+    nextWeekButton.textContent = 'Następny Tydzień';
+    nextWeekButton.addEventListener('click', function() {
+        currentWeek++;
+        generateForm(); // Generuj formularz na podstawie aktualnego tygodnia
     });
 
-    let submitButton = document.createElement('button');
-    submitButton.type = 'button';
-    submitButton.textContent = 'Zapisz dostępność';
-    submitButton.addEventListener('click', function() {
-        // Logika obsługi przesyłania formularza
-        console.log('Formularz przesłany!'); // Miejsce na rzeczywistą logikę przesyłania, np. aktualizację bazy danych
-    });
-    form.appendChild(submitButton);
+    // Pole tekstowe do wyświetlania aktualnego tygodnia
+    let weekDisplay = document.createElement('p');
+    weekDisplay.setAttribute('id', 'current-week');
+
+    form.appendChild(prevWeekButton);
+    form.appendChild(weekDisplay);
+    form.appendChild(nextWeekButton);
+
+    generateForm(); // Generuj formularz na początku
 });
-
 
 
 		
