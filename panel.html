@@ -1827,15 +1827,16 @@ function getDateForDayOfWeek(weekNumber, dayOfWeek) {
 // ...
 
 // Dodaj obsługę kliknięcia przycisku "Zamknij dostępność"
-const closeAvailabilityButton = document.getElementById('close-availability');
-closeAvailabilityButton.addEventListener('click', function () {
-    if (confirm('Czy na pewno chcesz zamknąć dostępność dla wybranych dat?')) {
-        saveClosedAvailability(); // Jeśli użytkownik potwierdzi, wywołaj funkcję zapisywania dostępności
-        alert('Wybrane daty zostały zamknięte.'); // Wyświetl informację po zapisaniu
-    } else {
-        // Użytkownik anulował operację, nie rób nic
-    }
-});
+document.addEventListener('DOMContentLoaded', function () {
+    const closeAvailabilityButton = document.getElementById('close-availability');
+    closeAvailabilityButton.addEventListener('click', function () {
+        if (confirm('Czy na pewno chcesz zamknąć dostępność dla wybranych dat?')) {
+            saveClosedAvailability(); // Jeśli użytkownik potwierdzi, wywołaj funkcję zapisywania dostępności
+            alert('Wybrane daty zostały zamknięte.'); // Wyświetl informację po zapisaniu
+        } else {
+            // Użytkownik anulował operację, nie rób nic
+        }
+    });
 
 		
     </script>
