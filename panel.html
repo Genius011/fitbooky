@@ -1517,6 +1517,19 @@ auth.onAuthStateChanged((user) => {
   setRegistrationLink();
 });
 
+// DOSTEPNOŚĆ!!
+
+// Dodaj obsługę kliknięcia przycisku "toggle-availability"
+const toggleAvailabilityButton = document.getElementById('toggle-availability');
+const availabilityForm = document.getElementById('availability-form');
+
+toggleAvailabilityButton.addEventListener('click', function() {
+    if (availabilityForm.style.display === 'none' || availabilityForm.style.display === '') {
+        availabilityForm.style.display = 'block'; // Rozwijanie sekcji
+    } else {
+        availabilityForm.style.display = 'none'; // Zwijanie sekcji
+    }
+});
 
 
 document.addEventListener('DOMContentLoaded', function() {
