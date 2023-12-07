@@ -1535,11 +1535,9 @@ toggleAvailabilityButton.addEventListener('click', function() {
     }
 });
 
-
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('availabilityMgr');
     const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
-    let currentDate = new Date(); // Początkowa data - aktualna data
     let currentWeek = 1; // Aktualny tydzień
 
     // Funkcja do obliczania daty początkowej wybranego tygodnia
@@ -1553,76 +1551,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Oblicz datę początkową wybranego tygodnia
         let startDate = new Date(firstMonday.getTime() + ((weekNumber - 1) * 7) * 24 * 60 * 60 * 1000);
-		
-		// Dodaj dni odpowiadające danemu dniowi tygodnia
-    switch (dzienTygodnia) {
-        case 'Poniedziałek':
-            startDate.setDate(startDate.getDate());
-            break;
-        case 'Wtorek':
-            startDate.setDate(startDate.getDate() + 1);
-            break;
-        case 'Środa':
-            startDate.setDate(startDate.getDate() + 2);
-            break;
-        case 'Czwartek':
-            startDate.setDate(startDate.getDate() + 3);
-            break;
-        case 'Piątek':
-            startDate.setDate(startDate.getDate() + 4);
-            break;
-        case 'Sobota':
-            startDate.setDate(startDate.getDate() + 5);
-            break;
-        case 'Niedziela':
-            startDate.setDate(startDate.getDate() + 6);
-            break;
+
+        return startDate;
     }
 
-    // Formatuj datę jako string
-    const formattedDate = startDate.toLocaleDateString();
-
-    return formattedDate;
-}
-	
-
-    // Funkcja do wyświetlania aktualnego tygodnia od poniedziałku do niedzieli
-function displayCurrentWeek() {
-    let today = new Date(); // Pobierz aktualną datę
-    let currentDay = today.getDay(); // Pobierz dzień tygodnia (0 - niedziela, 1 - poniedziałek, ..., 6 - sobota)
-
-    // Oblicz datę początkową (poniedziałek) i datę końcową (niedziela) aktualnego tygodnia
-    let startDate = new Date(today);
-    startDate.setDate(today.getDate() - currentDay + 1); // Ustaw na poniedziałek
-
-    let endDate = new Date(today);
-    endDate.setDate(today.getDate() + (7 - currentDay)); // Ustaw na niedzielę
-
-    const weekDisplay = document.getElementById('current-week');
-    const weekStartDate = startDate.toLocaleDateString();
-    const weekEndDate = endDate.toLocaleDateString();
-
-    weekDisplay.textContent = `Aktualny tydzień: ${weekStartDate} - ${weekEndDate}`;
-}
-
-
-
     // Funkcja do generowania formularza na podstawie aktualnego tygodnia
-function generateForm() {
-    form.innerHTML = ''; // Wyczyść formularz przed dodaniem nowych elementów
+    function generateForm() {
+        form.innerHTML = ''; // Wyczyść formularz przed dodaniem nowych elementów
 
-    days.forEach(day => {
-        let dayDiv = document.createElement('div');
-        dayDiv.classList.add('day-availability');
-        dayDiv.innerHTML = `<h3>${day}</h3>`;
+        days.forEach(day => {
+            let dayDiv = document.createElement('div');
+            dayDiv.classList.add('day-availability');
+            dayDiv.innerHTML = `<h3>${day}</h3>`;
 
-        // Oblicz aktualną datę dla danego dnia tygodnia
-        let currentDate = obliczDateDlaDniaTygodnia(currentWeek, day);
+            // Oblicz datę początkową dla danego dnia tygodnia
+            let currentDate = obliczDateDlaDniaTygodnia(currentWeek, day);
 
-        // Dodaj aktualną datę do formularza
-        let dateDisplay = document.createElement('p');
-        dateDisplay.textContent = `Data: ${currentDate}`;
-        dayDiv.appendChild(dateDisplay);
+            // Dodaj aktualną datę do formularza
+            let dateDisplay = document.createElement('p');
+            dateDisplay.textContent = `Data: ${currentDate}`;
+            dayDiv.appendChild(dateDisplay);
 
             // Opis treningu indywidualnego
             let individualDescription = document.createElement('p');
@@ -1677,54 +1625,64 @@ function generateForm() {
 
         displayCurrentWeek(); // Wyświetl aktualny tydzień po zmianach w formularzu
     }
-	
-	// Funkcja do obliczania daty dla danego dnia tygodnia na podstawie aktualnego tygodnia
-function obliczDateDlaDniaTygodnia(aktualnyTydzien, dzienTygodnia) {
-    // Pobierz aktualną datę
-    let today = new Date();
 
-    // Oblicz datę początkową wybranego tygodnia
-    let startDate = getStartDate(aktualnyTydzien, today.getFullYear(), dzienTygodnia);
+    // Funkcja do obliczania daty dla danego dnia tygodnia na podstawie aktualnego tygodnia
+    function obliczDateDlaDniaTygodnia(aktualnyTydzien, dzienTygodnia) {
+        // Pobierz aktualną datę
+        let today = new Date();
 
-    // Formatuj datę jako string
-    const formattedDate = startDate.toLocaleDateString();
+        // Oblicz datę początkową wybranego tygodnia
+        let startDate = getStartDate(aktualnyTydzien, today.getFullYear());
 
-    return formattedDate;
-}
+        // Dodaj dni odpowiadające danemu dniowi tygodnia
+        switch (dzienTygodnia) {
+            case 'Poniedziałek':
+                startDate.setDate(startDate.getDate());
+                break;
+            case 'Wtorek':
+                startDate.setDate(startDate.getDate() + 1);
+                break;
+            case 'Środa':
+                startDate.setDate(startDate.getDate() + 2);
+                break;
+            case 'Czwartek':
+                startDate.setDate(startDate.getDate() + 3);
+                break;
+            case 'Piątek':
+                startDate.setDate(startDate.getDate() + 4);
+                break;
+            case 'Sobota':
+                startDate.setDate(startDate.getDate() + 5);
+                break;
+            case 'Niedziela':
+                startDate.setDate(startDate.getDate() + 6);
+                break;
+        }
 
-// Funkcja do obliczania daty początkowej wybranego tygodnia
-function getStartDate(weekNumber, year, dzienTygodnia) {
+        // Formatuj datę jako string
+        const formattedDate = startDate.toLocaleDateString();
 
-    // Dodaj dni odpowiadające danemu dniowi tygodnia
-    switch (dzienTygodnia) {
-        case 'Poniedziałek':
-            startDate.setDate(startDate.getDate());
-            break;
-        case 'Wtorek':
-            startDate.setDate(startDate.getDate() + 1);
-            break;
-        case 'Środa':
-            startDate.setDate(startDate.getDate() + 2);
-            break;
-        case 'Czwartek':
-            startDate.setDate(startDate.getDate() + 3);
-            break;
-        case 'Piątek':
-            startDate.setDate(startDate.getDate() + 4);
-            break;
-        case 'Sobota':
-            startDate.setDate(startDate.getDate() + 5);
-            break;
-        case 'Niedziela':
-            startDate.setDate(startDate.getDate() + 6);
-            break;
+        return formattedDate;
     }
 
-    // Formatuj datę jako string
-    const formattedDate = startDate.toLocaleDateString();
+    // Funkcja do wyświetlania aktualnego tygodnia od poniedziałku do niedzieli
+    function displayCurrentWeek() {
+        let today = new Date(); // Pobierz aktualną datę
+        let currentDay = today.getDay(); // Pobierz dzień tygodnia (0 - niedziela, 1 - poniedziałek, ..., 6 - sobota)
 
-    return formattedDate;
-}
+        // Oblicz datę początkową (poniedziałek) i datę końcową (niedziela) aktualnego tygodnia
+        let startDate = new Date(today);
+        startDate.setDate(today.getDate() - currentDay + 1); // Ustaw na poniedziałek
+
+        let endDate = new Date(today);
+        endDate.setDate(today.getDate() + (7 - currentDay)); // Ustaw na niedzielę
+
+        const weekDisplay = document.getElementById('current-week');
+        const weekStartDate = startDate.toLocaleDateString();
+        const weekEndDate = endDate.toLocaleDateString();
+
+        weekDisplay.textContent = `Aktualny tydzień: ${weekStartDate} - ${weekEndDate}`;
+    }
 
     // Dodaj przyciski do przesuwania tygodnia
     let prevWeekButton = document.createElement('button');
@@ -1753,6 +1711,7 @@ function getStartDate(weekNumber, year, dzienTygodnia) {
 
     generateForm(); // Generuj formularz na początku
 });
+
 
 // ZAPISYWANIE DOSTEPNOSCI!!
 
