@@ -1727,24 +1727,12 @@ const days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobot
 // Globalna zmienna do przechowywania aktualnego tygodnia
 let currentWeek = 1;
 
-// Funkcja do obliczania daty początkowej wybranego tygodnia
-function getStartDate(weekNumber, year) {
-    let januaryFourth = new Date(year, 0, 4); // 4 stycznia danego roku
-    let dayOfWeek = januaryFourth.getDay(); // Dzień tygodnia 4 stycznia (0 - niedziela, 1 - poniedziałek, ..., 6 - sobota)
-    dayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek; // Konwersja niedzieli na 7 (ISO 8601)
-
-    // Oblicz pierwszy poniedziałek roku
-    let firstMonday = new Date(year, 0, 4 + (1 - dayOfWeek));
-
-    // Oblicz datę początkową wybranego tygodnia
-    let startDate = new Date(firstMonday.getTime() + ((weekNumber - 1) * 7) * 24 * 60 * 60 * 1000);
-
-    return startDate;
-}
-
 // Funkcja do zapisywania informacji o zamkniętej dostępności do Firestore
 async function saveClosedAvailability() {
     const closedAvailability = {}; // Obiekt do przechowywania informacji o zamkniętej dostępności
+
+    // Pobierz aktualną datę jako tekst
+    const currentDate = new Date().toLocaleDateString();
 
     // Iteracja przez dni tygodnia
     days.forEach(day => {
@@ -1838,6 +1826,16 @@ function getDateForDayOfWeek(weekNumber, dayOfWeek) {
     return startDate.toLocaleDateString();
 }
 
+// Funkcja do obliczania daty początkowej wybranego tygodnia
+function getStartDate(weekNumber, year) {
+    const januaryFirst = new Date(year, 0, 1);
+    const dayOfWeek = januaryFirst.getDay();
+    const daysUntilMonday = (dayOfWeek === 0 ? 7 : dayOfWeek) - 1;
+    const startDate = new Date(januaryFirst);
+    startDate.setDate(1 + daysUntilMonday + (weekNumber - 1) * 7);
+    return startDate;
+}
+
 // Dodaj obsługę kliknięcia przycisku "Zamknij dostępność"
 const closeAvailabilityButton = document.getElementById('close-availability');
 closeAvailabilityButton.addEventListener('click', function () {
@@ -1848,6 +1846,7 @@ closeAvailabilityButton.addEventListener('click', function () {
         // Użytkownik anulował operację, nie rób nic
     }
 });
+
 
 		
     </script>
