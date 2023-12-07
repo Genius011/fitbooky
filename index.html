@@ -657,7 +657,7 @@ bookButton.addEventListener('click', async () => {
 
 
 
-        function enableAllTimeSlots(popup) {
+       function enableAllTimeSlots(popup) {
     const timeSlots = popup.querySelectorAll('.time-slot');
     timeSlots.forEach(slot => {
         slot.classList.remove('disabled');
@@ -670,6 +670,7 @@ bookButton.addEventListener('click', async () => {
         });
     });
 }
+
 
 
         function enableGroupTrainingSlots(popup, selectedDay) {
