@@ -653,7 +653,8 @@ bookButton.addEventListener('click', async () => {
 			
         }
 
-        function generateTimeSlots(container, startHour, endHour, selectedDay) {
+        // Modify the generateTimeSlots function
+function generateTimeSlots(container, startHour, endHour, selectedDay) {
     container.innerHTML = '';
     let formattedDate = `${selectedDay.getFullYear()}-${(selectedDay.getMonth() + 1).toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
 
@@ -666,14 +667,19 @@ bookButton.addEventListener('click', async () => {
 
         timeSlot.addEventListener('click', function() {
             // Toggle the 'selected' state
-            let isSelected = timeSlot.getAttribute('data-selected') === 'true';
-            timeSlot.setAttribute('data-selected', !isSelected);
-            timeSlot.classList.toggle('selected');
+            if (this.getAttribute('data-selected') === 'false') {
+                this.setAttribute('data-selected', 'true');
+                this.classList.add('selected');
+            } else {
+                this.setAttribute('data-selected', 'false');
+                this.classList.remove('selected');
+            }
         });
 
         container.appendChild(timeSlot);
     }
 }
+
 
 
 
