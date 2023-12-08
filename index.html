@@ -445,10 +445,6 @@ document.getElementById('logout').addEventListener('click', () => {
         console.error('Logout failed', error);
     });
 });
-
-
-
-
 	
         const calendar = document.getElementById('calendar');
         const prevMonth = document.getElementById('prevMonth');
@@ -666,46 +662,65 @@ function clearSelectedTimeSlots(popup) {
 
 
 
-       function enableAllTimeSlots(popup) {
+       // Funkcja do włączania slotów dla treningu personalnego
+function enableAllTimeSlots(popup) {
     const timeSlots = popup.querySelectorAll('.time-slot');
     timeSlots.forEach(slot => {
+        // Usuń klasę 'disabled' oraz atrybut 'data-selected'
         slot.classList.remove('disabled');
-        slot.addEventListener('click', function() {
-            if (slot.classList.contains('selected')) {
-                slot.classList.remove('selected');
-            } else {
-                slot.classList.add('selected');
-            }
-        });
+        slot.setAttribute('data-selected', 'false');
+        // Resetowanie listenerów
+        slot.removeEventListener('click', handleTimeSlotClick);
+        slot.addEventListener('click', handleTimeSlotClick);
     });
 }
 
+// Funkcja do włączania slotów dla treningu grupowego
+function enableGroupTrainingSlots(popup, selectedDay) {
+    const timeSlots = popup.querySelectorAll('.time-slot');
+    timeSlots.forEach(slot => {
+        // Resetowanie stanu slotu
+        slot.classList.remove('selected');
+        slot.classList.add('disabled');
+        slot.setAttribute('data-selected', 'false');
+        slot.removeEventListener('click', handleTimeSlotClick);
 
+        const slotTime = slot.textContent.trim();
+        const dayOfWeek = selectedDay.getDay();
 
-        function enableGroupTrainingSlots(popup, selectedDay) {
-            const timeSlots = popup.querySelectorAll('.time-slot');
-            timeSlots.forEach(slot => {
-                const slotTime = slot.textContent.trim();
-                const dayOfWeek = selectedDay.getDay();
-
-                slot.classList.add('disabled');
-                slot.onclick = null;
-
-                if ((dayOfWeek === 2 || dayOfWeek === 4) && slotTime === '19:00' || 
-                    (dayOfWeek === 6 && slotTime === '10:00')) {
-                    slot.classList.remove('disabled');
-                    slot.onclick = function() {
-                        timeSlots.forEach(s => s.classList.remove('selected'));
-                        slot.classList.add('selected');
-                    };
-                }
-            });
+        // Aktywuj tylko odpowiednie sloty dla treningu grupowego
+        if ((dayOfWeek === 2 || dayOfWeek === 4) && slotTime === '19:00' || 
+            (dayOfWeek === 6 && slotTime === '10:00')) {
+            slot.classList.remove('disabled');
+            slot.addEventListener('click', handleTimeSlotClick);
         }
+    });
+}
 
-        function selectTrainingType(selected, other) {
-            selected.classList.add('selected');
-            other.classList.remove('selected');
-        }
+// Ujednolicona funkcja obsługi kliknięcia slotu czasowego
+function handleTimeSlotClick() {
+    // Toggle the 'selected' state
+    const isSelected = this.getAttribute('data-selected') === 'true';
+    this.setAttribute('data-selected', String(!isSelected));
+    this.classList.toggle('selected');
+}
+
+        // Funkcja do przełączania typu treningu
+function selectTrainingType(selected, other) {
+    selected.classList.add('selected');
+    other.classList.remove('selected');
+
+    // Usuń zaznaczenia z slotów czasowych
+    clearSelectedTimeSlots(popup);
+
+    // Wywołaj odpowiednie funkcje do inicjalizacji slotów czasowych
+    if (selected.getAttribute('data-type') === 'personal') {
+        enableAllTimeSlots(popup);
+    } else {
+        enableGroupTrainingSlots(popup, selectedDay);
+    }
+}
+
 
         prevMonth.addEventListener('click', function() {
             currentMonth--;
