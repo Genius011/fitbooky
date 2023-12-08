@@ -807,6 +807,26 @@ input[type="submit"] {
     margin-bottom: 10px; /* Zmniejszenie marginesu na dole sekcji */
 }
 
+.calendar-input {
+    width: 40px !important; /* Wymuszenie szerokości pola */
+    height: 25px !important; /* Wymuszenie wysokości pola */
+    padding: 2px 5px !important; /* Wymuszenie paddingu */
+    font-size: 12px !important; /* Wymuszenie wielkości tekstu */
+    margin: 0 !important; /* Wymuszenie braku marginesów */
+}
+
+/* Dodanie stylów, które wymuszą scrollowanie */
+.calendar-scrollable {
+    overflow-x: auto !important; /* Wymuszenie poziomego scrollowania */
+    max-height: 500px !important; /* Wymuszenie maksymalnej wysokości */
+    overflow-y: auto !important; /* Wymuszenie pionowego scrollowania */
+}
+
+/* Wymuszenie mniejszego marginesu dla wszystkich sekcji */
+.admin-panel .reduced-margin-section {
+    margin-bottom: 10px !important; /* Wymuszenie zmniejszenia marginesu na dole sekcji */
+}
+
 
     </style>
 </head>
@@ -842,13 +862,7 @@ input[type="submit"] {
   <i id="toggleIcon" class="fas fa-chevron-down"></i> Zarządzanie dostępnością
 </div>
 
-
-<!-- Sekcja do zwijania/rozwijania -->
 <section id="availabilityManager" class="section" style="display: none;">
-        
-        
-    
- <!-- Tabela kalendarza -->
     <table id="yearlyCalendar">
         <thead>
             <tr>
@@ -857,14 +871,16 @@ input[type="submit"] {
                 <th>6:00</th>
                 <th>7:00</th>
                 <th>8:00</th>
-                <!-- Powtarzaj dla każdej godziny aż do 21:00 -->
+                <!-- ...więcej godzin... -->
+                <th>21:00</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Tutaj będą wypełnione wiersze dla każdego dnia roku -->
+            <!-- Wiersze zostaną wypełnione przez skrypt JavaScript -->
         </tbody>
     </table>
 </section>
+
 
     
 
@@ -1403,24 +1419,26 @@ auth.onAuthStateChanged((user) => {
 
 document.addEventListener('DOMContentLoaded', function() {
     const calendarBody = document.getElementById('yearlyCalendar').querySelector('tbody');
-    const startDate = new Date(new Date().getFullYear(), 0, 1); // Początek roku
-    const endDate = new Date(new Date().getFullYear(), 11, 31); // Koniec roku
-
-    for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
-        const row = calendarBody.insertRow();
-        const dateCell = row.insertCell();
-        dateCell.textContent = date.toISOString().split('T')[0]; // Format YYYY-MM-DD
-
-        for (let hour = 6; hour <= 21; hour++) {
-            const hourCell = row.insertCell();
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.min = '0';
-            input.placeholder = 'Miejsca';
-            hourCell.appendChild(input);
+    const startYear = new Date().getFullYear();
+    for (let month = 0; month < 12; month++) {
+        for (let day = 1; day <= new Date(startYear, month + 1, 0).getDate(); day++) {
+            const date = new Date(startYear, month, day);
+            const row = calendarBody.insertRow();
+            const dateCell = row.insertCell();
+            dateCell.textContent = date.toISOString().split('T')[0]; // Format YYYY-MM-DD
+            
+            for (let hour = 6; hour <= 21; hour++) {
+                const hourCell = row.insertCell();
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.min = '0';
+                input.className = 'calendar-input'; // Dodajemy klasę do stylowania
+                hourCell.appendChild(input);
+            }
         }
     }
 });
+
 
 
 		
