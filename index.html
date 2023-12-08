@@ -633,6 +633,7 @@ function clearSelectedTimeSlots(popup) {
     });
 }
 
+
     generateTimeSlots(popup.querySelector('.time-slots'), 6, 21, selectedDay);
 			
 			
@@ -668,18 +669,25 @@ function clearSelectedTimeSlots(popup) {
        function enableAllTimeSlots(popup) {
     const timeSlots = popup.querySelectorAll('.time-slot');
     timeSlots.forEach(slot => {
-        slot.classList.remove('disabled');
-        slot.addEventListener('click', function() {
-            if (slot.classList.contains('selected')) {
-                slot.classList.remove('selected');
-            } else {
-                slot.classList.add('selected');
-            }
-        });
+        // Usuwamy wszystkie obecne listenery, aby uniknąć duplikacji
+        slot.removeEventListener('click', onTimeSlotClick);
+        slot.addEventListener('click', onTimeSlotClick);
     });
 }
 
+// Funkcja obsługująca kliknięcie na slot czasowy
+function onTimeSlotClick() {
+    // Toggle the 'selected' state
+    let isSelected = this.getAttribute('data-selected') === 'true';
+    this.setAttribute('data-selected', !isSelected);
+    this.classList.toggle('selected');
+}
 
+// Podobna logika dla funkcji enableGroupTrainingSlots
+function enableGroupTrainingSlots(popup, selectedDay) {
+    // ... (kod inicjalizujący sloty dla treningu grupowego)
+    // Pamiętaj, aby dodać odpowiednią logikę do obsługi zaznaczenia dla treningu grupowego
+}
 
         function enableGroupTrainingSlots(popup, selectedDay) {
             const timeSlots = popup.querySelectorAll('.time-slot');
