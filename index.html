@@ -636,23 +636,23 @@ bookButton.addEventListener('click', async () => {
         let timeSlot = document.createElement('div');
         timeSlot.className = 'time-slot';
         timeSlot.textContent = timeString;
+        timeSlot.setAttribute('data-selected', 'false'); // Dodaj atrybut do śledzenia zaznaczenia
 
-        // Sprawdź dostępność dla treningów indywidualnych
-        isTimeSlotAvailable(formattedDate, timeString, 'personal').then(available => {
-            if (!available) {
-                timeSlot.classList.add('inactive');
-                timeSlot.onclick = null;
+        timeSlot.onclick = function() {
+            let isSelected = timeSlot.getAttribute('data-selected') === 'true';
+            if (isSelected) {
+                timeSlot.classList.remove('selected');
+                timeSlot.setAttribute('data-selected', 'false');
             } else {
-                timeSlot.onclick = function() {
-                    container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
-                    timeSlot.classList.add('selected');
-                };
+                timeSlot.classList.add('selected');
+                timeSlot.setAttribute('data-selected', 'true');
             }
-        });
+        };
 
         container.appendChild(timeSlot);
     }
 }
+
 
 
 
