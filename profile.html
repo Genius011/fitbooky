@@ -433,6 +433,30 @@ getDocs(bookingsQuery)
 
         
 
+        // Display the next training session information
+        const nextTrainingElement = document.getElementById('nextTraining');
+        if (nextTraining) {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
+            const formattedDate = nextTraining.date.toLocaleDateString('pl-PL', options);
+            const formattedTime = nextTraining.date.toLocaleTimeString('pl-PL', options);
+            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: ${formattedDate}, ${formattedTime}, ${nextTraining.type}`;
+        } else {
+            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: Brak`;
+        }
+    })
+    .catch((error) => {
+        console.error('Error fetching bookings:', error);
+    });
+
+
+                // Rest of your code...
+            } else {
+                // User is signed out
+                // Handle user state when not logged in if necessary
+            }
+        });
+    });
+
     // Set onclick handler for the close button
     closeButton.onclick = function() {
         const modal = document.getElementById('profileModal');
