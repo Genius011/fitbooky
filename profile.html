@@ -31,7 +31,7 @@
         }
 
         .profile-header {
-            background: #6e8efb;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
             color: #fff;
             padding: 20px 0;
         }
@@ -77,7 +77,7 @@
         }
 
         .profile-actions button {
-            background: #6e8efb;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
             color: white;
             border: none;
             font-weight: bold;
@@ -131,7 +131,7 @@
 
 .back-button {
     display: inline-block;
-    background: #6e8efb;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
     color: white;
     text-decoration: none;
     padding: 10px 20px;
@@ -177,7 +177,7 @@
 }
 
 .form-button {
-    background: #6e8efb;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -189,7 +189,7 @@
 }
 
 .form-button:hover {
-    background: #6e8efb;
+    background: linear-gradient(135deg, #a777e3, #6e8efb);
 }
 .profile-container {
     /* ...existing styles... */
@@ -266,12 +266,18 @@
 	<p id="nextTraining"><i class="fas fa-clock"></i> Następny trening: <span id="nextTrainingDate"></span></p>
 <div id="profileModal" class="modal">
     <div class="modal-content">
-        
+        <span class="close">&times;</span>
         <!-- Reszta treści modala -->
     </div>
 </div>
 	
-	
+	<br>
+	<div class="add-to-google-calendar">
+    <a href="#" id="addToGoogleCalendarButton" class="google-calendar-button">
+        <i class="fab fa-google"></i> Dodaj do kalendarza Google
+    </a>
+	<br>
+</div>
 
 </div>
     
@@ -478,7 +484,27 @@ getDocs(bookingsQuery)
         modal.style.display = "none";
     }
 	
-	
+	// Dodaj obsługę kliknięcia przycisku "Dodaj do kalendarza Google"
+const addToGoogleCalendarButton = document.getElementById('addToGoogleCalendarButton');
+addToGoogleCalendarButton.addEventListener('click', () => {
+    // Pobierz dane dotyczące następnego treningu
+    const nextTrainingDateElement = document.getElementById('nextTrainingDate');
+    const nextTrainingDate = nextTrainingDateElement.textContent;
+
+    if (nextTrainingDate) {
+        // Utwórz link do kalendarza Google z danymi treningu
+        const eventTitle = "Następny trening"; // Tytuł wydarzenia
+        const eventDate = nextTrainingDate; // Data wydarzenia (pobrana z elementu)
+
+        // Utwórz link do kalendarza Google z odpowiednimi parametrami
+        const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=${eventDate}/${eventDate}`;
+
+        // Otwórz link w nowym oknie lub zakładce
+        window.open(googleCalendarLink, '_blank');
+    } else {
+        alert("Brak danych dotyczących następnego treningu.");
+    }
+});
 
 
 
