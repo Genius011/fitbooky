@@ -498,30 +498,44 @@ document.getElementById('logout').addEventListener('click', () => {
 
 // Poniżej musisz wkleić funkcję openPopup oraz inne pomocnicze funkcje, które współpracują z generateCalendar.
 
-		async function saveBooking(userId, date, trainingType, time, trainerId) {
+		// Zaktualizowana funkcja do obsługi zapisywania wielu rezerwacji
+async function saveBookings(userId, date, trainingType, times, trainerId) {
   if (!userId) {
     alert('Nie jesteś zalogowany!');
     return;
   }
 
+  // Przechowywanie obiektów rezerwacji
+  let bookings = [];
+
   try {
     // Pobranie dodatkowych informacji o użytkowniku
-    const userRef = doc(getFirestore(), 'users', userId);
+    const userRef = doc(db, 'users', userId);
     const docSnap = await getDoc(userRef);
 
     // Jeśli dokument użytkownika istnieje, użyj jego danych
     if (docSnap.exists()) {
       const userData = docSnap.data();
-      await addDoc(collection(db, "bookings"), {
-        userId: userId,
-        date: date,
-        trainingType: trainingType,
-        time: time,
-        email: userData.email,
-        firstName: userData.firstName,
-        trainerId: trainerId // Dodaj trainerId do dokumentu rezerwacji
-      });
-      alert("Rezerwacja została zapisana w Twoim profilu");
+
+      // Iteruj przez wszystkie wybrane godziny i twórz obiekty rezerwacji
+      for (let time of times) {
+        bookings.push({
+          userId: userId,
+          date: date,
+          trainingType: trainingType,
+          time: time,
+          email: userData.email,
+          firstName: userData.firstName,
+          trainerId: trainerId // Dodaj trainerId do dokumentu rezerwacji
+        });
+      }
+
+      // Zapisz wszystkie obiekty rezerwacji
+      for (let booking of bookings) {
+        await addDoc(collection(db, "bookings"), booking);
+      }
+
+      alert("Rezerwacje zostały zapisane w Twoim profilu");
     } else {
       console.log("Nie znaleziono danych użytkownika.");
     }
@@ -530,6 +544,7 @@ document.getElementById('logout').addEventListener('click', () => {
     alert("Wystąpił błąd podczas zapisu rezerwacji");
   }
 }
+
 
 
 
