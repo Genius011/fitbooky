@@ -305,9 +305,8 @@
 </head>
 <body>
 <div class="dropdown">
-    <button class="dropbtn">Menu</button>
+    <button class="dropbtn">Cześć <span id="userName"></span></button>
     <div class="dropdown-content">
-        <a href="index.html">Back to Calendar</a>
         <a href="#">Kalendarz</a>
         <a href="#">Wyloguj</a>
     </div>
@@ -413,6 +412,9 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 fetchAndDisplayUserData(user.uid);
+				
+            // Populate the user's name in the dropdown button
+            document.getElementById('userName').textContent = user.displayName;
 
                 const editProfileForm = document.getElementById('editProfileForm');
                 editProfileForm.addEventListener('submit', (e) => {
