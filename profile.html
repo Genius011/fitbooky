@@ -448,7 +448,27 @@ getDocs(bookingsQuery)
             }
         });
 
-        // Display the next training session information
+        // Function to fetch and display the next training session
+    const fetchAndDisplayNextTraining = async (userId) => {
+        const now = new Date();
+        const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', userId));
+        const bookingsSnapshot = await getDocs(bookingsQuery);
+        let nextTraining = null;
+
+        bookingsSnapshot.forEach((bookingDoc) => {
+            const bookingData = bookingDoc.data();
+            const trainingDate = new Date(bookingData.date + 'T' + bookingData.time + 'Z');
+
+            if (trainingDate > now && !bookingData.canceled) {
+                if (!nextTraining || trainingDate < nextTraining.date) {
+                    nextTraining = {
+                        date: trainingDate,
+                        type: bookingData.trainingType,
+                    };
+                }
+            }
+        });
+
         const nextTrainingElement = document.getElementById('nextTraining');
         if (nextTraining) {
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
@@ -458,13 +478,18 @@ getDocs(bookingsQuery)
         } else {
             nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: Brak`;
         }
-    })
-    .catch((error) => {
-        console.error('Error fetching bookings:', error);
-    });
+    };
 
+    document.addEventListener('DOMContentLoaded', () => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                fetchAndDisplayUserData(user.uid);
+                fetchAndDisplayNextTraining(user.uid);
 
-                // Rest of your code...
+                const editProfileForm = document.getElementById('editProfileForm');
+                editProfileForm.addEventListener('submit', (e) => {
+                    // ... (your profile update code)
+                });
             } else {
                 // User is signed out
                 // Handle user state when not logged in if necessary
