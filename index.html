@@ -687,15 +687,18 @@ function generateTimeSlots(container, startHour, endHour, selectedDay) {
             if (this.getAttribute('data-selected') === 'false') {
                 this.setAttribute('data-selected', 'true');
                 this.classList.add('selected');
+                console.log('Time slot selected:', this.textContent);
             } else {
                 this.setAttribute('data-selected', 'false');
                 this.classList.remove('selected');
+                console.log('Time slot deselected:', this.textContent);
             }
         });
 
         container.appendChild(timeSlot);
     }
 }
+
 
 
 
