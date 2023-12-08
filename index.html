@@ -681,13 +681,8 @@ function generateTimeSlots(container, startHour, endHour, selectedDay) {
         timeSlot.textContent = timeString;
         timeSlot.setAttribute('data-selected', 'false');
 
-        container.appendChild(timeSlot);
-    }
-
-    // Add event listeners to all time slots after they are created
-    const timeSlots = container.querySelectorAll('.time-slot');
-    timeSlots.forEach(slot => {
-        slot.addEventListener('click', function() {
+        // Add event listener to the time slot
+        timeSlot.addEventListener('click', function() {
             // Toggle the 'selected' state
             if (this.getAttribute('data-selected') === 'false') {
                 this.setAttribute('data-selected', 'true');
@@ -697,13 +692,11 @@ function generateTimeSlots(container, startHour, endHour, selectedDay) {
                 this.classList.remove('selected');
             }
         });
-    });
-}
-
 
         container.appendChild(timeSlot);
     }
 }
+
 
 
 
