@@ -458,18 +458,13 @@ getDocs(bookingsQuery)
         } else {
             nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: Brak`;
         }
-    };
+    })
+    .catch((error) => {
+        console.error('Error fetching bookings:', error);
+    });
 
-    document.addEventListener('DOMContentLoaded', () => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                fetchAndDisplayUserData(user.uid);
-                fetchAndDisplayNextTraining(user.uid);
 
-                const editProfileForm = document.getElementById('editProfileForm');
-                editProfileForm.addEventListener('submit', (e) => {
-                    // ... (your profile update code)
-                });
+                // Rest of your code...
             } else {
                 // User is signed out
                 // Handle user state when not logged in if necessary
