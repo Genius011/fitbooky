@@ -620,13 +620,31 @@ bookButton.addEventListener('click', async () => {
     enableGroupTrainingSlots(popup, selectedDay);
 };
 
-  function clearSelectedTimeSlots(popup) {
+   // Define the clearSelectedTimeSlots function here
+    function clearSelectedTimeSlots(popup) {
         const timeSlots = popup.querySelectorAll('.time-slot');
         timeSlots.forEach(slot => {
             slot.classList.remove('selected');
             slot.setAttribute('data-selected', 'false');
         });
     }
+
+    // Define the selectTrainingType function here
+    function selectTrainingType(selected, other) {
+        selected.classList.add('selected');
+        other.classList.remove('selected');
+
+        // Usuń zaznaczenia z slotów czasowych
+        clearSelectedTimeSlots(popup);
+
+        // Wywołaj odpowiednie funkcje do inicjalizacji slotów czasowych
+        if (selected.getAttribute('data-type') === 'personal') {
+            enableAllTimeSlots(popup);
+        } else {
+            enableGroupTrainingSlots(popup, selectedDay);
+        }
+    }
+
 
 
 
