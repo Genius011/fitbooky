@@ -42,6 +42,32 @@
     padding: 10px 20px;
 }
 
+.calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .day {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s, transform 0.3s;
+            height: 100px; /* Set a fixed height for each day */
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #6e8efb;
+            color: #fff;
+            padding: 10px 20px;
+            height: auto; /* Allow the header to adjust its height */
+        }
+
 .nav-button, .close-btn, .day, .time-slot, .book-btn {
     cursor: pointer;
 }
