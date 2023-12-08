@@ -614,13 +614,24 @@ bookButton.addEventListener('click', async () => {
             closeBtn.onclick = () => popup.remove();
 
             personalTraining.onclick = function() {
-                selectTrainingType(personalTraining, groupTraining);
-                enableAllTimeSlots(popup);
-            };
+    selectTrainingType(personalTraining, groupTraining);
+    clearSelectedTimeSlots(popup);
+    enableAllTimeSlots(popup);
+};
             groupTraining.onclick = function() {
-                selectTrainingType(groupTraining, personalTraining);
-                enableGroupTrainingSlots(popup, selectedDay);
-            };
+    selectTrainingType(groupTraining, personalTraining);
+    clearSelectedTimeSlots(popup);
+    enableGroupTrainingSlots(popup, selectedDay);
+};
+
+// Funkcja do odznaczania wszystkich zaznaczonych slotów czasowych
+function clearSelectedTimeSlots(popup) {
+    const timeSlots = popup.querySelectorAll('.time-slot');
+    timeSlots.forEach(slot => {
+        slot.classList.remove('selected');
+        slot.setAttribute('data-selected', 'false');
+    });
+}
 
     generateTimeSlots(popup.querySelector('.time-slots'), 6, 21, selectedDay);
 			
