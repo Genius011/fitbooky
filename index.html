@@ -729,7 +729,7 @@ function handleTimeSlotClick() {
     this.classList.toggle('selected');
 }
 
-        // Funkcja do przełączania typu treningu
+        // Modify the selectTrainingType function to reattach event listeners
 function selectTrainingType(selected, other) {
     selected.classList.add('selected');
     other.classList.remove('selected');
@@ -743,7 +743,15 @@ function selectTrainingType(selected, other) {
     } else {
         enableGroupTrainingSlots(popup, selectedDay);
     }
+
+    // Reattach event listeners to time slots
+    const timeSlots = popup.querySelectorAll('.time-slot');
+    timeSlots.forEach(slot => {
+        slot.removeEventListener('click', handleTimeSlotClick);
+        slot.addEventListener('click', handleTimeSlotClick);
+    });
 }
+
 
 
         prevMonth.addEventListener('click', function() {
