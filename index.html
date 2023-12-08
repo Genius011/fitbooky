@@ -629,21 +629,37 @@ bookButton.addEventListener('click', async () => {
         });
     }
 
-    // Define the selectTrainingType function here
-    function selectTrainingType(selected, other) {
-        selected.classList.add('selected');
-        other.classList.remove('selected');
+    // Modify the selectTrainingType function to reattach event listeners using event delegation
+function selectTrainingType(selected, other) {
+    selected.classList.add('selected');
+    other.classList.remove('selected');
 
-        // Usuń zaznaczenia z slotów czasowych
-        clearSelectedTimeSlots(popup);
+    // Usuń zaznaczenia z slotów czasowych
+    clearSelectedTimeSlots(popup);
 
-        // Wywołaj odpowiednie funkcje do inicjalizacji slotów czasowych
-        if (selected.getAttribute('data-type') === 'personal') {
-            enableAllTimeSlots(popup);
+    // Wywołaj odpowiednie funkcje do inicjalizacji slotów czasowych
+    if (selected.getAttribute('data-type') === 'personal') {
+        enableAllTimeSlots(popup);
+    } else {
+        enableGroupTrainingSlots(popup, selectedDay);
+    }
+}
+
+// Add an event listener to the popup element to handle time slot clicks using event delegation
+popup.addEventListener('click', function (event) {
+    const target = event.target;
+    if (target.classList.contains('time-slot') && target.getAttribute('data-selected') !== 'false') {
+        // Toggle the 'selected' state
+        if (target.getAttribute('data-selected') === 'true') {
+            target.setAttribute('data-selected', 'false');
+            target.classList.remove('selected');
         } else {
-            enableGroupTrainingSlots(popup, selectedDay);
+            target.setAttribute('data-selected', 'true');
+            target.classList.add('selected');
         }
     }
+});
+
 
 
 
