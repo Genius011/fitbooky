@@ -498,44 +498,30 @@ document.getElementById('logout').addEventListener('click', () => {
 
 // Poniżej musisz wkleić funkcję openPopup oraz inne pomocnicze funkcje, które współpracują z generateCalendar.
 
-		// Zaktualizowana funkcja do obsługi zapisywania wielu rezerwacji
-async function saveBookings(userId, date, trainingType, times, trainerId) {
+		async function saveBooking(userId, date, trainingType, time, trainerId) {
   if (!userId) {
     alert('Nie jesteś zalogowany!');
     return;
   }
 
-  // Przechowywanie obiektów rezerwacji
-  let bookings = [];
-
   try {
     // Pobranie dodatkowych informacji o użytkowniku
-    const userRef = doc(db, 'users', userId);
+    const userRef = doc(getFirestore(), 'users', userId);
     const docSnap = await getDoc(userRef);
 
     // Jeśli dokument użytkownika istnieje, użyj jego danych
     if (docSnap.exists()) {
       const userData = docSnap.data();
-
-      // Iteruj przez wszystkie wybrane godziny i twórz obiekty rezerwacji
-      for (let time of times) {
-        bookings.push({
-          userId: userId,
-          date: date,
-          trainingType: trainingType,
-          time: time,
-          email: userData.email,
-          firstName: userData.firstName,
-          trainerId: trainerId // Dodaj trainerId do dokumentu rezerwacji
-        });
-      }
-
-      // Zapisz wszystkie obiekty rezerwacji
-      for (let booking of bookings) {
-        await addDoc(collection(db, "bookings"), booking);
-      }
-
-      alert("Rezerwacje zostały zapisane w Twoim profilu");
+      await addDoc(collection(db, "bookings"), {
+        userId: userId,
+        date: date,
+        trainingType: trainingType,
+        time: time,
+        email: userData.email,
+        firstName: userData.firstName,
+        trainerId: trainerId // Dodaj trainerId do dokumentu rezerwacji
+      });
+      alert("Rezerwacja została zapisana w Twoim profilu");
     } else {
       console.log("Nie znaleziono danych użytkownika.");
     }
@@ -544,7 +530,6 @@ async function saveBookings(userId, date, trainingType, times, trainerId) {
     alert("Wystąpił błąd podczas zapisu rezerwacji");
   }
 }
-
 
 
 
@@ -651,22 +636,19 @@ bookButton.addEventListener('click', async () => {
         let timeSlot = document.createElement('div');
         timeSlot.className = 'time-slot';
         timeSlot.textContent = timeString;
-        timeSlot.setAttribute('data-selected', 'false'); // Dodaj atrybut do śledzenia zaznaczenia
+        timeSlot.setAttribute('data-selected', 'false');
 
-        timeSlot.onclick = function() {
+        timeSlot.addEventListener('click', function() {
+            // Toggle the 'selected' state
             let isSelected = timeSlot.getAttribute('data-selected') === 'true';
-            if (isSelected) {
-                timeSlot.classList.remove('selected');
-                timeSlot.setAttribute('data-selected', 'false');
-            } else {
-                timeSlot.classList.add('selected');
-                timeSlot.setAttribute('data-selected', 'true');
-            }
-        };
+            timeSlot.setAttribute('data-selected', !isSelected);
+            timeSlot.classList.toggle('selected');
+        });
 
         container.appendChild(timeSlot);
     }
 }
+
 
 
 
