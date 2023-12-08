@@ -780,23 +780,27 @@ input[type="submit"] {
 <!-- Sekcja do zwijania/rozwijania -->
 <section id="availabilityManager" class="section" style="display: none;">
         
-        <section id="availabilityManager" class="section">
-    
-    <div class="separator"></div>
-    <div id="dailyAvailability">
-       
-<!-- Navigation Buttons -->
-<div class="week-navigation">
-  
-</div>
-	   
-<div id="availability-wrapper">
-    
         
-        
+    
+ <!-- Tabela kalendarza -->
+    <table id="yearlyCalendar">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <!-- Pętla tworząca nagłówki dla każdej godziny -->
+                <th>6:00</th>
+                <th>7:00</th>
+                <th>8:00</th>
+                <!-- Powtarzaj dla każdej godziny aż do 21:00 -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Tutaj będą wypełnione wiersze dla każdego dnia roku -->
+        </tbody>
+    </table>
 </section>
 
-    </section>
+    
 
     
         <div class="toggle-future-bookings">
@@ -1327,6 +1331,29 @@ auth.onAuthStateChanged((user) => {
 
   // Wywołaj setRegistrationLink po zmianach w stanie uwierzytelnienia
   setRegistrationLink();
+});
+
+// ZARZĄDZENIA DOSTĘPNOŚCIĄ
+
+document.addEventListener('DOMContentLoaded', function() {
+    const calendarBody = document.getElementById('yearlyCalendar').querySelector('tbody');
+    const startDate = new Date(new Date().getFullYear(), 0, 1); // Początek roku
+    const endDate = new Date(new Date().getFullYear(), 11, 31); // Koniec roku
+
+    for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+        const row = calendarBody.insertRow();
+        const dateCell = row.insertCell();
+        dateCell.textContent = date.toISOString().split('T')[0]; // Format YYYY-MM-DD
+
+        for (let hour = 6; hour <= 21; hour++) {
+            const hourCell = row.insertCell();
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = '0';
+            input.placeholder = 'Miejsca';
+            hourCell.appendChild(input);
+        }
+    }
 });
 
 
