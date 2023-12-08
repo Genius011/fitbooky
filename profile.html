@@ -242,11 +242,75 @@
     }
 }
 
+/* Dropdown container */
+.dropdown {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: inline-block;
+}
+
+/* Dropdown button */
+.dropbtn {
+    background-color: #6e8efb;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    color: #333;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #6e8efb;
+    color: white;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Style for the "Back to Calendar" link */
+.back-button {
+    display: none; /* Hide the original Back to Calendar button */
+}
+
+/* Style for the other links */
+.google-calendar-button, .logout-button {
+    display: none; /* Hide other buttons */
+}
+
+
     </style>
 </head>
 <body>
-<div class="back-to-calendar">
-    <a href="index.html" class="back-button">Back to Calendar</a>
+<div class="dropdown">
+    <button class="dropbtn">Menu</button>
+    <div class="dropdown-content">
+        <a href="index.html">Back to Calendar</a>
+        <a href="#">Kalendarz</a>
+        <a href="#">Wyloguj</a>
+    </div>
 </div>
 
 
