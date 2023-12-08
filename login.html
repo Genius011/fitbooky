@@ -232,10 +232,10 @@
 		<div id="loginMessage" class="hidden-message"></div>
     <p id="accountQuestion">Nie masz konta? <a href="#" id="toggleRegistration">Zarejestruj się</a></p>
 </div>
+             <!-- Reset Password Link -->
             <div style="text-align: center;">
-
-<p>Zapomniałeś hasła? <a href="#" id="resetPasswordLink">Zresetuj</a>.</p>
-        </div>
+                <p>Zapomniałeś hasła? <a href="#" id="resetPasswordLink">Zresetuj</a>.</p>
+            </div>
     </div>
 
     <script type="module">
@@ -436,6 +436,21 @@ function toggleSwitchDisplay(displayValue) {
     }
 }
 
+// Obsługa resetowania hasła
+        document.getElementById('resetPasswordLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            const email = prompt('Proszę podać swój adres e-mail:');
+            
+            if (email) {
+                auth.sendPasswordResetEmail(email)
+                    .then(function() {
+                        alert('E-mail z instrukcjami resetowania hasła został wysłany.');
+                    })
+                    .catch(function(error) {
+                        alert('Błąd podczas resetowania hasła: ' + error.message);
+                    });
+            }
+        });
 
 </script>
 
