@@ -323,7 +323,7 @@
     const auth = getAuth(app);
 
     // Function to fetch and display user data
-    const fetchAndDisplayUserData = async (userId) => {
+     const fetchAndDisplayUserData = async (userId) => {
         const userDocRef = doc(db, 'users', userId);
         const userDocSnap = await getDoc(userDocRef);
 
@@ -368,16 +368,14 @@
                     });
                 });
             } else {
-                // User is signed out
                 // Handle user state when not logged in if necessary
             }
         });
     });
 
-    // Definiowanie funkcji viewProfile
     function viewProfile(userId) {
-        const modal = document.getElementById('profileModal'); // Upewnij się, że masz element modal w HTML
-        const profileDetails = document.getElementById('profileDetails'); // I ten element również
+        const modal = document.getElementById('profileModal');
+        const profileDetails = document.getElementById('profileDetails');
 
         getDoc(doc(db, 'users', userId)).then(docSnap => {
             if (docSnap.exists()) {
@@ -397,9 +395,6 @@
         });
     }
 
-
-
-    // Gdy użytkownik kliknie (x), zamknij modal
     const closeButton = document.querySelector('.close');
     const modal = document.getElementById('profileModal');
 
@@ -413,79 +408,12 @@
                 modal.style.display = "none";
             }
         }
-		
-		} else {
+    } else {
         console.error('Element .close lub #profileModal nie istnieje w DOM.');
     }
 
-    // Eksportowanie viewProfile do globalnego zasięgu
     window.viewProfile = viewProfile;
-
-    document.addEventListener('DOMContentLoaded', () => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                fetchAndDisplayUserData(user.uid);
-
-                // Fetch user's bookings
-const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid));
-getDocs(bookingsQuery)
-    .then((bookingsSnapshot) => {
-        const now = new Date();
-        let nextTraining = null;
-
-        // Find the next training session
-        bookingsSnapshot.forEach((bookingDoc) => {
-            const bookingData = bookingDoc.data();
-            // Uwzględnij strefę czasową - w tym przypadku zakładam UTC
-            const trainingDate = new Date(bookingData.date + 'T' + bookingData.time + 'Z');
-
-            // Check if the training is in the future and not canceled
-            if (trainingDate > now && !bookingData.canceled) {
-                if (!nextTraining || trainingDate < nextTraining.date) {
-                    nextTraining = {
-                        date: trainingDate,
-                        type: bookingData.trainingType,
-                    };
-                }
-            }
-        });
-
-        // Display the next training session information
-        const nextTrainingElement = document.getElementById('nextTraining');
-        if (nextTraining) {
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
-            const formattedDate = nextTraining.date.toLocaleDateString('pl-PL', options);
-            const formattedTime = nextTraining.date.toLocaleTimeString('pl-PL', options);
-            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: ${formattedDate}, ${formattedTime}, ${nextTraining.type}`;
-        } else {
-            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: Brak`;
-        }
-    })
-    .catch((error) => {
-        console.error('Error fetching bookings:', error);
-    });
-
-
-                // Rest of your code...
-            } else {
-                // User is signed out
-                // Handle user state when not logged in if necessary
-            }
-        });
-    });
-
-    // Set onclick handler for the close button
-    closeButton.onclick = function() {
-        const modal = document.getElementById('profileModal');
-        modal.style.display = "none";
-    }
-	
-	
-
-
-
 </script>
-
 
 
 </body>
