@@ -18,7 +18,6 @@
     padding: 20px;
 }
 
-/* Styl podstawowy dla wszystkich przycisków */
 button {
     background-color: #6e8efb;
     color: white;
@@ -128,13 +127,12 @@ h2 {
     margin: 0 10px;
 }
 
-/* Styl dla tabel z rezerwacjami */
 #todayBookingsTable,
 #futureBookingsTable {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
     background: white;
     border-radius: 8px;
 }
@@ -202,17 +200,17 @@ h2 {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
     background-color: #fefefe;
-  margin: 10% auto; /* Centrowanie modalu w pionie */
-  padding: 10px; /* Zmniejszony padding wewnątrz modalu */
-  border: 1px solid #888;
-  width: 40%; /* Zmniejszenie szerokości modalu do 40% szerokości okna */
-  border-radius: 10px; /* Delikatne zaokrąglenie rogów */
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    margin: 10% auto;
+    padding: 10px;
+    border: 1px solid #888;
+    width: 40%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 600px) {
@@ -226,7 +224,6 @@ h2 {
 .toggle-future-bookings,
 .toggle-finances,
 .toggle-today-bookings {
-
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -250,16 +247,10 @@ h2 {
     transform: rotate(180deg);
 }
 
-display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
 .trainingPrice {
-   flex-grow: 1; /* Pozwala na rozszerzanie się */
-    flex-basis: 33%; /* Początkowa szerokość */
-    margin: 0 10px 0 0; /* Dodaje margines z prawej strony */
+    flex-grow: 1;
+    flex-basis: 33%;
+    margin: 0 10px 0 0;
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -269,567 +260,69 @@ display: flex;
 }
 
 .savePriceButton {
-    flex-grow: 0; /* Nie pozwala na rozszerzanie się */
+    flex-grow: 0;
     padding: 5px 10px;
-    font-size: 0.8em; /* Ustaw mniejszy rozmiar czcionki aby pasował do przycisku profilowego */
-    border-radius: 4px; /* Dostosuj zaokrąglenia */
-    display: inline-flex; /* Umożliwia wyśrodkowanie ikony i tekstu */
-    justify-content: center; /* Wyśrodkowanie zawartości w poziomie */
-    align-items: center; /* Wyśrodkowanie zawartości w pionie */
-    border: none; /* Brak obramowania */
-    cursor: pointer; /* Kursor wskazujący */
+    font-size: 0.8em;
+    border-radius: 4px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
     transition: background-color 0.3s ease;
+}
 
 .savePriceButton i {
     font-size: 1.2em;
 }
 
 #todayBookingsTable {
-  width: 100%;
-  border-collapse: collapse;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-  margin-top: 20px;
-  background: white;
-  border-radius: 8px;
-  text-align: left;
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    background: white;
+    border-radius: 8px;
 }
 
 #todayBookingsTable thead {
-  background-color: #6e8efb;
-  color: white;
-}
-
-#todayBookingsTable th,
-#todayBookingsTable td {
-  padding: 10px 15px;
-  border-bottom: 1px solid #ddd;
-}
-
-#todayBookingsTable th {
-  position: sticky;
-  top: 0;
-}
-
-#todayBookingsTable tbody tr:hover {
-  background-color: #ddd;
-}
-
-/* Styl dla pola wprowadzania ceny i przycisku zapisu */
-.price-input-container {
-   display: flex;
-    align-items: center;
-    justify-content: flex-end; /* Aby wyrównać do prawej krawędzi */
-    height: 100%;
-}
-
-.trainingPrice {
-  flex-grow: 0; /* Nie pozwala polemu na rozciąganie się */
-    width: auto; /* Automatycznie dostosowuje szerokość do zawartości */
-    margin-right: 10px; /* Dostosowuje odstęp od przycisku */
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    height: 30px; /* Dopasowanie wysokości do przycisków */
-    box-sizing: border-box;
-}
-
-.savePriceButton {
-  padding: 5px;
-    margin-left: 5px; /* Niewielki margines dla separacji od pola ceny */
-    height: 30px; /* Wysokość dopasowana do pola ceny */
-    width: 30px; /* Szerokość przycisku z ikoną */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Aby wszystkie kolumny miały tę samą szerokość */
-#todayBookingsTable th,
-#todayBookingsTable td {
-  width: calc(100% / liczba_kolumn); /* Dziel szerokość tabeli przez liczbę kolumn */
-}
-
-/* Zapewnienie, że pole input i przycisk są w tej samej linii */
-#todayBookingsTable .price-input-container {
-  white-space: nowrap;
-}
-
-/* Dostosowanie szerokości kolumn */
-#todayBookingsTable .trainingPrice {
-  width: 50%; /* lub inna wartość procentowa, która wygląda dobrze na ekranie */
-}
-
-#todayBookingsTable .savePriceButton {
-  width: 30%; /* lub inna wartość procentowa, która wygląda dobrze na ekranie */
-}
-
-.profileButton {
-   padding: 5px 10px; /* Ustawia mniejszy padding */
-    font-size: 0.8em; /* Ustawia mniejszy rozmiar czcionki */
-    line-height: 1; /* Aby wysokość przycisku była proporcjonalna do tekstu */
-    border-radius: 4px; /* Nieco mniejsze zaokrąglenie */
-    display: inline-flex; /* Umożliwia wyśrodkowanie ikony i tekstu */
-    justify-content: center; /* Wyśrodkowanie zawartości w poziomie */
-    align-items: center; /* Wyśrodkowanie zawartości w pionie */
-    text-align: center; /* Wyśrodkowanie tekstu */
-    border: none; /* Brak obramowania */
-    cursor: pointer; /* Kursor wskazujący */
-    transition: background-color 0.3s ease; /* Płynna zmiana tła */
-	width: 30px;
-
-.profileButton:hover {
-  color: #000; /* ciemniejszy kolor podczas najechania */
-  text-shadow: 0px 0px 8px rgba(0,0,0,0.5); /* dodaje cień dla lepszego kontrastu */
-}
-
-#todayBookingsTable td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  height: 50px; /* przykładowa wysokość, dostosuj według potrzeb */
-  box-sizing: border-box; /* uwzględnia padding i border w wymiarach elementu */
-}
-
-.price-input {
-  width: auto; /* lub określona szerokość, ale nie więcej niż szerokość komórki */
-  margin: 0;
-  padding: 5px;
-  border: 1px solid #ccc;
-  height: 20px; /* wysokość mniejsza niż komórka, aby nie wyjeżdżać */
-}
-
-.savePriceButton {
-   padding: 5px 10px; /* Ustawia mniejszy padding */
-    font-size: 0.8em; /* Ustawia mniejszy rozmiar czcionki */
-    line-height: 1; /* Aby wysokość przycisku była proporcjonalna do tekstu */
-    border-radius: 4px; /* Nieco mniejsze zaokrąglenie */
-    display: inline-flex; /* Umożliwia wyśrodkowanie ikony i tekstu */
-    justify-content: center; /* Wyśrodkowanie zawartości w poziomie */
-    align-items: center; /* Wyśrodkowanie zawartości w pionie */
-    text-align: center; /* Wyśrodkowanie tekstu */
-    border: none; /* Brak obramowania */
-    cursor: pointer; /* Kursor wskazujący */
-    transition: background-color 0.3s ease; /* Płynna zmiana tła */
-
-/* Usunięcie domyślnych stylów komórek tabeli dla komórki z polem ceny */
-#todayBookingsTable .price-input-container td {
-    padding: 0; /* Usuwa padding z komórki tabeli */
-    height: auto; /* Pozwala na automatyczne dostosowanie wysokości */
-    align-items: center; /* Wyśrodkowanie zawartości w pionie */
-    display: flex; /* Umożliwia elastyczne pozycjonowanie pola ceny */
-}
-
-/* Aplikowanie stylu do konkretnego td zawierającego pole ceny */
-#todayBookingsTable .price-cell {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 15px; /* Dodaje odstęp od prawej krawędzi komórki */
-}
-
-/* Styl dla nowej sekcji Finanse */
-#financesManager {
-  margin-bottom: 30px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-}
-
-#financesTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-  background: white;
-  border-radius: 8px;
-}
-
-#financesTable thead {
-  background-color: #6e8efb;
-  color: white;
-}
-
-#financesTable th, 
-#financesTable td {
-  padding: 10px 15px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
-}
-
-#financesTable tbody tr:hover {
-  background-color: #ddd;
-}
-
-/* Style dla podsumowań */
-#dailySummary, 
-#monthlySummary {
-  font-size: 1em;
-  color: #555;
-  margin-top: 15px;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-}
-
-#dailySummary span, 
-#monthlySummary span {
-  font-weight: bold;
-  color: #333;
-}
-
-/* Zastosuj te style globalnie dla wszystkich przycisków rozwijania sekcji */
-.toggle-section {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* Wyrównuje zawartość do lewej */
-  cursor: pointer;
-  padding: 10px;
-  width: 100%;
-  background: none;
-  border: none;
-  font-size: 0.9em;
-  color: #555;
-  transition: background-color 0.3s ease;
-}
-
-.toggle-section i {
-  margin-right: 10px; /* Dodaje odstęp między ikoną a tekstem */
-}
-
-.toggle-section:hover {
-  background-color: #f2f2f2; /* Lekkie podświetlenie tła podczas najechania */
-}
-
-/* Konkretnie dla przycisku Finanse, upewniając się, że jest on częścią tej samej klasy */
-.toggle-finances {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* Wyrównanie do lewej */
-  padding: 10px;
-  width: 100%;
-  background: none;
-  border: none;
-  font-size: 0.9em;
-  color: #555;
-}
-
-.toggle-finances i {
-  margin-right: 10px; /* Odstęp między ikoną a tekstem */
-}
-
-/* Styl dla tekstu w przycisku "Finanse", aby był wyśrodkowany */
-.toggle-finances span {
-  margin-left: auto;
-}
-
-
-/* Styl dla tabeli podsumowania */
-.summary-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-  background: white;
-  border-radius: 8px;
-  text-align: left;
-}
-
-.summary-table th, 
-.summary-table td {
-  padding: 10px 15px;
-  border-bottom: 1px solid #ddd;
-}
-
-.summary-table thead {
-  background-color: #6e8efb;
-  color: white;
-}
-
-.summary-table tbody tr:hover {
-  background-color: #ddd;
-}
-
-
-/* Styl dla tabeli podsumowania finansowego */
-#financesSummaryTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-    background: white;
-    border-radius: 8px;
-    text-align: left;
-}
-
-#financesSummaryTable thead {
     background-color: #6e8efb;
     color: white;
 }
 
-#financesSummaryTable th, 
-#financesSummaryTable td {
+#todayBookingsTable th,
+#todayBookingsTable td {
     padding: 10px 15px;
     border-bottom: 1px solid #ddd;
 }
 
-#financesSummaryTable tbody tr:last-child {
-    border-bottom: none;
+#todayBookingsTable tbody tr:hover {
+    background-color: #ddd;
 }
 
-#financesSummaryTable tbody tr:hover {
-    background-color: #f2f2f2;
-}
-
-/* Styl dla nagłówków */
-#financesSummaryTable th {
-    text-transform: uppercase;
-    font-size: 0.9em;
-}
-
-/* Styl dla komórek */
-#financesSummaryTable td {
-    font-size: 0.8em;
-    color: #555;
-}
-
-/* Styl dla nagłówka sekcji */
-#financesManager h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-#trainerInfo {
-    background-color: #f3f3f3;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-}
-#trainerInfo p {
-    margin: 5px 0;
-}
-
-/* Stylizacja kontenera dla unikalnego linku trenera */
-#trainerLinkContainer {
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #f9f9f9;
-  border: none; /* Usunięcie obramowania */
-  border-radius: 5px; /* Opcjonalnie, zaokrąglonych rogów */
-}
-
-/* Stylizacja etykiety */
-#trainerLinkContainer label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-/* Stylizacja przycisku "Kopiuj link" */
-#trainerLinkContainer button {
-  padding: 5px 10px;
-  background-color: #007bff; /* Kolor tła */
-  color: #fff; /* Kolor tekstu */
-  border: none; /* Usunięcie obramowania */
-  border-radius: 5px; /* Opcjonalnie, zaokrąglonych rogów */
-  cursor: pointer;
-}
-
-/* Stylizacja przycisku "Kopiuj link" po najechaniu myszką (hover) */
-#trainerLinkContainer button:hover {
-  background-color: #0056b3; /* Kolor tła po najechaniu myszką */
-}
-
-.finances-table {
-  margin-top: 10px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #f9f9f9;
-}
-
-th, td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #ccc;
-}
-
-th {
-  background-color: #333;
-  color: white;
-}
-
-td {
-  background-color: white;
-}
-
-tr:hover {
-  background-color: #f2f2f2;
-}
-
-tfoot {
-  background-color: #333;
-  color: white;
-}
-
-tfoot td {
-  font-weight: bold;
-}
-
-/* CSS for the rotate-icon */
-.rotate-icon {
-    transform: rotate(180deg);
-}
-
-/* CSS for the form section */
-#availability-form {
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #f8f8f8;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.day-availability {
+#todayBookingsTable tr {
     margin-bottom: 10px;
 }
 
-.hour-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.hour-list label {
-    display: flex;
-    align-items: center;
-    margin-right: 5px;
-}
-
-input[type="submit"] {
-    margin-top: 10px;
-    cursor: pointer;
-}
-
-
-/* Styles for the chevron icons */
-.fa-chevron-up, .fa-chevron-down {
-    transition: transform 0.3s ease;
-}
-
-/* Rotate the chevron icon when the form is visible */
-.fa-chevron-up {
-    transform: rotate(180deg);
-}
-
-.training-type-selector {
-    margin-top: 10px;
-    padding: 5px;
-    background-color: #eef;
-    border-radius: 5px;
-}
-
-.training-type-selector label {
+#todayBookingsTable td {
     display: block;
-    margin-bottom: 5px;
+    text-align: right;
+    font-size: 13px;
+    border-bottom: 1px dotted #ddd;
 }
 
-.training-type-selector input[type='number'] {
-    margin-left: 10px;
+#todayBookingsTable td:last-child {
+    border-bottom: 0;
 }
 
-/* Stylizacja tabeli kalendarza */
-#yearlyCalendar {
-  width: 100%; /* Zajmuje całą dostępną szerokość */
-  border-collapse: collapse; /* Usuwa przestrzenie między komórkami */
-  table-layout: fixed; /* Zapewnia równą szerokość kolumn */
+#todayBookingsTable td:before {
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
-#yearlyCalendar th,
-#yearlyCalendar td {
-  border: 1px solid #ccc; /* Dodaje subtelne obramowanie */
-  padding: 5px; /* Dodaje wewnętrzny odstęp */
-  text-align: center; /* Centruje tekst */
-  white-space: nowrap; /* Zapobiega zawijaniu się tekstu */
-}
+/* Dodano klasy CSS na potrzeby panelu administracyjnego */
 
-/* Stylizacja pól input */
-#yearlyCalendar input[type="number"] {
-  width: 50px; /* Zmniejsza szerokość pól input */
-  padding: 2px; /* Zmniejsza wewnętrzny odstęp */
-  margin: 0; /* Usuwa zewnętrzny odstęp */
-  font-size: 12px; /* Zmniejsza rozmiar czcionki */
-  text-align: center; /* Centruje tekst */
-}
-
-/* Dodaje suwaki (scrollbars), jeśli tabela jest zbyt szeroka */
-.admin-panel {
-  overflow-x: auto; /* Dodaje poziomy suwak, jeśli zawartość jest zbyt szeroka */
-  background: #fff; /* Tło białe */
-  max-width: 100%; /* Maksymalna szerokość kontenera */
-  margin: 0 auto; /* Centruje kontener */
-  padding: 20px; /* Dodaje odstęp wewnątrz kontenera */
-}
-
-/* Stylizacja nagłówków dla godzin */
-#yearlyCalendar thead th {
-  background-color: #f2f2f2; /* Jasnoszare tło dla nagłówków */
-  font-weight: bold; /* Pogrubienie tekstu */
-}
-
-/* Ukrywa overflow wewnątrz komórek */
-#yearlyCalendar td {
-  overflow: hidden; /* Ukrywa nadmiar treści nie mieszczącej się w komórce */
-}
-
-#yearlyCalendar {
-    font-size: 12px; /* Zmniejszenie domyślnej wielkości tekstu */
-}
-
-#yearlyCalendar input[type="number"] {
-    width: 40px; /* Zmniejszenie szerokości pola */
-    height: 25px; /* Zmniejszenie wysokości pola */
-    padding: 2px 5px; /* Zmniejszenie paddingu */
-    font-size: 12px; /* Dopasowanie wielkości tekstu */
-    margin: 0; /* Usunięcie marginesów */
-}
-
-#availabilityManager .section {
-    overflow-x: scroll; /* Dodanie poziomego scrolla dla obszaru zarządzania dostępnością */
-    max-height: 500px; /* Maksymalna wysokość sekcji */
-    overflow-y: auto; /* Dodanie pionowego scrolla w razie potrzeby */
-}
-
-/* Zmniejszenie marginesu dla wszystkich sekcji w panelu administracyjnym */
-.admin-panel .section {
-    margin-bottom: 10px; /* Zmniejszenie marginesu na dole sekcji */
-}
-
-.calendar-input {
-    width: 40px !important; /* Wymuszenie szerokości pola */
-    height: 25px !important; /* Wymuszenie wysokości pola */
-    padding: 2px 5px !important; /* Wymuszenie paddingu */
-    font-size: 12px !important; /* Wymuszenie wielkości tekstu */
-    margin: 0 !important; /* Wymuszenie braku marginesów */
-}
-
-/* Dodanie stylów, które wymuszą scrollowanie */
-.calendar-scrollable {
-    overflow-x: auto !important; /* Wymuszenie poziomego scrollowania */
-    max-height: 500px !important; /* Wymuszenie maksymalnej wysokości */
-    overflow-y: auto !important; /* Wymuszenie pionowego scrollowania */
-}
-
-/* Wymuszenie mniejszego marginesu dla wszystkich sekcji */
-.admin-panel .reduced-margin-section {
-    margin-bottom: 10px !important; /* Wymuszenie zmniejszenia marginesu na dole sekcji */
-}
-
-#yearlyCalendar input[type="text"] {
-            width: 10px; /* Możesz dostosować szerokość według potrzeb */
-        }
 
     </style>
 </head>
