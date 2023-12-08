@@ -740,6 +740,50 @@ input[type="submit"] {
     margin-left: 10px;
 }
 
+/* Stylizacja tabeli kalendarza */
+#yearlyCalendar {
+  width: 100%; /* Zajmuje całą dostępną szerokość */
+  border-collapse: collapse; /* Usuwa przestrzenie między komórkami */
+  table-layout: fixed; /* Zapewnia równą szerokość kolumn */
+}
+
+#yearlyCalendar th,
+#yearlyCalendar td {
+  border: 1px solid #ccc; /* Dodaje subtelne obramowanie */
+  padding: 5px; /* Dodaje wewnętrzny odstęp */
+  text-align: center; /* Centruje tekst */
+  white-space: nowrap; /* Zapobiega zawijaniu się tekstu */
+}
+
+/* Stylizacja pól input */
+#yearlyCalendar input[type="number"] {
+  width: 50px; /* Zmniejsza szerokość pól input */
+  padding: 2px; /* Zmniejsza wewnętrzny odstęp */
+  margin: 0; /* Usuwa zewnętrzny odstęp */
+  font-size: 12px; /* Zmniejsza rozmiar czcionki */
+  text-align: center; /* Centruje tekst */
+}
+
+/* Dodaje suwaki (scrollbars), jeśli tabela jest zbyt szeroka */
+.admin-panel {
+  overflow-x: auto; /* Dodaje poziomy suwak, jeśli zawartość jest zbyt szeroka */
+  background: #fff; /* Tło białe */
+  max-width: 100%; /* Maksymalna szerokość kontenera */
+  margin: 0 auto; /* Centruje kontener */
+  padding: 20px; /* Dodaje odstęp wewnątrz kontenera */
+}
+
+/* Stylizacja nagłówków dla godzin */
+#yearlyCalendar thead th {
+  background-color: #f2f2f2; /* Jasnoszare tło dla nagłówków */
+  font-weight: bold; /* Pogrubienie tekstu */
+}
+
+/* Ukrywa overflow wewnątrz komórek */
+#yearlyCalendar td {
+  overflow: hidden; /* Ukrywa nadmiar treści nie mieszczącej się w komórce */
+}
+
 
 
     </style>
