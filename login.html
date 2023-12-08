@@ -169,6 +169,18 @@
   white-space: nowrap; /* Zapobiega przenoszeniu się tekstu do nowej linii */
 }
 
+.hidden-message {
+  display: none;
+  color: green;
+  font-weight: bold;
+}
+
+.visible-message {
+  display: block;
+  /* inne style, jeśli potrzebujesz */
+}
+
+
     </style>
 </head>
 <body>
@@ -217,6 +229,7 @@
 
         </div>
         <div class="form-footer">
+		<div id="loginMessage" class="hidden-message"></div>
     <p id="accountQuestion">Nie masz konta? <a href="#" id="toggleRegistration">Zarejestruj się</a></p>
 </div>
 
@@ -325,9 +338,18 @@
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           console.log('Logged in user:', userCredential.user);
-          alert('Login successful!');
-          window.location.href = 'index.html'; // Przekierowanie do index.html
-        })
+          // Zamiast alert('Login successful!');
+  const loginMessageDiv = document.getElementById('loginMessage');
+  loginMessageDiv.textContent = 'Zalogowano'; // Ustawienie tekstu komunikatu
+  loginMessageDiv.classList.remove('hidden-message');
+  loginMessageDiv.classList.add('visible-message');
+  
+  // Możesz dodać opóźnienie przed przekierowaniem, aby użytkownik mógł zobaczyć komunikat
+  setTimeout(() => {
+    window.location.href = 'index.html'; // Przekierowanie do index.html
+  }, 3000); // Opóźnienie 3 sekundy
+  
+})
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
