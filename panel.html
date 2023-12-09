@@ -904,6 +904,8 @@ input[type="submit"] {
         <a href="#" id="logout">Wyloguj</a>
     </div>
 </div>
+<div class="dropdown-content-background" id="dropdownContentBackground"></div>
+
 
  
 <div id="adminPanel" class="admin-panel">
@@ -1512,11 +1514,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// DROPDOWN MENU!!
 document.addEventListener("DOMContentLoaded", function () {
     // Get the dropdown button and content
     var dropdown = document.querySelector(".dropdown");
     var dropdownContent = document.querySelector(".dropdown-content");
+    var dropdownContentBackground = document.getElementById("dropdownContentBackground");
 
     // Get the links inside the dropdown content
     var links = dropdownContent.getElementsByTagName("a");
@@ -1524,6 +1526,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Function to toggle the dropdown content
     function toggleDropdown() {
         dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+        dropdownContentBackground.style.display = dropdownContentBackground.style.display === "block" ? "none" : "block";
     }
 
     // Event listener to toggle the dropdown when the button is clicked
