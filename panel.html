@@ -10,6 +10,97 @@
     <link rel="stylesheet" href="css/all.min.css">
 
 	<style>
+	
+	/* Stylizacja tabeli kalendarza */
+#yearlyCalendar {
+  width: 100%; /* Zajmuje całą dostępną szerokość */
+  border-collapse: collapse; /* Usuwa przestrzenie między komórkami */
+  table-layout: fixed; /* Zapewnia równą szerokość kolumn */
+}
+
+#yearlyCalendar th,
+#yearlyCalendar td {
+  border: 1px solid #ccc; /* Dodaje subtelne obramowanie */
+  padding: 5px; /* Dodaje wewnętrzny odstęp */
+  text-align: center; /* Centruje tekst */
+  white-space: nowrap; /* Zapobiega zawijaniu się tekstu */
+}
+
+/* Stylizacja pól input */
+#yearlyCalendar input[type="number"] {
+  width: 20px; /* Zmniejsza szerokość pól input */
+  padding: 2px; /* Zmniejsza wewnętrzny odstęp */
+  margin: 0; /* Usuwa zewnętrzny odstęp */
+  font-size: 12px; /* Zmniejsza rozmiar czcionki */
+  text-align: center; /* Centruje tekst */
+}
+
+/* Dodaje suwaki (scrollbars), jeśli tabela jest zbyt szeroka */
+.admin-panel {
+  overflow-x: auto; /* Dodaje poziomy suwak, jeśli zawartość jest zbyt szeroka */
+  background: #fff; /* Tło białe */
+  max-width: 100%; /* Maksymalna szerokość kontenera */
+  margin: 0 auto; /* Centruje kontener */
+  padding: 20px; /* Dodaje odstęp wewnątrz kontenera */
+}
+
+/* Stylizacja nagłówków dla godzin */
+#yearlyCalendar thead th {
+  background-color: #f2f2f2; /* Jasnoszare tło dla nagłówków */
+  font-weight: bold; /* Pogrubienie tekstu */
+}
+
+/* Ukrywa overflow wewnątrz komórek */
+#yearlyCalendar td {
+  overflow: hidden; /* Ukrywa nadmiar treści nie mieszczącej się w komórce */
+}
+
+#yearlyCalendar {
+    font-size: 12px; /* Zmniejszenie domyślnej wielkości tekstu */
+}
+
+#yearlyCalendar input[type="number"] {
+    width: 40px; /* Zmniejszenie szerokości pola */
+    height: 25px; /* Zmniejszenie wysokości pola */
+    padding: 2px 5px; /* Zmniejszenie paddingu */
+    font-size: 12px; /* Dopasowanie wielkości tekstu */
+    margin: 0; /* Usunięcie marginesów */
+}
+
+#availabilityManager .section {
+    overflow-x: scroll; /* Dodanie poziomego scrolla dla obszaru zarządzania dostępnością */
+    max-height: 500px; /* Maksymalna wysokość sekcji */
+    overflow-y: auto; /* Dodanie pionowego scrolla w razie potrzeby */
+}
+
+/* Zmniejszenie marginesu dla wszystkich sekcji w panelu administracyjnym */
+.admin-panel .section {
+    margin-bottom: 10px; /* Zmniejszenie marginesu na dole sekcji */
+}
+
+.calendar-input {
+    width: 10px !important; /* Wymuszenie szerokości pola */
+    height: 25px !important; /* Wymuszenie wysokości pola */
+    padding: 2px 5px !important; /* Wymuszenie paddingu */
+    font-size: 12px !important; /* Wymuszenie wielkości tekstu */
+    margin: 0 !important; /* Wymuszenie braku marginesów */
+}
+
+/* Dodanie stylów, które wymuszą scrollowanie */
+.calendar-scrollable {
+    overflow-x: auto !important; /* Wymuszenie poziomego scrollowania */
+    max-height: 500px !important; /* Wymuszenie maksymalnej wysokości */
+    overflow-y: auto !important; /* Wymuszenie pionowego scrollowania */
+}
+
+/* Wymuszenie mniejszego marginesu dla wszystkich sekcji */
+.admin-panel .reduced-margin-section {
+    margin-bottom: 10px !important; /* Wymuszenie zmniejszenia marginesu na dole sekcji */
+}
+
+#yearlyCalendar input[type="text"] {
+            width: 10px; /* Możesz dostosować szerokość według potrzeb */
+        }
         body {
     font-family: 'Roboto', sans-serif;
     background-image: url('dall.png');
@@ -17,6 +108,8 @@
     margin: 0;
     padding: 20px;
 }
+
+
 
 /* Styl podstawowy dla wszystkich przycisków */
 utton {
@@ -740,96 +833,7 @@ input[type="submit"] {
     margin-left: 10px;
 }
 
-/* Stylizacja tabeli kalendarza */
-#yearlyCalendar {
-  width: 100%; /* Zajmuje całą dostępną szerokość */
-  border-collapse: collapse; /* Usuwa przestrzenie między komórkami */
-  table-layout: fixed; /* Zapewnia równą szerokość kolumn */
-}
 
-#yearlyCalendar th,
-#yearlyCalendar td {
-  border: 1px solid #ccc; /* Dodaje subtelne obramowanie */
-  padding: 5px; /* Dodaje wewnętrzny odstęp */
-  text-align: center; /* Centruje tekst */
-  white-space: nowrap; /* Zapobiega zawijaniu się tekstu */
-}
-
-/* Stylizacja pól input */
-#yearlyCalendar input[type="number"] {
-  width: 20px; /* Zmniejsza szerokość pól input */
-  padding: 2px; /* Zmniejsza wewnętrzny odstęp */
-  margin: 0; /* Usuwa zewnętrzny odstęp */
-  font-size: 12px; /* Zmniejsza rozmiar czcionki */
-  text-align: center; /* Centruje tekst */
-}
-
-/* Dodaje suwaki (scrollbars), jeśli tabela jest zbyt szeroka */
-.admin-panel {
-  overflow-x: auto; /* Dodaje poziomy suwak, jeśli zawartość jest zbyt szeroka */
-  background: #fff; /* Tło białe */
-  max-width: 100%; /* Maksymalna szerokość kontenera */
-  margin: 0 auto; /* Centruje kontener */
-  padding: 20px; /* Dodaje odstęp wewnątrz kontenera */
-}
-
-/* Stylizacja nagłówków dla godzin */
-#yearlyCalendar thead th {
-  background-color: #f2f2f2; /* Jasnoszare tło dla nagłówków */
-  font-weight: bold; /* Pogrubienie tekstu */
-}
-
-/* Ukrywa overflow wewnątrz komórek */
-#yearlyCalendar td {
-  overflow: hidden; /* Ukrywa nadmiar treści nie mieszczącej się w komórce */
-}
-
-#yearlyCalendar {
-    font-size: 12px; /* Zmniejszenie domyślnej wielkości tekstu */
-}
-
-#yearlyCalendar input[type="number"] {
-    width: 40px; /* Zmniejszenie szerokości pola */
-    height: 25px; /* Zmniejszenie wysokości pola */
-    padding: 2px 5px; /* Zmniejszenie paddingu */
-    font-size: 12px; /* Dopasowanie wielkości tekstu */
-    margin: 0; /* Usunięcie marginesów */
-}
-
-#availabilityManager .section {
-    overflow-x: scroll; /* Dodanie poziomego scrolla dla obszaru zarządzania dostępnością */
-    max-height: 500px; /* Maksymalna wysokość sekcji */
-    overflow-y: auto; /* Dodanie pionowego scrolla w razie potrzeby */
-}
-
-/* Zmniejszenie marginesu dla wszystkich sekcji w panelu administracyjnym */
-.admin-panel .section {
-    margin-bottom: 10px; /* Zmniejszenie marginesu na dole sekcji */
-}
-
-.calendar-input {
-    width: 10px !important; /* Wymuszenie szerokości pola */
-    height: 25px !important; /* Wymuszenie wysokości pola */
-    padding: 2px 5px !important; /* Wymuszenie paddingu */
-    font-size: 12px !important; /* Wymuszenie wielkości tekstu */
-    margin: 0 !important; /* Wymuszenie braku marginesów */
-}
-
-/* Dodanie stylów, które wymuszą scrollowanie */
-.calendar-scrollable {
-    overflow-x: auto !important; /* Wymuszenie poziomego scrollowania */
-    max-height: 500px !important; /* Wymuszenie maksymalnej wysokości */
-    overflow-y: auto !important; /* Wymuszenie pionowego scrollowania */
-}
-
-/* Wymuszenie mniejszego marginesu dla wszystkich sekcji */
-.admin-panel .reduced-margin-section {
-    margin-bottom: 10px !important; /* Wymuszenie zmniejszenia marginesu na dole sekcji */
-}
-
-#yearlyCalendar input[type="text"] {
-            width: 10px; /* Możesz dostosować szerokość według potrzeb */
-        }
 
 /* Dropdown container */
         .dropdown {
