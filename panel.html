@@ -1548,6 +1548,15 @@ auth.onAuthStateChanged((user) => {
             const dateCell = row.insertCell();
             dateCell.textContent = currentDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
 
+            for (let hour = 6; hour <= 21; hour++) {
+                const hourCell = row.insertCell();
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.min = '0';
+                input.className = 'calendar-input'; // Dodajemy klasę do stylowania
+                hourCell.appendChild(input);
+            }
+
             const saveCell = row.insertCell();
             const saveButton = document.createElement('button');
             saveButton.textContent = 'Zapisz';
@@ -1563,15 +1572,6 @@ auth.onAuthStateChanged((user) => {
                 });
             });
             saveCell.appendChild(saveButton);
-
-            for (let hour = 6; hour <= 21; hour++) {
-                const hourCell = row.insertCell();
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.min = '0';
-                input.className = 'calendar-input'; // Dodajemy klasę do stylowania
-                hourCell.appendChild(input);
-            }
 
             currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
         }
