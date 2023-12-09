@@ -1537,7 +1537,6 @@ auth.onAuthStateChanged((user) => {
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
 
 
-    // Funkcja do tworzenia tabeli
     function createTable(tableId) {
         const calendarBody = document.getElementById(tableId).querySelector('tbody');
         const currentDate = new Date();
@@ -1549,6 +1548,15 @@ auth.onAuthStateChanged((user) => {
             const dateCell = row.insertCell();
             const dayOfWeek = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Dzień tygodnia
             dateCell.textContent = `${currentDate.toISOString().split('T')[0]} - ${dayOfWeek}`; // Format YYYY-MM-DD - Dzień tygodnia
+
+            for (let hour = 6; hour <= 21; hour++) {
+                const hourCell = row.insertCell();
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.min = '0';
+                input.className = 'calendar-input'; // Dodajemy klasę do stylowania
+                hourCell.appendChild(input);
+            }
 
             const saveCell = row.insertCell();
             const saveButton = document.createElement('button');
@@ -1566,18 +1574,6 @@ auth.onAuthStateChanged((user) => {
             });
             saveCell.appendChild(saveButton);
 
-            // Wstaw pusty komunikat między datą a godzinami
-            const emptyCell = row.insertCell();
-
-            for (let hour = 6; hour <= 21; hour++) {
-                const hourCell = row.insertCell();
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.min = '0';
-                input.className = 'calendar-input'; // Dodajemy klasę do stylowania
-                hourCell.appendChild(input);
-            }
-
             currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
         }
     }
@@ -1587,7 +1583,7 @@ auth.onAuthStateChanged((user) => {
 
     // Tworzenie tabeli dla Treningów Grupowych
     createTable('groupTrainingCalendar');
-</script>
+
 
 
 
