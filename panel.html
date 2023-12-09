@@ -1536,7 +1536,9 @@ auth.onAuthStateChanged((user) => {
 
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
 
- function createTable(tableId) {
+ <script>
+    // Funkcja do tworzenia tabeli
+    function createTable(tableId) {
         const calendarBody = document.getElementById(tableId).querySelector('tbody');
         const currentDate = new Date();
         const endDate = new Date();
@@ -1564,6 +1566,9 @@ auth.onAuthStateChanged((user) => {
             });
             saveCell.appendChild(saveButton);
 
+            // Wstaw pusty komunikat między datą a godzinami
+            const emptyCell = row.insertCell();
+
             for (let hour = 6; hour <= 21; hour++) {
                 const hourCell = row.insertCell();
                 const input = document.createElement('input');
@@ -1582,6 +1587,7 @@ auth.onAuthStateChanged((user) => {
 
     // Tworzenie tabeli dla Treningów Grupowych
     createTable('groupTrainingCalendar');
+</script>
 
 
 
