@@ -1611,6 +1611,17 @@ auth.onAuthStateChanged((user) => {
     createTrainingTable('groupTrainingCalendar', 'group');
 });
 
+async function sendToFirebase(data) {
+    try {
+        const collectionRef = collection(db, 'availability'); // Zmień na odpowiednią kolekcję w Firebase
+
+        await addDoc(collectionRef, data);
+
+        console.log('Dane zostały wysłane do Firebase');
+    } catch (error) {
+        console.error('Błąd podczas wysyłania danych do Firebase:', error);
+    }
+}
 
 
 
