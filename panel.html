@@ -949,7 +949,6 @@ input[type="submit"] {
             </tr>
         </thead>
         <tbody>
-            <!-- Pętla generująca wiersze dla każdego dnia i godziny -->
             <?php
             $rok = 2023; // Twój wybrany rok
             for ($miesiac = 1; $miesiac <= 12; $miesiac++) { // Pętla dla miesięcy
@@ -957,12 +956,11 @@ input[type="submit"] {
                     for ($godzina = 6; $godzina <= 20; $godzina++) { // Pętla dla godzin
                         ?>
                         <tr>
-                            <td><?php echo sprintf('%02d/%02d/%04d', $miesiac, $dzien, $rok); ?></td>
+                            <td rowspan="2"><?php echo sprintf('%02d/%02d/%04d', $miesiac, $dzien, $rok); ?></td>
                             <td>Personalny</td>
                             <td><input type="text" class="availabilityInput" data-date="<?php echo sprintf('%02d/%02d/%04d', $miesiac, $dzien, $rok); ?>" data-type="personal" data-hour="<?php echo sprintf('%02d:00', $godzina); ?>"></td>
                         </tr>
                         <tr>
-                            <td><?php echo sprintf('%02d/%02d/%04d', $miesiac, $dzien, $rok); ?></td>
                             <td>Grupowy</td>
                             <td><input type="text" class="availabilityInput" data-date="<?php echo sprintf('%02d/%02d/%04d', $miesiac, $dzien, $rok); ?>" data-type="group" data-hour="<?php echo sprintf('%02d:00', $godzina); ?>"></td>
                         </tr>
