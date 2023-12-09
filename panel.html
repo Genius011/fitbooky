@@ -1678,6 +1678,20 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+// Przykładowy kod sprawdzający, czy użytkownik jest zalogowany i ustawiający jego imię w przycisku dropdown
+var userNameSpan = document.getElementById("userName");
+
+// Sprawdź, czy użytkownik jest zalogowany
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user) {
+    // Użytkownik jest zalogowany
+    var displayName = user.displayName;
+    if (displayName) {
+      // Ustaw imię użytkownika na przycisku dropdown
+      userNameSpan.textContent = "Cześć " + displayName;
+    }
+  }
+});
 
 
 
