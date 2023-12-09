@@ -1511,27 +1511,30 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let day = 1; day <= new Date(startYear, month + 1, 0).getDate(); day++) {
             const date = new Date(startYear, month, day);
             const row = calendarBody.insertRow();
+
+            // Dodaj pole do daty
             const dateCell = row.insertCell();
             dateCell.textContent = date.toISOString().split('T')[0]; // Format YYYY-MM-DD
-            
-            // Dodaj pole do treningów personalnych
+
+            // Dodaj pole do treningu personalnego
             const personalCell = row.insertCell();
             const personalInput = document.createElement('input');
             personalInput.type = 'number';
             personalInput.min = '0';
-            personalInput.className = 'calendar-input personal-input'; // Dodajemy klasę do stylowania
+            personalInput.className = 'calendar-input'; // Dodajemy klasę do stylowania
             personalCell.appendChild(personalInput);
 
-            // Dodaj pole do treningów grupowych
+            // Dodaj pole do treningu grupowego
             const groupCell = row.insertCell();
             const groupInput = document.createElement('input');
             groupInput.type = 'number';
             groupInput.min = '0';
-            groupInput.className = 'calendar-input group-input'; // Dodajemy klasę do stylowania
+            groupInput.className = 'calendar-input'; // Dodajemy klasę do stylowania
             groupCell.appendChild(groupInput);
         }
     }
 });
+
 
 
 // DROPDOWN MENU!!
