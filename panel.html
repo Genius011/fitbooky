@@ -10,7 +10,66 @@
     <link rel="stylesheet" href="css/all.min.css">
 
 	<style>
-	
+	/* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Custom dropdown button */
+        .custom-dropbtn {
+            background-color: #6e8efb;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Dropdown content (hidden by default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            top: 100%;
+            left: 0;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            color: #333;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #6e8efb;
+            color: white;
+        }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Background for dropdown content */
+        .dropdown-content-background {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent background */
+            z-index: 0;
+        }
+
 	/* Stylizacja tabeli kalendarza */
 #yearlyCalendar {
   width: 100%; /* Zajmuje całą dostępną szerokość */
@@ -835,65 +894,6 @@ input[type="submit"] {
 
 
 
-/* Dropdown container */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        /* Custom dropdown button */
-        .custom-dropbtn {
-            background-color: #6e8efb;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-        }
-
-        /* Dropdown content (hidden by default) */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            top: 100%;
-            left: 0;
-        }
-
-        /* Links inside the dropdown */
-        .dropdown-content a {
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            color: #333;
-        }
-
-        /* Change color of dropdown links on hover */
-        .dropdown-content a:hover {
-            background-color: #6e8efb;
-            color: white;
-        }
-
-        /* Show the dropdown menu on hover */
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        /* Background for dropdown content */
-        .dropdown-content-background {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent background */
-            z-index: 0;
-        }
 
 
     </style>
