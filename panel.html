@@ -1499,7 +1499,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+document.addEventListener("DOMContentLoaded", function () {
+    // Get the dropdown button and content
+    var dropdown = document.querySelector(".dropdown");
+    var dropdownContent = document.querySelector(".dropdown-content");
 
+    // Get the links inside the dropdown content
+    var links = dropdownContent.getElementsByTagName("a");
+
+    // Function to toggle the dropdown content
+    function toggleDropdown() {
+        dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+    }
+
+    // Event listener to toggle the dropdown when the button is clicked
+    dropdown.addEventListener("click", toggleDropdown);
+
+    // Event listener to close the dropdown when a link is clicked
+    for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener("click", toggleDropdown);
+    }
+
+    // Example: Set the username dynamically (you can replace this with your logic)
+    var userName = "John Doe"; // Replace with your username logic
+    document.getElementById("userName").textContent = userName;
+
+    // Example: Show the "Panel Trenera" link based on login status (you can replace this with your logic)
+    var isLoggedIn = true; // Replace with your login status logic
+    if (isLoggedIn) {
+        document.getElementById("trainerPanelLink").style.display = "block";
+    }
+});
 
 
 		
