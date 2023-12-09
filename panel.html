@@ -1612,22 +1612,39 @@ auth.onAuthStateChanged((user) => {
     createTrainingTable('groupTrainingCalendar', 'group');
 });
 
-async function sendToFirebase(date, time, availability) {
-    try {
-        const collectionRef = collection(db, 'availability');
+async function sendToFirebase(date, time, availability, trainerId, trainingType) {
+  const availabilityRef = doc(db, 'availability', trainerId); // Zakładamy, że dane są przechowywane w kolekcji "availability" pod docuemntem z ID trenera
 
-        // Dodaj nowy dokument z danymi dostępności
-        await addDoc(collectionRef, {
-            date: date,
-            time: time,
-            availability: availability
-        });
+  try {
+    // Sprawdzamy, czy istnieje dokument dla danego trenera
+    const docSnap = await getDoc(availabilityRef);
 
-        console.log('Dane zostały wysłane do Firebase');
-    } catch (error) {
-        console.error('Błąd podczas wysyłania danych do Firebase:', error);
+    if (docSnap.exists()) {
+      // Dokument istnieje, więc aktualizujemy dane
+      await updateDoc(availabilityRef, {
+        [`${date}.${time}`]: {
+          availability,
+          trainingType // Dodajemy typ treningu
+        }
+      });
+    } else {
+      // Dokument nie istnieje, więc tworzymy nowy dokument z danymi
+      await setDoc(availabilityRef, {
+        [date]: {
+          [time]: {
+            availability,
+            trainingType // Dodajemy typ treningu
+          }
+        }
+      });
     }
+
+    console.log('Dane zostały zaktualizowane w bazie Firebase.');
+  } catch (error) {
+    console.error('Błąd podczas aktualizacji danych w bazie Firebase:', error);
+  }
 }
+
 
 
 
