@@ -1557,10 +1557,10 @@ auth.onAuthStateChanged((user) => {
                 hourCell.appendChild(input);
             }
 
-            const saveCell = row.insertCell();
-            const saveButton = document.createElement('button');
-            saveButton.textContent = 'Zapisz';
-            saveButton.addEventListener('click', function () {
+            const copyCell = row.insertCell();
+            const copyButton = document.createElement('button');
+            copyButton.textContent = 'Kopiuj';
+            copyButton.addEventListener('click', function () {
                 // Pobierz wprowadzoną liczbę z pierwszego inputa w danym rzędzie
                 const firstInput = row.querySelector('input.calendar-input');
                 const number = parseInt(firstInput.value, 10);
@@ -1571,7 +1571,12 @@ auth.onAuthStateChanged((user) => {
                     hourInput.value = number;
                 });
             });
-            saveCell.appendChild(saveButton);
+            copyCell.appendChild(copyButton);
+
+            const sendCell = row.insertCell();
+            const sendButton = document.createElement('button');
+            sendButton.textContent = 'Wyślij';
+            sendCell.appendChild(sendButton);
 
             currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
         }
