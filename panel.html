@@ -997,26 +997,7 @@ console.log("onAuthStateChanged called");
   setupWeekNavigation();
 });
 
- onAuthStateChanged(auth, (user) => {
-        if (user) {
-            fetchAndDisplayUserData(user.uid);
 
-            // Pobierz imię użytkownika z dokumentu w bazie danych Firebase
-            const userDocRef = doc(db, 'users', user.uid);
-            getDoc(userDocRef).then((userDocSnap) => {
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-					// Check if the user is a trainer and show or hide the 'Panel Trenera' link
-                const trainerPanelLink = document.getElementById('trainerPanelLink');
-                trainerPanelLink.style.display = userData.isTrainer ? 'block' : 'none';
-                    const userNameButton = document.getElementById('userName');
-                    if (userNameButton) {
-                        userNameButton.textContent = `Cześć ${userData.firstName || ''}`;
-                    }
-                }
-            }).catch((error) => {
-                console.error('Error fetching user data:', error);
-            });
 
 function updateDatesForWeek(current) {
   let currentDay = new Date(current.setDate(current.getDate() - current.getDay() + 1));
