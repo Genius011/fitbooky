@@ -904,7 +904,7 @@ input[type="submit"] {
     <button class="custom-dropbtn"><span id="userName">John Doe</span>▼</button>
     <div class="dropdown-content">
         <a href="index.html">Kalendarz</a>
-        <a id="trainerPanelLink" href="/panel.html" style="display: none;">Panel Trenera</a>
+        <a href="profile.html">Profil</a>
         <a href="#" id="logout">Wyloguj</a>
     </div>
 </div>
@@ -944,23 +944,15 @@ input[type="submit"] {
         <thead>
             <tr>
                 <th>Data</th>
-                <!-- Pętla tworząca nagłówki dla każdej godziny -->
-                <th>6:00</th>
-                <th>7:00</th>
-                <th>8:00</th>
-                <th>9:00</th>
-                <th>10:00</th>
-                <th>11:00</th>
-                <th>12:00</th>
-                <th>13:00</th>
-                <th>14:00</th>
-                <th>15:00</th>
-                <th>16:00</th>
-                <th>17:00</th>
-                <th>18:00</th>
-                <th>19:00</th>
-                <th>20:00</th>
-                <th>21:00</th>
+                <th style="width: 50px;">Personalne 6:00</th>
+                <th style="width: 50px;">Personalne 7:00</th>
+                <!-- Dodaj tutaj kolumny dla treningów grupowych -->
+                <th style="width: 50px;">Grupowe 6:00</th>
+                <th style="width: 50px;">Grupowe 7:00</th>
+                <!-- Kontynuuj dodawanie kolumn dla treningów grupowych dla innych godzin -->
+                <!-- ... -->
+                <th style="width: 50px;">Personalne 21:00</th>
+                <th style="width: 50px;">Grupowe 21:00</th>
             </tr>
         </thead>
         <tbody>
