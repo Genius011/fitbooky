@@ -1537,7 +1537,7 @@ auth.onAuthStateChanged((user) => {
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
 
 
-     function createTable(tableId) {
+      function createTable(tableId) {
         const calendarBody = document.getElementById(tableId).querySelector('tbody');
         const currentDate = new Date();
         const endDate = new Date();
@@ -1561,11 +1561,11 @@ auth.onAuthStateChanged((user) => {
             const saveButton = document.createElement('button');
             saveButton.textContent = 'Zapisz';
             saveButton.addEventListener('click', function () {
-                // Pobierz wprowadzoną liczbę
-                const input = row.querySelector('input[type="number"]');
-                const number = parseInt(input.value, 10);
+                // Pobierz wprowadzoną liczbę z pierwszego inputa w danym rzędzie
+                const firstInput = row.querySelector('input.calendar-input');
+                const number = parseInt(firstInput.value, 10);
 
-                // Zapisz tę liczbę we wszystkich godzinach danego dnia
+                // Zapisz tę liczbę we wszystkich inputach danego rzędu
                 const hourInputs = row.querySelectorAll('input.calendar-input');
                 hourInputs.forEach(function (hourInput) {
                     hourInput.value = number;
@@ -1582,7 +1582,6 @@ auth.onAuthStateChanged((user) => {
 
     // Tworzenie tabeli dla Treningów Grupowych
     createTable('groupTrainingCalendar');
-
 
 
 
