@@ -940,11 +940,40 @@ input[type="submit"] {
 </div>
 
 <section id="availabilityManager" class="section" style="display: none;">
-    <table id="yearlyCalendar">
+    <h2>Treningi Personalne</h2>
+    <table id="personalTrainingCalendar"> <!-- Unikalny identyfikator dla tabeli personalnych -->
         <thead>
             <tr>
                 <th>Data</th>
-                <th>Kopiuj</th>
+                <!-- Pętla tworząca nagłówki dla każdej godziny -->
+                <th>6:00</th>
+                <th>7:00</th>
+                <th>8:00</th>
+                <th>9:00</th>
+                <th>10:00</th>
+                <th>11:00</th>
+                <th>12:00</th>
+                <th>13:00</th>
+                <th>14:00</th>
+                <th>15:00</th>
+                <th>16:00</th>
+                <th>17:00</th>
+                <th>18:00</th>
+                <th>19:00</th>
+                <th>20:00</th>
+                <th>21:00</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Wiersze zostaną wypełnione przez skrypt JavaScript -->
+        </tbody>
+    </table>
+    
+    <h2>Treningi Grupowe</h2>
+    <table id="groupTrainingCalendar"> <!-- Unikalny identyfikator dla tabeli grupowych -->
+        <thead>
+            <tr>
+                <th>Data</th>
                 <!-- Pętla tworząca nagłówki dla każdej godziny -->
                 <th>6:00</th>
                 <th>7:00</th>
@@ -1507,45 +1536,50 @@ auth.onAuthStateChanged((user) => {
 
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
 
-document.addEventListener('DOMContentLoaded', function() {
-    const calendarBody = document.getElementById('yearlyCalendar').querySelector('tbody');
-    const currentDate = new Date();
-    const endDate = new Date();
-    endDate.setDate(currentDate.getDate() + 30); // Ustaw datę końcową na 30 dni od bieżącej daty
+function createTable(tableId) {
+        const calendarBody = document.getElementById(tableId).querySelector('tbody');
+        const startYear = new Date().getFullYear();
+        for (let month = 0; month < 12; month++) {
+            for (let day = 1; day <= new Date(startYear, month + 1, 0).getDate(); day++) {
+                const date = new Date(startYear, month, day);
+                const row = calendarBody.insertRow();
+                const dateCell = row.insertCell();
+                const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' }); // Dzień tygodnia
+                dateCell.textContent = `${date.toISOString().split('T')[0]} - ${dayOfWeek}`; // Format YYYY-MM-DD - Dzień tygodnia
 
-    while (currentDate <= endDate) {
-        const row = calendarBody.insertRow();
-        const dateCell = row.insertCell();
-        dateCell.textContent = currentDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
+                const saveCell = row.insertCell();
+                const saveButton = document.createElement('button');
+                saveButton.textContent = 'Zapisz';
+                saveButton.addEventListener('click', function () {
+                    // Pobierz wprowadzoną liczbę
+                    const input = row.querySelector('input[type="number"]');
+                    const number = parseInt(input.value, 10);
 
-        const saveCell = row.insertCell();
-        const saveButton = document.createElement('button');
-        saveButton.textContent = 'Zapisz';
-        saveButton.addEventListener('click', function() {
-            // Pobierz wprowadzoną liczbę
-            const input = row.querySelector('input[type="number"]');
-            const number = parseInt(input.value, 10);
-            
-            // Zapisz tę liczbę we wszystkich godzinach danego dnia
-            const hourInputs = row.querySelectorAll('input.calendar-input');
-            hourInputs.forEach(function(hourInput) {
-                hourInput.value = number;
-            });
-        });
-        saveCell.appendChild(saveButton);
+                    // Zapisz tę liczbę we wszystkich godzinach danego dnia
+                    const hourInputs = row.querySelectorAll('input.calendar-input');
+                    hourInputs.forEach(function (hourInput) {
+                        hourInput.value = number;
+                    });
+                });
+                saveCell.appendChild(saveButton);
 
-        for (let hour = 6; hour <= 21; hour++) {
-            const hourCell = row.insertCell();
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.min = '0';
-            input.className = 'calendar-input'; // Dodajemy klasę do stylowania
-            hourCell.appendChild(input);
+                for (let hour = 6; hour <= 21; hour++) {
+                    const hourCell = row.insertCell();
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.min = '0';
+                    input.className = 'calendar-input'; // Dodajemy klasę do stylowania
+                    hourCell.appendChild(input);
+                }
+            }
         }
-
-        currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
     }
-});
+
+    // Tworzenie tabeli dla Treningów Personalnych
+    createTable('personalTrainingCalendar');
+
+    // Tworzenie tabeli dla Treningów Grupowych
+    createTable('groupTrainingCalendar');
 
 
 
