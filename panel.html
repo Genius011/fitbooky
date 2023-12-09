@@ -885,7 +885,7 @@ input[type="submit"] {
 <body>
 
 <div class="dropdown">
-    <button class="custom-dropbtn"><span id="userName"></span><span class="arrow-down">&#9660;</span></button>
+    <button class="custom-dropbtn"><span id="userName">John Doe</span>▼</button>
     <div class="dropdown-content">
         <a href="index.html">Kalendarz</a>
         <a id="trainerPanelLink" href="/panel.html" style="display: none;">Panel Trenera</a>
@@ -1521,10 +1521,6 @@ document.addEventListener("DOMContentLoaded", function () {
     for (var i = 0; i < links.length; i++) {
         links[i].addEventListener("click", toggleDropdown);
     }
-
-    // Example: Set the username dynamically (you can replace this with your logic)
-    var userName = "John Doe"; // Replace with your username logic
-    document.getElementById("userName").textContent = userName;
 
     // Example: Show the "Panel Trenera" link based on login status (you can replace this with your logic)
     var isLoggedIn = true; // Replace with your login status logic
