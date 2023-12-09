@@ -944,7 +944,8 @@ input[type="submit"] {
         <thead>
             <tr>
                 <th>Data</th>
-				 <!-- Pętla tworząca nagłówki dla każdej godziny -->
+                <th>Zapisz Dzień</th>
+                <!-- Pętla tworząca nagłówki dla każdej godziny -->
                 <th>6:00</th>
                 <th>7:00</th>
                 <th>8:00</th>
@@ -968,6 +969,7 @@ input[type="submit"] {
         </tbody>
     </table>
 </section>
+
 
 
     
@@ -1516,6 +1518,22 @@ document.addEventListener('DOMContentLoaded', function() {
         const dateCell = row.insertCell();
         dateCell.textContent = currentDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
 
+        const saveCell = row.insertCell();
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Zapisz';
+        saveButton.addEventListener('click', function() {
+            // Pobierz wprowadzoną liczbę
+            const input = row.querySelector('input[type="number"]');
+            const number = parseInt(input.value, 10);
+            
+            // Zapisz tę liczbę we wszystkich godzinach danego dnia
+            const hourInputs = row.querySelectorAll('input.calendar-input');
+            hourInputs.forEach(function(hourInput) {
+                hourInput.value = number;
+            });
+        });
+        saveCell.appendChild(saveButton);
+
         for (let hour = 6; hour <= 21; hour++) {
             const hourCell = row.insertCell();
             const input = document.createElement('input');
@@ -1528,6 +1546,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
     }
 });
+
 
 
 // DROPDOWN MENU!!
