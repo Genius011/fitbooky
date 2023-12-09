@@ -1516,8 +1516,7 @@ document.addEventListener('DOMContentLoaded', function() {
     while (currentDate <= endDate) {
         const row = calendarBody.insertRow();
         const dateCell = row.insertCell();
-        const dayOfWeekText = getDayOfWeekText(currentDate.getDay());
-        dateCell.textContent = currentDate.toISOString().split('T')[0] + ' (' + dayOfWeekText + ')'; // Dodaj dzień tygodnia do daty
+        dateCell.textContent = currentDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
 
         const saveCell = row.insertCell();
         const saveButton = document.createElement('button');
@@ -1547,12 +1546,6 @@ document.addEventListener('DOMContentLoaded', function() {
         currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
     }
 });
-
-function getDayOfWeekText(dayOfWeek) {
-    const daysOfWeek = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'];
-    return daysOfWeek[dayOfWeek];
-}
-
 
 
 
