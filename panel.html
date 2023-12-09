@@ -998,31 +998,6 @@ console.log("onAuthStateChanged called");
 });
 
 
-function updateDatesForWeek(current) {
-  let currentDay = new Date(current.setDate(current.getDate() - current.getDay() + 1));
-  for (let i = 0; i < 7; i++) {
-    const dateSpan = document.querySelectorAll('.date-display')[i];
-    dateSpan.textContent = formatDate(currentDay);
-    currentDay.setDate(currentDay.getDate() + 1);
-  }
-}
-
-function formatDate(date) {
-  return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
-}
-
-function setupWeekNavigation() {
-  document.getElementById('prevWeek').addEventListener('click', function() {
-    let current = new Date(document.querySelectorAll('.date-display')[0].textContent);
-    updateDatesForWeek(new Date(current.setDate(current.getDate() - 7)));
-  });
-
-  document.getElementById('nextWeek').addEventListener('click', function() {
-    let current = new Date(document.querySelectorAll('.date-display')[6].textContent);
-    updateDatesForWeek(new Date(current.setDate(current.getDate() + 1)));
-  });
-}
-
 
 async function displayFutureBookings() {
   console.log("displayFutureBookings called"); // Sprawdź, czy funkcja jest wywoływana
@@ -1441,21 +1416,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-onAuthStateChanged(auth, user => {
-  if (user) {
-    // Użytkownik jest zalogowany, zaktualizuj tekst przycisku
-    const dropdownButton = document.getElementById('dropdownButton');
-    dropdownButton.textContent = `Cześć ${user.displayName || 'użytkowniku'}`;
-    
-    // Inne czynności, które chcesz wykonać po zalogowaniu użytkownika...
-  } else {
-    // Użytkownik jest wylogowany, możesz zresetować tekst przycisku
-    const dropdownButton = document.getElementById('dropdownButton');
-    dropdownButton.textContent = 'Zaloguj się';
-    
-    // Inne czynności, które chcesz wykonać po wylogowaniu użytkownika...
-  }
-});
+
 
 		
     </script>
