@@ -1535,93 +1535,102 @@ auth.onAuthStateChanged((user) => {
 });
 
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
+document.addEventListener('DOMContentLoaded', function () {
+  // Funkcja do tworzenia tabeli treningów
+  function createTrainingTable(tableId, trainingType) {
+    const calendarBody = document.getElementById(tableId).querySelector('tbody');
+    const currentDate = new Date();
+    const endDate = new Date();
+    endDate.setDate(currentDate.getDate() + 30); // Ustaw datę końcową na 30 dni od bieżącej daty
 
+    while (currentDate <= endDate) {
+      const row = calendarBody.insertRow();
+      const dateCell = row.insertCell();
+      dateCell.textContent = currentDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
 
-      document.addEventListener('DOMContentLoaded', function() {
-    // Funkcja do tworzenia tabeli treningów
-    function createTrainingTable(tableId, trainingType) {
-        const calendarBody = document.getElementById(tableId).querySelector('tbody');
-        const currentDate = new Date();
-        const endDate = new Date();
-        endDate.setDate(currentDate.getDate() + 30); // Ustaw datę końcową na 30 dni od bieżącej daty
+      for (let hour = 6; hour <= 21; hour++) {
+        const hourCell = row.insertCell();
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = '0';
+        input.className = 'calendar-input'; // Dodajemy klasę do stylowania
+        hourCell.appendChild(input);
+      }
 
-        while (currentDate <= endDate) {
-            const row = calendarBody.insertRow();
-            const dateCell = row.insertCell();
-            dateCell.textContent = currentDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
+      const copyCell = row.insertCell();
+      const copyButton = document.createElement('button');
+      copyButton.textContent = 'Kopiuj';
+      copyButton.addEventListener('click', function () {
+        // Pobierz wprowadzoną liczbę z pierwszego inputa w danym rzędzie
+        const firstInput = row.querySelector('input.calendar-input');
+        const number = parseInt(firstInput.value, 10);
 
-            for (let hour = 6; hour <= 21; hour++) {
-                const hourCell = row.insertCell();
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.min = '0';
-                input.className = 'calendar-input'; // Dodajemy klasę do stylowania
-                hourCell.appendChild(input);
-            }
+        // Zapisz tę liczbę we wszystkich inputach danego rzędu
+        const hourInputs = row.querySelectorAll('input.calendar-input');
+        hourInputs.forEach(function (hourInput) {
+          hourInput.value = number;
+        });
+      });
+      copyCell.appendChild(copyButton);
 
-            const copyCell = row.insertCell();
-            const copyButton = document.createElement('button');
-            copyButton.textContent = 'Kopiuj';
-            copyButton.addEventListener('click', function () {
-                // Pobierz wprowadzoną liczbę z pierwszego inputa w danym rzędzie
-                const firstInput = row.querySelector('input.calendar-input');
-                const number = parseInt(firstInput.value, 10);
+      const sendCell = row.insertCell();
+      const sendButton = document.createElement('button');
+      sendButton.textContent = 'Wyślij';
+      sendCell.appendChild(sendButton); // Przenieśliśmy przycisk na górę, aby móc zmieniać jego stan
 
-                // Zapisz tę liczbę we wszystkich inputach danego rzędu
-                const hourInputs = row.querySelectorAll('input.calendar-input');
-                hourInputs.forEach(function (hourInput) {
-                    hourInput.value = number;
-                });
-            });
-            copyCell.appendChild(copyButton);
+      currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
 
-            const sendCell = row.insertCell();
-            const sendButton = document.createElement('button');
-            sendButton.textContent = 'Wyślij';
-            sendButton.addEventListener('click', function () {
-                // Pobierz datę z komórki daty
-                const date = dateCell.textContent;
-                // Pobierz ilość miejsc z komórek godzin
-                const hours = [];
-                row.querySelectorAll('input.calendar-input').forEach(function (hourInput) {
-                    hours.push(parseInt(hourInput.value, 10));
-                });
+      // Dodajemy obsługę kliknięcia do przycisku Wyślij
+      sendButton.addEventListener('click', async function () {
+        // Pobierz datę z komórki daty
+        const date = dateCell.textContent;
+        // Pobierz ilość miejsc z komórek godzin
+        const hours = [];
+        row.querySelectorAll('input.calendar-input').forEach(function (hourInput) {
+          hours.push(parseInt(hourInput.value, 10));
+        });
 
-                // Przygotuj dane do wysłania do Firebase
-                const dataToSend = {
-                    date: date,
-                    trainerId: loggedInUserId,
-                    trainingType: trainingType,
-                    availability: hours
-                };
+        // Przygotuj dane do wysłania do Firebase
+        const dataToSend = {
+          date: date,
+          trainerId: loggedInUserId,
+          trainingType: trainingType,
+          availability: hours
+        };
 
-                // Tutaj możesz wysłać dane do Firebase
-                sendToFirebase(dataToSend);
-            });
-            sendCell.appendChild(sendButton);
+        // Wyłącz przycisk Wyślij, aby uniknąć wielokrotnego wysłania
+        sendButton.disabled = true;
+        sendButton.textContent = 'Wysyłanie...';
 
-            currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
-        }
+        // Tutaj możesz wysłać dane do Firebase
+        await sendToFirebase(dataToSend);
+
+        // Po udanym wysłaniu przywróć przycisk do stanu początkowego
+        sendButton.textContent = 'OK';
+        sendButton.disabled = true; // Możesz ustawić disabled na false, jeśli chcesz umożliwić ponowne wysłanie
+      });
     }
+  }
 
-    // Tworzenie tabeli dla Treningów Personalnych
-    createTrainingTable('personalTrainingCalendar', 'personal');
+  // Tworzenie tabeli dla Treningów Personalnych
+  createTrainingTable('personalTrainingCalendar', 'personal');
 
-    // Tworzenie tabeli dla Treningów Grupowych
-    createTrainingTable('groupTrainingCalendar', 'group');
+  // Tworzenie tabeli dla Treningów Grupowych
+  createTrainingTable('groupTrainingCalendar', 'group');
 });
 
 async function sendToFirebase(data) {
-    try {
-        const collectionRef = collection(db, 'availability'); // Zmień na odpowiednią kolekcję w Firebase
+  try {
+    const collectionRef = collection(db, 'availability'); // Zmień na odpowiednią kolekcję w Firebase
 
-        await addDoc(collectionRef, data);
+    await addDoc(collectionRef, data);
 
-        console.log('Dane zostały wysłane do Firebase');
-    } catch (error) {
-        console.error('Błąd podczas wysyłania danych do Firebase:', error);
-    }
+    console.log('Dane zostały wysłane do Firebase');
+  } catch (error) {
+    console.error('Błąd podczas wysyłania danych do Firebase:', error);
+  }
 }
+
 
 
 
