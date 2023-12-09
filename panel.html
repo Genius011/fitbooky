@@ -1670,6 +1670,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+// ZAPISANE LICZBY DOSTEPNOSCI NA EKRANIE
+
+// Przykład odczytu danych tylko dla zalogowanego trenera
+async function readDataForLoggedInTrainer() {
+  try {
+    const user = auth.currentUser; // Pobierz zalogowanego użytkownika Firebase
+
+    if (user) {
+      const trainerId = user.email; // Załóżmy, że trener ma identyfikator jako email
+
+      // Odczytaj dane z Firebase tylko dla zalogowanego trenera
+      const querySnapshot = await getDocs(collection(db, 'availability'));
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.trainerId === trainerId) {
+          // Tutaj możesz wyświetlić dane trenera
+          console.log('Data for trainer:', data);
+        }
+      });
+    } else {
+      console.log('Użytkownik nie jest zalogowany.');
+    }
+  } catch (error) {
+    console.error('Błąd podczas odczytu danych:', error);
+  }
+}
+
+// Wywołaj funkcję do odczytu danych dla zalogowanego trenera
+readDataForLoggedInTrainer();
+
 
 		
     </script>
