@@ -1535,7 +1535,6 @@ auth.onAuthStateChanged((user) => {
 });
 
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
-// ZARZĄDZENIA DOSTĘPNOŚCIĄ
 document.addEventListener('DOMContentLoaded', function () {
   // Funkcja do tworzenia tabeli treningów
   function createTrainingTable(tableId, trainingType) {
@@ -1604,24 +1603,16 @@ document.addEventListener('DOMContentLoaded', function () {
           availability: hours
         };
 
-        // Wyłącz przycisk Wyślij podczas wysyłania, aby uniknąć wielokrotnego wysłania
-        sendButton.disabled = true;
-        sendButton.textContent = 'Wysyłanie...';
-
         try {
           // Tutaj możesz wysłać dane do Firebase
           await sendToFirebase(dataToSend);
 
-          // Po udanym wysłaniu przywróć przycisk do stanu początkowego
-          sendButton.style.display = 'none';
+          // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
           okText.style.display = 'inline';
-          // Ponownie aktywuj przycisk Wyślij
-          sendButton.disabled = false;
         } catch (error) {
           console.error('Błąd podczas wysyłania danych do Firebase:', error);
-          // Jeśli wystąpił błąd, przywróć przycisk Wyślij do stanu początkowego
-          sendButton.disabled = false;
-          sendButton.textContent = 'Wyślij';
+          // Jeśli wystąpił błąd, ukryj tekst "OK"
+          okText.style.display = 'none';
         }
       });
       
@@ -1648,8 +1639,6 @@ async function sendToFirebase(data) {
     throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendToFirebase
   }
 }
-
-
 
 
 // DROPDOWN MENU!!
