@@ -944,8 +944,7 @@ input[type="submit"] {
         <thead>
             <tr>
                 <th>Data</th>
-                <th>Typ</th>
-                <!-- Pętla tworząca nagłówki dla każdej godziny -->
+				 <!-- Pętla tworząca nagłówki dla każdej godziny -->
                 <th>6:00</th>
                 <th>7:00</th>
                 <th>8:00</th>
@@ -965,34 +964,10 @@ input[type="submit"] {
             </tr>
         </thead>
         <tbody>
-            <?php
-            $rok = 2023; // Twój wybrany rok
-            for ($miesiac = 1; $miesiac <= 12; $miesiac++) { // Pętla dla miesięcy
-                for ($dzien = 1; $dzien <= 31; $dzien++) { // Pętla dla dni
-                    ?>
-                    <tr>
-                        <td rowspan="2"><?php echo sprintf('%02d/%02d/%04d', $miesiac, $dzien, $rok); ?></td>
-                        <td rowspan="2" style="display: flex; flex-direction: row;">
-                            <div style="flex: 1;">Personalny</div>
-                            <div style="flex: 1;">Grupowy</div>
-                        </td>
-                        <?php
-                        for ($godzina = 6; $godzina <= 21; $godzina++) { // Pętla dla godzin
-                            ?>
-                            <td><input type="text" class="availabilityInput" data-date="<?php echo sprintf('%02d/%02d/%04d', $miesiac, $dzien, $rok); ?>" data-type="personal" data-hour="<?php echo sprintf('%02d:00', $godzina); ?>"></td>
-                            <td><input type="text" class="availabilityInput" data-date="<?php echo sprintf('%02d/%02d/%04d', $miesiac, $dzien, $rok); ?>" data-type="group" data-hour="<?php echo sprintf('%02d:00', $godzina); ?>"></td>
-                            <?php
-                        }
-                        ?>
-                    </tr>
-                    <?php
-                }
-            }
-            ?>
+            <!-- Wiersze zostaną wypełnione przez skrypt JavaScript -->
         </tbody>
     </table>
 </section>
-
 
 
     
@@ -1529,7 +1504,6 @@ auth.onAuthStateChanged((user) => {
 });
 
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
-
 document.addEventListener('DOMContentLoaded', function() {
     const calendarBody = document.getElementById('yearlyCalendar').querySelector('tbody');
     const startYear = new Date().getFullYear();
@@ -1540,17 +1514,25 @@ document.addEventListener('DOMContentLoaded', function() {
             const dateCell = row.insertCell();
             dateCell.textContent = date.toISOString().split('T')[0]; // Format YYYY-MM-DD
             
-            for (let hour = 6; hour <= 21; hour++) {
-                const hourCell = row.insertCell();
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.min = '0';
-                input.className = 'calendar-input'; // Dodajemy klasę do stylowania
-                hourCell.appendChild(input);
-            }
+            // Dodaj pole do treningów personalnych
+            const personalCell = row.insertCell();
+            const personalInput = document.createElement('input');
+            personalInput.type = 'number';
+            personalInput.min = '0';
+            personalInput.className = 'calendar-input personal-input'; // Dodajemy klasę do stylowania
+            personalCell.appendChild(personalInput);
+
+            // Dodaj pole do treningów grupowych
+            const groupCell = row.insertCell();
+            const groupInput = document.createElement('input');
+            groupInput.type = 'number';
+            groupInput.min = '0';
+            groupInput.className = 'calendar-input group-input'; // Dodajemy klasę do stylowania
+            groupCell.appendChild(groupInput);
         }
     }
 });
+
 
 // DROPDOWN MENU!!
 document.addEventListener("DOMContentLoaded", function () {
