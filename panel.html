@@ -993,12 +993,7 @@ console.log("onAuthStateChanged called");
 });
 
   
-  updateDatesForWeek(new Date());
-  setupWeekNavigation();
-});
-
-
-
+ 
 async function displayFutureBookings() {
   console.log("displayFutureBookings called"); // Sprawdź, czy funkcja jest wywoływana
   console.log("Logged in User ID (inside displayFutureBookings):", loggedInUserId); // Sprawdź wartość loggedInUserId
@@ -1140,16 +1135,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   
  
-  // Aktualizacja dat na stronie zgodnie z aktualnym tygodniem
-  updateDatesForWeek(new Date());
   
-  // Ustawienie nawigacji tygodniowej
-  setupWeekNavigation();
-  
-  // Reszta kodu, która może być potrzebna do innych funkcji na stronie...
-});
-
-
 function viewProfile(userId) {
   const modal = document.getElementById('profileModal');
   const profileDetails = document.getElementById('profileDetails');
