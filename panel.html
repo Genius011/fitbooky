@@ -1537,7 +1537,7 @@ auth.onAuthStateChanged((user) => {
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
 
 
-    function createTable(tableId) {
+     function createTable(tableId) {
         const calendarBody = document.getElementById(tableId).querySelector('tbody');
         const currentDate = new Date();
         const endDate = new Date();
@@ -1546,17 +1546,7 @@ auth.onAuthStateChanged((user) => {
         while (currentDate <= endDate) {
             const row = calendarBody.insertRow();
             const dateCell = row.insertCell();
-            const dayOfWeek = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Dzień tygodnia
-            dateCell.textContent = `${currentDate.toISOString().split('T')[0]} - ${dayOfWeek}`; // Format YYYY-MM-DD - Dzień tygodnia
-
-            for (let hour = 6; hour <= 21; hour++) {
-                const hourCell = row.insertCell();
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.min = '0';
-                input.className = 'calendar-input'; // Dodajemy klasę do stylowania
-                hourCell.appendChild(input);
-            }
+            dateCell.textContent = currentDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
 
             const saveCell = row.insertCell();
             const saveButton = document.createElement('button');
@@ -1573,6 +1563,15 @@ auth.onAuthStateChanged((user) => {
                 });
             });
             saveCell.appendChild(saveButton);
+
+            for (let hour = 6; hour <= 21; hour++) {
+                const hourCell = row.insertCell();
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.min = '0';
+                input.className = 'calendar-input'; // Dodajemy klasę do stylowania
+                hourCell.appendChild(input);
+            }
 
             currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
         }
