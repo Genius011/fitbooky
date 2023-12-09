@@ -944,19 +944,22 @@ input[type="submit"] {
         <thead>
             <tr>
                 <th>Data</th>
-                <th style="width: 50px;">Personalne 6:00</th>
-                <th style="width: 50px;">Personalne 7:00</th>
-                <!-- Dodaj tutaj kolumny dla treningów grupowych -->
-                <th style="width: 50px;">Grupowe 6:00</th>
-                <th style="width: 50px;">Grupowe 7:00</th>
-                <!-- Kontynuuj dodawanie kolumn dla treningów grupowych dla innych godzin -->
-                <!-- ... -->
-                <th style="width: 50px;">Personalne 21:00</th>
-                <th style="width: 50px;">Grupowe 21:00</th>
+                <th>Typ</th>
+                <th>Godzina</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Wiersze zostaną wypełnione przez skrypt JavaScript -->
+            <!-- Pierwszy wiersz dla treningów personalnych -->
+            <tr>
+                <td rowspan="2">01/01/2023</td>
+                <td>Personalny</td>
+                <td><input type="text" class="availabilityInput" data-date="01/01/2023" data-type="personal" data-hour="6:00"></td>
+            </tr>
+            <tr>
+                <td>Grupowy</td>
+                <td><input type="text" class="availabilityInput" data-date="01/01/2023" data-type="group" data-hour="6:00"></td>
+            </tr>
+            <!-- Kontynuuj dla pozostałych dat i godzin -->
         </tbody>
     </table>
 </section>
