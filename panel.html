@@ -1537,7 +1537,9 @@ auth.onAuthStateChanged((user) => {
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
 
 
-      function createTable(tableId) {
+      document.addEventListener('DOMContentLoaded', function() {
+    // Funkcja do tworzenia tabeli treningów
+    function createTrainingTable(tableId, trainingType) {
         const calendarBody = document.getElementById(tableId).querySelector('tbody');
         const currentDate = new Date();
         const endDate = new Date();
@@ -1576,6 +1578,26 @@ auth.onAuthStateChanged((user) => {
             const sendCell = row.insertCell();
             const sendButton = document.createElement('button');
             sendButton.textContent = 'Wyślij';
+            sendButton.addEventListener('click', function () {
+                // Pobierz datę z komórki daty
+                const date = dateCell.textContent;
+                // Pobierz ilość miejsc z komórek godzin
+                const hours = [];
+                row.querySelectorAll('input.calendar-input').forEach(function (hourInput) {
+                    hours.push(parseInt(hourInput.value, 10));
+                });
+
+                // Przygotuj dane do wysłania do Firebase
+                const dataToSend = {
+                    date: date,
+                    trainerId: loggedInUserId,
+                    trainingType: trainingType,
+                    availability: hours
+                };
+
+                // Tutaj możesz wysłać dane do Firebase
+                sendToFirebase(dataToSend);
+            });
             sendCell.appendChild(sendButton);
 
             currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
@@ -1583,10 +1605,12 @@ auth.onAuthStateChanged((user) => {
     }
 
     // Tworzenie tabeli dla Treningów Personalnych
-    createTable('personalTrainingCalendar');
+    createTrainingTable('personalTrainingCalendar', 'personal');
 
     // Tworzenie tabeli dla Treningów Grupowych
-    createTable('groupTrainingCalendar');
+    createTrainingTable('groupTrainingCalendar', 'group');
+});
+
 
 
 
