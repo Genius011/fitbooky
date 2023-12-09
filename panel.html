@@ -1535,6 +1535,7 @@ auth.onAuthStateChanged((user) => {
 });
 
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
+// ZARZĄDZENIA DOSTĘPNOŚCIĄ
 document.addEventListener('DOMContentLoaded', function () {
   // Funkcja do tworzenia tabeli treningów
   function createTrainingTable(tableId, trainingType) {
@@ -1576,9 +1577,14 @@ document.addEventListener('DOMContentLoaded', function () {
       const sendCell = row.insertCell();
       const sendButton = document.createElement('button');
       sendButton.textContent = 'Wyślij';
-      sendCell.appendChild(sendButton); // Przenieśliśmy przycisk na górę, aby móc zmieniać jego stan
+      sendCell.appendChild(sendButton);
 
-      currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
+      // Przycisk OK po wysłaniu
+      const okText = document.createElement('span');
+      okText.textContent = 'OK';
+      okText.style.color = 'green';
+      okText.style.display = 'none'; // Ukrywamy na początku
+      sendCell.appendChild(okText);
 
       // Dodajemy obsługę kliknięcia do przycisku Wyślij
       sendButton.addEventListener('click', async function () {
@@ -1598,17 +1604,28 @@ document.addEventListener('DOMContentLoaded', function () {
           availability: hours
         };
 
-        // Wyłącz przycisk Wyślij, aby uniknąć wielokrotnego wysłania
+        // Wyłącz przycisk Wyślij podczas wysyłania, aby uniknąć wielokrotnego wysłania
         sendButton.disabled = true;
         sendButton.textContent = 'Wysyłanie...';
 
-        // Tutaj możesz wysłać dane do Firebase
-        await sendToFirebase(dataToSend);
+        try {
+          // Tutaj możesz wysłać dane do Firebase
+          await sendToFirebase(dataToSend);
 
-        // Po udanym wysłaniu przywróć przycisk do stanu początkowego
-        sendButton.textContent = 'OK';
-        sendButton.disabled = true; // Możesz ustawić disabled na false, jeśli chcesz umożliwić ponowne wysłanie
+          // Po udanym wysłaniu przywróć przycisk do stanu początkowego
+          sendButton.style.display = 'none';
+          okText.style.display = 'inline';
+          // Ponownie aktywuj przycisk Wyślij
+          sendButton.disabled = false;
+        } catch (error) {
+          console.error('Błąd podczas wysyłania danych do Firebase:', error);
+          // Jeśli wystąpił błąd, przywróć przycisk Wyślij do stanu początkowego
+          sendButton.disabled = false;
+          sendButton.textContent = 'Wyślij';
+        }
       });
+      
+      currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
     }
   }
 
@@ -1628,6 +1645,7 @@ async function sendToFirebase(data) {
     console.log('Dane zostały wysłane do Firebase');
   } catch (error) {
     console.error('Błąd podczas wysyłania danych do Firebase:', error);
+    throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendToFirebase
   }
 }
 
