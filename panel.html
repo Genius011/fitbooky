@@ -1675,8 +1675,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var user = firebase.auth().currentUser;
     if (user) {
         var userNameElement = document.getElementById("userName");
-        userNameElement.textContent = "Cześć " + user.displayName;
-    }
+if (userNameElement) {
+    userNameElement.textContent = "Cześć " + user.displayName;
+}
+
 
    // Add a click event listener to the "Wyloguj" link
 var logoutLink = document.getElementById("logout");
