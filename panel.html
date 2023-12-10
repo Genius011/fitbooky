@@ -1673,9 +1673,12 @@ document.addEventListener("DOMContentLoaded", function () {
     var user = auth.currentUser;
 
     if (user) {
-        var userNameElement = document.getElementById("userName");
-        userNameElement.textContent = "Cześć " + user.displayName;
-    }
+    console.log("User is logged in:", user);
+    userNameElement.textContent = "Cześć " + user.displayName;
+} else {
+    console.log("User is not logged in.");
+}
+
 
    // Add a click event listener to the "Wyloguj" link
 var logoutLink = document.getElementById("logout");
