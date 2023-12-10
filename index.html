@@ -16,7 +16,10 @@
     align-items: center;
     height: 100vh;
 }
-
+.training-type.selected, .time-slot.selected, .book-btn {
+    background: grey;
+    color: white;
+}
 .time-slot.selected {
 	background: #6e8efb;
 	}
@@ -68,14 +71,16 @@
     padding: 20px;
 }
 
-.day, .book-btn {
+.day, .time-slot, .book-btn {
     background-color: #ffffff;
     padding: 15px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     transition: box-shadow 0.3s, transform 0.3s;
 }
-
+.calendar-container .time-slot.selected {
+    background-color: #6e8efb 
+}
 .day:hover, .time-slot:hover {
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     transform: translateY(-2px);
@@ -102,10 +107,7 @@
     flex-basis: 45%; /* Adjust width accordingly */
 }
 
-.training-type.selected, .time-slot.selected, .book-btn {
-    background: #6e8efb;
-    color: white;
-}
+
 
 .current-day {
     background-color: #6e8efb;
