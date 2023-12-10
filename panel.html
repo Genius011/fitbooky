@@ -1065,7 +1065,7 @@ input[type="submit"] {
       
 </div>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
 import { 
@@ -1712,7 +1712,6 @@ logoutLink.addEventListener("click", function () {
 
 
     // Funkcja obsługująca przycisk "Rezerwacje dziś"
-	src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js">
    document.getElementById("todayBookingsButton").addEventListener("click", function () {
     const doc = new jsPDF();
     
