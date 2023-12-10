@@ -1079,7 +1079,7 @@ import {
   addDoc
 } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
-
+import jsPDF from 'jspdf';
 
 
 
@@ -1101,6 +1101,7 @@ const auth = getAuth(app);
 let loggedInUserId = null;
 
 document.addEventListener('DOMContentLoaded', function() {
+
 
  // Funkcja obsługująca przycisk "Rezerwacje dziś"
   document.getElementById('todayBookingsButton').addEventListener('click', function () {
