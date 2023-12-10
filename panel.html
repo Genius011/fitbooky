@@ -1681,6 +1681,7 @@ document.addEventListener("DOMContentLoaded", function () {
    // Add a click event listener to the "Wyloguj" link
 var logoutLink = document.getElementById("logout");
 logoutLink.addEventListener("click", function () {
+    console.log("Logout button clicked"); // Add this line
     firebase.auth().signOut().then(function () {
         // Successful logout
         window.location.href = "index.html"; // Redirect to the home page
@@ -1689,6 +1690,7 @@ logoutLink.addEventListener("click", function () {
         console.error("Error during logout: " + error.message);
     });
 });
+
 });
 
 
