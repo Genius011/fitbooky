@@ -905,7 +905,7 @@ input[type="submit"] {
     <div class="dropdown-content">
         <a href="index.html">Kalendarz</a>
         <a id="trainerPanelLink" href="/panel.html" style="display: none;">Panel Trenera</a>
-        <a href="#" id="logout">Wyloguj</a>
+        <a href="#" id="logoutButon">Wyloguj</a>
     </div>
 </div>
 
@@ -1093,10 +1093,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+// Get the logout button element
 const logoutButton = document.getElementById('logoutButton');
 
-
-     // Logout function
+// Check if the logout button element exists
+if (logoutButton) {
+  // Add an event listener to the logout button
   logoutButton.addEventListener('click', () => {
     signOut(auth).then(() => {
       // Sign-out successful, redirect to login page
@@ -1106,6 +1108,10 @@ const logoutButton = document.getElementById('logoutButton');
       console.error('Logout failed', error);
     });
   });
+} else {
+  console.error('Logout button not found in the DOM.');
+}
+
   
      
     document.addEventListener('DOMContentLoaded', function() {
