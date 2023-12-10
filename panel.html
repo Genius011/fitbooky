@@ -1678,16 +1678,15 @@ document.addEventListener("DOMContentLoaded", function () {
         userNameElement.textContent = "Cześć " + user.displayName;
     }
 
-    // Add a click event listener to the "Wyloguj" link
-    var logoutLink = document.getElementById("logout");
-    logoutLink.addEventListener("click", function () {
-        // Use Firebase Authentication to log the user out
-        firebase.auth().signOut().then(function () {
-            // Redirect or perform any necessary actions after logout
-            window.location.href = "index.html"; // Redirect to the home page
-        }).catch(function (error) {
-            console.error("Error during logout: " + error.message);
-        });
+   // Add a click event listener to the "Wyloguj" link
+var logoutLink = document.getElementById("logout");
+logoutLink.addEventListener("click", function () {
+    firebase.auth().signOut().then(function () {
+        // Successful logout
+        window.location.href = "index.html"; // Redirect to the home page
+    }).catch(function (error) {
+        // Handle errors
+        console.error("Error during logout: " + error.message);
     });
 });
 
