@@ -1113,9 +1113,7 @@ console.log("onAuthStateChanged called");
 });
 
   
-  updateDatesForWeek(new Date());
-  setupWeekNavigation();
-});
+
 
 function updateDatesForWeek(current) {
   let currentDay = new Date(current.setDate(current.getDate() - current.getDay() + 1));
