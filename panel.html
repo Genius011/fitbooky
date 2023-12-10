@@ -1102,7 +1102,65 @@ let loggedInUserId = null;
 
 document.addEventListener('DOMContentLoaded', function() {
 
+ // Funkcja obsługująca przycisk "Rezerwacje dziś"
+  document.getElementById('todayBookingsButton').addEventListener('click', function () {
+    const doc = new jsPDF();
 
+    // Nagłówek PDF
+    doc.setFontSize(18);
+    doc.text('Lista rezerwacji na dziś', 10, 10);
+
+    // Tabela z danymi
+    const tableData = [];
+    const tableHeaders = ['Imię', 'Nazwisko', 'Godzina', 'Data', 'Rodzaj treningu', 'Cena'];
+
+    // Pobierz dane z tabeli todayBookings
+    const todayBookingsTable = document.getElementById('todayBookingsTable');
+    const rows = todayBookingsTable.querySelectorAll('tbody tr');
+
+    rows.forEach((row) => {
+      const rowData = [];
+      row.querySelectorAll('td').forEach((cell) => {
+        rowData.push(cell.textContent);
+      });
+      tableData.push(rowData);
+    });
+
+    doc.autoTable({
+      head: [tableHeaders],
+      body: tableData,
+      startY: 20,
+    });
+
+    // Zapisz lub wyświetl PDF
+    doc.save('raport_rezerwacji_dzis.pdf');
+  });
+
+
+    // Funkcja obsługująca przycisk "Rezerwacje ten miesiąc"
+    document.getElementById("thisMonthBookingsButton").addEventListener("click", function () {
+        // Tutaj dodaj kod obsługujący wyświetlanie rezerwacji na ten miesiąc
+    });
+
+    // Funkcja obsługująca przycisk "Rezerwacje pracowników"
+    document.getElementById("employeeBookingsButton").addEventListener("click", function () {
+        // Tutaj dodaj kod obsługujący wyświetlanie rezerwacji pracowników
+    });
+
+    // Funkcja obsługująca przycisk "Raport kasowy"
+    document.getElementById("cashReportButton").addEventListener("click", function () {
+        // Tutaj dodaj kod obsługujący generowanie raportu kasowego
+    });
+
+    // Funkcja obsługująca przycisk "Raport miesięczny"
+    document.getElementById("monthlyReportButton").addEventListener("click", function () {
+        // Tutaj dodaj kod obsługujący generowanie raportu miesięcznego
+    });
+
+    // Funkcja obsługująca przycisk "Statystyki"
+    document.getElementById("statisticsButton").addEventListener("click", function () {
+        // Tutaj dodaj kod obsługujący wyświetlanie statystyk
+    });
 
 onAuthStateChanged(auth, user => {
 console.log("onAuthStateChanged called");
@@ -1711,65 +1769,7 @@ logoutLink.addEventListener("click", function () {
 });
 
 
-    // Funkcja obsługująca przycisk "Rezerwacje dziś"
-  document.getElementById('todayBookingsButton').addEventListener('click', function () {
-    const doc = new jsPDF();
-
-    // Nagłówek PDF
-    doc.setFontSize(18);
-    doc.text('Lista rezerwacji na dziś', 10, 10);
-
-    // Tabela z danymi
-    const tableData = [];
-    const tableHeaders = ['Imię', 'Nazwisko', 'Godzina', 'Data', 'Rodzaj treningu', 'Cena'];
-
-    // Pobierz dane z tabeli todayBookings
-    const todayBookingsTable = document.getElementById('todayBookingsTable');
-    const rows = todayBookingsTable.querySelectorAll('tbody tr');
-
-    rows.forEach((row) => {
-      const rowData = [];
-      row.querySelectorAll('td').forEach((cell) => {
-        rowData.push(cell.textContent);
-      });
-      tableData.push(rowData);
-    });
-
-    doc.autoTable({
-      head: [tableHeaders],
-      body: tableData,
-      startY: 20,
-    });
-
-    // Zapisz lub wyświetl PDF
-    doc.save('raport_rezerwacji_dzis.pdf');
-  });
-
-
-    // Funkcja obsługująca przycisk "Rezerwacje ten miesiąc"
-    document.getElementById("thisMonthBookingsButton").addEventListener("click", function () {
-        // Tutaj dodaj kod obsługujący wyświetlanie rezerwacji na ten miesiąc
-    });
-
-    // Funkcja obsługująca przycisk "Rezerwacje pracowników"
-    document.getElementById("employeeBookingsButton").addEventListener("click", function () {
-        // Tutaj dodaj kod obsługujący wyświetlanie rezerwacji pracowników
-    });
-
-    // Funkcja obsługująca przycisk "Raport kasowy"
-    document.getElementById("cashReportButton").addEventListener("click", function () {
-        // Tutaj dodaj kod obsługujący generowanie raportu kasowego
-    });
-
-    // Funkcja obsługująca przycisk "Raport miesięczny"
-    document.getElementById("monthlyReportButton").addEventListener("click", function () {
-        // Tutaj dodaj kod obsługujący generowanie raportu miesięcznego
-    });
-
-    // Funkcja obsługująca przycisk "Statystyki"
-    document.getElementById("statisticsButton").addEventListener("click", function () {
-        // Tutaj dodaj kod obsługujący wyświetlanie statystyk
-    });
+   
 </script>
 
 		
