@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <!-- Local Font Awesome -->
     <link rel="stylesheet" href="css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
 	<style>
 	/* Dropdown container */
@@ -1710,7 +1711,7 @@ logoutLink.addEventListener("click", function () {
 
 });
 
-document.addEventListener('DOMContentLoaded', function () {
+import jsPDF from 'jspdf';
 
     // Funkcja obsługująca przycisk "Rezerwacje dziś"
   document.getElementById('todayBookingsButton').addEventListener('click', function () {
