@@ -1110,12 +1110,7 @@ console.log("onAuthStateChanged called");
     // Przekierowanie na stronę logowania
     window.location.href = 'login.html';
   }
-});
 
-  
-  updateDatesForWeek(new Date());
-  setupWeekNavigation();
-});
 
 function updateDatesForWeek(current) {
   let currentDay = new Date(current.setDate(current.getDate() - current.getDay() + 1));
