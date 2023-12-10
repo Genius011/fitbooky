@@ -1693,37 +1693,41 @@ document.addEventListener("DOMContentLoaded", function () {
         links[i].addEventListener("click", toggleDropdown);
     }
 
-    // Example: Show the "Panel Trenera" link based on login status (you can replace this with your logic)
-    var isLoggedIn = true; // Replace with your login status logic
-    if (isLoggedIn) {
-        document.getElementById("trainerPanelLink").style.display = "block";
-    }
+    // Check if a user is logged in
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            console.log("User is logged in:", user);
 
-    // Get the user's display name from Firebase Authentication
-    var user = auth.currentUser;
+            // Update the content of the userNameElement
+            var userNameElement = document.getElementById("userName");
+            userNameElement.textContent = "Cześć " + user.displayName;
 
-    if (user) {
-    console.log("User is logged in:", user);
-    userNameElement.textContent = "Cześć " + user.displayName;
-} else {
-    console.log("User is not logged in.");
-}
+            // Make the button visible
+            var customDropbtn = document.querySelector(".custom-dropbtn");
+            customDropbtn.style.display = "block";
 
+            // Show the "Panel Trenera" link based on your logic
+            var trainerPanelLink = document.getElementById("trainerPanelLink");
+            trainerPanelLink.style.display = "block"; // Adjust this based on your logic
+        } else {
+            console.log("User is not logged in.");
+        }
+    });
 
-   // Add a click event listener to the "Wyloguj" link
-var logoutLink = document.getElementById("logout");
-logoutLink.addEventListener("click", function () {
-    console.log("Logout button clicked"); // Add this line
-    firebase.auth().signOut().then(function () {
-        // Successful logout
-        window.location.href = "index.html"; // Redirect to the home page
-    }).catch(function (error) {
-        // Handle errors
-        console.error("Error during logout: " + error.message);
+    // Add a click event listener to the "Wyloguj" link
+    var logoutLink = document.getElementById("logout");
+    logoutLink.addEventListener("click", function () {
+        console.log("Logout button clicked");
+        firebase.auth().signOut().then(function () {
+            // Successful logout
+            window.location.href = "index.html"; // Redirect to the home page
+        }).catch(function (error) {
+            // Handle errors
+            console.error("Error during logout: " + error.message);
+        });
     });
 });
 
-});
 
  // Funkcja obsługująca przycisk "Rezerwacje dziś"
   document.getElementById('todayBookingsButton').addEventListener('click', function () {
