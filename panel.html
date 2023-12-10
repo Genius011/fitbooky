@@ -1712,38 +1712,38 @@ logoutLink.addEventListener("click", function () {
 
 
     // Funkcja obsługująca przycisk "Rezerwacje dziś"
-   document.getElementById("todayBookingsButton").addEventListener("click", function () {
+  document.getElementById('todayBookingsButton').addEventListener('click', function () {
     const doc = new jsPDF();
-    
+
     // Nagłówek PDF
     doc.setFontSize(18);
-    doc.text("Lista rezerwacji na dziś", 10, 10);
-    
+    doc.text('Lista rezerwacji na dziś', 10, 10);
+
     // Tabela z danymi
     const tableData = [];
-    const tableHeaders = ["Imię", "Nazwisko", "Godzina", "Data", "Rodzaj treningu", "Cena"];
-    
+    const tableHeaders = ['Imię', 'Nazwisko', 'Godzina', 'Data', 'Rodzaj treningu', 'Cena'];
+
     // Pobierz dane z tabeli todayBookings
-    const todayBookingsTable = document.getElementById("todayBookingsTable");
-    const rows = todayBookingsTable.querySelectorAll("tbody tr");
-    
+    const todayBookingsTable = document.getElementById('todayBookingsTable');
+    const rows = todayBookingsTable.querySelectorAll('tbody tr');
+
     rows.forEach((row) => {
-        const rowData = [];
-        row.querySelectorAll("td").forEach((cell) => {
-            rowData.push(cell.textContent);
-        });
-        tableData.push(rowData);
+      const rowData = [];
+      row.querySelectorAll('td').forEach((cell) => {
+        rowData.push(cell.textContent);
+      });
+      tableData.push(rowData);
     });
-    
+
     doc.autoTable({
-        head: [tableHeaders],
-        body: tableData,
-        startY: 20,
+      head: [tableHeaders],
+      body: tableData,
+      startY: 20,
     });
-    
+
     // Zapisz lub wyświetl PDF
-    doc.save("raport_rezerwacji_dzis.pdf");
-});
+    doc.save('raport_rezerwacji_dzis.pdf');
+  });
 
 
     // Funkcja obsługująca przycisk "Rezerwacje ten miesiąc"
