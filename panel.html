@@ -8,9 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <!-- Local Font Awesome -->
     <link rel="stylesheet" href="css/all.min.css">
-<script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js"></script>
+
 	<style>
 	/* Dropdown container */
         .dropdown {
@@ -911,6 +909,7 @@ input[type="submit"] {
     </div>
 </div>
 
+
  
 <div id="adminPanel" class="admin-panel">
     <h1>Panel Trenera</h1>
@@ -1678,7 +1677,20 @@ document.addEventListener("DOMContentLoaded", function () {
         var userNameElement = document.getElementById("userName");
         userNameElement.textContent = "Cześć " + user.displayName;
     }
+
+    // Add a click event listener to the "Wyloguj" link
+    var logoutLink = document.getElementById("logout");
+    logoutLink.addEventListener("click", function () {
+        // Use Firebase Authentication to log the user out
+        firebase.auth().signOut().then(function () {
+            // Redirect or perform any necessary actions after logout
+            window.location.href = "index.html"; // Redirect to the home page
+        }).catch(function (error) {
+            console.error("Error during logout: " + error.message);
+        });
+    });
 });
+
 
 
 		
