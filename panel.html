@@ -1641,7 +1641,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         };
 
         try {
-          await sendToFirebase(dataToSend);
+          await sendToFirebase(dataToSend, tableId); // Przekazujemy tableId do funkcji sendToFirebase
           // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
           const okText = document.createElement('span');
           okText.textContent = 'OK';
@@ -1709,7 +1709,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
   // Funkcja do wysyłania danych do Firebase
-  async function sendToFirebase(data) {
+  async function sendToFirebase(data, tableId) {
     try {
       const collectionRef = collection(db, 'availability'); // Zmień na odpowiednią kolekcję w Firebase
       const q = query(
@@ -1737,7 +1737,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   }
 });
-
 
 
 
