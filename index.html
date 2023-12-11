@@ -380,6 +380,9 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 const db = getFirestore(app);
+const dateInputElement = document.getElementById('your-date-input-id');
+const selectedDate = dateInputElement.value;
+
 
      // Logout function
   logoutButton.addEventListener('click', () => {
