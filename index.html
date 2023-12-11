@@ -420,15 +420,18 @@
   document.addEventListener('DOMContentLoaded', function () {
     const auth = getAuth();
     let currentUserId = null;
+	let trainerId = null;
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         currentUserId = user.uid;
         const userRef = doc(getFirestore(), 'users', user.uid);
         try {
-          const docSnap = await getDoc(userRef);
+           const userRef = doc(getFirestore(), 'users', user.uid);
+			const docSnap = await getDoc(userRef);
           if (docSnap.exists()) {
             const userData = docSnap.data();
+			 trainerId = userData.trainerId;
             const trainerPanelLink = document.getElementById('trainerPanelLink');
             trainerPanelLink.style.display = userData.isTrainer ? 'block' : 'none';
             const logoutButtonText = document.getElementById('logoutButtonText');
@@ -634,7 +637,7 @@
       generateTimeSlots(popup.querySelector('.time-slots'), 6, 21, selectedDay);
     }
 
-    async function generateTimeSlots(container, startHour, endHour, selectedDay) {
+generateTimeSlots(container, startHour, endHour, selectedDay, trainerId);
       container.innerHTML = '';
       let adjustedMonth = selectedDay.getMonth() + 1;
       let formattedDate = `${selectedDay.getFullYear()}-${adjustedMonth.toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
