@@ -1641,12 +1641,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         };
 
         try {
-          await sendToFirebase(dataToSend, tableId); // Przekazujemy tableId do funkcji sendToFirebase
-          // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
-          const okText = document.createElement('span');
-          okText.textContent = 'OK';
-          okText.style.color = 'green';
-          sendButton.parentNode.appendChild(okText);
+          if (trainingType === 'personal') { // Dodaj warunek dotyczący typu treningu
+            await sendToFirebase(dataToSend);
+            // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
+            const okText = document.createElement('span');
+            okText.textContent = 'OK';
+            okText.style.color = 'green';
+            sendButton.parentNode.appendChild(okText);
+          }
         } catch (error) {
           console.error('Błąd podczas wysyłania danych do Firebase:', error);
         }
@@ -1709,14 +1711,13 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
   // Funkcja do wysyłania danych do Firebase
-  async function sendToFirebase(data, tableId) {
+  async function sendToFirebase(data) {
     try {
       const collectionRef = collection(db, 'availability'); // Zmień na odpowiednią kolekcję w Firebase
       const q = query(
         collectionRef,
         where('date', '==', data.date),
-        where('trainerId', '==', data.trainerId),
-        where('trainingType', '==', data.trainingType) // Dodaj warunek dotyczący typu treningu
+        where('trainerId', '==', data.trainerId)
       );
 
       const querySnapshot = await getDocs(q);
@@ -1737,6 +1738,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   }
 });
+
 
 
 
