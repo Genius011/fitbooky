@@ -363,7 +363,7 @@
   // Import the required Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
-  import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where, updateDoc, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+  import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where, updateDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
   // Your Firebase configuration
   const firebaseConfig = {
@@ -379,12 +379,6 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-  
-  // Dodaj funkcję konwersji godziny z formy tekstowej na numeryczną
-  function convertTimeToNumber(timeText) {
-    const [hour] = timeText.split(":");
-    return parseInt(hour, 10);
-  }
 
   // Logout function
   const logoutButton = document.getElementById('logout');
@@ -494,73 +488,70 @@
     }
 
     async function saveBooking(userId, date, trainingType, time, trainerId) {
-  if (!userId) {
-    alert('Nie jesteś zalogowany!');
-    return;
-  }
-
-  try {
-    // Pobranie dodatkowych informacji o użytkowniku
-    const userRef = doc(getFirestore(), 'users', userId);
-    const docSnap = await getDoc(userRef);
-
-    // Jeśli dokument użytkownika istnieje, użyj jego danych
-    if (docSnap.exists()) {
-      const userData = docSnap.data();
-
-      console.log("Próba zaktualizowania dostępności...");
-      
-      // Aktualizuj dostępność przed zapisaniem rezerwacji
-      const updatedAvailability = await updateAvailability(date, time, trainingType);
-      
-      console.log("Wynik aktualizacji dostępności:", updatedAvailability);
-      
-      if (!updatedAvailability) {
-        alert("Nie udało się zaktualizować dostępności. Spróbuj ponownie.");
+      if (!userId) {
+        alert('Nie jesteś zalogowany!');
         return;
       }
 
-      await addDoc(collection(db, "bookings"), {
-        userId: userId,
-        date: date,
-        trainingType: trainingType,
-        time: time,
-        email: userData.email,
-        firstName: userData.firstName,
-        trainerId: trainerId // Dodaj trainerId do dokumentu rezerwacji
-      });
-      alert("Rezerwacja została zapisana w Twoim profilu");
-    } else {
-      console.log("Nie znaleziono danych użytkownika.");
-    }
-  } catch (e) {
-    console.error("Błąd podczas zapisu: ", e);
-    alert("Wystąpił błąd podczas zapisu rezerwacji");
-  }
-}
+      try {
+        // Pobranie dodatkowych informacji o użytkowniku
+        const userRef = doc(getFirestore(), 'users', userId);
+        const docSnap = await getDoc(userRef);
 
+        // Jeśli dokument użytkownika istnieje, użyj jego danych
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+
+          console.log("Próba zaktualizowania dostępności...");
+
+          // Aktualizuj dostępność przed zapisaniem rezerwacji
+          const updatedAvailability = await updateAvailability(date, time, trainingType);
+
+          console.log("Wynik aktualizacji dostępności:", updatedAvailability);
+
+          if (!updatedAvailability) {
+            alert("Nie udało się zaktualizować dostępności. Spróbuj ponownie.");
+            return;
+          }
+
+          await addDoc(collection(db, "bookings"), {
+            userId: userId,
+            date: date,
+            trainingType: trainingType,
+            time: time,
+            email: userData.email,
+            firstName: userData.firstName,
+            trainerId: trainerId // Dodaj trainerId do dokumentu rezerwacji
+          });
+          alert("Rezerwacja została zapisana w Twoim profilu");
+        } else {
+          console.log("Nie znaleziono danych użytkownika.");
+        }
+      } catch (e) {
+        console.error("Błąd podczas zapisu: ", e);
+        alert("Wystąpił błąd podczas zapisu rezerwacji");
+      }
+    }
 
     async function updateAvailability(date, time, trainingType) {
-    try {
-      const availabilityRef = collection(db, "availability");
-      const timeNumber = convertTimeToNumber(time); // Konwersja godziny na liczbę
-      const querySnapshot = await getDocs(query(availabilityRef, where("date", "==", date), where("time", "==", timeNumber), where("trainingType", "==", trainingType)));
+      try {
+        const availabilityRef = collection(db, "availability");
+        const querySnapshot = await getDocs(query(availabilityRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
 
-      console.log("Query Snapshot:", querySnapshot);
+        console.log("Query Snapshot:", querySnapshot);
 
-      if (!querySnapshot.empty) {
-        const docRef = querySnapshot.docs[0].ref;
-        await updateDoc(docRef, { available: false }); // Aktualizuj dostępność na "false"
-        return true;
+        if (!querySnapshot.empty) {
+          const docRef = querySnapshot.docs[0].ref;
+          await updateDoc(docRef, { available: false }); // Aktualizuj dostępność na "false"
+          return true;
+        }
+
+        return false;
+      } catch (error) {
+        console.error("Błąd podczas aktualizacji dostępności:", error);
+        return false;
       }
-
-      return false;
-    } catch (error) {
-      console.error("Błąd podczas aktualizacji dostępności:", error);
-      return false;
     }
-  }
-
 
     async function openPopup(selectedDay) {
       const popup = document.createElement('div');
@@ -679,6 +670,26 @@
         slot.classList.remove('disabled');
         slot.onclick = function () {
           timeSlots.forEach(s => s.classList.remove('selected'));
+          slot.classList.add('selected');
+        };
+      });
+    }
+
+    function enableGroupTrainingSlots(popup, selectedDay) {
+      const timeSlots = popup.querySelectorAll('.time-slot');
+      timeSlots.forEach(slot => {
+        const slotTime = slot.textContent.trim();
+        const dayOfWeek = selectedDay.getDay();
+
+        slot.classList.add('disabled');
+        slot.onclick = null;
+
+        if ((dayOfWeek === 2 || dayOfWeek === 4) && slotTime === '19:00' ||
+          (dayOfWeek === 6 && slotTime === '10:00')) {
+          slot.classList.remove('disabled');
+          slot.onclick = function () {
+            timeSlots.forEach(s => s.classList.remove
+
           slot.classList.add('selected');
         };
       });
