@@ -1792,6 +1792,43 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("statisticsButton").addEventListener("click", function () {
         // Tutaj dodaj kod obsługujący wyświetlanie statystyk
     });
+	
+// WIDOK LICZB DOSTEPNOSCI
+
+async function fetchAvailabilityData() {
+  const availabilityRef = collection(db, 'availability'); // Assuming 'availability' is the collection name
+  const availabilityTable = document.getElementById('availabilityTable'); // Assuming you have an HTML table to display availability
+  const currentDate = new Date(); // Get the current date
+
+  try {
+    const availabilitySnapshot = await getDocs(availabilityRef);
+    const availabilityData = availabilitySnapshot.docs.map(doc => doc.data());
+
+    // Loop through the data and update the corresponding cells in the HTML table
+    for (const data of availabilityData) {
+      const date = new Date(data.date);
+      // Check if the date matches the current date
+      if (date.toDateString() === currentDate.toDateString()) {
+        const row = availabilityTable.insertRow();
+        const dateCell = row.insertCell(0);
+        dateCell.textContent = formatDate(date); // Format the date as needed
+
+        for (const hour of data.availability) {
+          const hourCell = row.insertCell();
+          hourCell.textContent = hour.toString(); // Display the availability value
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching availability data:', error);
+  }
+}
+
+// Call the fetchAvailabilityData function when the page loads
+document.addEventListener('DOMContentLoaded', function () {
+  fetchAvailabilityData();
+});
+
    	
     </script>
 
