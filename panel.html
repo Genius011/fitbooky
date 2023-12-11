@@ -1740,9 +1740,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         await addDoc(collectionRef, data);
       }
 
-      console.log('Dane zostały wysłane do Firebase');
+      console.log('Dane dla treningów personalnych zostały wysłane do Firebase');
     } catch (error) {
-      console.error('Błąd podczas wysyłania danych do Firebase:', error);
+      console.error('Błąd podczas wysyłania danych dla treningów personalnych do Firebase:', error);
       throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendToFirebase
     }
   }
