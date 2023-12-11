@@ -1590,7 +1590,11 @@ document.addEventListener('DOMContentLoaded', async function () {
       }
 
       rowHTML.push(`<td><button class="copy-button">Kopiuj</button></td>`);
-      rowHTML.push(`<td><button class="send-button">Wyślij</button></td>`);
+
+      // Dodaj przycisk "Wyślij" tylko dla treningów osobistych
+      if (trainingType === 'personal') {
+        rowHTML.push(`<td><button class="send-button">Wyślij</button></td>`);
+      }
 
       // Dodaj wiersz do tablicy HTML
       tableHTML.push(`<tr>${rowHTML.join('')}</tr>`);
@@ -1643,14 +1647,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         try {
           if (trainingType === 'personal' && tableId === 'personalTrainingCalendar') {
             await sendToFirebase(dataToSend);
-            // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
-            const okText = document.createElement('span');
-            okText.textContent = 'OK';
-            okText.style.color = 'green';
-            sendButton.parentNode.appendChild(okText);
-          }
-          if (trainingType === 'group' && tableId === 'groupTrainingCalendar') {
-            await sendGroupToFirebase(dataToSend);
             // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
             const okText = document.createElement('span');
             okText.textContent = 'OK';
@@ -1744,34 +1740,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     } catch (error) {
       console.error('Błąd podczas wysyłania danych dla treningów personalnych do Firebase:', error);
       throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendToFirebase
-    }
-  }
-
-  // Funkcja do wysyłania danych do Firebase dla treningów grupowych
-  async function sendGroupToFirebase(data) {
-    try {
-      const collectionRef = collection(db, 'groupAvailability'); // Zmień na odpowiednią kolekcję dla treningów grupowych w Firebase
-      const q = query(
-        collectionRef,
-        where('date', '==', data.date),
-        where('trainerId', '==', data.trainerId)
-      );
-
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
-        // Jeśli istnieją pasujące dokumenty, to nadpisz pierwszy z nich
-        const docToOverwrite = querySnapshot.docs[0];
-        await updateDoc(docToOverwrite.ref, data);
-      } else {
-        // Jeśli nie ma pasujących dokumentów, to utwórz nowy dokument
-        await addDoc(collectionRef, data);
-      }
-
-      console.log('Dane dla treningów grupowych zostały wysłane do Firebase');
-    } catch (error) {
-      console.error('Błąd podczas wysyłania danych dla treningów grupowych do Firebase:', error);
-      throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendGroupToFirebase
     }
   }
 });
