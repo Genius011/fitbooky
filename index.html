@@ -721,15 +721,6 @@ bookButton.addEventListener('click', async () => {
     today.setHours(0, 0, 0, 0); // Ustaw godzinę na początek dnia
     return date < today;
 }
-let selectedDate; // Deklaracja zmiennej
-
-document.addEventListener('DOMContentLoaded', (event) => {
-  // Teraz możemy bezpiecznie zainicjować zmienną, ponieważ element DOM będzie dostępny
-  selectedDate = document.getElementById('date-input').value;
-
-  // Teraz możesz użyć zmiennej selectedDate w dalszej części kodu
-  console.log(selectedDate);
-});
 
 import { runTransaction } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
@@ -781,6 +772,8 @@ document.getElementById('logout').addEventListener('click', () => {
   });
 });
 
+// Zakładając, że masz element interfejsu użytkownika, z którego pobierasz datę, na przykład input typu date.
+let selectedDate = document.getElementById('your-date-input-id').value; // Pobierz wartość daty
 
 // Teraz możesz użyć zmiennej selectedDate w swojej funkcji
 const timeSlot = '10:00'; // Przykładowy wybrany czas, powinieneś to dostosować
