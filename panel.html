@@ -1584,19 +1584,19 @@ document.addEventListener('DOMContentLoaded', async function () {
       dateCell.textContent = currentDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
 
       for (let hour = 6; hour <= 21; hour++) {
-        const hourCell = row.insertCell();
-        const input = document.createElement('input');
-        input.type = 'number';
-        input.min = '0';
-        input.className = 'calendar-input'; // Dodajemy klasę do stylowania
-        hourCell.appendChild(input);
+  const hourCell = row.insertCell();
+  const input = document.createElement('input');
+  input.type = 'number';
+  input.min = '0';
+  input.className = 'calendar-input'; // Dodajemy klasę do stylowania
+  hourCell.appendChild(input);
 
-        // Pobierz dane z bazy dla danego trenera, daty i godziny
-        const data = await fetchDataFromFirebase(currentDate.toISOString().split('T')[0], loggedInUserId, trainingType, hour);
+  // Pobierz dane z bazy dla danej daty, trenera, typu treningu i godziny
+  const data = await fetchDataFromFirebase(currentDate.toISOString().split('T')[0], loggedInUserId, trainingType, hour);
 
-        if (data) {
-          input.value = data.availability;
-        }
+  // Ustaw wartość inputa na dostępność z bazy danych lub 0, jeśli dane nie istnieją
+  input.value = data ? data.availability : 0;
+}
       }
 
       // ... reszta kodu
