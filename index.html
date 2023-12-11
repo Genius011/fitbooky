@@ -382,14 +382,20 @@
   
   async function updateAvailability(hour) {
   try {
-    const hourKey = hour - 6; // Zakładając, że 6:00 to 0, 7:00 to 1, itd.
+    console.log("Rozpoczynanie aktualizacji dostępności dla godziny:", hour);
+    const hourKey = hour - 6;
     const availabilityRef = doc(db, "availability", hourKey.toString());
     const docSnap = await getDoc(availabilityRef);
 
+    console.log("Odczytano dokument:", docSnap.exists());
+
     if (docSnap.exists()) {
       let currentAvailability = docSnap.data().number;
+      console.log("Aktualna dostępność:", currentAvailability);
+
       if (currentAvailability > 0) {
         await updateDoc(availabilityRef, { number: currentAvailability - 1 });
+        console.log("Zaktualizowano dostępność");
         return true;
       } else {
         console.log("Brak dostępnych miejsc na tę godzinę");
@@ -404,6 +410,7 @@
     return false;
   }
 }
+
 
 
   // Logout function
