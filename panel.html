@@ -1794,66 +1794,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Tutaj dodaj kod obsługujący wyświetlanie statystyk
     });
 	
-// WIDOK LICZB DOSTEPNOSCI
-
-// Funkcja do pobierania i aktualizacji stanu miejsc w tabelach
-async function updateAvailability() {
-  const personalTable = document.getElementById('personalTrainingCalendar').querySelector('tbody');
-  const groupTable = document.getElementById('groupTrainingCalendar').querySelector('tbody');
-
-  try {
-    // Pobierz dane z kolekcji 'availability' w Firebase
-    const availabilityRef = collection(db, 'availability');
-    const availabilitySnapshot = await getDocs(availabilityRef);
-
-    // Inicjalizuj puste tablice na dane dotyczące dostępności
-    const personalAvailability = [];
-    const groupAvailability = [];
-
-    // Iteruj przez dokumenty dostępności
-    availabilitySnapshot.forEach((doc) => {
-      const data = doc.data();
-      const date = data.date;
-      const availability = data.availability;
-
-      // Sprawdź, czy data należy do przyszłości
-      const currentDate = new Date();
-      const availabilityDate = new Date(date);
-      if (availabilityDate >= currentDate) {
-        if (data.trainingType === 'personal') {
-          personalAvailability.push({ date, availability });
-        } else if (data.trainingType === 'group') {
-          groupAvailability.push({ date, availability });
-        }
-      }
-    });
-
-    // Aktualizuj tabelę personalTrainingCalendar
-    personalTable.querySelectorAll('tr').forEach((row, index) => {
-      const availabilityData = personalAvailability[index];
-      if (availabilityData) {
-        row.querySelectorAll('input.calendar-input').forEach((input, hour) => {
-          input.value = availabilityData.availability[hour];
-        });
-      }
-    });
-
-    // Aktualizuj tabelę groupTrainingCalendar
-    groupTable.querySelectorAll('tr').forEach((row, index) => {
-      const availabilityData = groupAvailability[index];
-      if (availabilityData) {
-        row.querySelectorAll('input.calendar-input').forEach((input, hour) => {
-          input.value = availabilityData.availability[hour];
-        });
-      }
-    });
-  } catch (error) {
-    console.error('Błąd podczas pobierania dostępności:', error);
-  }
-}
-
-// Wywołaj funkcję updateAvailability, aby zaktualizować stan miejsc przy ładowaniu strony
-updateAvailability();
 
    	
     </script>
