@@ -644,7 +644,7 @@ generateTimeSlots(container, startHour, endHour, selectedDay, trainerId);
 
       const availabilityRef = collection(db, "availability");
       const q = query(availabilityRef, where("date", "==", formattedDate), where("trainingType", "==", "personal"));
-      const querySnapshot = await getDocs(q);
+      
 
       let availabilityForDay = null;
       querySnapshot.forEach((doc) => {
