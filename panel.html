@@ -1148,14 +1148,6 @@ console.log("onAuthStateChanged called");
   setupWeekNavigation();
 });
 
-function updateDatesForWeek(current) {
-  let currentDay = new Date(current.setDate(current.getDate() - current.getDay() + 1));
-  for (let i = 0; i < 7; i++) {
-    const dateSpan = document.querySelectorAll('.date-display')[i];
-    dateSpan.textContent = formatDate(currentDay);
-    currentDay.setDate(currentDay.getDate() + 1);
-  }
-}
 
 function formatDate(date) {
   return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
