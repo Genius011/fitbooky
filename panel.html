@@ -1570,9 +1570,9 @@ auth.onAuthStateChanged((user) => {
 });
 
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
-document.addEventListener('DOMContentLoaded', async function () {
+document.addEventListener('DOMContentLoaded', function () {
   // Funkcja do tworzenia tabeli treningów
-  async function createTrainingTable(tableId, trainingType) {
+  function createTrainingTable(tableId, trainingType) {
     const calendarBody = document.getElementById(tableId).querySelector('tbody');
     const currentDate = new Date();
     const endDate = new Date();
@@ -1590,62 +1590,68 @@ document.addEventListener('DOMContentLoaded', async function () {
         input.min = '0';
         input.className = 'calendar-input'; // Dodajemy klasę do stylowania
         hourCell.appendChild(input);
-
-        // Przycisk "Kopiuj"
-        const copyCell = row.insertCell();
-        const copyButton = document.createElement('button');
-        copyButton.textContent = 'Kopiuj';
-        copyCell.appendChild(copyButton);
-
-        copyButton.addEventListener('click', function () {
-          // Pobierz wprowadzoną liczbę z pierwszego inputa w danym rzędzie
-          const firstInput = row.querySelector('input.calendar-input');
-          const number = parseInt(firstInput.value, 10);
-
-          // Zapisz tę liczbę we wszystkich inputach danego rzędu
-          const hourInputs = row.querySelectorAll('input.calendar-input');
-          hourInputs.forEach(function (hourInput) {
-            hourInput.value = number;
-          });
-        });
-
-        // Przycisk "Wyślij"
-        const sendCell = row.insertCell();
-        const sendButton = document.createElement('button');
-        sendButton.textContent = 'Wyślij';
-        sendCell.appendChild(sendButton);
-
-        const okText = document.createElement('span');
-        okText.textContent = 'OK';
-        okText.style.color = 'green';
-        okText.style.display = 'none';
-        sendCell.appendChild(okText);
-
-        sendButton.addEventListener('click', async function () {
-          const date = dateCell.textContent;
-          const hours = [];
-          row.querySelectorAll('input.calendar-input').forEach(function (hourInput) {
-            hours.push(parseInt(hourInput.value, 10));
-          });
-
-          const dataToSend = {
-            date: date,
-            trainerId: loggedInUserId,
-            trainingType: trainingType,
-            availability: hours
-          };
-
-          try {
-            await sendToFirebase(dataToSend);
-            okText.style.display = 'inline';
-          } catch (error) {
-            console.error('Błąd podczas wysyłania danych do Firebase:', error);
-            okText.style.display = 'none';
-          }
-        });
       }
 
-      currentDate.setDate(currentDate.getDate() + 1);
+      const copyCell = row.insertCell();
+      const copyButton = document.createElement('button');
+      copyButton.textContent = 'Kopiuj';
+      copyButton.addEventListener('click', function () {
+        // Pobierz wprowadzoną liczbę z pierwszego inputa w danym rzędzie
+        const firstInput = row.querySelector('input.calendar-input');
+        const number = parseInt(firstInput.value, 10);
+
+        // Zapisz tę liczbę we wszystkich inputach danego rzędu
+        const hourInputs = row.querySelectorAll('input.calendar-input');
+        hourInputs.forEach(function (hourInput) {
+          hourInput.value = number;
+        });
+      });
+      copyCell.appendChild(copyButton);
+
+      const sendCell = row.insertCell();
+      const sendButton = document.createElement('button');
+      sendButton.textContent = 'Wyślij';
+      sendCell.appendChild(sendButton);
+
+      // Przycisk OK po wysłaniu
+      const okText = document.createElement('span');
+      okText.textContent = 'OK';
+      okText.style.color = 'green';
+      okText.style.display = 'none'; // Ukrywamy na początku
+      sendCell.appendChild(okText);
+
+      // Dodajemy obsługę kliknięcia do przycisku Wyślij
+      sendButton.addEventListener('click', async function () {
+        // Pobierz datę z komórki daty
+        const date = dateCell.textContent;
+        // Pobierz ilość miejsc z komórek godzin
+        const hours = [];
+        row.querySelectorAll('input.calendar-input').forEach(function (hourInput) {
+          hours.push(parseInt(hourInput.value, 10));
+        });
+
+        // Przygotuj dane do wysłania do Firebase
+        const dataToSend = {
+          date: date,
+          trainerId: loggedInUserId,
+          trainingType: trainingType,
+          availability: hours
+        };
+
+        try {
+          // Tutaj możesz wysłać dane do Firebase
+          await sendToFirebase(dataToSend);
+
+          // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
+          okText.style.display = 'inline';
+        } catch (error) {
+          console.error('Błąd podczas wysyłania danych do Firebase:', error);
+          // Jeśli wystąpił błąd, ukryj tekst "OK"
+          okText.style.display = 'none';
+        }
+      });
+      
+      currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
     }
   }
 
@@ -1656,6 +1662,32 @@ document.addEventListener('DOMContentLoaded', async function () {
   createTrainingTable('groupTrainingCalendar', 'group');
 });
 
+async function sendToFirebase(data) {
+  try {
+    const collectionRef = collection(db, 'availability'); // Zmień na odpowiednią kolekcję w Firebase
+    const q = query(
+      collectionRef,
+      where('date', '==', data.date),
+      where('trainerId', '==', data.trainerId)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      // Jeśli istnieją pasujące dokumenty, to nadpisz pierwszy z nich
+      const docToOverwrite = querySnapshot.docs[0];
+      await updateDoc(docToOverwrite.ref, data);
+    } else {
+      // Jeśli nie ma pasujących dokumentów, to utwórz nowy dokument
+      await addDoc(collectionRef, data);
+    }
+
+    console.log('Dane zostały wysłane do Firebase');
+  } catch (error) {
+    console.error('Błąd podczas wysyłania danych do Firebase:', error);
+    throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendToFirebase
+  }
+}
 
 
 
