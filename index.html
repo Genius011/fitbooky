@@ -721,6 +721,15 @@ bookButton.addEventListener('click', async () => {
     today.setHours(0, 0, 0, 0); // Ustaw godzinę na początek dnia
     return date < today;
 }
+let selectedDate; // Deklaracja zmiennej
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  // Teraz możemy bezpiecznie zainicjować zmienną, ponieważ element DOM będzie dostępny
+  selectedDate = document.getElementById('date-input').value;
+
+  // Teraz możesz użyć zmiennej selectedDate w dalszej części kodu
+  console.log(selectedDate);
+});
 
 import { runTransaction } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
