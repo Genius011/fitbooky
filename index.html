@@ -689,33 +689,47 @@ async function saveBooking(userId, date, trainingType, time, trainerId) {
   const availabilityRef = collection(db, "availability");
   const q = query(availabilityRef, where("date", "==", formattedDate), where("trainingType", "==", "personal")); // Zakładam, że chcesz sprawdzić dla treningu personalnego
   const querySnapshot = await getDocs(q);
-  
-  let availabilityForDay = {};
+
+  let availabilityForDay = null;
   querySnapshot.forEach((doc) => {
-    if(doc.data().trainerId === "IdTwojegoTrenera") { // Tu musisz wstawić odpowiednie ID trenera
+    // Można usunąć warunek if, jeśli w danym dniu jest tylko jeden dokument per trener
+    if (doc.data().trainerId === "IdTwojegoTrenera") { // Wstaw odpowiednie ID trenera
       availabilityForDay = doc.data().availability;
     }
   });
 
-  for (let hour = startHour; hour <= endHour; hour++) {
-    let timeString = `${hour.toString().padStart(2, '0')}:00`;
-    let timeSlot = document.createElement('div');
-    timeSlot.className = 'time-slot';
-    timeSlot.textContent = timeString;
+  // Jeśli nie ma dostępności dla danego dnia, to wszystkie timesloty będą nieaktywne
+  if (!availabilityForDay) {
+    for (let hour = startHour; hour <= endHour; hour++) {
+      let timeSlot = createTimeSlotElement(hour, 'inactive');
+      container.appendChild(timeSlot);
+    }
+    return; // Zakończ funkcję, jeśli nie ma dostępności
+  }
 
+  // Jeśli jest dostępność, generuj timesloty na podstawie dostępności
+  for (let hour = startHour; hour <= endHour; hour++) {
     let hourKey = hour - 6; // Dostosuj zgodnie z logiką kluczy w Firestore
-    if (availabilityForDay[hourKey] && availabilityForDay[hourKey] > 0) {
+    let timeSlotClass = availabilityForDay[hourKey] && availabilityForDay[hourKey] > 0 ? '' : 'inactive';
+    let timeSlot = createTimeSlotElement(hour, timeSlotClass);
+    if (timeSlotClass === '') {
       timeSlot.addEventListener('click', function () {
         container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
         timeSlot.classList.add('selected');
       });
-    } else {
-      timeSlot.classList.add('inactive');
     }
-
     container.appendChild(timeSlot);
   }
 }
+
+function createTimeSlotElement(hour, className) {
+  let timeString = `${hour.toString().padStart(2, '0')}:00`;
+  let timeSlot = document.createElement('div');
+  timeSlot.className = `time-slot ${className}`;
+  timeSlot.textContent = timeString;
+  return timeSlot;
+}
+
 
 
     function enableAllTimeSlots(popup) {
