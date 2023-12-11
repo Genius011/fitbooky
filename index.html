@@ -680,34 +680,23 @@ async function saveBooking(userId, date, trainingType, time, trainerId) {
       generateTimeSlots(popup.querySelector('.time-slots'), 6, 21, selectedDay);
     }
 
-    async function generateTimeSlots(container, startHour, endHour, selectedDay) {
+    async function generateTimeSlots(container, startHour, endHour, selectedDay, trainerId) {
   container.innerHTML = '';
   let adjustedMonth = selectedDay.getMonth() + 1;
   let formattedDate = `${selectedDay.getFullYear()}-${adjustedMonth.toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
 
   // Pobierz dostępność dla wybranej daty i trenera
   const availabilityRef = collection(db, "availability");
-  const q = query(availabilityRef, where("date", "==", formattedDate), where("trainingType", "==", "personal")); // Zakładam, że chcesz sprawdzić dla treningu personalnego
+  const q = query(availabilityRef, where("date", "==", formattedDate), where("trainerId", "==", trainerId));
   const querySnapshot = await getDocs(q);
 
-  let availabilityForDay = null;
+  let availabilityForDay = {};
   querySnapshot.forEach((doc) => {
-    // Można usunąć warunek if, jeśli w danym dniu jest tylko jeden dokument per trener
-    if (doc.data().trainerId === "IdTwojegoTrenera") { // Wstaw odpowiednie ID trenera
-      availabilityForDay = doc.data().availability;
-    }
+    // Teraz używamy tylko tych dokumentów dostępności, które pasują do trenera
+    availabilityForDay = doc.data().availability;
   });
 
-  // Jeśli nie ma dostępności dla danego dnia, to wszystkie timesloty będą nieaktywne
-  if (!availabilityForDay) {
-    for (let hour = startHour; hour <= endHour; hour++) {
-      let timeSlot = createTimeSlotElement(hour, 'inactive');
-      container.appendChild(timeSlot);
-    }
-    return; // Zakończ funkcję, jeśli nie ma dostępności
-  }
-
-  // Jeśli jest dostępność, generuj timesloty na podstawie dostępności
+  // Generowanie slotów czasowych
   for (let hour = startHour; hour <= endHour; hour++) {
     let hourKey = hour - 6; // Dostosuj zgodnie z logiką kluczy w Firestore
     let timeSlotClass = availabilityForDay[hourKey] && availabilityForDay[hourKey] > 0 ? '' : 'inactive';
@@ -721,6 +710,12 @@ async function saveBooking(userId, date, trainingType, time, trainerId) {
     container.appendChild(timeSlot);
   }
 }
+
+// Następnie wywołaj `generateTimeSlots` z odpowiednim `trainerId`
+// Po zalogowaniu użytkownika i pobraniu jego danych (w tym trainerId), możesz wywołać:
+// generateTimeSlots(calendarContainer, 6, 21, new Date(), userTrainerId);
+// gdzie `userTrainerId` to ID trenera przypisane do zalogowanego użytkownika.
+
 
 function createTimeSlotElement(hour, className) {
   let timeString = `${hour.toString().padStart(2, '0')}:00`;
