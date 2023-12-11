@@ -379,6 +379,12 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  
+  // Dodaj funkcję konwersji godziny z formy tekstowej na numeryczną
+  function convertTimeToNumber(timeText) {
+    const [hour] = timeText.split(":");
+    return parseInt(hour, 10);
+  }
 
   // Logout function
   const logoutButton = document.getElementById('logout');
@@ -535,24 +541,25 @@
 
 
     async function updateAvailability(date, time, trainingType) {
-  try {
-    const availabilityRef = collection(db, "availability");
-    const querySnapshot = await getDocs(query(availabilityRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
+    try {
+      const availabilityRef = collection(db, "availability");
+      const timeNumber = convertTimeToNumber(time); // Konwersja godziny na liczbę
+      const querySnapshot = await getDocs(query(availabilityRef, where("date", "==", date), where("time", "==", timeNumber), where("trainingType", "==", trainingType)));
 
-    console.log("Query Snapshot:", querySnapshot);
+      console.log("Query Snapshot:", querySnapshot);
 
-    if (!querySnapshot.empty) {
-      const docRef = querySnapshot.docs[0].ref;
-      await updateDoc(docRef, { available: false }); // Aktualizuj dostępność na "false"
-      return true;
+      if (!querySnapshot.empty) {
+        const docRef = querySnapshot.docs[0].ref;
+        await updateDoc(docRef, { available: false }); // Aktualizuj dostępność na "false"
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error("Błąd podczas aktualizacji dostępności:", error);
+      return false;
     }
-
-    return false;
-  } catch (error) {
-    console.error("Błąd podczas aktualizacji dostępności:", error);
-    return false;
   }
-}
 
 
     async function openPopup(selectedDay) {
