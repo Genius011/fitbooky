@@ -380,8 +380,6 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 const db = getFirestore(app);
-const dateInputElement = document.getElementById('your-date-input-id');
-const selectedDate = dateInputElement.value;
 
 
      // Logout function
@@ -756,6 +754,16 @@ async function isTimeSlotAvailable(db, date, time, trainingType) {
     return false; // Slot nie jest dostępny lub wystąpił błąd
   }
 }
+
+// Przykładowe użycie powyższej funkcji (możesz to umieścić tam, gdzie wykonujesz rezerwację):
+// ...
+const isAvailable = await isTimeSlotAvailable(selectedDate, selectedTimeSlot, 'personal');
+if (isAvailable) {
+  // kontynuuj z procesem rezerwacji
+} else {
+  alert('Wybrany przedział czasowy nie jest dostępny.');
+}
+// ...
 
 document.getElementById('logout').addEventListener('click', () => {
   signOut(auth).then(() => {
