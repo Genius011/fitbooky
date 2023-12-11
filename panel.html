@@ -1794,6 +1794,17 @@ document.addEventListener("DOMContentLoaded", function () {
         // Tutaj dodaj kod obsługujący wyświetlanie statystyk
     });
 	
+	document.addEventListener('DOMContentLoaded', function() {
+  const element = document.getElementById('yourElementId');
+  if (element) {
+    element.addEventListener('click', yourFunction);
+  } else {
+    console.error('Element not found');
+  }
+
+  // ... (reszta twojego kodu) ...
+});
+
    	
     </script>
 
