@@ -1583,86 +1583,78 @@ document.addEventListener('DOMContentLoaded', async function () {
       const dateCell = row.insertCell();
       dateCell.textContent = currentDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
 
-      // ... pozostały kod ...
+      for (let hour = 6; hour <= 21; hour++) {
+        const hourCell = row.insertCell();
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = '0';
+        input.className = 'calendar-input'; // Dodajemy klasę do stylowania
+        hourCell.appendChild(input);
 
-for (let hour = 6; hour <= 21; hour++) {
-  const row = calendarBody.insertRow();
-  const dateCell = row.insertCell();
-  dateCell.textContent = currentDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
+        // Przycisk "Kopiuj"
+        const copyCell = row.insertCell();
+        const copyButton = document.createElement('button');
+        copyButton.textContent = 'Kopiuj';
+        copyCell.appendChild(copyButton);
 
-  for (let hour = 6; hour <= 21; hour++) {
-    const hourCell = row.insertCell();
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.min = '0';
-    input.className = 'calendar-input'; // Dodajemy klasę do stylowania
-    hourCell.appendChild(input);
+        copyButton.addEventListener('click', function () {
+          // Pobierz wprowadzoną liczbę z pierwszego inputa w danym rzędzie
+          const firstInput = row.querySelector('input.calendar-input');
+          const number = parseInt(firstInput.value, 10);
+
+          // Zapisz tę liczbę we wszystkich inputach danego rzędu
+          const hourInputs = row.querySelectorAll('input.calendar-input');
+          hourInputs.forEach(function (hourInput) {
+            hourInput.value = number;
+          });
+        });
+
+        // Przycisk "Wyślij"
+        const sendCell = row.insertCell();
+        const sendButton = document.createElement('button');
+        sendButton.textContent = 'Wyślij';
+        sendCell.appendChild(sendButton);
+
+        const okText = document.createElement('span');
+        okText.textContent = 'OK';
+        okText.style.color = 'green';
+        okText.style.display = 'none';
+        sendCell.appendChild(okText);
+
+        sendButton.addEventListener('click', async function () {
+          const date = dateCell.textContent;
+          const hours = [];
+          row.querySelectorAll('input.calendar-input').forEach(function (hourInput) {
+            hours.push(parseInt(hourInput.value, 10));
+          });
+
+          const dataToSend = {
+            date: date,
+            trainerId: loggedInUserId,
+            trainingType: trainingType,
+            availability: hours
+          };
+
+          try {
+            await sendToFirebase(dataToSend);
+            okText.style.display = 'inline';
+          } catch (error) {
+            console.error('Błąd podczas wysyłania danych do Firebase:', error);
+            okText.style.display = 'none';
+          }
+        });
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
   }
 
-  const copyCell = row.insertCell();
-  const copyButton = document.createElement('button');
-  copyButton.textContent = 'Kopiuj';
-  copyButton.addEventListener('click', function () {
-    // Pobierz wprowadzoną liczbę z pierwszego inputa w danym rzędzie
-    const firstInput = row.querySelector('input.calendar-input');
-    const number = parseInt(firstInput.value, 10);
+  // Tworzenie tabeli dla Treningów Personalnych
+  createTrainingTable('personalTrainingCalendar', 'personal');
 
-    // Zapisz tę liczbę we wszystkich inputach danego rzędu
-    const hourInputs = row.querySelectorAll('input.calendar-input');
-    hourInputs.forEach(function (hourInput) {
-      hourInput.value = number;
-    });
-  });
-  copyCell.appendChild(copyButton);
-
-  const sendCell = row.insertCell();
-  const sendButton = document.createElement('button');
-  sendButton.textContent = 'Wyślij';
-  sendCell.appendChild(sendButton);
-
-  // Przycisk OK po wysłaniu
-  const okText = document.createElement('span');
-  okText.textContent = 'OK';
-  okText.style.color = 'green';
-  okText.style.display = 'none'; // Ukrywamy na początku
-  sendCell.appendChild(okText);
-
-  // Dodajemy obsługę kliknięcia do przycisku Wyślij
-  sendButton.addEventListener('click', async function () {
-    // Pobierz datę z komórki daty
-    const date = dateCell.textContent;
-    // Pobierz ilość miejsc z komórek godzin
-    const hours = [];
-    row.querySelectorAll('input.calendar-input').forEach(function (hourInput) {
-      hours.push(parseInt(hourInput.value, 10));
-    });
-
-    // Przygotuj dane do wysłania do Firebase
-    const dataToSend = {
-      date: date,
-      trainerId: loggedInUserId,
-      trainingType: trainingType,
-      availability: hours
-    };
-
-    try {
-      // Tutaj możesz wysłać dane do Firebase
-      await sendToFirebase(dataToSend);
-
-      // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
-      okText.style.display = 'inline';
-    } catch (error) {
-      console.error('Błąd podczas wysyłania danych do Firebase:', error);
-      // Jeśli wystąpił błąd, ukryj tekst "OK"
-      okText.style.display = 'none';
-    }
-  });
-  
-  currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
-}
-
-// ... reszta kodu ...
-
+  // Tworzenie tabeli dla Treningów Grupowych
+  createTrainingTable('groupTrainingCalendar', 'group');
+});
 
 
 
