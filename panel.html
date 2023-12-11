@@ -1715,7 +1715,8 @@ document.addEventListener('DOMContentLoaded', async function () {
       const q = query(
         collectionRef,
         where('date', '==', data.date),
-        where('trainerId', '==', data.trainerId)
+        where('trainerId', '==', data.trainerId),
+        where('trainingType', '==', data.trainingType) // Dodaj warunek dotyczący typu treningu
       );
 
       const querySnapshot = await getDocs(q);
