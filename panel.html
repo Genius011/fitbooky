@@ -1568,18 +1568,28 @@ auth.onAuthStateChanged((user) => {
 });
 
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
-document.addEventListener('DOMContentLoaded', function () {
-  // Funkcja do tworzenia tabeli treningów
-  function createTrainingTable(tableId, trainingType) {
-    const calendarBody = document.getElementById(tableId).querySelector('tbody');
-    const currentDate = new Date();
-    const endDate = new Date();
-    endDate.setDate(currentDate.getDate() + 30); // Ustaw datę końcową na 30 dni od bieżącej daty
+// Zaktualizuj funkcję createTrainingTable
+async function createTrainingTable(tableId, trainingType) {
+  const calendarBody = document.getElementById(tableId).querySelector('tbody');
+  const currentDate = new Date();
+  const endDate = new Date();
+  endDate.setDate(currentDate.getDate() + 30); // Ustaw datę końcową na 30 dni od bieżącej daty
+
+  try {
+    const availabilityRef = collection(db, 'availability');
+    const availabilitySnapshot = await getDocs(availabilityRef);
 
     while (currentDate <= endDate) {
       const row = calendarBody.insertRow();
       const dateCell = row.insertCell();
       dateCell.textContent = currentDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
+
+      // Zaktualizuj poniższą sekcję, aby wypełniać dane z bazy Firebase
+      const dateISOString = dateCell.textContent;
+      const matchingAvailability = availabilitySnapshot.docs.filter(doc => {
+        const data = doc.data();
+        return data.date === dateISOString && data.trainingType === trainingType;
+      });
 
       for (let hour = 6; hour <= 21; hour++) {
         const hourCell = row.insertCell();
@@ -1587,6 +1597,13 @@ document.addEventListener('DOMContentLoaded', function () {
         input.type = 'number';
         input.min = '0';
         input.className = 'calendar-input'; // Dodajemy klasę do stylowania
+
+        // Sprawdzamy, czy istnieją dane zaciągnięte z bazy dla danej godziny
+        const matchingHourData = matchingAvailability.find(data => parseInt(data.hour) === hour);
+        if (matchingHourData) {
+          input.value = matchingHourData.number;
+        }
+
         hourCell.appendChild(input);
       }
 
@@ -1651,27 +1668,11 @@ document.addEventListener('DOMContentLoaded', function () {
       
       currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
     }
-  }
-
-  // Tworzenie tabeli dla Treningów Personalnych
-  createTrainingTable('personalTrainingCalendar', 'personal');
-
-  // Tworzenie tabeli dla Treningów Grupowych
-  createTrainingTable('groupTrainingCalendar', 'group');
-});
-
-async function sendToFirebase(data) {
-  try {
-    const collectionRef = collection(db, 'availability'); // Zmień na odpowiednią kolekcję w Firebase
-
-    await addDoc(collectionRef, data);
-
-    console.log('Dane zostały wysłane do Firebase');
   } catch (error) {
-    console.error('Błąd podczas wysyłania danych do Firebase:', error);
-    throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendToFirebase
+    console.error('Błąd podczas pobierania danych z bazy:', error);
   }
 }
+
 
 
 // DROPDOWN MENU!!
