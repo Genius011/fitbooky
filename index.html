@@ -772,6 +772,29 @@ document.getElementById('logout').addEventListener('click', () => {
   });
 });
 
+// Zakładając, że masz element interfejsu użytkownika, z którego pobierasz datę, na przykład input typu date.
+let selectedDate = document.getElementById('your-date-input-id').value; // Pobierz wartość daty
+
+// Teraz możesz użyć zmiennej selectedDate w swojej funkcji
+const timeSlot = '10:00'; // Przykładowy wybrany czas, powinieneś to dostosować
+const trainingType = 'personal'; // Przykładowy typ treningu, dostosuj do swoich potrzeb
+
+// Upewnij się, że przekazujesz `db` (referencję do bazy danych) do swojej funkcji
+isTimeSlotAvailable(db, selectedDate, timeSlot, trainingType)
+  .then(isAvailable => {
+    if (isAvailable) {
+      // Kod do wykonania, gdy slot czasowy jest dostępny
+    } else {
+      // Kod do wykonania, gdy slot czasowy nie jest dostępny
+    }
+  })
+  .catch(error => {
+    // Obsługa błędów
+    console.error('Wystąpił błąd podczas sprawdzania dostępności: ', error);
+  });
+
+// Pamiętaj, że musisz zdefiniować `db` wcześniej w swoim kodzie, na przykład:
+// const db = getFirestore(app);
 
 	
 </script>
