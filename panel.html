@@ -1697,7 +1697,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Check if a user is logged in
-    firebase.auth().onAuthStateChanged(function(user) {
+    onAuthStateChanged(auth, (user) => {
+
         if (user) {
             console.log("User is logged in:", user);
 
