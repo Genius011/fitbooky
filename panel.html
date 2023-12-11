@@ -1594,6 +1594,8 @@ document.addEventListener('DOMContentLoaded', async function () {
       // Dodaj przycisk "Wyślij" tylko dla treningów osobistych
       if (trainingType === 'personal') {
         rowHTML.push(`<td><button class="send-button">Wyślij</button></td>`);
+      } else {
+        rowHTML.push(`<td></td>`); // Pusty td dla treningów grupowych, żeby zachować kolumny zgodnie z nagłówkami
       }
 
       // Dodaj wiersz do tablicy HTML
@@ -1646,6 +1648,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         try {
           if (trainingType === 'personal' && tableId === 'personalTrainingCalendar') {
+            await sendToFirebase(dataToSend);
+            // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
+            const okText = document.createElement('span');
+            okText.textContent = 'OK';
+            okText.style.color = 'green';
+            sendButton.parentNode.appendChild(okText);
+          }
+          else if (trainingType === 'group' && tableId === 'groupTrainingCalendar') {
             await sendToFirebase(dataToSend);
             // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
             const okText = document.createElement('span');
@@ -1714,7 +1724,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   }
 
-  // Funkcja do wysyłania danych do Firebase dla treningów personalnych
+  // Funkcja do wysyłania danych do Firebase
   async function sendToFirebase(data) {
     try {
       const collectionRef = collection(db, 'availability'); // Zmień na odpowiednią kolekcję w Firebase
@@ -1736,13 +1746,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         await addDoc(collectionRef, data);
       }
 
-      console.log('Dane dla treningów personalnych zostały wysłane do Firebase');
+      console.log('Dane zostały wysłane do Firebase');
     } catch (error) {
-      console.error('Błąd podczas wysyłania danych dla treningów personalnych do Firebase:', error);
+      console.error('Błąd podczas wysyłania danych do Firebase:', error);
       throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendToFirebase
     }
   }
 });
+
 
 
 
