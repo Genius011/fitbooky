@@ -488,45 +488,51 @@
     }
 
     async function saveBooking(userId, date, trainingType, time, trainerId) {
-      if (!userId) {
-        alert('Nie jesteś zalogowany!');
+  if (!userId) {
+    alert('Nie jesteś zalogowany!');
+    return;
+  }
+
+  try {
+    // Pobranie dodatkowych informacji o użytkowniku
+    const userRef = doc(getFirestore(), 'users', userId);
+    const docSnap = await getDoc(userRef);
+
+    // Jeśli dokument użytkownika istnieje, użyj jego danych
+    if (docSnap.exists()) {
+      const userData = docSnap.data();
+
+      console.log("Próba zaktualizowania dostępności...");
+      
+      // Aktualizuj dostępność przed zapisaniem rezerwacji
+      const updatedAvailability = await updateAvailability(date, time, trainingType);
+      
+      console.log("Wynik aktualizacji dostępności:", updatedAvailability);
+      
+      if (!updatedAvailability) {
+        alert("Nie udało się zaktualizować dostępności. Spróbuj ponownie.");
         return;
       }
 
-      try {
-        // Pobranie dodatkowych informacji o użytkowniku
-        const userRef = doc(getFirestore(), 'users', userId);
-        const docSnap = await getDoc(userRef);
-
-        // Jeśli dokument użytkownika istnieje, użyj jego danych
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-
-          // Aktualizuj dostępność przed zapisaniem rezerwacji
-          const updatedAvailability = await updateAvailability(date, time, trainingType);
-          if (!updatedAvailability) {
-            alert("Nie udało się zaktualizować dostępności. Spróbuj ponownie.");
-            return;
-          }
-
-          await addDoc(collection(db, "bookings"), {
-            userId: userId,
-            date: date,
-            trainingType: trainingType,
-            time: time,
-            email: userData.email,
-            firstName: userData.firstName,
-            trainerId: trainerId // Dodaj trainerId do dokumentu rezerwacji
-          });
-          alert("Rezerwacja została zapisana w Twoim profilu");
-        } else {
-          console.log("Nie znaleziono danych użytkownika.");
-        }
-      } catch (e) {
-        console.error("Błąd podczas zapisu: ", e);
-        alert("Wystąpił błąd podczas zapisu rezerwacji");
-      }
+      await addDoc(collection(db, "bookings"), {
+        userId: userId,
+        date: date,
+        trainingType: trainingType,
+        time: time,
+        email: userData.email,
+        firstName: userData.firstName,
+        trainerId: trainerId // Dodaj trainerId do dokumentu rezerwacji
+      });
+      alert("Rezerwacja została zapisana w Twoim profilu");
+    } else {
+      console.log("Nie znaleziono danych użytkownika.");
     }
+  } catch (e) {
+    console.error("Błąd podczas zapisu: ", e);
+    alert("Wystąpił błąd podczas zapisu rezerwacji");
+  }
+}
+
 
     async function updateAvailability(date, time, trainingType) {
       try {
