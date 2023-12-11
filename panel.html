@@ -1608,13 +1608,48 @@ document.addEventListener('DOMContentLoaded', async function () {
     // Obsługa przycisków kopiowania i wysyłania (dodaj swoją logikę)
     copyButtons.forEach(function (copyButton) {
       copyButton.addEventListener('click', function () {
-        // Implementuj logikę kopiowania
+        // Pobierz wprowadzoną liczbę z pierwszego inputa w danym rzędzie
+        const row = copyButton.closest('tr');
+        const firstInput = row.querySelector('input.calendar-input');
+        const number = parseInt(firstInput.value, 10);
+
+        // Zapisz tę liczbę we wszystkich inputach danego rzędu
+        row.querySelectorAll('input.calendar-input').forEach(function (hourInput) {
+          hourInput.value = number;
+        });
       });
     });
 
     sendButtons.forEach(function (sendButton) {
       sendButton.addEventListener('click', async function () {
-        // Implementuj logikę wysyłania
+        // Pobierz datę z komórki daty
+        const row = sendButton.closest('tr');
+        const dateCell = row.cells[0];
+        const date = dateCell.textContent;
+
+        // Pobierz ilość miejsc z komórek godzin
+        const hours = [];
+        row.querySelectorAll('input.calendar-input').forEach(function (hourInput) {
+          hours.push(parseInt(hourInput.value, 10));
+        });
+
+        const dataToSend = {
+          date: date,
+          trainerId: loggedInUserId,
+          trainingType: trainingType,
+          availability: hours
+        };
+
+        try {
+          await sendToFirebase(dataToSend);
+          // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
+          const okText = document.createElement('span');
+          okText.textContent = 'OK';
+          okText.style.color = 'green';
+          sendButton.parentNode.appendChild(okText);
+        } catch (error) {
+          console.error('Błąd podczas wysyłania danych do Firebase:', error);
+        }
       });
     });
 
@@ -1701,6 +1736,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   }
 });
+
 
 
 
