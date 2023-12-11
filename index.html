@@ -535,22 +535,25 @@
 
 
     async function updateAvailability(date, time, trainingType) {
-      try {
-        const availabilityRef = collection(db, "availability");
-        const querySnapshot = await getDocs(query(availabilityRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
+  try {
+    const availabilityRef = collection(db, "availability");
+    const querySnapshot = await getDocs(query(availabilityRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
 
-        if (!querySnapshot.empty) {
-          const docRef = querySnapshot.docs[0].ref;
-          await updateDoc(docRef, { available: false }); // Aktualizuj dostępność na "false"
-          return true;
-        }
+    console.log("Query Snapshot:", querySnapshot);
 
-        return false;
-      } catch (error) {
-        console.error("Błąd podczas aktualizacji dostępności:", error);
-        return false;
-      }
+    if (!querySnapshot.empty) {
+      const docRef = querySnapshot.docs[0].ref;
+      await updateDoc(docRef, { available: false }); // Aktualizuj dostępność na "false"
+      return true;
     }
+
+    return false;
+  } catch (error) {
+    console.error("Błąd podczas aktualizacji dostępności:", error);
+    return false;
+  }
+}
+
 
     async function openPopup(selectedDay) {
       const popup = document.createElement('div');
