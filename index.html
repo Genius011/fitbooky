@@ -513,7 +513,7 @@
       }
     }
 
-    async function saveBooking(userId, date, trainingType, time, trainerId) {
+async function saveBooking(userId, date, trainingType, time, trainerId) {
   if (!userId) {
     alert('Nie jesteś zalogowany!');
     return;
@@ -530,8 +530,11 @@
 
       console.log("Próba zaktualizowania dostępności...");
       
+      // Konwersja czasu na godzinę
+      const hour = parseInt(time.split(':')[0]); // Zakładając, że time ma format 'HH:MM'
+
       // Aktualizuj dostępność przed zapisaniem rezerwacji
-      const updatedAvailability = await updateAvailability(date, time, trainingType);
+      const updatedAvailability = await updateAvailability(hour);
       
       console.log("Wynik aktualizacji dostępności:", updatedAvailability);
       
@@ -558,6 +561,7 @@
     alert("Wystąpił błąd podczas zapisu rezerwacji");
   }
 }
+
 
 
     async function updateAvailability(date, time, trainingType) {
