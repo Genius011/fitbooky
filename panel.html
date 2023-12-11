@@ -1724,7 +1724,8 @@ document.addEventListener('DOMContentLoaded', async function () {
       const q = query(
         collectionRef,
         where('date', '==', data.date),
-        where('trainerId', '==', data.trainerId)
+        where('trainerId', '==', data.trainerId),
+        where('trainingType', '==', data.trainingType)
       );
 
       const querySnapshot = await getDocs(q);
@@ -1745,14 +1746,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   }
 
-  // Funkcja do wysyłania danych dla treningów grupowych
+  // Funkcja do wysyłania danych do Firebase dla treningów grupowych
   async function sendGroupDataToFirebase(data) {
     try {
       const collectionRef = collection(db, 'groupAvailability'); // Zmień na odpowiednią kolekcję w Firebase
       const q = query(
         collectionRef,
         where('date', '==', data.date),
-        where('trainerId', '==', data.trainerId)
+        where('trainerId', '==', data.trainerId),
+        where('trainingType', '==', data.trainingType)
       );
 
       const querySnapshot = await getDocs(q);
