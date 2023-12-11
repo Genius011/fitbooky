@@ -1641,7 +1641,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         };
 
         try {
-          if (trainingType === 'personal') { // Dodaj warunek dotyczący typu treningu
+          if (trainingType === 'group') { // Zmieniamy warunek na "group" dla treningów grupowych
             await sendToFirebase(dataToSend);
             // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
             const okText = document.createElement('span');
