@@ -360,12 +360,10 @@
    
    
 <script type="module">
-  // Import the required Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
-  import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where, updateDoc, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+  import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where, updateDoc } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
 
-  // Your Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyAHZ6gQdYUSPFGJfW4dd5QH5IuOMG9PDnY",
     authDomain: "genius-f6a78.firebaseapp.com",
@@ -375,63 +373,53 @@
     appId: "1:4413237203:web:8ce44809d0b3dd0147b126"
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-  
-  
-  
+
   async function updateAvailability(hour) {
-  try {
-    console.log("Rozpoczynanie aktualizacji dostępności dla godziny:", hour);
-    const hourKey = hour - 6; // Zakładając, że 6:00 to 0, 7:00 to 1, itd.
-    const availabilityRef = doc(db, "availability", hourKey.toString());
-    const docSnap = await getDoc(availabilityRef);
+    try {
+      console.log("Rozpoczynanie aktualizacji dostępności dla godziny:", hour);
+      const hourKey = hour - 6; // Zakładając, że 6:00 to 0, 7:00 to 1, itd.
+      const availabilityRef = doc(db, "availability", hourKey.toString());
+      const docSnap = await getDoc(availabilityRef);
 
-    console.log("Odczytano dokument:", docSnap.exists());
+      console.log("Odczytano dokument:", docSnap.exists());
 
-    if (docSnap.exists()) {
-      let currentAvailability = docSnap.data().number;
-      console.log("Aktualna dostępność:", currentAvailability);
+      if (docSnap.exists()) {
+        let currentAvailability = docSnap.data().number;
+        console.log("Aktualna dostępność:", currentAvailability);
 
-      if (currentAvailability > 0) {
-        await updateDoc(availabilityRef, { number: currentAvailability - 1 });
-        console.log("Zaktualizowano dostępność");
-        return true;
+        if (currentAvailability > 0) {
+          await updateDoc(availabilityRef, { number: currentAvailability - 1 });
+          console.log("Zaktualizowano dostępność");
+          return true;
+        } else {
+          console.log("Brak dostępnych miejsc na tę godzinę");
+          return false;
+        }
       } else {
-        console.log("Brak dostępnych miejsc na tę godzinę");
+        console.log("Nie znaleziono dokumentu dla tej godziny");
         return false;
       }
-    } else {
-      console.log("Nie znaleziono dokumentu dla tej godziny");
+    } catch (error) {
+      console.error("Błąd podczas aktualizacji dostępności:", error);
       return false;
     }
-  } catch (error) {
-    console.error("Błąd podczas aktualizacji dostępności:", error);
-    return false;
   }
-}
 
-
-
-
-
-  // Logout function
   const logoutButton = document.getElementById('logout');
   logoutButton.addEventListener('click', () => {
     signOut(auth).then(() => {
-      // Sign-out successful, redirect to login page
       window.location.href = 'login.html';
     }).catch((error) => {
-      // An error happened during sign out
       console.error('Logout failed', error);
     });
   });
 
   document.addEventListener('DOMContentLoaded', function () {
     const auth = getAuth();
-    let currentUserId = null; // Użyj zmiennej do przechowywania aktualnego ID użytkownika
+    let currentUserId = null;
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -441,10 +429,8 @@
           const docSnap = await getDoc(userRef);
           if (docSnap.exists()) {
             const userData = docSnap.data();
-            // Check if the user is a trainer and show or hide the 'Panel Trenera' link
             const trainerPanelLink = document.getElementById('trainerPanelLink');
             trainerPanelLink.style.display = userData.isTrainer ? 'block' : 'none';
-            // Update the logout button text with the user's first name
             const logoutButtonText = document.getElementById('logoutButtonText');
             logoutButtonText.textContent = `Cześć ${userData.firstName}`;
           } else {
@@ -459,7 +445,6 @@
       }
     });
 
-    // Ensure the dropdown content is hidden initially and shown on hover
     const dropdown = document.querySelector('.dropdown');
     dropdown.addEventListener('mouseover', () => {
       document.querySelector('.dropdown-content').style.display = 'block';
@@ -469,7 +454,6 @@
       document.querySelector('.dropdown-content').style.display = 'none';
     });
 
-    // Add logout functionality
     logoutButton.addEventListener('click', () => {
       signOut(auth).then(() => {
         window.location.href = 'login.html';
@@ -524,77 +508,49 @@
       }
     }
 
-async function saveBooking(userId, date, trainingType, time, trainerId) {
-  if (!userId) {
-    alert('Nie jesteś zalogowany!');
-    return;
-  }
-
-  try {
-    // Pobranie dodatkowych informacji o użytkowniku
-    const userRef = doc(getFirestore(), 'users', userId);
-    const docSnap = await getDoc(userRef);
-
-    // Jeśli dokument użytkownika istnieje, użyj jego danych
-    if (docSnap.exists()) {
-      const userData = docSnap.data();
-
-      console.log("Próba zaktualizowania dostępności...");
-      
-      // Konwersja czasu na godzinę
-      const hour = parseInt(time.split(':')[0]); // Zakładając, że time ma format 'HH:MM'
-
-      // Aktualizuj dostępność przed zapisaniem rezerwacji
-      const updatedAvailability = await updateAvailability(hour);
-      
-      console.log("Wynik aktualizacji dostępności:", updatedAvailability);
-      
-      if (!updatedAvailability) {
-        alert("Nie udało się zaktualizować dostępności. Spróbuj ponownie.");
+    async function saveBooking(userId, date, trainingType, time, trainerId) {
+      if (!userId) {
+        alert('Nie jesteś zalogowany!');
         return;
       }
 
-      await addDoc(collection(db, "bookings"), {
-        userId: userId,
-        date: date,
-        trainingType: trainingType,
-        time: time,
-        email: userData.email,
-        firstName: userData.firstName,
-        trainerId: trainerId // Dodaj trainerId do dokumentu rezerwacji
-      });
-      alert("Rezerwacja została zapisana w Twoim profilu");
-    } else {
-      console.log("Nie znaleziono danych użytkownika.");
+      try {
+        const userRef = doc(getFirestore(), 'users', userId);
+        const docSnap = await getDoc(userRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+
+          console.log("Próba zaktualizowania dostępności...");
+          const hour = parseInt(time.split(':')[0]);
+
+          const updatedAvailability = await updateAvailability(hour);
+
+          console.log("Wynik aktualizacji dostępności:", updatedAvailability);
+
+          if (!updatedAvailability) {
+            alert("Nie udało się zaktualizować dostępności. Spróbuj ponownie.");
+            return;
+          }
+
+          await addDoc(collection(db, "bookings"), {
+            userId: userId,
+            date: date,
+            trainingType: trainingType,
+            time: time,
+            email: userData.email,
+            firstName: userData.firstName,
+            trainerId: trainerId
+          });
+          alert("Rezerwacja została zapisana w Twoim profilu");
+        } else {
+          console.log("Nie znaleziono danych użytkownika.");
+        }
+      } catch (e) {
+        console.error("Błąd podczas zapisu: ", e);
+        alert("Wystąpił błąd podczas zapisu rezerwacji");
+      }
     }
-  } catch (e) {
-    console.error("Błąd podczas zapisu: ", e);
-    alert("Wystąpił błąd podczas zapisu rezerwacji");
-  }
-}
-
-
-
-    async function updateAvailability(date, time, trainingType) {
-  try {
-    const availabilityRef = collection(db, "availability");
-    const querySnapshot = await getDocs(query(availabilityRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
-
-    console.log("Query Snapshot:", querySnapshot);
-
-    if (!querySnapshot.empty) {
-      const docRef = querySnapshot.docs[0].ref;
-      await updateDoc(docRef, { available: false }); // Aktualizuj dostępność na "false"
-      return true;
-    }
-
-    return false;
-  } catch (error) {
-    console.error("Błąd podczas aktualizacji dostępności:", error);
-    return false;
-  }
-}
-
 
     async function openPopup(selectedDay) {
       const popup = document.createElement('div');
@@ -631,14 +587,12 @@ async function saveBooking(userId, date, trainingType, time, trainerId) {
           let adjustedMonth = selectedDay.getMonth() + 1;
           let formattedDate = `${selectedDay.getFullYear()}-${adjustedMonth.toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
 
-          // Pobierz trainerId z danych użytkownika
           const userRef = doc(getFirestore(), 'users', currentUserId);
           const docSnap = await getDoc(userRef);
           if (docSnap.exists()) {
             const userData = docSnap.data();
             const trainerId = userData.trainerId;
 
-            // Sprawdź dostępność dla wybranego slotu czasowego i treningu personalnego
             if (selectedTrainingType === 'personal') {
               const available = await isTimeSlotAvailable(formattedDate, selectedTimeSlot, selectedTrainingType);
               if (!available) {
@@ -648,7 +602,7 @@ async function saveBooking(userId, date, trainingType, time, trainerId) {
             }
 
             if (cancellationCheckbox.checked) {
-              saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot, trainerId); // Przekazanie trainerId
+              saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot, trainerId);
               popup.remove();
             } else {
               alert("Aby dokonać rezerwacji, musisz zaakceptować warunki anulacji.");
@@ -680,52 +634,51 @@ async function saveBooking(userId, date, trainingType, time, trainerId) {
       generateTimeSlots(popup.querySelector('.time-slots'), 6, 21, selectedDay);
     }
 
-    async function generateTimeSlots(container, startHour, endHour, selectedDay, trainerId) {
-  container.innerHTML = '';
-  let adjustedMonth = selectedDay.getMonth() + 1;
-  let formattedDate = `${selectedDay.getFullYear()}-${adjustedMonth.toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
+    async function generateTimeSlots(container, startHour, endHour, selectedDay) {
+      container.innerHTML = '';
+      let adjustedMonth = selectedDay.getMonth() + 1;
+      let formattedDate = `${selectedDay.getFullYear()}-${adjustedMonth.toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
 
-  // Pobierz dostępność dla wybranej daty i trenera
-  const availabilityRef = collection(db, "availability");
-  const q = query(availabilityRef, where("date", "==", formattedDate), where("trainerId", "==", trainerId));
-  const querySnapshot = await getDocs(q);
+      const availabilityRef = collection(db, "availability");
+      const q = query(availabilityRef, where("date", "==", formattedDate), where("trainingType", "==", "personal"));
+      const querySnapshot = await getDocs(q);
 
-  let availabilityForDay = {};
-  querySnapshot.forEach((doc) => {
-    // Teraz używamy tylko tych dokumentów dostępności, które pasują do trenera
-    availabilityForDay = doc.data().availability;
-  });
-
-  // Generowanie slotów czasowych
-  for (let hour = startHour; hour <= endHour; hour++) {
-    let hourKey = hour - 6; // Dostosuj zgodnie z logiką kluczy w Firestore
-    let timeSlotClass = availabilityForDay[hourKey] && availabilityForDay[hourKey] > 0 ? '' : 'inactive';
-    let timeSlot = createTimeSlotElement(hour, timeSlotClass);
-    if (timeSlotClass === '') {
-      timeSlot.addEventListener('click', function () {
-        container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
-        timeSlot.classList.add('selected');
+      let availabilityForDay = null;
+      querySnapshot.forEach((doc) => {
+        if (doc.data().trainerId === "IdTwojegoTrenera") {
+          availabilityForDay = doc.data().availability;
+        }
       });
+
+      if (!availabilityForDay) {
+        for (let hour = startHour; hour <= endHour; hour++) {
+          let timeSlot = createTimeSlotElement(hour, 'inactive');
+          container.appendChild(timeSlot);
+        }
+        return;
+      }
+
+      for (let hour = startHour; hour <= endHour; hour++) {
+        let hourKey = hour - 6;
+        let timeSlotClass = availabilityForDay[hourKey] && availabilityForDay[hourKey] > 0 ? '' : 'inactive';
+        let timeSlot = createTimeSlotElement(hour, timeSlotClass);
+        if (timeSlotClass === '') {
+          timeSlot.addEventListener('click', function () {
+            container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+            timeSlot.classList.add('selected');
+          });
+        }
+        container.appendChild(timeSlot);
+      }
     }
-    container.appendChild(timeSlot);
-  }
-}
 
-// Następnie wywołaj `generateTimeSlots` z odpowiednim `trainerId`
-// Po zalogowaniu użytkownika i pobraniu jego danych (w tym trainerId), możesz wywołać:
-// generateTimeSlots(calendarContainer, 6, 21, new Date(), userTrainerId);
-// gdzie `userTrainerId` to ID trenera przypisane do zalogowanego użytkownika.
-
-
-function createTimeSlotElement(hour, className) {
-  let timeString = `${hour.toString().padStart(2, '0')}:00`;
-  let timeSlot = document.createElement('div');
-  timeSlot.className = `time-slot ${className}`;
-  timeSlot.textContent = timeString;
-  return timeSlot;
-}
-
-
+    function createTimeSlotElement(hour, className) {
+      let timeString = `${hour.toString().padStart(2, '0')}:00`;
+      let timeSlot = document.createElement('div');
+      timeSlot.className = `time-slot ${className}`;
+      timeSlot.textContent = timeString;
+      return timeSlot;
+    }
 
     function enableAllTimeSlots(popup) {
       const timeSlots = popup.querySelectorAll('.time-slot');
@@ -768,16 +721,6 @@ function createTimeSlotElement(hour, className) {
       if (currentMonth < 0) {
         currentMonth = 11;
         currentYear--;
-      }
-      currentDate = new Date(currentYear, currentMonth, 1);
-      generateCalendar();
-    });
-
-    nextMonth.addEventListener('click', function () {
-      currentMonth++;
-      if (currentMonth > 11) {
-        currentMonth = 0;
-        currentYear++;
       }
       currentDate = new Date(currentYear, currentMonth, 1);
       generateCalendar();
