@@ -1662,7 +1662,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   createTrainingTable('groupTrainingCalendar', 'group');
 });
 
-async function fetchDataFromFirebase(date, trainerId, trainingType, hour) {
+async function sendToFirebase(data) {
   try {
     const collectionRef = collection(db, 'availability'); // Zmień na odpowiednią kolekcję w Firebase
     const q = query(
