@@ -1648,8 +1648,9 @@ document.addEventListener('DOMContentLoaded', async function () {
             okText.textContent = 'OK';
             okText.style.color = 'green';
             sendButton.parentNode.appendChild(okText);
-          } else if (trainingType === 'group' && tableId === 'groupTrainingCalendar') {
-            await sendToFirebase(dataToSend);
+          }
+          if (trainingType === 'group' && tableId === 'groupTrainingCalendar') {
+            await sendGroupToFirebase(dataToSend);
             // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
             const okText = document.createElement('span');
             okText.textContent = 'OK';
@@ -1717,7 +1718,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   }
 
-  // Funkcja do wysyłania danych do Firebase
+  // Funkcja do wysyłania danych do Firebase dla treningów personalnych
   async function sendToFirebase(data) {
     try {
       const collectionRef = collection(db, 'availability'); // Zmień na odpowiednią kolekcję w Firebase
@@ -1743,6 +1744,34 @@ document.addEventListener('DOMContentLoaded', async function () {
     } catch (error) {
       console.error('Błąd podczas wysyłania danych do Firebase:', error);
       throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendToFirebase
+    }
+  }
+
+  // Funkcja do wysyłania danych do Firebase dla treningów grupowych
+  async function sendGroupToFirebase(data) {
+    try {
+      const collectionRef = collection(db, 'groupAvailability'); // Zmień na odpowiednią kolekcję dla treningów grupowych w Firebase
+      const q = query(
+        collectionRef,
+        where('date', '==', data.date),
+        where('trainerId', '==', data.trainerId)
+      );
+
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        // Jeśli istnieją pasujące dokumenty, to nadpisz pierwszy z nich
+        const docToOverwrite = querySnapshot.docs[0];
+        await updateDoc(docToOverwrite.ref, data);
+      } else {
+        // Jeśli nie ma pasujących dokumentów, to utwórz nowy dokument
+        await addDoc(collectionRef, data);
+      }
+
+      console.log('Dane dla treningów grupowych zostały wysłane do Firebase');
+    } catch (error) {
+      console.error('Błąd podczas wysyłania danych dla treningów grupowych do Firebase:', error);
+      throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendGroupToFirebase
     }
   }
 });
