@@ -1641,7 +1641,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         };
 
         try {
-          if (trainingType === 'group') { // Zmieniamy warunek na "group" dla treningów grupowych
+          if (trainingType === 'personal' && tableId === 'personalTrainingCalendar') {
+            await sendToFirebase(dataToSend);
+            // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
+            const okText = document.createElement('span');
+            okText.textContent = 'OK';
+            okText.style.color = 'green';
+            sendButton.parentNode.appendChild(okText);
+          } else if (trainingType === 'group' && tableId === 'groupTrainingCalendar') {
             await sendToFirebase(dataToSend);
             // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
             const okText = document.createElement('span');
