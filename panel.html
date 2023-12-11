@@ -1568,28 +1568,18 @@ auth.onAuthStateChanged((user) => {
 });
 
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
-// Zaktualizuj funkcję createTrainingTable
-async function createTrainingTable(tableId, trainingType) {
-  const calendarBody = document.getElementById(tableId).querySelector('tbody');
-  const currentDate = new Date();
-  const endDate = new Date();
-  endDate.setDate(currentDate.getDate() + 30); // Ustaw datę końcową na 30 dni od bieżącej daty
-
-  try {
-    const availabilityRef = collection(db, 'availability');
-    const availabilitySnapshot = await getDocs(availabilityRef);
+document.addEventListener('DOMContentLoaded', function () {
+  // Funkcja do tworzenia tabeli treningów
+  function createTrainingTable(tableId, trainingType) {
+    const calendarBody = document.getElementById(tableId).querySelector('tbody');
+    const currentDate = new Date();
+    const endDate = new Date();
+    endDate.setDate(currentDate.getDate() + 30); // Ustaw datę końcową na 30 dni od bieżącej daty
 
     while (currentDate <= endDate) {
       const row = calendarBody.insertRow();
       const dateCell = row.insertCell();
       dateCell.textContent = currentDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
-
-      // Zaktualizuj poniższą sekcję, aby wypełniać dane z bazy Firebase
-      const dateISOString = dateCell.textContent;
-      const matchingAvailability = availabilitySnapshot.docs.filter(doc => {
-        const data = doc.data();
-        return data.date === dateISOString && data.trainingType === trainingType;
-      });
 
       for (let hour = 6; hour <= 21; hour++) {
         const hourCell = row.insertCell();
@@ -1597,13 +1587,6 @@ async function createTrainingTable(tableId, trainingType) {
         input.type = 'number';
         input.min = '0';
         input.className = 'calendar-input'; // Dodajemy klasę do stylowania
-
-        // Sprawdzamy, czy istnieją dane zaciągnięte z bazy dla danej godziny
-        const matchingHourData = matchingAvailability.find(data => parseInt(data.hour) === hour);
-        if (matchingHourData) {
-          input.value = matchingHourData.number;
-        }
-
         hourCell.appendChild(input);
       }
 
@@ -1668,11 +1651,27 @@ async function createTrainingTable(tableId, trainingType) {
       
       currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
     }
+  }
+
+  // Tworzenie tabeli dla Treningów Personalnych
+  createTrainingTable('personalTrainingCalendar', 'personal');
+
+  // Tworzenie tabeli dla Treningów Grupowych
+  createTrainingTable('groupTrainingCalendar', 'group');
+});
+
+async function sendToFirebase(data) {
+  try {
+    const collectionRef = collection(db, 'availability'); // Zmień na odpowiednią kolekcję w Firebase
+
+    await addDoc(collectionRef, data);
+
+    console.log('Dane zostały wysłane do Firebase');
   } catch (error) {
-    console.error('Błąd podczas pobierania danych z bazy:', error);
+    console.error('Błąd podczas wysyłania danych do Firebase:', error);
+    throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendToFirebase
   }
 }
-
 
 
 // DROPDOWN MENU!!
@@ -1794,6 +1793,66 @@ document.addEventListener("DOMContentLoaded", function () {
         // Tutaj dodaj kod obsługujący wyświetlanie statystyk
     });
 	
+// WIDOK LICZB DOSTEPNOSCI
+
+// Funkcja do pobierania i aktualizacji stanu miejsc w tabelach
+async function updateAvailability() {
+  const personalTable = document.getElementById('personalTrainingCalendar').querySelector('tbody');
+  const groupTable = document.getElementById('groupTrainingCalendar').querySelector('tbody');
+
+  try {
+    // Pobierz dane z kolekcji 'availability' w Firebase
+    const availabilityRef = collection(db, 'availability');
+    const availabilitySnapshot = await getDocs(availabilityRef);
+
+    // Inicjalizuj puste tablice na dane dotyczące dostępności
+    const personalAvailability = [];
+    const groupAvailability = [];
+
+    // Iteruj przez dokumenty dostępności
+    availabilitySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const date = data.date;
+      const availability = data.availability;
+
+      // Sprawdź, czy data należy do przyszłości
+      const currentDate = new Date();
+      const availabilityDate = new Date(date);
+      if (availabilityDate >= currentDate) {
+        if (data.trainingType === 'personal') {
+          personalAvailability.push({ date, availability });
+        } else if (data.trainingType === 'group') {
+          groupAvailability.push({ date, availability });
+        }
+      }
+    });
+
+    // Aktualizuj tabelę personalTrainingCalendar
+    personalTable.querySelectorAll('tr').forEach((row, index) => {
+      const availabilityData = personalAvailability[index];
+      if (availabilityData) {
+        row.querySelectorAll('input.calendar-input').forEach((input, hour) => {
+          input.value = availabilityData.availability[hour];
+        });
+      }
+    });
+
+    // Aktualizuj tabelę groupTrainingCalendar
+    groupTable.querySelectorAll('tr').forEach((row, index) => {
+      const availabilityData = groupAvailability[index];
+      if (availabilityData) {
+        row.querySelectorAll('input.calendar-input').forEach((input, hour) => {
+          input.value = availabilityData.availability[hour];
+        });
+      }
+    });
+  } catch (error) {
+    console.error('Błąd podczas pobierania dostępności:', error);
+  }
+}
+
+// Wywołaj funkcję updateAvailability, aby zaktualizować stan miejsc przy ładowaniu strony
+updateAvailability();
 
    	
     </script>
