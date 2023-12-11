@@ -360,7 +360,6 @@
    
    
   <script type="module">
-  let selectedDate;
     // Import the required Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js';
   
@@ -381,7 +380,6 @@ import { getFirestore, doc, getDoc, collection, addDoc, getDocs, query, where } 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 const db = getFirestore(app);
-
 
      // Logout function
   logoutButton.addEventListener('click', () => {
@@ -497,14 +495,13 @@ document.getElementById('logout').addEventListener('click', () => {
   }
 }
 
-// Zaktualizowana funkcja saveBooking, aby sprawdzać dostępność przed zapisem
-async function saveBooking(userId, date, trainingType, time, trainerId) {
-    // Najpierw sprawdź dostępność
-    const isAvailable = await isTimeSlotAvailable(date, time, trainingType);
-    if (!isAvailable) {
-        alert('Wybrany przedział czasowy nie jest dostępny.');
-        return;
-    }
+// Poniżej musisz wkleić funkcję openPopup oraz inne pomocnicze funkcje, które współpracują z generateCalendar.
+
+		async function saveBooking(userId, date, trainingType, time, trainerId) {
+  if (!userId) {
+    alert('Nie jesteś zalogowany!');
+    return;
+  }
 
   try {
     // Pobranie dodatkowych informacji o użytkowniku
@@ -724,79 +721,21 @@ bookButton.addEventListener('click', async () => {
     return date < today;
 }
 
-import { runTransaction } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
-
-async function isTimeSlotAvailable(db, date, time, trainingType) {
-  const timeIndex = parseInt(time.split(':')[0]) - 6; // Przekształć czas z formatu "HH:MM" na indeks
-  const availabilityDocRef = doc(db, "availability", date); // Data jako ID dokumentu
-
-  try {
-    await runTransaction(db, async (transaction) => {
-      const availabilityDoc = await transaction.get(availabilityDocRef);
-
-      if (!availabilityDoc.exists()) {
-        throw new Error("Dokument dostępności nie istnieje");
-      }
-
-      const currentAvailability = availabilityDoc.data().availability;
-      if (currentAvailability[timeIndex] > 0) {
-        const updatedAvailability = [...currentAvailability];
-        updatedAvailability[timeIndex]--;
-
-        transaction.update(availabilityDocRef, { availability: updatedAvailability });
-      } else {
-        throw new Error("Brak dostępnych slotów");
-      }
-    });
-
-    return true; // Slot jest dostępny i został zaktualizowany
-  } catch (error) {
-    console.error("Nie udało się zaktualizować dostępności: ", error);
-    return false; // Slot nie jest dostępny lub wystąpił błąd
-  }
+async function isTimeSlotAvailable(date, time, trainingType) {
+  const bookingsRef = collection(db, "bookings");
+  const querySnapshot = await getDocs(query(bookingsRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
+  return querySnapshot.empty; // Zwróć true jeśli nie ma rezerwacji, false w przeciwnym wypadku
 }
-
-// Przykładowe użycie powyższej funkcji (możesz to umieścić tam, gdzie wykonujesz rezerwację):
-// ...
-const isAvailable = await isTimeSlotAvailable(selectedDate, selectedTimeSlot, 'personal');
-if (isAvailable) {
-  // kontynuuj z procesem rezerwacji
-} else {
-  alert('Wybrany przedział czasowy nie jest dostępny.');
-}
-// ...
 
 document.getElementById('logout').addEventListener('click', () => {
-  signOut(auth).then(() => {
-    window.location.href = 'login.html'; // Wylogowanie udane, przekierowanie do strony logowania
-  }).catch((error) => {
-    console.error('Logout failed', error); // Wystąpił błąd podczas wylogowywania
-  });
+    signOut(auth).then(() => {
+        // Sign-out successful, redirect to login page
+        window.location.href = 'login.html';
+    }).catch((error) => {
+        // An error happened during sign out
+        console.error('Logout failed', error);
+    });
 });
-
-// Zakładając, że masz element interfejsu użytkownika, z którego pobierasz datę, na przykład input typu date.
-let selectedDate = document.getElementById('your-date-input-id').value; // Pobierz wartość daty
-
-// Teraz możesz użyć zmiennej selectedDate w swojej funkcji
-const timeSlot = '10:00'; // Przykładowy wybrany czas, powinieneś to dostosować
-const trainingType = 'personal'; // Przykładowy typ treningu, dostosuj do swoich potrzeb
-
-// Upewnij się, że przekazujesz `db` (referencję do bazy danych) do swojej funkcji
-isTimeSlotAvailable(db, selectedDate, timeSlot, trainingType)
-  .then(isAvailable => {
-    if (isAvailable) {
-      // Kod do wykonania, gdy slot czasowy jest dostępny
-    } else {
-      // Kod do wykonania, gdy slot czasowy nie jest dostępny
-    }
-  })
-  .catch(error => {
-    // Obsługa błędów
-    console.error('Wystąpił błąd podczas sprawdzania dostępności: ', error);
-  });
-
-// Pamiętaj, że musisz zdefiniować `db` wcześniej w swoim kodzie, na przykład:
-// const db = getFirestore(app);
 
 	
 </script>
