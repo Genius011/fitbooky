@@ -495,13 +495,14 @@ document.getElementById('logout').addEventListener('click', () => {
   }
 }
 
-// Poniżej musisz wkleić funkcję openPopup oraz inne pomocnicze funkcje, które współpracują z generateCalendar.
-
-		async function saveBooking(userId, date, trainingType, time, trainerId) {
-  if (!userId) {
-    alert('Nie jesteś zalogowany!');
-    return;
-  }
+// Zaktualizowana funkcja saveBooking, aby sprawdzać dostępność przed zapisem
+async function saveBooking(userId, date, trainingType, time, trainerId) {
+    // Najpierw sprawdź dostępność
+    const isAvailable = await isTimeSlotAvailable(date, time, trainingType);
+    if (!isAvailable) {
+        alert('Wybrany przedział czasowy nie jest dostępny.');
+        return;
+    }
 
   try {
     // Pobranie dodatkowych informacji o użytkowniku
@@ -721,21 +722,56 @@ bookButton.addEventListener('click', async () => {
     return date < today;
 }
 
-async function isTimeSlotAvailable(date, time, trainingType) {
-  const bookingsRef = collection(db, "bookings");
-  const querySnapshot = await getDocs(query(bookingsRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
-  return querySnapshot.empty; // Zwróć true jeśli nie ma rezerwacji, false w przeciwnym wypadku
+import { runTransaction } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js';
+
+async function isTimeSlotAvailable(db, date, time, trainingType) {
+  const timeIndex = parseInt(time.split(':')[0]) - 6; // Przekształć czas z formatu "HH:MM" na indeks
+  const availabilityDocRef = doc(db, "availability", date); // Data jako ID dokumentu
+
+  try {
+    await runTransaction(db, async (transaction) => {
+      const availabilityDoc = await transaction.get(availabilityDocRef);
+
+      if (!availabilityDoc.exists()) {
+        throw new Error("Dokument dostępności nie istnieje");
+      }
+
+      const currentAvailability = availabilityDoc.data().availability;
+      if (currentAvailability[timeIndex] > 0) {
+        const updatedAvailability = [...currentAvailability];
+        updatedAvailability[timeIndex]--;
+
+        transaction.update(availabilityDocRef, { availability: updatedAvailability });
+      } else {
+        throw new Error("Brak dostępnych slotów");
+      }
+    });
+
+    return true; // Slot jest dostępny i został zaktualizowany
+  } catch (error) {
+    console.error("Nie udało się zaktualizować dostępności: ", error);
+    return false; // Slot nie jest dostępny lub wystąpił błąd
+  }
 }
 
+// Przykładowe użycie powyższej funkcji (możesz to umieścić tam, gdzie wykonujesz rezerwację):
+// ...
+const isAvailable = await isTimeSlotAvailable(selectedDate, selectedTimeSlot, 'personal');
+if (isAvailable) {
+  // kontynuuj z procesem rezerwacji
+} else {
+  alert('Wybrany przedział czasowy nie jest dostępny.');
+}
+// ...
+
 document.getElementById('logout').addEventListener('click', () => {
-    signOut(auth).then(() => {
-        // Sign-out successful, redirect to login page
-        window.location.href = 'login.html';
-    }).catch((error) => {
-        // An error happened during sign out
-        console.error('Logout failed', error);
-    });
+  signOut(auth).then(() => {
+    window.location.href = 'login.html'; // Wylogowanie udane, przekierowanie do strony logowania
+  }).catch((error) => {
+    console.error('Logout failed', error); // Wystąpił błąd podczas wylogowywania
+  });
 });
+
 
 	
 </script>
