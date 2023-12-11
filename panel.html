@@ -1143,28 +1143,6 @@ console.log("onAuthStateChanged called");
   }
 });
 
-  
-  updateDatesForWeek(new Date());
-  setupWeekNavigation();
-});
-
-
-function formatDate(date) {
-  return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
-}
-
-function setupWeekNavigation() {
-  document.getElementById('prevWeek').addEventListener('click', function() {
-    let current = new Date(document.querySelectorAll('.date-display')[0].textContent);
-    updateDatesForWeek(new Date(current.setDate(current.getDate() - 7)));
-  });
-
-  document.getElementById('nextWeek').addEventListener('click', function() {
-    let current = new Date(document.querySelectorAll('.date-display')[6].textContent);
-    updateDatesForWeek(new Date(current.setDate(current.getDate() + 1)));
-  });
-}
-
 
 async function displayFutureBookings() {
   console.log("displayFutureBookings called"); // Sprawdź, czy funkcja jest wywoływana
@@ -1306,16 +1284,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   
- 
-  // Aktualizacja dat na stronie zgodnie z aktualnym tygodniem
-  updateDatesForWeek(new Date());
-  
-  // Ustawienie nawigacji tygodniowej
-  setupWeekNavigation();
-  
-  // Reszta kodu, która może być potrzebna do innych funkcji na stronie...
-});
-
 
 function viewProfile(userId) {
   const modal = document.getElementById('profileModal');
