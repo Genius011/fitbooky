@@ -1665,20 +1665,17 @@ document.addEventListener('DOMContentLoaded', function () {
 async function sendToFirebase(data) {
   try {
     const collectionRef = collection(db, 'availability'); // Zmień na odpowiednią kolekcję w Firebase
-    const querySnapshot = await query(
+    const q = query(
       collectionRef,
       where('date', '==', data.date),
       where('trainerId', '==', data.trainerId)
     );
-    
-    const matchingDocs = [];
-    querySnapshot.forEach((doc) => {
-      matchingDocs.push(doc);
-    });
 
-    if (matchingDocs.length > 0) {
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
       // Jeśli istnieją pasujące dokumenty, to nadpisz pierwszy z nich
-      const docToOverwrite = matchingDocs[0];
+      const docToOverwrite = querySnapshot.docs[0];
       await updateDoc(docToOverwrite.ref, data);
     } else {
       // Jeśli nie ma pasujących dokumentów, to utwórz nowy dokument
@@ -1691,6 +1688,7 @@ async function sendToFirebase(data) {
     throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendToFirebase
   }
 }
+
 
 
 
