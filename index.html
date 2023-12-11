@@ -757,16 +757,6 @@ async function isTimeSlotAvailable(db, date, time, trainingType) {
   }
 }
 
-// Przykładowe użycie powyższej funkcji (możesz to umieścić tam, gdzie wykonujesz rezerwację):
-// ...
-const isAvailable = await isTimeSlotAvailable(selectedDate, selectedTimeSlot, 'personal');
-if (isAvailable) {
-  // kontynuuj z procesem rezerwacji
-} else {
-  alert('Wybrany przedział czasowy nie jest dostępny.');
-}
-// ...
-
 document.getElementById('logout').addEventListener('click', () => {
   signOut(auth).then(() => {
     window.location.href = 'login.html'; // Wylogowanie udane, przekierowanie do strony logowania
