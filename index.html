@@ -379,6 +379,32 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  
+  async function updateAvailability(hour) {
+  try {
+    const hourKey = hour - 6; // Zakładając, że 6:00 to 0, 7:00 to 1, itd.
+    const availabilityRef = doc(db, "availability", hourKey.toString());
+    const docSnap = await getDoc(availabilityRef);
+
+    if (docSnap.exists()) {
+      let currentAvailability = docSnap.data().number;
+      if (currentAvailability > 0) {
+        await updateDoc(availabilityRef, { number: currentAvailability - 1 });
+        return true;
+      } else {
+        console.log("Brak dostępnych miejsc na tę godzinę");
+        return false;
+      }
+    } else {
+      console.log("Nie znaleziono dokumentu dla tej godziny");
+      return false;
+    }
+  } catch (error) {
+    console.error("Błąd podczas aktualizacji dostępności:", error);
+    return false;
+  }
+}
+
 
   // Logout function
   const logoutButton = document.getElementById('logout');
