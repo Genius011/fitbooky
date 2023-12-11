@@ -383,7 +383,7 @@
   async function updateAvailability(hour) {
   try {
     console.log("Rozpoczynanie aktualizacji dostępności dla godziny:", hour);
-    const hourKey = hour - 6;
+    const hourKey = hour - 6; // Zakładając, że 6:00 to 0, 7:00 to 1, itd.
     const availabilityRef = doc(db, "availability", hourKey.toString());
     const docSnap = await getDoc(availabilityRef);
 
@@ -410,6 +410,7 @@
     return false;
   }
 }
+
 
 
 
