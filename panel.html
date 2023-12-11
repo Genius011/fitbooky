@@ -1717,7 +1717,8 @@ document.addEventListener('DOMContentLoaded', async function () {
       const q = query(
         collectionRef,
         where('date', '==', data.date),
-        where('trainerId', '==', data.trainerId)
+        where('trainerId', '==', data.trainerId),
+        where('trainingType', '==', data.trainingType)
       );
 
       const querySnapshot = await getDocs(q);
@@ -1738,6 +1739,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   }
 });
+
 
 
 
