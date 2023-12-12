@@ -329,6 +329,8 @@
     <p id="totalSessions"><i class="fas fa-calendar-alt"></i> Wszystkich treningów: 1</p>
 	<br>
 	<p id="nextTraining"><i class="fas fa-clock"></i> Następny trening: <span id="nextTrainingDate"></span></p>
+	<ul id="trainingList"></ul>
+
 <div id="profileModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
@@ -507,52 +509,36 @@
     document.addEventListener('DOMContentLoaded', () => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                fetchAndDisplayUserData(user.uid);
+    // Fetch user's bookings
+    const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid));
+    getDocs(bookingsQuery)
+        .then((bookingsSnapshot) => {
+            const trainingListElement = document.getElementById('trainingList');
+            
+            // Clear the existing list before populating it
+            trainingListElement.innerHTML = '';
 
-                // Fetch user's bookings
-                const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid));
-                getDocs(bookingsQuery)
-                    .then((bookingsSnapshot) => {
-                        const now = new Date();
-                        let nextTraining = null;
+            // Iterate through the booking documents and populate the list
+            bookingsSnapshot.forEach((bookingDoc) => {
+                const bookingData = bookingDoc.data();
+                const trainingDate = new Date(bookingData.date + 'T' + bookingData.time + 'Z');
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
+                const formattedDate = trainingDate.toLocaleDateString('pl-PL', options);
+                const formattedTime = trainingDate.toLocaleTimeString('pl-PL', options);
 
-                        // Find the next training session
-                        bookingsSnapshot.forEach((bookingDoc) => {
-                            const bookingData = bookingDoc.data();
-                            // Uwzględnij strefę czasową - w tym przypadku zakładam UTC
-                            const trainingDate = new Date(bookingData.date + 'T' + bookingData.time + 'Z');
-
-                            // Check if the training is in the future and not canceled
-                            if (trainingDate > now && !bookingData.canceled) {
-                                if (!nextTraining || trainingDate < nextTraining.date) {
-                                    nextTraining = {
-                                        date: trainingDate,
-                                        type: bookingData.trainingType,
-                                    };
-                                }
-                            }
-                        });
-
-                        // Display the next training session information
-                        const nextTrainingElement = document.getElementById('nextTraining');
-                        if (nextTraining) {
-                            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
-                            const formattedDate = nextTraining.date.toLocaleDateString('pl-PL', options);
-                            const formattedTime = nextTraining.date.toLocaleTimeString('pl-PL', options);
-                            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: ${formattedDate}, ${formattedTime}, ${nextTraining.type}`;
-                        } else {
-                            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: Brak`;
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Error fetching bookings:', error);
-                    });
-            } else {
-                // User is signed out
-                // Handle user state when not logged in if necessary
-            }
+                // Create a list item for each training session and add it to the list
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<i class="fas fa-calendar"></i> ${formattedDate}, ${formattedTime}, ${bookingData.trainingType}`;
+                trainingListElement.appendChild(listItem);
+            });
+        })
+        .catch((error) => {
+            console.error('Error fetching bookings:', error);
         });
-    });
+} else {
+    // User is signed out
+    // Handle user state when not logged in if necessary
+}
 
     // Dodaj obsługę kliknięcia przycisku "Dodaj do kalendarza Google"
     const addToGoogleCalendarButton = document.getElementById('addToGoogleCalendarButton');
