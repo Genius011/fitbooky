@@ -328,13 +328,7 @@
 	<br>
     <p id="totalSessions"><i class="fas fa-calendar-alt"></i> Wszystkich treningów: 1</p>
 	<br>
-<div id="trainingsListContainer">
-    <h3>Twoje treningi:</h3>
-    <ul id="trainingsList"></ul>
-</div>
-
-
-
+	<p id="nextTraining"><i class="fas fa-clock"></i> Następny trening: <span id="nextTrainingDate"></span></p>
 <div id="profileModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
@@ -417,86 +411,54 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            fetchAndDisplayUserData(user.uid);
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                fetchAndDisplayUserData(user.uid);
 
-            // Pobierz imię użytkownika z dokumentu w bazie danych Firebase
-            const userDocRef = doc(db, 'users', user.uid);
-            getDoc(userDocRef).then((userDocSnap) => {
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-					// Check if the user is a trainer and show or hide the 'Panel Trenera' link
-                const trainerPanelLink = document.getElementById('trainerPanelLink');
-                trainerPanelLink.style.display = userData.isTrainer ? 'block' : 'none';
-                    const userNameButton = document.getElementById('userName');
-                    if (userNameButton) {
-                        userNameButton.textContent = `Cześć ${userData.firstName || ''}`;
-                    }
-                }
-            }).catch((error) => {
-                console.error('Error fetching user data:', error);
-            });
-
-            const editProfileForm = document.getElementById('editProfileForm');
-            editProfileForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const firstName = document.getElementById('firstName').value;
-                const lastName = document.getElementById('lastName').value;
-                const email = document.getElementById('email').value;
-                const phone = document.getElementById('phone').value;
+                // Pobierz imię użytkownika z dokumentu w bazie danych Firebase
                 const userDocRef = doc(db, 'users', user.uid);
-                setDoc(userDocRef, {
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    phone: phone
-                }, { merge: true }).then(() => {
-                    console.log('Profile updated successfully');
-                    alert('Profile updated successfully!');
+                getDoc(userDocRef).then((userDocSnap) => {
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        // Check if the user is a trainer and show or hide the 'Panel Trenera' link
+                        const trainerPanelLink = document.getElementById('trainerPanelLink');
+                        trainerPanelLink.style.display = userData.isTrainer ? 'block' : 'none';
+                        const userNameButton = document.getElementById('userName');
+                        if (userNameButton) {
+                            userNameButton.textContent = `Cześć ${userData.firstName || ''}`;
+                        }
+                    }
                 }).catch((error) => {
-                    console.error('Error updating profile:', error);
-                    alert('Error updating profile');
+                    console.error('Error fetching user data:', error);
                 });
-            });
-        } else {
-            // User is signed out
-            // Handle user state when not logged in if necessary
-        }
+
+                const editProfileForm = document.getElementById('editProfileForm');
+                editProfileForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const firstName = document.getElementById('firstName').value;
+                    const lastName = document.getElementById('lastName').value;
+                    const email = document.getElementById('email').value;
+                    const phone = document.getElementById('phone').value;
+                    const userDocRef = doc(db, 'users', user.uid);
+                    setDoc(userDocRef, {
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        phone: phone
+                    }, { merge: true }).then(() => {
+                        console.log('Profile updated successfully');
+                        alert('Profile updated successfully!');
+                    }).catch((error) => {
+                        console.error('Error updating profile:', error);
+                        alert('Error updating profile');
+                    });
+                });
+            } else {
+                // User is signed out
+                // Handle user state when not logged in if necessary
+            }
+        });
     });
-});
-
-// Add this inside the 'DOMContentLoaded' event listener, after you've confirmed the user is logged in
-const trainingsListElement = document.getElementById('trainingsList');
-const now = new Date();
-
-// Query for future bookings for the logged-in user
-const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid), where('date', '>=', now.toISOString().split('T')[0]));
-
-getDocs(bookingsQuery).then((bookingsSnapshot) => {
-    trainingsListElement.innerHTML = ''; // Clear existing list items
-
-    bookingsSnapshot.forEach((doc) => {
-        const booking = doc.data();
-        const bookingDate = new Date(booking.date + 'T' + booking.time);
-
-        if (bookingDate > now) { // Ensure it's a future training
-            const li = document.createElement('li');
-            li.textContent = `Trening: ${bookingDate.toLocaleDateString()} o godzinie ${bookingDate.toLocaleTimeString()}`;
-            trainingsListElement.appendChild(li);
-        }
-    });
-
-    if (trainingsListElement.innerHTML === '') {
-        trainingsListElement.innerHTML = '<li>Brak przyszłych treningów.</li>';
-    }
-}).catch((error) => {
-    console.error('Error fetching bookings:', error);
-    trainingsListElement.innerHTML = '<li>Wystąpił błąd podczas pobierania treningów.</li>';
-});
-
-
-
 
     // Definiowanie funkcji viewProfile
     function viewProfile(userId) {
@@ -521,8 +483,6 @@ getDocs(bookingsQuery).then((bookingsSnapshot) => {
         });
     }
 
-
-
     // Gdy użytkownik kliknie (x), zamknij modal
     const closeButton = document.querySelector('.close');
     const modal = document.getElementById('profileModal');
@@ -537,86 +497,84 @@ getDocs(bookingsQuery).then((bookingsSnapshot) => {
                 modal.style.display = "none";
             }
         }
-		
-		} else {
+    } else {
         console.error('Element .close lub #profileModal nie istnieje w DOM.');
     }
 
     // Eksportowanie viewProfile do globalnego zasięgu
     window.viewProfile = viewProfile;
 
-document.addEventListener('DOMContentLoaded', () => {
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // Now that 'user' is defined, you can use it here
-            fetchAndDisplayUserData(user.uid);
+    document.addEventListener('DOMContentLoaded', () => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                fetchAndDisplayUserData(user.uid);
 
-            // Now fetch the user's future training sessions
-            const trainingsListElement = document.getElementById('trainingsList');
-            const now = new Date();
-            const bookingsQuery = query(
-                collection(db, 'bookings'),
-                where('userId', '==', user.uid),
-                where('date', '>=', now.toISOString().split('T')[0])
-            );
+                // Fetch user's bookings
+                const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid));
+                getDocs(bookingsQuery)
+                    .then((bookingsSnapshot) => {
+                        const now = new Date();
+                        let nextTraining = null;
 
-            getDocs(bookingsQuery).then((bookingsSnapshot) => {
-                trainingsListElement.innerHTML = ''; // Clear existing list items
+                        // Find the next training session
+                        bookingsSnapshot.forEach((bookingDoc) => {
+                            const bookingData = bookingDoc.data();
+                            // Uwzględnij strefę czasową - w tym przypadku zakładam UTC
+                            const trainingDate = new Date(bookingData.date + 'T' + bookingData.time + 'Z');
 
-                bookingsSnapshot.forEach((doc) => {
-                    const booking = doc.data();
-                    const bookingDate = new Date(booking.date + 'T' + booking.time);
+                            // Check if the training is in the future and not canceled
+                            if (trainingDate > now && !bookingData.canceled) {
+                                if (!nextTraining || trainingDate < nextTraining.date) {
+                                    nextTraining = {
+                                        date: trainingDate,
+                                        type: bookingData.trainingType,
+                                    };
+                                }
+                            }
+                        });
 
-                    if (bookingDate > now) { // Ensure it's a future training
-                        const li = document.createElement('li');
-                        li.textContent = `Trening: ${bookingDate.toLocaleDateString()} o godzinie ${bookingDate.toLocaleTimeString()}`;
-                        trainingsListElement.appendChild(li);
-                    }
-                });
+                        // Display the next training session information
+                        const nextTrainingElement = document.getElementById('nextTraining');
+                        if (nextTraining) {
+                            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
+                            const formattedDate = nextTraining.date.toLocaleDateString('pl-PL', options);
+                            const formattedTime = nextTraining.date.toLocaleTimeString('pl-PL', options);
+                            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: ${formattedDate}, ${formattedTime}, ${nextTraining.type}`;
+                        } else {
+                            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: Brak`;
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching bookings:', error);
+                    });
+            } else {
+                // User is signed out
+                // Handle user state when not logged in if necessary
+            }
+        });
+    });
 
-                if (trainingsListElement.innerHTML === '') {
-                    trainingsListElement.innerHTML = '<li>Brak przyszłych treningów.</li>';
-                }
-            }).catch((error) => {
-                console.error('Error fetching bookings:', error);
-                trainingsListElement.innerHTML = '<li>Wystąpił błąd podczas pobierania treningów.</li>';
-            });
-            // Other operations that depend on the user being logged in
+    // Dodaj obsługę kliknięcia przycisku "Dodaj do kalendarza Google"
+    const addToGoogleCalendarButton = document.getElementById('addToGoogleCalendarButton');
+    addToGoogleCalendarButton.addEventListener('click', () => {
+        // Pobierz dane dotyczące następnego treningu
+        const nextTrainingDateElement = document.getElementById('nextTrainingDate');
+        const nextTrainingDate = nextTrainingDateElement.textContent;
+
+        if (nextTrainingDate) {
+            // Utwórz link do kalendarza Google z danymi treningu
+            const eventTitle = "Następny trening"; // Tytuł wydarzenia
+            const eventDate = nextTrainingDate; // Data wydarzenia (pobrana z elementu)
+
+            // Utwórz link do kalendarza Google z odpowiednimi parametrami
+            const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=${eventDate}/${eventDate}`;
+
+            // Otwórz link w nowym oknie lub zakładce
+            window.open(googleCalendarLink, '_blank');
         } else {
-            // User is not logged in, handle accordingly
+            alert("Brak danych dotyczących następnego treningu.");
         }
     });
-});
-
-
-    // Set onclick handler for the close button
-    closeButton.onclick = function() {
-        const modal = document.getElementById('profileModal');
-        modal.style.display = "none";
-    }
-	
-	// Dodaj obsługę kliknięcia przycisku "Dodaj do kalendarza Google"
-const addToGoogleCalendarButton = document.getElementById('addToGoogleCalendarButton');
-addToGoogleCalendarButton.addEventListener('click', () => {
-    // Pobierz dane dotyczące następnego treningu
-    const nextTrainingDateElement = document.getElementById('nextTrainingDate');
-    const nextTrainingDate = nextTrainingDateElement.textContent;
-
-    if (nextTrainingDate) {
-        // Utwórz link do kalendarza Google z danymi treningu
-        const eventTitle = "Następny trening"; // Tytuł wydarzenia
-        const eventDate = nextTrainingDate; // Data wydarzenia (pobrana z elementu)
-
-        // Utwórz link do kalendarza Google z odpowiednimi parametrami
-        const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=${eventDate}/${eventDate}`;
-
-        // Otwórz link w nowym oknie lub zakładce
-        window.open(googleCalendarLink, '_blank');
-    } else {
-        alert("Brak danych dotyczących następnego treningu.");
-    }
-});
-
-
-
 </script>
+</body>
+</html>
