@@ -419,6 +419,7 @@
     document.addEventListener('DOMContentLoaded', () => {
     onAuthStateChanged(auth, (user) => {
         if (user) {
+            // Inside this callback function, 'user' is defined and can be used.
             fetchAndDisplayUserData(user.uid);
 
             // Pobierz imię użytkownika z dokumentu w bazie danych Firebase
