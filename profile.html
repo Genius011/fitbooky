@@ -412,10 +412,35 @@
         }
     };
 
+ const fetchAndDisplayTrainingSessions = async (userId) => {
+            const sessionsList = document.getElementById('trainingSessionsList');
+            sessionsList.innerHTML = ''; // Clear the list
+
+            const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', userId));
+            const bookingsSnapshot = await getDocs(bookingsQuery);
+
+            if (bookingsSnapshot.empty) {
+                sessionsList.innerHTML = '<p>No upcoming training sessions.</p>';
+            } else {
+                bookingsSnapshot.forEach((bookingDoc) => {
+                    const bookingData = bookingDoc.data();
+                    const trainingDate = new Date(bookingData.date + 'T' + bookingData.time + 'Z');
+                    if (trainingDate > new Date() && !bookingData.canceled) {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `
+                            <strong>${bookingData.trainingType}</strong> on ${trainingDate.toDateString()} at ${trainingDate.toLocaleTimeString()}
+                        `;
+                        sessionsList.appendChild(listItem);
+                    }
+                });
+            }
+        };
+
     document.addEventListener('DOMContentLoaded', () => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 fetchAndDisplayUserData(user.uid);
+                    fetchAndDisplayTrainingSessions(user.uid);
 
                 // Pobierz imię użytkownika z dokumentu w bazie danych Firebase
                 const userDocRef = doc(db, 'users', user.uid);
@@ -509,36 +534,52 @@
     document.addEventListener('DOMContentLoaded', () => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-    // Fetch user's bookings
-    const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid));
-    getDocs(bookingsQuery)
-        .then((bookingsSnapshot) => {
-            const trainingListElement = document.getElementById('trainingList');
-            
-            // Clear the existing list before populating it
-            trainingListElement.innerHTML = '';
+                fetchAndDisplayUserData(user.uid);
 
-            // Iterate through the booking documents and populate the list
-            bookingsSnapshot.forEach((bookingDoc) => {
-                const bookingData = bookingDoc.data();
-                const trainingDate = new Date(bookingData.date + 'T' + bookingData.time + 'Z');
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
-                const formattedDate = trainingDate.toLocaleDateString('pl-PL', options);
-                const formattedTime = trainingDate.toLocaleTimeString('pl-PL', options);
+                // Fetch user's bookings
+                const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid));
+                getDocs(bookingsQuery)
+                    .then((bookingsSnapshot) => {
+                        const now = new Date();
+                        let nextTraining = null;
 
-                // Create a list item for each training session and add it to the list
-                const listItem = document.createElement('li');
-                listItem.innerHTML = `<i class="fas fa-calendar"></i> ${formattedDate}, ${formattedTime}, ${bookingData.trainingType}`;
-                trainingListElement.appendChild(listItem);
-            });
-        })
-        .catch((error) => {
-            console.error('Error fetching bookings:', error);
+                        // Find the next training session
+                        bookingsSnapshot.forEach((bookingDoc) => {
+                            const bookingData = bookingDoc.data();
+                            // Uwzględnij strefę czasową - w tym przypadku zakładam UTC
+                            const trainingDate = new Date(bookingData.date + 'T' + bookingData.time + 'Z');
+
+                            // Check if the training is in the future and not canceled
+                            if (trainingDate > now && !bookingData.canceled) {
+                                if (!nextTraining || trainingDate < nextTraining.date) {
+                                    nextTraining = {
+                                        date: trainingDate,
+                                        type: bookingData.trainingType,
+                                    };
+                                }
+                            }
+                        });
+
+                        // Display the next training session information
+                        const nextTrainingElement = document.getElementById('nextTraining');
+                        if (nextTraining) {
+                            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
+                            const formattedDate = nextTraining.date.toLocaleDateString('pl-PL', options);
+                            const formattedTime = nextTraining.date.toLocaleTimeString('pl-PL', options);
+                            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: ${formattedDate}, ${formattedTime}, ${nextTraining.type}`;
+                        } else {
+                            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: Brak`;
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching bookings:', error);
+                    });
+            } else {
+                // User is signed out
+                // Handle user state when not logged in if necessary
+            }
         });
-} else {
-    // User is signed out
-    // Handle user state when not logged in if necessary
-}
+    });
 
     // Dodaj obsługę kliknięcia przycisku "Dodaj do kalendarza Google"
     const addToGoogleCalendarButton = document.getElementById('addToGoogleCalendarButton');
