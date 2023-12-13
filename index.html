@@ -670,7 +670,9 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
     let timeSlot = document.createElement('div');
     timeSlot.className = 'time-slot';
     let hourIndex = hour - 6; // Since 6:00 is represented by 0 in your availability data
-    timeSlot.textContent = `${hour.toString().padStart(2, '0')}:00`; // Format the hour for display
+        console.log(`Hour: ${hour}, Index: ${hourIndex}, Availability: ${availability[hourIndex]}`);
+
+	timeSlot.textContent = `${hour.toString().padStart(2, '0')}:00`; // Format the hour for display
 
     // Check if the time slot is available in the availability data
     if (availability && availability[hourIndex.toString()] === 1) {
