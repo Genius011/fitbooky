@@ -445,10 +445,6 @@ document.getElementById('logout').addEventListener('click', () => {
     });
 });
 
-
-
-
-	
         const calendar = document.getElementById('calendar');
         const prevMonth = document.getElementById('prevMonth');
         const nextMonth = document.getElementById('nextMonth');
@@ -456,6 +452,35 @@ document.getElementById('logout').addEventListener('click', () => {
         let currentDate = new Date();
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
+
+async function getCurrentUserTrainerId() {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (user) {
+    const userRef = doc(getFirestore(), 'users', user.uid);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+      return userDoc.data().trainerId; // Return the trainerId associated with the user
+    } else {
+      throw new Error('User document does not exist');
+    }
+  } else {
+    throw new Error('No user is currently logged in');
+  }
+}
+
+// Modify this function to include trainerId when opening the popup
+async function openPopupWithAvailability(day) {
+  try {
+    const trainerId = await getCurrentUserTrainerId(); // Retrieve trainerId for the current user
+    const availability = await checkTrainersAvailability(trainerId, day.toISOString().split('T')[0]);
+    openPopup(day, availability); // Pass availability data to the popup function
+  } catch (error) {
+    console.error('Error:', error);
+    // Handle errors such as no user logged in or no trainerId found
+    // Maybe show an error message to the user
+  }
+}
 
         function generateCalendar() {
   calendar.innerHTML = '';
@@ -477,8 +502,9 @@ document.getElementById('logout').addEventListener('click', () => {
     if (day.getMonth() === currentMonth) {
       dayElement.textContent = day.getDate();
       if (day >= today) {
+        // Update this part to use openPopupWithAvailability
         dayElement.addEventListener('click', function() {
-          openPopup(day);
+          openPopupWithAvailability(day); // Use the new function with availability check
         });
       } else {
         dayElement.classList.add('inactive');
@@ -589,10 +615,6 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
     container.appendChild(timeSlot);
   }
 }
-
-// ... (existing code where generateTimeSlots is called)
-
-
 
 
        async function openPopup(selectedDay) {
