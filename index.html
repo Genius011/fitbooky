@@ -746,16 +746,7 @@ function enableAllTimeSlots(popup, availability) {
 
 
 
-        function enableAllTimeSlots(popup) {
-            const timeSlots = popup.querySelectorAll('.time-slot');
-            timeSlots.forEach(slot => {
-                slot.classList.remove('disabled');
-                slot.onclick = function() {
-                    timeSlots.forEach(s => s.classList.remove('selected'));
-                    slot.classList.add('selected');
-                };
-            });
-        }
+        
 
         function enableGroupTrainingSlots(popup, selectedDay) {
             const timeSlots = popup.querySelectorAll('.time-slot');
