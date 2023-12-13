@@ -720,6 +720,8 @@ function enableAllTimeSlots(popup, availability) {
     const timeSlotsContainer = popup.querySelector('.time-slots');
     timeSlotsContainer.innerHTML = '';
 
+    console.log('Availability:', availability);
+
     // Assuming availability is an object with keys as hours and values as boolean (available or not)
     for (let hour = 6; hour <= 21; hour++) {
         const timeSlot = document.createElement('div');
