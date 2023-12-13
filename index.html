@@ -556,28 +556,31 @@ async function openPopupWithAvailability(day) {
   }
 }
 
-// Function to check trainer's availability
+// Function to check trainer's availability using a field-based query
 async function checkTrainersAvailability(trainerId, date) {
   const db = getFirestore();
-  const trainerAvailabilityRef = doc(db, "availability", trainerId);
+  const availabilityRef = collection(db, 'availability');
+  
+  // Create a query against the collection.
+  const q = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', date));
+  
   try {
-    const docSnap = await getDoc(trainerAvailabilityRef);
-    if (docSnap.exists()) {
-      // Get the availability data for the specified date
-      const availabilityData = docSnap.data().availability;
-      // Log the entire availability for the day
-      console.log("Availability for " + date + ":", availabilityData);
-      // Return the availability object
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      // Assuming there is only one document for each trainerId and date combination
+      const availabilityData = querySnapshot.docs[0].data().availability;
+      console.log("Availability data:", availabilityData); // Debugging line
       return availabilityData;
     } else {
-      console.log("No such trainer availability document!");
-      return null; // Indicate that the document does not exist
+      console.log("No matching trainer availability document found!");
+      return null;
     }
   } catch (error) {
     console.error("Error getting trainer availability:", error);
     throw error; // Re-throw the error to be handled by the caller
   }
 }
+
 
 // Example usage:
 // Assuming the trainerId is 'trainer123' and the date is '2023-12-13'
