@@ -417,28 +417,29 @@
     };
 
  const fetchAndDisplayTrainingSessions = async (userId) => {
-            const sessionsList = document.getElementById('trainingSessionsList');
-            sessionsList.innerHTML = ''; // Clear the list
+    const sessionsList = document.getElementById('trainingSessionsList');
+    sessionsList.innerHTML = ''; // Clear the list
 
-            const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', userId));
-            const bookingsSnapshot = await getDocs(bookingsQuery);
+    const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', userId));
+    const bookingsSnapshot = await getDocs(bookingsQuery);
 
-            if (bookingsSnapshot.empty) {
-                sessionsList.innerHTML = '<p>No upcoming training sessions.</p>';
-            } else {
-                bookingsSnapshot.forEach((bookingDoc) => {
-                    const bookingData = bookingDoc.data();
-                    const trainingDate = new Date(bookingData.date + 'T' + bookingData.time + 'Z');
-                    if (trainingDate > new Date() && !bookingData.canceled) {
-                        const listItem = document.createElement('li');
-                        listItem.innerHTML = `
-                            <strong>${bookingData.trainingType}</strong> on ${trainingDate.toDateString()} at ${trainingDate.toLocaleTimeString()}
-                        `;
-                        sessionsList.appendChild(listItem);
-                    }
-                });
+    if (bookingsSnapshot.empty) {
+        sessionsList.innerHTML = '<p>No upcoming training sessions.</p>';
+    } else {
+        bookingsSnapshot.forEach((bookingDoc) => {
+            const bookingData = bookingDoc.data();
+            const trainingDate = new Date(bookingData.date + 'T' + bookingData.time + 'Z');
+            if (trainingDate > new Date() && !bookingData.canceled) {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <strong>${bookingData.trainingType}</strong> on ${trainingDate.toDateString()} at ${trainingDate.toLocaleTimeString()}
+                `;
+                sessionsList.appendChild(listItem);
             }
-        };
+        });
+    }
+};
+
 
     document.addEventListener('DOMContentLoaded', () => {
         onAuthStateChanged(auth, (user) => {
