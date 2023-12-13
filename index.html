@@ -469,18 +469,33 @@ async function getCurrentUserTrainerId() {
   }
 }
 
-// Modify this function to include trainerId when opening the popup
-async function openPopupWithAvailability(day) {
+// This function gets called when you need to check the trainer's availability, such as when a user selects a date on the calendar
+async function checkAvailabilityForSelectedDate(selectedDate) {
   try {
-    const trainerId = await getCurrentUserTrainerId(); // Retrieve trainerId for the current user
-    const availability = await checkTrainersAvailability(trainerId, day.toISOString().split('T')[0]);
-    openPopup(day, availability); // Pass availability data to the popup function
+    // Get the trainerId of the currently logged-in user
+    const trainerId = await getCurrentUserTrainerId();
+    if (!trainerId) {
+      console.error('No trainerId found for the current user.');
+      return;
+    }
+
+    // Format the selected date as required
+    const formattedDate = selectedDate.toISOString().split('T')[0]; // Or any other required format
+
+    // Now check the trainer's availability for this date
+    const availability = await checkTrainersAvailability(trainerId, formattedDate);
+    if (availability) {
+      // Process the availability data here
+      console.log(`Availability for ${formattedDate}:`, availability);
+      // Update the UI with available time slots or other relevant actions
+    } else {
+      console.log(`No availability found for trainer on ${formattedDate}.`);
+    }
   } catch (error) {
-    console.error('Error:', error);
-    // Handle errors such as no user logged in or no trainerId found
-    // Maybe show an error message to the user
+    console.error('Error checking availability:', error);
   }
 }
+
 
 
 // This function is triggered when the user selects a date from the calendar
@@ -531,10 +546,9 @@ async function handleDateSelection(selectedDate) {
     if (day.getMonth() === currentMonth) {
       dayElement.textContent = day.getDate();
       if (day >= today) {
-        // Attach event listener to handle date selection
         dayElement.addEventListener('click', function() {
-          // Call handleDateSelection with the date as the argument
-          handleDateSelection(day);
+          const selectedDate = new Date(currentYear, currentMonth, dayElement.textContent);
+          checkAvailabilityForSelectedDate(selectedDate); // Call the function with the selected date
         });
       } else {
         dayElement.classList.add('inactive');
@@ -550,6 +564,7 @@ async function handleDateSelection(selectedDate) {
     calendar.appendChild(dayElement);
   }
 }
+
 
 // The handleDateSelection function should already be defined in your script.
 // Make sure it is defined above where you call generateCalendar() to ensure it is hoisted correctly.
@@ -623,7 +638,7 @@ async function checkTrainersAvailability(trainerId, date) {
 
 // Example usage:
 // Assuming the trainerId is 'trainer123' and the date is '2023-12-13'
-checkTrainersAvailability('ot2JR0HGoMZwavjJB8d77EKl0v43', '2023-12-13').then(availability => {
+checkTrainersAvailability('trainer123', '2023-12-13').then(availability => {
   if (availability) {
     // Process the availability data here
     // For example, update the UI with available time slots
