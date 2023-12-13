@@ -448,6 +448,38 @@ const trainerId = 'oJ2JR0HG0MZvavvJB8d77Ek10v43'; // przykładowy trainerId
 loadAvailabilityAndGenerateTimeSlots(container, trainerId);
 
 
+
+  async function updateAvailability(hour) {
+    try {
+      console.log("Rozpoczynanie aktualizacji dostępności dla godziny:", hour);
+      const hourKey = hour - 6; // Zakładając, że 6:00 to 0, 7:00 to 1, itd.
+      const availabilityRef = doc(db, "availability", hourKey.toString());
+      const docSnap = await getDoc(availabilityRef);
+
+      console.log("Odczytano dokument:", docSnap.exists());
+
+      if (docSnap.exists()) {
+        let currentAvailability = docSnap.data().number;
+        console.log("Aktualna dostępność:", currentAvailability);
+
+        if (currentAvailability > 0) {
+          await updateDoc(availabilityRef, { number: currentAvailability - 1 });
+          console.log("Zaktualizowano dostępność");
+          return true;
+        } else {
+          console.log("Brak dostępnych miejsc na tę godzinę");
+          return false;
+        }
+      } else {
+        console.log("Nie znaleziono dokumentu dla tej godziny");
+        return false;
+      }
+    } catch (error) {
+      console.error("Błąd podczas aktualizacji dostępności:", error);
+      return false;
+    }
+  }
+
   const logoutButton = document.getElementById('logout');
   logoutButton.addEventListener('click', () => {
     signOut(auth).then(() => {
