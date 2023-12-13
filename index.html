@@ -482,6 +482,35 @@ async function openPopupWithAvailability(day) {
   }
 }
 
+
+// This function is triggered when the user selects a date from the calendar
+async function handleDateSelection(selectedDate) {
+  try {
+    // Get the trainerId of the currently logged-in user
+    const trainerId = await getCurrentUserTrainerId();
+    if (!trainerId) {
+      console.log('No trainerId found for the current user.');
+      return;
+    }
+
+    // Format the selected date to match the format stored in your Firestore documents
+    const formattedDate = selectedDate.toISOString().split('T')[0]; // Adjust if needed
+
+    // Now check the trainer's availability for this date
+    const availability = await checkTrainersAvailability(trainerId, formattedDate);
+    if (availability) {
+      // Process the availability data here
+      // For example, enable or disable time slots based on the availability
+      console.log(`Availability for ${formattedDate}:`, availability);
+    } else {
+      console.log(`No availability found for trainer on ${formattedDate}.`);
+    }
+  } catch (error) {
+    console.error('Error handling date selection:', error);
+  }
+}
+
+
         function generateCalendar() {
   calendar.innerHTML = '';
   let today = new Date();
@@ -502,9 +531,10 @@ async function openPopupWithAvailability(day) {
     if (day.getMonth() === currentMonth) {
       dayElement.textContent = day.getDate();
       if (day >= today) {
-        // Update this part to use openPopupWithAvailability
+        // Attach event listener to handle date selection
         dayElement.addEventListener('click', function() {
-          openPopupWithAvailability(day); // Use the new function with availability check
+          // Call handleDateSelection with the date as the argument
+          handleDateSelection(day);
         });
       } else {
         dayElement.classList.add('inactive');
@@ -520,6 +550,10 @@ async function openPopupWithAvailability(day) {
     calendar.appendChild(dayElement);
   }
 }
+
+// The handleDateSelection function should already be defined in your script.
+// Make sure it is defined above where you call generateCalendar() to ensure it is hoisted correctly.
+
 
 // Poniżej musisz wkleić funkcję openPopup oraz inne pomocnicze funkcje, które współpracują z generateCalendar.
 
