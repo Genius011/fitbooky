@@ -561,15 +561,19 @@ async function checkTrainersAvailability(trainerId, date) {
   const db = getFirestore();
   const availabilityRef = collection(db, 'availability');
   
+  console.log(`Querying for availability with trainerId: ${trainerId} and date: ${date}`);
+
+  // Make sure the date is formatted correctly as per your Firestore document
+  const formattedDate = new Date(date).toISOString().split('T')[0]; // Example date formatting
+  
   // Create a query against the collection.
-  const q = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', date));
+  const q = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate));
   
   try {
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
-      // Assuming there is only one document for each trainerId and date combination
       const availabilityData = querySnapshot.docs[0].data().availability;
-      console.log("Availability data:", availabilityData); // Debugging line
+      console.log("Found availability data:", availabilityData);
       return availabilityData;
     } else {
       console.log("No matching trainer availability document found!");
@@ -577,9 +581,10 @@ async function checkTrainersAvailability(trainerId, date) {
     }
   } catch (error) {
     console.error("Error getting trainer availability:", error);
-    throw error; // Re-throw the error to be handled by the caller
+    throw error;
   }
 }
+
 
 
 // Example usage:
