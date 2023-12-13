@@ -503,8 +503,14 @@ async function handleDateSelection(selectedDate) {
       return;
     }
 
-    // Format the selected date to match the format stored in your Firestore documents
-    const formattedDate = selectedDate.toISOString().split('T')[0]; // Adjust if needed
+    // Get the time zone offset in minutes and convert it to milliseconds
+    const timezoneOffset = selectedDate.getTimezoneOffset() * 60000;
+
+    // Subtract the timezone offset to get the correct UTC time for the start of the day
+    const adjustedDate = new Date(selectedDate.getTime() - timezoneOffset);
+
+    // Now you can use toISOString() without it changing the date due to UTC conversion
+    const formattedDate = adjustedDate.toISOString().split('T')[0];
 
     // Now check the trainer's availability for this date
     const availability = await checkTrainersAvailability(trainerId, formattedDate);
@@ -519,6 +525,7 @@ async function handleDateSelection(selectedDate) {
     console.error('Error handling date selection:', error);
   }
 }
+
 
 
         function generateCalendar() {
@@ -542,9 +549,20 @@ async function handleDateSelection(selectedDate) {
       dayElement.textContent = day.getDate();
       if (day >= today) {
         dayElement.addEventListener('click', function() {
-          const selectedDate = new Date(currentYear, currentMonth, dayElement.textContent);
-          checkAvailabilityForSelectedDate(selectedDate); // Call the function with the selected date
-        });
+  // Parse the day from the element's text content
+  const dayNumber = parseInt(dayElement.textContent, 10); // Use base 10 for parseInt
+
+  // Create a new date object for the clicked day
+  const selectedDate = new Date(currentYear, currentMonth, dayNumber);
+
+  // Adjust for the timezone offset before passing it to checkAvailabilityForSelectedDate
+  const timezoneOffset = selectedDate.getTimezoneOffset() * 60000; // Offset in milliseconds
+  const adjustedDate = new Date(selectedDate.getTime() - timezoneOffset);
+
+  // Now you can pass the adjustedDate which represents the correct local date
+  checkAvailabilityForSelectedDate(adjustedDate);
+});
+
       } else {
         dayElement.classList.add('inactive');
       }
