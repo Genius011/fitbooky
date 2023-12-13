@@ -398,55 +398,17 @@
 }
 
 
-
-
-  function loadAvailabilityAndGenerateTimeSlots(container, trainerId) {
-  firebase.firestore().collection('availability')
-    .where('trainerId', '==', trainerId) // Filtrowanie dokumentów po trainerId
-    .get()
-    .then(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        // Założenie: istnieje tylko jeden dokument na trenera na dany dzień
-        const availabilityData = doc.data().availability;
-        generateTimeSlots(container, availabilityData, trainerId);
-      });
-    })
-    .catch(error => {
-      console.log("Error getting documents: ", error);
-    });
-}
-
-function generateTimeSlots(container, availability, trainerId) {
+  // Modify the generateTimeSlots function
+function generateTimeSlots(container, availability) {
   container.innerHTML = '';
-  for (let hour = 0; hour <= 15; hour++) {
-    let actualHour = hour + 6; // Konwersja indeksu na godzinę, zaczynając od 6:00
-
-    // Sprawdzamy ilość miejsc dostępnych na dany slot
-    let timeSlotClass = availability[hour.toString()] > 0 ? 'available' : 'unavailable';
-
-    // Jeśli godzina jest niedostępna (ilość miejsc równa 0), to wyszarz ją
-    if (timeSlotClass === 'unavailable') {
-      timeSlotClass += ' grayed-out';
-    }
-
-    console.log(`Trainer ID ${trainerId} - Time slot ${actualHour}:00 has ${availability[hour.toString()]} available spot(s)`); // Log statusu slotu czasowego
+  for (let hour = 0; hour <= 15; hour++) { // Adjust based on your actual slots
+    let actualHour = hour + 6; // Convert index to hour
+    let timeSlotClass = availability[hour] === 1 ? 'available' : 'unavailable';
+    console.log(`Time slot ${actualHour}:00 is ${timeSlotClass}`); // Log the time slot status
     let timeSlot = createTimeSlotElement(actualHour, timeSlotClass);
     container.appendChild(timeSlot);
   }
 }
-
-function createTimeSlotElement(hour, className) {
-  const timeSlot = document.createElement('div');
-  timeSlot.className = className;
-  timeSlot.textContent = `${hour}:00`;
-  return timeSlot;
-}
-
-// Przykładowe użycie
-const container = document.getElementById('timeslot-container');
-const trainerId = 'oJ2JR0HG0MZvavvJB8d77Ek10v43'; // przykładowy trainerId
-loadAvailabilityAndGenerateTimeSlots(container, trainerId);
-
 
 
   async function updateAvailability(hour) {
@@ -520,7 +482,8 @@ loadAvailabilityAndGenerateTimeSlots(container, trainerId);
       }
     });
 	
-	
+	await generateCalendar();
+  });
 
     const dropdown = document.querySelector('.dropdown');
     dropdown.addEventListener('mouseover', () => {
