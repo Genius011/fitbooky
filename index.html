@@ -530,6 +530,32 @@ document.getElementById('logout').addEventListener('click', () => {
   }
 }
 
+// Function to check trainer's availability
+async function checkTrainersAvailability(trainerId, date) {
+  const db = getFirestore();
+  const trainerAvailabilityRef = doc(db, "availability", trainerId);
+  try {
+    const docSnap = await getDoc(trainerAvailabilityRef);
+    if (docSnap.exists()) {
+      const availabilityData = docSnap.data();
+      const dayAvailability = availabilityData[date]; // Assuming the date is the key for the availability
+      if (dayAvailability) {
+        // Process the availability data
+        console.log("Availability for " + date + ":", dayAvailability);
+      } else {
+        console.log("No availability data for this date");
+      }
+    } else {
+      console.log("No such trainer availability document!");
+    }
+  } catch (error) {
+    console.error("Error getting trainer availability:", error);
+  }
+}
+
+// Example usage:
+// Assuming the trainerId is 'trainer123' and the date is '2023-12-13'
+checkTrainersAvailability('trainer123', '2023-12-13');
 
 
        async function openPopup(selectedDay) {
@@ -599,11 +625,7 @@ bookButton.addEventListener('click', async () => {
       alert("Proszę wybrać rodzaj treningu i godzinę");
     }
   });
-
-
-    
-			
-			
+		
 			
             document.body.appendChild(popup);
 
@@ -736,6 +758,8 @@ document.getElementById('logout').addEventListener('click', () => {
         console.error('Logout failed', error);
     });
 });
+
+
 
 	
 </script>
