@@ -679,7 +679,7 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
       // Add code here to handle booking the selected time slot
     } else {
       timeSlot.classList.add('inactive');
-	  console.log(`${hour}:00 is inactive.`);
+	  console.log(`Time slot for ${hour}:00 should be inactive.`);
     }
 
     container.appendChild(timeSlot);
