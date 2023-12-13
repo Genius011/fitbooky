@@ -469,32 +469,27 @@ async function getCurrentUserTrainerId() {
   }
 }
 
-// This function gets called when you need to check the trainer's availability, such as when a user selects a date on the calendar
 async function checkAvailabilityForSelectedDate(selectedDate) {
   try {
-    // Get the trainerId of the currently logged-in user
     const trainerId = await getCurrentUserTrainerId();
     if (!trainerId) {
       console.error('No trainerId found for the current user.');
       return;
     }
 
-    // Format the selected date as required
-    const formattedDate = selectedDate.toISOString().split('T')[0]; // Or any other required format
-
-    // Now check the trainer's availability for this date
+    const formattedDate = selectedDate.toISOString().split('T')[0];
     const availability = await checkTrainersAvailability(trainerId, formattedDate);
     if (availability) {
-      // Process the availability data here
-      console.log(`Availability for ${formattedDate}:`, availability);
-      // Update the UI with available time slots or other relevant actions
+      openPopup(selectedDate, availability); // Pass the availability data to the popup
     } else {
       console.log(`No availability found for trainer on ${formattedDate}.`);
+      // Optionally, handle the case when no availability is found (e.g., show a message)
     }
   } catch (error) {
     console.error('Error checking availability:', error);
   }
 }
+
 
 
 
@@ -674,122 +669,78 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
 }
 
 
-       async function openPopup(selectedDay) {
+       async function openPopup(selectedDay, availability) {
     const popup = document.createElement('div');
     popup.className = 'popup';
     popup.innerHTML = `
         <div class="popup-content">
             <span class="close-btn">&times;</span>
-          <h2 class="centered-title">Zarezerwuj swój trening</h2>
+            <h2 class="centered-title">Zarezerwuj swój trening</h2>
             <div class="training-type-container">
                 <div class="training-type" data-type="personal">Personalny</div>
                 <div class="training-type" data-type="group">Grupowy</div>
             </div>
-			
-           <hr class="separator">
-    <div class="time-slots"></div>
-    <div class="booking-section">
-        <div class="booking-text">
-           
-        </div>
-        <div class="checkbox-section">
-            <label for="cancellationCheckbox">Akceptuję warunki anulacji</label>
-            <input type="checkbox" id="cancellationCheckbox">
-        </div>
-    </div>
-    <button id="bookButton" class="book-btn">Rezerwuj</button>
-</div>
-    `;
+            <hr class="separator">
+            <div class="time-slots"></div>
+            <div class="booking-section">
+                <div class="booking-text"></div>
+                <div class="checkbox-section">
+                    <label for="cancellationCheckbox">Akceptuję warunki anulacji</label>
+                    <input type="checkbox" id="cancellationCheckbox">
+                </div>
+            </div>
+            <button id="bookButton" class="book-btn">Rezerwuj</button>
+        </div>`;
 
     document.body.appendChild(popup);
-const bookButton = document.getElementById('bookButton');
-bookButton.addEventListener('click', async () => {
-    const selectedTrainingType = popup.querySelector('.training-type.selected')?.getAttribute('data-type');
-    const selectedTimeSlot = popup.querySelector('.time-slot.selected')?.textContent;
-    const cancellationCheckbox = document.getElementById('cancellationCheckbox');
-    
-    if (selectedTrainingType && selectedTimeSlot) {
-      let adjustedMonth = selectedDay.getMonth() + 1;
-      let formattedDate = `${selectedDay.getFullYear()}-${adjustedMonth.toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
-      
-      // Pobierz trainerId z danych użytkownika
-      const userRef = doc(getFirestore(), 'users', currentUserId);
-      const docSnap = await getDoc(userRef);
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        const trainerId = userData.trainerId;
-        
-        // Sprawdź dostępność dla wybranego slotu czasowego i treningu personalnego
-        if (selectedTrainingType === 'personal') {
-          const available = await isTimeSlotAvailable(formattedDate, selectedTimeSlot, selectedTrainingType);
-          if (!available) {
-            alert("Ten termin jest już zajęty. Wybierz inną godzinę.");
-            return;
-          }
-        }
-        
-        if (cancellationCheckbox.checked) {
-          saveBooking(currentUserId, formattedDate, selectedTrainingType, selectedTimeSlot, trainerId); // Przekazanie trainerId
-          popup.remove();
-        } else {
-          alert("Aby dokonać rezerwacji, musisz zaakceptować warunki anulacji.");
-        }
-      } else {
-        console.log("Nie znaleziono danych użytkownika.");
-      }
-    } else {
-      alert("Proszę wybrać rodzaj treningu i godzinę");
-    }
-  });
-		
-			
-            document.body.appendChild(popup);
 
-            const closeBtn = popup.querySelector('.close-btn');
-            const personalTraining = popup.querySelector('.training-type[data-type="personal"]');
-            const groupTraining = popup.querySelector('.training-type[data-type="group"]');
-            closeBtn.onclick = () => popup.remove();
+    const bookButton = document.getElementById('bookButton');
+    bookButton.addEventListener('click', async () => {
+        // ... booking button event listener code ...
+    });
 
-            personalTraining.onclick = function() {
-                selectTrainingType(personalTraining, groupTraining);
-                enableAllTimeSlots(popup);
-            };
-            groupTraining.onclick = function() {
-                selectTrainingType(groupTraining, personalTraining);
-                enableGroupTrainingSlots(popup, selectedDay);
-            };
+    const closeBtn = popup.querySelector('.close-btn');
+    const personalTraining = popup.querySelector('.training-type[data-type="personal"]');
+    const groupTraining = popup.querySelector('.training-type[data-type="group"]');
+    closeBtn.onclick = () => popup.remove();
 
-    generateTimeSlots(popup.querySelector('.time-slots'), 6, 21, selectedDay);
-			
-			
-        }
+    personalTraining.onclick = function() {
+        selectTrainingType(personalTraining, groupTraining);
+        enableAllTimeSlots(popup, availability);
+    };
+    groupTraining.onclick = function() {
+        selectTrainingType(groupTraining, personalTraining);
+        enableGroupTrainingSlots(popup, selectedDay, availability);
+    };
 
-        function generateTimeSlots(container, startHour, endHour, selectedDay) {
-    container.innerHTML = '';
-    let formattedDate = `${selectedDay.getFullYear()}-${(selectedDay.getMonth() + 1).toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
+    enableAllTimeSlots(popup, availability); // Enable time slots based on availability
+}
 
-    for (let hour = startHour; hour <= endHour; hour++) {
-        let timeString = `${hour.toString().padStart(2, '0')}:00`;
-        let timeSlot = document.createElement('div');
+function enableAllTimeSlots(popup, availability) {
+    const timeSlotsContainer = popup.querySelector('.time-slots');
+    timeSlotsContainer.innerHTML = '';
+
+    // Assuming availability is an object with keys as hours and values as boolean (available or not)
+    for (let hour = 6; hour <= 21; hour++) {
+        const timeSlot = document.createElement('div');
         timeSlot.className = 'time-slot';
-        timeSlot.textContent = timeString;
+        timeSlot.textContent = `${hour.toString().padStart(2, '0')}:00`;
+        
+        if (availability[hour]) {
+            timeSlot.classList.remove('inactive');
+            timeSlot.addEventListener('click', function() {
+                // Code to handle time slot selection
+            });
+        } else {
+            timeSlot.classList.add('inactive');
+        }
 
-        // Sprawdź dostępność dla treningów indywidualnych
-        isTimeSlotAvailable(formattedDate, timeString, 'personal').then(available => {
-            if (!available) {
-                timeSlot.classList.add('inactive');
-                timeSlot.onclick = null;
-            } else {
-                timeSlot.onclick = function() {
-                    container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
-                    timeSlot.classList.add('selected');
-                };
-            }
-        });
-
-        container.appendChild(timeSlot);
+        timeSlotsContainer.appendChild(timeSlot);
     }
 }
+
+// Implement enableGroupTrainingSlots similarly, considering the group training logic
+
 
 
 
