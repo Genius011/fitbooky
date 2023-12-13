@@ -675,9 +675,11 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
     // Check if the time slot is available in the availability data
     if (availability && availability[hourIndex.toString()] === 1) {
       timeSlot.classList.remove('inactive');
+	  console.log(`${hour}:00 is available.`);
       // Add code here to handle booking the selected time slot
     } else {
       timeSlot.classList.add('inactive');
+	  console.log(`${hour}:00 is inactive.`);
     }
 
     container.appendChild(timeSlot);
