@@ -720,18 +720,19 @@ function enableAllTimeSlots(popup, availability) {
     const timeSlotsContainer = popup.querySelector('.time-slots');
     timeSlotsContainer.innerHTML = '';
 
-    console.log('Availability:', availability);
+    console.log('Generating time slots with availability:', availability);
 
-    // Assuming availability is an object with keys as hours and values as boolean (available or not)
     for (let hour = 6; hour <= 21; hour++) {
         const timeSlot = document.createElement('div');
         timeSlot.className = 'time-slot';
         timeSlot.textContent = `${hour.toString().padStart(2, '0')}:00`;
         
-        if (availability[hour]) {
+        // Check if the time slot is available using the availability data
+        if (availability && availability[hour.toString()]) {
             timeSlot.classList.remove('inactive');
             timeSlot.addEventListener('click', function() {
-                // Code to handle time slot selection
+                // Handle time slot selection here
+                console.log(`Time slot ${hour}:00 selected.`);
             });
         } else {
             timeSlot.classList.add('inactive');
@@ -739,11 +740,9 @@ function enableAllTimeSlots(popup, availability) {
 
         timeSlotsContainer.appendChild(timeSlot);
     }
+
+    console.log('Time slots added:', timeSlotsContainer.children.length);
 }
-
-// Implement enableGroupTrainingSlots similarly, considering the group training logic
-
-
 
 
 
