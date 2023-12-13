@@ -702,7 +702,71 @@ bookButton.addEventListener('click', async () => {
                 enableGroupTrainingSlots(popup, selectedDay);
             };
 
-    
+    generateTimeSlots(popup.querySelector('.time-slots'), 6, 21, selectedDay);
+			
+			
+        }
+
+        function generateTimeSlots(container, startHour, endHour, selectedDay) {
+    container.innerHTML = '';
+    let formattedDate = `${selectedDay.getFullYear()}-${(selectedDay.getMonth() + 1).toString().padStart(2, '0')}-${selectedDay.getDate().toString().padStart(2, '0')}`;
+
+    for (let hour = startHour; hour <= endHour; hour++) {
+        let timeString = `${hour.toString().padStart(2, '0')}:00`;
+        let timeSlot = document.createElement('div');
+        timeSlot.className = 'time-slot';
+        timeSlot.textContent = timeString;
+
+        // Sprawdź dostępność dla treningów indywidualnych
+        isTimeSlotAvailable(formattedDate, timeString, 'personal').then(available => {
+            if (!available) {
+                timeSlot.classList.add('inactive');
+                timeSlot.onclick = null;
+            } else {
+                timeSlot.onclick = function() {
+                    container.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+                    timeSlot.classList.add('selected');
+                };
+            }
+        });
+
+        container.appendChild(timeSlot);
+    }
+}
+
+
+
+
+        function enableAllTimeSlots(popup) {
+            const timeSlots = popup.querySelectorAll('.time-slot');
+            timeSlots.forEach(slot => {
+                slot.classList.remove('disabled');
+                slot.onclick = function() {
+                    timeSlots.forEach(s => s.classList.remove('selected'));
+                    slot.classList.add('selected');
+                };
+            });
+        }
+
+        function enableGroupTrainingSlots(popup, selectedDay) {
+            const timeSlots = popup.querySelectorAll('.time-slot');
+            timeSlots.forEach(slot => {
+                const slotTime = slot.textContent.trim();
+                const dayOfWeek = selectedDay.getDay();
+
+                slot.classList.add('disabled');
+                slot.onclick = null;
+
+                if ((dayOfWeek === 2 || dayOfWeek === 4) && slotTime === '19:00' || 
+                    (dayOfWeek === 6 && slotTime === '10:00')) {
+                    slot.classList.remove('disabled');
+                    slot.onclick = function() {
+                        timeSlots.forEach(s => s.classList.remove('selected'));
+                        slot.classList.add('selected');
+                    };
+                }
+            });
+        }
 
         function selectTrainingType(selected, other) {
             selected.classList.add('selected');
