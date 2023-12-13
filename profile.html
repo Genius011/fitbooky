@@ -31,7 +31,7 @@
         }
 
         .profile-header {
-            background: #6e8efb;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
             color: #fff;
             padding: 20px 0;
         }
@@ -77,8 +77,8 @@
         }
 
         .profile-actions button {
-            background: white;
-            color: black;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
             border: none;
             font-weight: bold;
             border-radius: 5px;
@@ -131,8 +131,8 @@
 
 .back-button {
     display: inline-block;
-    background: white;
-    color: black;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
     text-decoration: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -177,7 +177,7 @@
 }
 
 .form-button {
-    background: #6e8efb;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -189,7 +189,7 @@
 }
 
 .form-button:hover {
-    background: #6e8efb;
+    background: linear-gradient(135deg, #a777e3, #6e8efb);
 }
 .profile-container {
     /* ...existing styles... */
@@ -242,76 +242,11 @@
     }
 }
 
-/* Dropdown container */
-.dropdown {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    display: inline-block;
-}
-
-/* Dropdown button */
-.dropbtn {
-    background-color: white;
-    color: black;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-}
-
-/* Dropdown content (hidden by default) */
-.dropdown-content {
-    display: none;
-    position: absolute;
-	border-radius: 5px;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-/* Links inside the dropdown */
-.dropdown-content a {
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    color: #333;
-}
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {
-    background-color: #6e8efb;
-    color: white;
-}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-/* Style for the "Back to Calendar" link */
-.back-button {
-    display: none; /* Hide the original Back to Calendar button */
-}
-
-/* Style for the other links */
-.google-calendar-button, .logout-button {
-    display: none; /* Hide other buttons */
-}
-
-
     </style>
 </head>
 <body>
-<div class="dropdown">
-    <button class="dropbtn"><span id="userName"></span><span class="arrow-down">&#9660;</span></button>
-    <div class="dropdown-content">
-        <a href="index.html">Kalendarz</a>
-		<a id="trainerPanelLink" href="/panel.html" style="display: none;">Panel Trenera</a>
-        <a href="#" id="logout">Wyloguj</a>
-    </div>
+<div class="back-to-calendar">
+    <a href="index.html" class="back-button">Back to Calendar</a>
 </div>
 
 
@@ -329,12 +264,6 @@
     <p id="totalSessions"><i class="fas fa-calendar-alt"></i> Wszystkich treningów: 1</p>
 	<br>
 	<p id="nextTraining"><i class="fas fa-clock"></i> Następny trening: <span id="nextTrainingDate"></span></p>
-	<div class="training-sessions">
-    <h2>Your Training Sessions</h2>
-    <ul id="trainingSessionsList"></ul>
-</div>
-
-
 <div id="profileModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
@@ -416,53 +345,10 @@
         }
     };
 
- const fetchAndDisplayTrainingSessions = async (userId) => {
-    const sessionsList = document.getElementById('trainingSessionsList');
-    sessionsList.innerHTML = ''; // Clear the list
-
-    const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', userId));
-    const bookingsSnapshot = await getDocs(bookingsQuery);
-
-    if (bookingsSnapshot.empty) {
-        sessionsList.innerHTML = '<p>No upcoming training sessions.</p>';
-    } else {
-        bookingsSnapshot.forEach((bookingDoc) => {
-            const bookingData = bookingDoc.data();
-            const trainingDate = new Date(bookingData.date + 'T' + bookingData.time + 'Z');
-            if (trainingDate > new Date() && !bookingData.canceled) {
-                const listItem = document.createElement('li');
-                listItem.innerHTML = `
-                    <strong>${bookingData.trainingType}</strong> on ${trainingDate.toDateString()} at ${trainingDate.toLocaleTimeString()}
-                `;
-                sessionsList.appendChild(listItem);
-            }
-        });
-    }
-};
-
-
     document.addEventListener('DOMContentLoaded', () => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 fetchAndDisplayUserData(user.uid);
-                    fetchAndDisplayTrainingSessions(user.uid);
-
-                // Pobierz imię użytkownika z dokumentu w bazie danych Firebase
-                const userDocRef = doc(db, 'users', user.uid);
-                getDoc(userDocRef).then((userDocSnap) => {
-                    if (userDocSnap.exists()) {
-                        const userData = userDocSnap.data();
-                        // Check if the user is a trainer and show or hide the 'Panel Trenera' link
-                        const trainerPanelLink = document.getElementById('trainerPanelLink');
-                        trainerPanelLink.style.display = userData.isTrainer ? 'block' : 'none';
-                        const userNameButton = document.getElementById('userName');
-                        if (userNameButton) {
-                            userNameButton.textContent = `Cześć ${userData.firstName || ''}`;
-                        }
-                    }
-                }).catch((error) => {
-                    console.error('Error fetching user data:', error);
-                });
 
                 const editProfileForm = document.getElementById('editProfileForm');
                 editProfileForm.addEventListener('submit', (e) => {
@@ -515,6 +401,8 @@
         });
     }
 
+
+
     // Gdy użytkownik kliknie (x), zamknij modal
     const closeButton = document.querySelector('.close');
     const modal = document.getElementById('profileModal');
@@ -529,7 +417,8 @@
                 modal.style.display = "none";
             }
         }
-    } else {
+		
+		} else {
         console.error('Element .close lub #profileModal nie istnieje w DOM.');
     }
 
@@ -542,43 +431,46 @@
                 fetchAndDisplayUserData(user.uid);
 
                 // Fetch user's bookings
-                const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid));
-                getDocs(bookingsQuery)
-                    .then((bookingsSnapshot) => {
-                        const now = new Date();
-                        let nextTraining = null;
+const bookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid));
+getDocs(bookingsQuery)
+    .then((bookingsSnapshot) => {
+        const now = new Date();
+        let nextTraining = null;
 
-                        // Find the next training session
-                        bookingsSnapshot.forEach((bookingDoc) => {
-                            const bookingData = bookingDoc.data();
-                            // Uwzględnij strefę czasową - w tym przypadku zakładam UTC
-                            const trainingDate = new Date(bookingData.date + 'T' + bookingData.time + 'Z');
+        // Find the next training session
+        bookingsSnapshot.forEach((bookingDoc) => {
+            const bookingData = bookingDoc.data();
+            // Uwzględnij strefę czasową - w tym przypadku zakładam UTC
+            const trainingDate = new Date(bookingData.date + 'T' + bookingData.time + 'Z');
 
-                            // Check if the training is in the future and not canceled
-                            if (trainingDate > now && !bookingData.canceled) {
-                                if (!nextTraining || trainingDate < nextTraining.date) {
-                                    nextTraining = {
-                                        date: trainingDate,
-                                        type: bookingData.trainingType,
-                                    };
-                                }
-                            }
-                        });
+            // Check if the training is in the future and not canceled
+            if (trainingDate > now && !bookingData.canceled) {
+                if (!nextTraining || trainingDate < nextTraining.date) {
+                    nextTraining = {
+                        date: trainingDate,
+                        type: bookingData.trainingType,
+                    };
+                }
+            }
+        });
 
-                        // Display the next training session information
-                        const nextTrainingElement = document.getElementById('nextTraining');
-                        if (nextTraining) {
-                            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
-                            const formattedDate = nextTraining.date.toLocaleDateString('pl-PL', options);
-                            const formattedTime = nextTraining.date.toLocaleTimeString('pl-PL', options);
-                            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: ${formattedDate}, ${formattedTime}, ${nextTraining.type}`;
-                        } else {
-                            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: Brak`;
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Error fetching bookings:', error);
-                    });
+        // Display the next training session information
+        const nextTrainingElement = document.getElementById('nextTraining');
+        if (nextTraining) {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
+            const formattedDate = nextTraining.date.toLocaleDateString('pl-PL', options);
+            const formattedTime = nextTraining.date.toLocaleTimeString('pl-PL', options);
+            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: ${formattedDate}, ${formattedTime}, ${nextTraining.type}`;
+        } else {
+            nextTrainingElement.innerHTML = `<i class="fas fa-clock"></i> Następny trening: Brak`;
+        }
+    })
+    .catch((error) => {
+        console.error('Error fetching bookings:', error);
+    });
+
+
+                // Rest of your code...
             } else {
                 // User is signed out
                 // Handle user state when not logged in if necessary
@@ -586,27 +478,39 @@
         });
     });
 
-    // Dodaj obsługę kliknięcia przycisku "Dodaj do kalendarza Google"
-    const addToGoogleCalendarButton = document.getElementById('addToGoogleCalendarButton');
-    addToGoogleCalendarButton.addEventListener('click', () => {
-        // Pobierz dane dotyczące następnego treningu
-        const nextTrainingDateElement = document.getElementById('nextTrainingDate');
-        const nextTrainingDate = nextTrainingDateElement.textContent;
+    // Set onclick handler for the close button
+    closeButton.onclick = function() {
+        const modal = document.getElementById('profileModal');
+        modal.style.display = "none";
+    }
+	
+	// Dodaj obsługę kliknięcia przycisku "Dodaj do kalendarza Google"
+const addToGoogleCalendarButton = document.getElementById('addToGoogleCalendarButton');
+addToGoogleCalendarButton.addEventListener('click', () => {
+    // Pobierz dane dotyczące następnego treningu
+    const nextTrainingDateElement = document.getElementById('nextTrainingDate');
+    const nextTrainingDate = nextTrainingDateElement.textContent;
 
-        if (nextTrainingDate) {
-            // Utwórz link do kalendarza Google z danymi treningu
-            const eventTitle = "Następny trening"; // Tytuł wydarzenia
-            const eventDate = nextTrainingDate; // Data wydarzenia (pobrana z elementu)
+    if (nextTrainingDate) {
+        // Utwórz link do kalendarza Google z danymi treningu
+        const eventTitle = "Następny trening"; // Tytuł wydarzenia
+        const eventDate = nextTrainingDate; // Data wydarzenia (pobrana z elementu)
 
-            // Utwórz link do kalendarza Google z odpowiednimi parametrami
-            const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=${eventDate}/${eventDate}`;
+        // Utwórz link do kalendarza Google z odpowiednimi parametrami
+        const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=${eventDate}/${eventDate}`;
 
-            // Otwórz link w nowym oknie lub zakładce
-            window.open(googleCalendarLink, '_blank');
-        } else {
-            alert("Brak danych dotyczących następnego treningu.");
-        }
-    });
+        // Otwórz link w nowym oknie lub zakładce
+        window.open(googleCalendarLink, '_blank');
+    } else {
+        alert("Brak danych dotyczących następnego treningu.");
+    }
+});
+
+
+
 </script>
+
+
+
 </body>
 </html>
