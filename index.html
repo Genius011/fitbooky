@@ -76,7 +76,7 @@
     transition: box-shadow 0.3s, transform 0.3s;
 }
 .calendar-container .time-slot.selected {
-    background-color: #6e8efb !important;
+    background-color: #6e8efb 
 }
 .day:hover, .time-slot:hover {
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
@@ -667,24 +667,30 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
 
     // Then create the time slots
     for (let hour = startHour; hour <= endHour; hour++) {
-        let timeSlot = document.createElement('div');
-        timeSlot.className = 'time-slot';
-        timeSlot.textContent = `${hour.toString().padStart(2, '0')}:00`;
+    let timeSlot = document.createElement('div');
+    timeSlot.className = 'time-slot';
+    timeSlot.textContent = `${hour.toString().padStart(2, '0')}:00`;
 
-        let hourIndex = hour - 6; // Adjust the hour to match the keys in the availability data (0 to 15)
-        
-        // Check if the time slot is available in the availability data
-        if (availability && availability[hourIndex] === 1) {
-            timeSlot.classList.remove('inactive');
-            console.log(`${hour}:00 is available.`);
-            // Add code here to handle booking the selected time slot
-        } else {
-            timeSlot.classList.add('inactive');
-            console.log(`Time slot for ${hour}:00 should be inactive.`);
-        }
-
-        container.appendChild(timeSlot);
+    let hourIndex = hour - 6; // Adjust the hour to match the keys in the availability data (0 to 15)
+    
+    // Check if the time slot is available in the availability data
+    if (availability && availability[hourIndex] === 1) {
+        timeSlot.classList.remove('inactive');
+        timeSlot.addEventListener('click', function() {
+            // Remove 'selected' class from all other time slots
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            // Add 'selected' class to the clicked time slot
+            timeSlot.classList.add('selected');
+            console.log(`Time slot ${timeSlot.textContent} selected.`);
+        });
+    } else {
+        timeSlot.classList.add('inactive');
     }
+
+    container.appendChild(timeSlot);
 }
 
 
