@@ -16,7 +16,27 @@
     align-items: center;
     height: 100vh;
 }
+.day, .time-slot, .book-btn {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+.calendar-container .time-slot.selected {
+    background-color: #6e8efb 
+}
+.day:hover, .time-slot:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transform: translateY(-2px);
+	
+}
 
+.inactive, .time-slot.disabled {
+    color: #cccccc;
+    background-color: #f9f9f9;
+    pointer-events: none;
+}
 
 .calendar-container, .popup-content {
     background-color: #fff;
@@ -65,27 +85,7 @@
     padding: 20px;
 }
 
-.day, .time-slot, .book-btn {
-    background-color: #ffffff;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s, transform 0.3s;
-}
-.calendar-container .time-slot.selected {
-    background-color: #6e8efb 
-}
-.day:hover, .time-slot:hover {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    transform: translateY(-2px);
-	
-}
 
-.inactive, .time-slot.disabled {
-    color: #cccccc;
-    background-color: #f9f9f9;
-    pointer-events: none;
-}
 
 .training-type-container {
     display: grid;
