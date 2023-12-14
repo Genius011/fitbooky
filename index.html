@@ -743,7 +743,9 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
 
     personalTraining.onclick = function() {
         selectTrainingType(personalTraining, groupTraining);
-        enableAllTimeSlots(popup, availability);
+        console.log("About to enable all time slots with availability data:", availability);
+enableAllTimeSlots(popup, availability);
+
     };
     groupTraining.onclick = function() {
         selectTrainingType(groupTraining, personalTraining);
