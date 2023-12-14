@@ -760,19 +760,24 @@ function enableAllTimeSlots(popup, availability) {
     console.log('Generating time slots with availability:', availability);
 
     for (let hour = 6; hour <= 21; hour++) {
+        const hourString = hour.toString().padStart(2, '0');
         const timeSlot = document.createElement('div');
         timeSlot.className = 'time-slot';
-        timeSlot.textContent = `${hour.toString().padStart(2, '0')}:00`;
-        
+        timeSlot.textContent = `${hourString}:00`;
+
+        // Log the expected index and the actual availability for debugging
+        console.log(`Checking availability for hour ${hourString}:`, availability[hourString]);
+
         // Check if the time slot is available using the availability data
-        if (availability && availability[hour.toString()]) {
+        if (availability && availability[hourString] === 1) {
             timeSlot.classList.remove('inactive');
             timeSlot.addEventListener('click', function() {
                 // Handle time slot selection here
-                console.log(`Time slot ${hour}:00 selected.`);
+                console.log(`Time slot ${hourString}:00 selected.`);
             });
         } else {
             timeSlot.classList.add('inactive');
+            console.log(`Time slot for ${hourString}:00 should be inactive.`);
         }
 
         timeSlotsContainer.appendChild(timeSlot);
@@ -780,6 +785,7 @@ function enableAllTimeSlots(popup, availability) {
 
     console.log('Time slots added:', timeSlotsContainer.children.length);
 }
+
 
 
 
