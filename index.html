@@ -667,7 +667,7 @@ async function checkTrainersAvailability(trainerId, date) {
 
 
 // Function to generate time slots based on availability
-generateTimeSlots(containerElement, 6, endHour, selectedDay, trainerId);
+async generateTimeSlots(containerElement, 6, endHour, selectedDay, trainerId);
     container.innerHTML = ''; // Clear existing slots
 
     // Check the trainer's availability for the selected day
