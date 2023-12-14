@@ -1643,6 +1643,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         };
 
         try {
+          console.log('Data to send:', dataToSend); // Debugging: Log the data before sending
           await sendToFirebase(dataToSend);
           okText.style.display = 'inline';
         } catch (error) {
@@ -1714,6 +1715,7 @@ async function sendToFirebase(data) {
     throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendToFirebase
   }
 }
+
 
 
 
