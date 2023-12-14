@@ -424,6 +424,19 @@ const db = getFirestore(app);
 });
 
 
+document.addEventListener('click', function(event) {
+  // Check if the clicked element is a time slot
+  if (event.target.classList.contains('time-slot')) {
+    // Remove 'selected' class from all time slots
+    document.querySelectorAll('.time-slot').forEach(function(slot) {
+      slot.classList.remove('selected');
+    });
+    // Add 'selected' class to the clicked time slot
+    event.target.classList.add('selected');
+  }
+});
+
+
 // Ensure the dropdown content is hidden initially and shown on hover
 const dropdown = document.querySelector('.dropdown');
 dropdown.addEventListener('mouseover', () => {
