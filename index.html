@@ -760,11 +760,14 @@ function enableAllTimeSlots(popup, availability) {
         timeSlot.className = 'time-slot';
         timeSlot.textContent = `${hourString}:00`;
 
+        // Sprawdź dostępność dla danej godziny
+        const hourAvailability = availability[hour - 6];
+        
         // Log the expected index and the actual availability for debugging
-        console.log(`Checking availability for hour ${hourString}:`, availability[hourString]);
+        console.log(`Checking availability for hour ${hourString}:`, hourAvailability);
 
-        // Check if the time slot is available using the availability data
-        if (availability && availability[hourString] === 1) {
+        // Sprawdź, czy godzina jest dostępna
+        if (hourAvailability === 1) {
             timeSlot.classList.remove('inactive');
             timeSlot.addEventListener('click', function() {
                 // Handle time slot selection here
@@ -780,6 +783,7 @@ function enableAllTimeSlots(popup, availability) {
 
     console.log('Time slots added:', timeSlotsContainer.children.length);
 }
+
 
 
 
