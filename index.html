@@ -533,6 +533,8 @@ async function handleDateSelection(selectedDate) {
       // Process the availability data here
       // For example, enable or disable time slots based on the availability
       console.log(`Availability for ${formattedDate}:`, availability);
+	              enableGroupTrainingSlots(popup, selectedDate, availabilityForGroupTraining);
+
     } else {
       console.log(`No availability found for trainer on ${formattedDate}.`);
     }
@@ -784,31 +786,44 @@ function enableAllTimeSlots(popup, availability) {
     console.log('Time slots added:', timeSlotsContainer.children.length);
 }
 
-
-
-
+    
 
         
+    function enableGroupTrainingSlots(popup, availability) {
+    const timeSlotsContainer = popup.querySelector('.time-slots');
+    timeSlotsContainer.innerHTML = '';
 
-        function enableGroupTrainingSlots(popup, selectedDay) {
-            const timeSlots = popup.querySelectorAll('.time-slot');
-            timeSlots.forEach(slot => {
-                const slotTime = slot.textContent.trim();
-                const dayOfWeek = selectedDay.getDay();
+    console.log('Generating time slots with availability:', availability);
 
-                slot.classList.add('disabled');
-                slot.onclick = null;
+    for (let hour = 6; hour <= 21; hour++) {
+        const hourString = hour.toString().padStart(2, '0');
+        const timeSlot = document.createElement('div');
+        timeSlot.className = 'time-slot';
+        timeSlot.textContent = `${hourString}:00`;
 
-                if ((dayOfWeek === 2 || dayOfWeek === 4) && slotTime === '19:00' || 
-                    (dayOfWeek === 6 && slotTime === '10:00')) {
-                    slot.classList.remove('disabled');
-                    slot.onclick = function() {
-                        timeSlots.forEach(s => s.classList.remove('selected'));
-                        slot.classList.add('selected');
-                    };
-                }
+        // Sprawdź dostępność dla danej godziny
+        const hourAvailability = availability[hour - 6];
+        
+        // Log the expected index and the actual availability for debugging
+        console.log(`Checking availability for hour ${hourString}:`, hourAvailability);
+
+        // Sprawdź, czy godzina jest dostępna
+        if (hourAvailability === 1) {
+            timeSlot.classList.remove('inactive');
+            timeSlot.addEventListener('click', function() {
+                // Handle time slot selection here
+                console.log(`Time slot ${hourString}:00 selected.`);
             });
+        } else {
+            timeSlot.classList.add('inactive');
+            console.log(`Time slot for ${hourString}:00 should be inactive.`);
         }
+
+        timeSlotsContainer.appendChild(timeSlot);
+    }
+
+    console.log('Time slots added:', timeSlotsContainer.children.length);
+}
 
         function selectTrainingType(selected, other) {
             selected.classList.add('selected');
