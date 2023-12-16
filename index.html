@@ -882,6 +882,33 @@ document.getElementById('logout').addEventListener('click', () => {
 });
 
 
+async function getAvailabilityFromFirestore(date, trainerId) {
+    const db = getFirestore();
+    const availabilityRef = collection(db, 'availability');
+    const q = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', date));
+
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+        // Assuming the availability data is in the first document
+        const availabilityData = querySnapshot.docs[0].data().availability;
+        return availabilityData;
+    } else {
+        // Handle case where there is no availability
+        return null;
+    }
+}
+
+// When you want to enable the group training slots:
+const selectedDate = //... the date you're interested in
+const trainerId = //... the trainer's ID
+
+getAvailabilityFromFirestore(selectedDate, trainerId).then(availabilityArray => {
+    if (availabilityArray) {
+        enableGroupTrainingSlots(popup, availabilityArray);
+    } else {
+        // Handle case where there is no availability data
+    }
+});
 
 	
 </script>
