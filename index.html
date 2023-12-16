@@ -790,12 +790,6 @@ function enableAllTimeSlots(popup, availability) {
 
         
     function enableGroupTrainingSlots(popup, availability) {
-    // Ensure that 'availability' is an array
-    if (!Array.isArray(availability)) {
-        console.error('Expected availability to be an array, but got:', availability);
-        return; // Exit the function if 'availability' is not an array
-    }
-
     const timeSlotsContainer = popup.querySelector('.time-slots');
     timeSlotsContainer.innerHTML = '';
 
@@ -807,13 +801,13 @@ function enableAllTimeSlots(popup, availability) {
         timeSlot.className = 'time-slot';
         timeSlot.textContent = `${hourString}:00`;
 
-        // Check availability for the hour
+        // Sprawdź dostępność dla danej godziny
         const hourAvailability = availability[hour - 6];
-
+        
         // Log the expected index and the actual availability for debugging
         console.log(`Checking availability for hour ${hourString}:`, hourAvailability);
 
-        // Check if the hour is available
+        // Sprawdź, czy godzina jest dostępna
         if (hourAvailability === 1) {
             timeSlot.classList.remove('inactive');
             timeSlot.addEventListener('click', function() {
@@ -822,6 +816,7 @@ function enableAllTimeSlots(popup, availability) {
             });
         } else {
             timeSlot.classList.add('inactive');
+            console.log(`Time slot for ${hourString}:00 should be inactive.`);
         }
 
         timeSlotsContainer.appendChild(timeSlot);
@@ -829,7 +824,6 @@ function enableAllTimeSlots(popup, availability) {
 
     console.log('Time slots added:', timeSlotsContainer.children.length);
 }
-
 
         function selectTrainingType(selected, other) {
             selected.classList.add('selected');
