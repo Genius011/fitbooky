@@ -789,32 +789,41 @@ function enableAllTimeSlots(popup, availability) {
     
 
         
-    function enableGroupTrainingSlots(popup, availability) {
+    function enableGroupTrainingSlots(popup, selectedDay, availability) {
     const timeSlotsContainer = popup.querySelector('.time-slots');
     timeSlotsContainer.innerHTML = '';
 
-    console.log('Generating time slots with availability:', availability);
+    console.log('Generating time slots with availability for group training:', availability);
 
-    for (let hour = 6; hour <= 21; hour++) {
+    // You can adjust the start and end hours as needed
+    const startHour = 6;
+    const endHour = 21;
+
+    for (let hour = startHour; hour <= endHour; hour++) {
         const hourString = hour.toString().padStart(2, '0');
         const timeSlot = document.createElement('div');
         timeSlot.className = 'time-slot';
         timeSlot.textContent = `${hourString}:00`;
 
-        // Sprawdź dostępność dla danej godziny
-        const hourAvailability = availability[hour - 6];
-        
-        // Log the expected index and the actual availability for debugging
-        console.log(`Checking availability for hour ${hourString}:`, hourAvailability);
+        // Check if the hour is within the availability array bounds
+        if (hour >= startHour && hour - startHour < availability.length) {
+            const hourAvailability = availability[hour - startHour];
 
-        // Sprawdź, czy godzina jest dostępna
-        if (hourAvailability === 1) {
-            timeSlot.classList.remove('inactive');
-            timeSlot.addEventListener('click', function() {
-                // Handle time slot selection here
-                console.log(`Time slot ${hourString}:00 selected.`);
-            });
+            console.log(`Checking availability for hour ${hourString}:`, hourAvailability);
+
+            // Check if the hour is available
+            if (hourAvailability === 1) {
+                timeSlot.classList.remove('inactive');
+                timeSlot.addEventListener('click', function() {
+                    // Handle time slot selection here
+                    console.log(`Time slot ${hourString}:00 selected.`);
+                });
+            } else {
+                timeSlot.classList.add('inactive');
+                console.log(`Time slot for ${hourString}:00 should be inactive.`);
+            }
         } else {
+            // Handle the case where the hour is outside the availability array bounds
             timeSlot.classList.add('inactive');
             console.log(`Time slot for ${hourString}:00 should be inactive.`);
         }
@@ -824,6 +833,7 @@ function enableAllTimeSlots(popup, availability) {
 
     console.log('Time slots added:', timeSlotsContainer.children.length);
 }
+
 
         function selectTrainingType(selected, other) {
             selected.classList.add('selected');
