@@ -358,11 +358,8 @@
             <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
         </div>
         <div id="calendar" class="calendar-grid"></div>
-		<div id="timeSlotsContainer" class="calendar-grid"></div>
-
     </div>
    
-   </body>
    
   <script type="module">
     // Import the required Firebase modules
@@ -399,44 +396,36 @@ const db = getFirestore(app);
   
      
     document.addEventListener('DOMContentLoaded', function() {
-    // Inicjalizacja obiektu autoryzacji Firebase
     const auth = getAuth();
-    let currentUserId = null; // Zmienna do przechowywania aktualnego ID użytkownika
+    let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
+
     
-    // Reakcja na zmiany stanu autoryzacji użytkownika
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            // Jeśli użytkownik jest zalogowany
-            currentUserId = user.uid; // Ustaw aktualne ID użytkownika
-            const userRef = doc(getFirestore(), 'users', user.uid);
-
-            try {
-                // Pobierz dane użytkownika z Firestore
-                const docSnap = await getDoc(userRef);
-                
-                if (docSnap.exists()) {
-                    // Jeśli dane użytkownika istnieją
-                    const userData = docSnap.data();
-
-                    // Sprawdź, czy użytkownik jest trenerem i dostosuj interfejs
-                    const trainerPanelLink = document.getElementById('trainerPanelLink');
-                    trainerPanelLink.style.display = userData.isTrainer ? 'block' : 'none';
-                    
-                    // Aktualizuj tekst przycisku wylogowania
-                    const logoutButtonText = document.getElementById('logoutButtonText');
-                    logoutButtonText.textContent = `Cześć ${userData.firstName}`; // Użyj imienia użytkownika z danych
-                } else {
-                    console.log("Brak danych użytkownika w Firestore.");
-                }
-            } catch (error) {
-                console.error("Błąd podczas pobierania danych użytkownika:", error);
+	
+	onAuthStateChanged(auth, async (user) => { // Make this callback async
+    if (user) {
+        currentUserId = user.uid;
+        const userRef = doc(getFirestore(), 'users', user.uid);
+        try {
+            const docSnap = await getDoc(userRef); // Use await to wait for the promise to resolve
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                // Check if the user is a trainer and show or hide the 'Panel Trenera' link
+                const trainerPanelLink = document.getElementById('trainerPanelLink');
+                trainerPanelLink.style.display = userData.isTrainer ? 'block' : 'none';
+                // Update the logout button text with the user's first name
+                const logoutButtonText = document.getElementById('logoutButtonText');
+                logoutButtonText.textContent = `Cześć ${userData.firstName}`; // Use the first name from userData
+            } else {
+                console.log("User data not found in Firestore.");
             }
-        } else {
-            // Jeśli użytkownik nie jest zalogowany, przekieruj na stronę logowania
-            console.log("Brak zalogowanego użytkownika, przekierowanie do strony logowania");
-            window.location.href = 'login.html';
+        } catch (error) {
+            console.error("Error fetching user data:", error);
         }
-    });
+    } else {
+        console.log("No user is logged in, redirecting to login");
+        window.location.href = 'login.html';
+    }
+});
 
 
 document.addEventListener('click', function(event) {
@@ -479,9 +468,6 @@ document.getElementById('logout').addEventListener('click', () => {
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
 
-
-let trainerId; // Zadeklaruj zmienną globalnie
-
 async function getCurrentUserTrainerId() {
   const auth = getAuth();
   const user = auth.currentUser;
@@ -489,10 +475,7 @@ async function getCurrentUserTrainerId() {
     const userRef = doc(getFirestore(), 'users', user.uid);
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
-      trainerId = userDoc.data().trainerId; // Przypisz wartość trainerId
-      // Teraz, kiedy masz trainerId, możesz wywoływać inne funkcje z nim
-      checkAvailabilityForSelectedDate(selectedDate);
-      handleDateSelection(selectedDate);
+      return userDoc.data().trainerId; // Return the trainerId associated with the user
     } else {
       throw new Error('User document does not exist');
     }
@@ -500,10 +483,6 @@ async function getCurrentUserTrainerId() {
     throw new Error('No user is currently logged in');
   }
 }
-
-// Wywołaj funkcję getCurrentUserTrainerId() na początku, aby uzyskać trainerId
-getCurrentUserTrainerId();
-
 
 async function checkAvailabilityForSelectedDate(selectedDate) {
   try {
@@ -656,35 +635,30 @@ async function handleDateSelection(selectedDate) {
   }
 }
 
-// Modify checkTrainersAvailability function to fetch availability for both "personal" and "group"
+// Function to check trainer's availability using a field-based query
 async function checkTrainersAvailability(trainerId, date) {
   const db = getFirestore();
   const availabilityRef = collection(db, 'availability');
+  
+  console.log(`Querying for availability with trainerId: ${trainerId} and date: ${date}`);
 
-  const formattedDate = new Date(date).toISOString().split('T')[0];
+  const formattedDate = new Date(date).toISOString().split('T')[0]; 
+  console.log(`Formatted date for querying: ${formattedDate}`);
 
-  const personalQuery = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate), where('type', '==', 'personal'));
-  const groupQuery = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate), where('type', '==', 'group'));
-
+  const q = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate));
+  
   try {
-    const personalQuerySnapshot = await getDocs(personalQuery);
-    const groupQuerySnapshot = await getDocs(groupQuery);
+    const querySnapshot = await getDocs(q);
+    console.log(`Query snapshot size: ${querySnapshot.size}`);
 
-    const availabilityData = {
-      personal: null,
-      group: null,
-    };
-
-    if (!personalQuerySnapshot.empty) {
-      availabilityData.personal = personalQuerySnapshot.docs[0].data().availability;
+    if (!querySnapshot.empty) {
+      const availabilityData = querySnapshot.docs[0].data().availability;
+      console.log("Found availability data:", availabilityData);
+      return availabilityData;
+    } else {
+      console.log("No matching trainer availability document found for", formattedDate, "and trainerId", trainerId);
+      return null;
     }
-
-    if (!groupQuerySnapshot.empty) {
-      availabilityData.group = groupQuerySnapshot.docs[0].data().availability;
-    }
-
-    console.log("Found availability data:", availabilityData);
-    return availabilityData;
   } catch (error) {
     console.error("Error getting trainer availability:", error);
     throw error;
@@ -694,13 +668,14 @@ async function checkTrainersAvailability(trainerId, date) {
 
 
 
-// Function to generate time slots based on availability and training type
-async function generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, trainingType) {
+
+// Function to generate time slots based on availability
+async function generateTimeSlots(container, startHour, endHour, selectedDay, trainerId) {
     container.innerHTML = ''; // Clear existing slots
 
-    console.log(`Generating time slots from ${startHour} to ${endHour} for trainerId: ${trainerId}, date: ${selectedDay.toISOString().split('T')[0]}, and type: ${trainingType}`);
+    console.log(`Generating time slots from ${startHour} to ${endHour} for trainerId: ${trainerId} and date: ${selectedDay.toISOString().split('T')[0]}`);
 
-    const availability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], trainingType);
+    const availability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0]);
     console.log(`Received availability data:`, availability);
 
     for (let hour = startHour; hour <= endHour; hour++) {
@@ -722,16 +697,8 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
         container.appendChild(timeSlot);
     }
 }
-const selectedDay = new Date(); // Definicja zmiennej selectedDay
-const startHour = 6; // Początkowa godzina
-const endHour = 21; // Końcowa godzina
 
 
-// Wywołaj funkcję generateTimeSlots dla treningu "personal"
-generateTimeSlots(document.getElementById('timeSlotsContainer'), startHour, endHour, selectedDay, trainerId, 'personal');
-
-// Wywołaj funkcję generateTimeSlots dla treningu "group"
-generateTimeSlots(document.getElementById('timeSlotsContainer'), startHour, endHour, selectedDay, trainerId, 'group');
 
 
        async function openPopup(selectedDay, availability) {
@@ -903,16 +870,10 @@ function enableAllTimeSlots(popup, availability) {
 }
 
 async function isTimeSlotAvailable(date, time, trainingType) {
-  if (!date || !time || !trainingType) {
-    console.error('One or more of the input values (date, time, trainingType) are undefined.');
-    return false; // Lub inny sposób obsługi błędu
-  }
-
   const bookingsRef = collection(db, "bookings");
   const querySnapshot = await getDocs(query(bookingsRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
-  return querySnapshot.empty;
+  return querySnapshot.empty; // Zwróć true jeśli nie ma rezerwacji, false w przeciwnym wypadku
 }
-
 
 document.getElementById('logout').addEventListener('click', () => {
     signOut(auth).then(() => {
