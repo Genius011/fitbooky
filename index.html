@@ -636,35 +636,34 @@ async function handleDateSelection(selectedDate) {
 }
 
 // Function to check trainer's availability using a field-based query
-async function checkTrainersAvailability(trainerId, date, trainingType) {
+async function checkTrainersAvailability(trainerId, date) {
   const db = getFirestore();
   const availabilityRef = collection(db, 'availability');
-
-  console.log(`Querying for ${trainingType} availability with trainerId: ${trainerId} and date: ${date}`);
+  
+  console.log(`Querying for availability with trainerId: ${trainerId} and date: ${date}`);
 
   const formattedDate = new Date(date).toISOString().split('T')[0]; 
   console.log(`Formatted date for querying: ${formattedDate}`);
 
-  const q = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate), where('trainingType', '==', trainingType));
-
+  const q = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate));
+  
   try {
     const querySnapshot = await getDocs(q);
     console.log(`Query snapshot size: ${querySnapshot.size}`);
 
     if (!querySnapshot.empty) {
       const availabilityData = querySnapshot.docs[0].data().availability;
-      console.log(`Found ${trainingType} availability data:`, availabilityData);
+      console.log("Found availability data:", availabilityData);
       return availabilityData;
     } else {
-      console.log(`No matching trainer ${trainingType} availability document found for`, formattedDate, "and trainerId", trainerId);
+      console.log("No matching trainer availability document found for", formattedDate, "and trainerId", trainerId);
       return null;
     }
   } catch (error) {
-    console.error(`Error getting trainer ${trainingType} availability:`, error);
+    console.error("Error getting trainer availability:", error);
     throw error;
   }
 }
-
 
 
 
@@ -676,7 +675,7 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
 
     console.log(`Generating time slots from ${startHour} to ${endHour} for trainerId: ${trainerId} and date: ${selectedDay.toISOString().split('T')[0]}`);
 
-    const availability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], 'personal');
+    const availability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0]);
     console.log(`Received availability data:`, availability);
 
     for (let hour = startHour; hour <= endHour; hour++) {
@@ -790,15 +789,10 @@ function enableAllTimeSlots(popup, availability) {
     
 
         
-    // Make sure this function is async because it will call another async function
-async function enableGroupTrainingSlots(popup, selectedDay, trainerId) {
+    function enableGroupTrainingSlots(popup, selectedDay, availability) {
     const timeSlotsContainer = popup.querySelector('.time-slots');
     timeSlotsContainer.innerHTML = '';
 
-    // Call the checkTrainersAvailability function to get the availability for group training
-    // Assuming the trainerId is available in this function's scope
-    const availability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], 'group');
-    
     console.log('Generating time slots with availability for group training:', availability);
 
     // You can adjust the start and end hours as needed
@@ -812,7 +806,7 @@ async function enableGroupTrainingSlots(popup, selectedDay, trainerId) {
         timeSlot.textContent = `${hourString}:00`;
 
         // Check if the hour is within the availability array bounds
-        if (hour - startHour < availability.length) {
+        if (hour >= startHour && hour - startHour < availability.length) {
             const hourAvailability = availability[hour - startHour];
 
             console.log(`Checking availability for hour ${hourString}:`, hourAvailability);
@@ -839,7 +833,6 @@ async function enableGroupTrainingSlots(popup, selectedDay, trainerId) {
 
     console.log('Time slots added:', timeSlotsContainer.children.length);
 }
-
 
 
         function selectTrainingType(selected, other) {
@@ -877,31 +870,20 @@ async function enableGroupTrainingSlots(popup, selectedDay, trainerId) {
 }
 
 async function isTimeSlotAvailable(date, time, trainingType) {
-  try {
-    const db = getFirestore(); // Ensure db is properly initialized
-    const bookingsRef = collection(db, "bookings");
-
-    // Check if date, time, and trainingType are defined and not empty
-    if (!date || !time || !trainingType) {
-      throw new Error("Invalid input data.");
-    }
-
-    const querySnapshot = await getDocs(
-      query(
-        bookingsRef,
-        where("date", "==", date),
-        where("time", "==", time),
-        where("trainingType", "==", trainingType)
-      )
-    );
-
-    return querySnapshot.empty; // Return true if no matching documents found
-  } catch (error) {
-    console.error("Error checking availability:", error);
-    throw error;
-  }
+  const bookingsRef = collection(db, "bookings");
+  const querySnapshot = await getDocs(query(bookingsRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
+  return querySnapshot.empty; // Zwróć true jeśli nie ma rezerwacji, false w przeciwnym wypadku
 }
 
+document.getElementById('logout').addEventListener('click', () => {
+    signOut(auth).then(() => {
+        // Sign-out successful, redirect to login page
+        window.location.href = 'login.html';
+    }).catch((error) => {
+        // An error happened during sign out
+        console.error('Logout failed', error);
+    });
+});
 
 
 
