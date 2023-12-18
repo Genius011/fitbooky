@@ -675,9 +675,6 @@ async function checkTrainersAvailability(trainerId, date) {
 
 
 
-const startHour = 6; // Początkowa godzina
-const endHour = 21; // Końcowa godzina
-
 
 // Function to generate time slots based on availability and training type
 async function generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, trainingType) {
@@ -707,6 +704,11 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
         container.appendChild(timeSlot);
     }
 }
+
+
+const startHour = 6; // Początkowa godzina
+const endHour = 21; // Końcowa godzina
+
 
 // Wywołaj funkcję generateTimeSlots dla treningu "personal"
 generateTimeSlots(document.getElementById('timeSlotsContainer'), startHour, endHour, selectedDay, trainerId, 'personal');
