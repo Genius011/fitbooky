@@ -472,7 +472,7 @@ document.getElementById('logout').addEventListener('click', () => {
         let currentYear = currentDate.getFullYear();
 
 
-let trainerId; // Użyj let, jeśli zmienna ma być inicjowana później
+let trainerId; // Zadeklaruj zmienną globalnie
 
 async function getCurrentUserTrainerId() {
   const auth = getAuth();
@@ -481,7 +481,10 @@ async function getCurrentUserTrainerId() {
     const userRef = doc(getFirestore(), 'users', user.uid);
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
-      trainerId = userDoc.data().trainerId; // Przypisujesz wartość do zmiennej na poziomie globalnym
+      trainerId = userDoc.data().trainerId; // Przypisz wartość trainerId
+      // Teraz, kiedy masz trainerId, możesz wywoływać inne funkcje z nim
+      checkAvailabilityForSelectedDate(selectedDate);
+      handleDateSelection(selectedDate);
     } else {
       throw new Error('User document does not exist');
     }
@@ -489,6 +492,10 @@ async function getCurrentUserTrainerId() {
     throw new Error('No user is currently logged in');
   }
 }
+
+// Wywołaj funkcję getCurrentUserTrainerId() na początku, aby uzyskać trainerId
+getCurrentUserTrainerId();
+
 
 async function checkAvailabilityForSelectedDate(selectedDate) {
   try {
