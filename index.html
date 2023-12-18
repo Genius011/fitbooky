@@ -471,6 +471,9 @@ document.getElementById('logout').addEventListener('click', () => {
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
 
+
+const trainerId; // Deklarujesz zmienną na poziomie globalnym
+
 async function getCurrentUserTrainerId() {
   const auth = getAuth();
   const user = auth.currentUser;
@@ -478,7 +481,7 @@ async function getCurrentUserTrainerId() {
     const userRef = doc(getFirestore(), 'users', user.uid);
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
-      return userDoc.data().trainerId; // Return the trainerId associated with the user
+      trainerId = userDoc.data().trainerId; // Przypisujesz wartość do zmiennej na poziomie globalnym
     } else {
       throw new Error('User document does not exist');
     }
