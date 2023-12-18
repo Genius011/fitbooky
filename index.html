@@ -888,10 +888,16 @@ function enableAllTimeSlots(popup, availability) {
 }
 
 async function isTimeSlotAvailable(date, time, trainingType) {
+  if (!date || !time || !trainingType) {
+    console.error('One or more of the input values (date, time, trainingType) are undefined.');
+    return false; // Lub inny sposób obsługi błędu
+  }
+
   const bookingsRef = collection(db, "bookings");
   const querySnapshot = await getDocs(query(bookingsRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
-  return querySnapshot.empty; // Zwróć true jeśli nie ma rezerwacji, false w przeciwnym wypadku
+  return querySnapshot.empty;
 }
+
 
 document.getElementById('logout').addEventListener('click', () => {
     signOut(auth).then(() => {
