@@ -705,6 +705,11 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
 }
 
 
+// Generate time slots for personal training
+generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, 'personal');
+
+// Generate time slots for group training
+generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, 'group');
 
 
 
