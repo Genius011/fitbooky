@@ -704,7 +704,7 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
         container.appendChild(timeSlot);
     }
 }
-
+const trainerId = await getCurrentUserTrainerId(); // Pobierz trainerId dla zalogowanego użytkownika
 const selectedDay = new Date(); // Definicja zmiennej selectedDay
 const startHour = 6; // Początkowa godzina
 const endHour = 21; // Końcowa godzina
