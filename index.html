@@ -669,7 +669,17 @@ async function checkTrainersAvailability(trainerId, date) {
 
 
 
-// Function to generate time slots based on availability for a specific training type
+// Function to generate time slots based on availability for personal training
+async function generatePersonalTimeSlots(container, startHour, endHour, selectedDay, trainerId) {
+    return generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, 'personal');
+}
+
+// Function to generate time slots based on availability for group training
+async function generateGroupTimeSlots(container, startHour, endHour, selectedDay, trainerId) {
+    return generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, 'group');
+}
+
+// Common function to generate time slots based on availability for a specific training type
 async function generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, trainingType) {
     container.innerHTML = ''; // Clear existing slots
 
@@ -697,6 +707,14 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
         container.appendChild(timeSlot);
     }
 }
+
+// Example usage:
+// For personal training
+generatePersonalTimeSlots(container, startHour, endHour, selectedDay, trainerId);
+
+// For group training
+generateGroupTimeSlots(container, startHour, endHour, selectedDay, trainerId);
+
 
 
 
