@@ -670,7 +670,7 @@ async function checkTrainersAvailability(trainerId, date) {
 
 
 // Function to generate time slots based on availability for a specific training type
-generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, 'personal');
+generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, 'personal', 'group');
     container.innerHTML = ''; // Clear existing slots
 
     console.log(`Generating time slots from ${startHour} to ${endHour} for trainerId: ${trainerId} and date: ${selectedDay.toISOString().split('T')[0]} for training type: ${trainingType}`);
@@ -699,34 +699,7 @@ generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, 'person
 }
 
 
-// Function to generate time slots based on availability for a specific training type
-generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, 'group');
-    container.innerHTML = ''; // Clear existing slots
 
-    console.log(`Generating time slots from ${startHour} to ${endHour} for trainerId: ${trainerId} and date: ${selectedDay.toISOString().split('T')[0]} for training type: ${trainingType}`);
-
-    const availability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], trainingType); // Pass the trainingType parameter
-    console.log(`Received availability data for ${trainingType}:`, availability);
-
-    for (let hour = startHour; hour <= endHour; hour++) {
-        let timeSlot = document.createElement('div');
-        timeSlot.className = 'time-slot';
-        timeSlot.textContent = `${hour.toString().padStart(2, '0')}:00`;
-
-        let hourIndex = hour - 6;
-        console.log(`Checking availability for hour: ${hour}, index: ${hourIndex}`);
-
-        if (availability && availability[hourIndex] === 1) {
-            timeSlot.classList.remove('inactive');
-            console.log(`Time slot for ${hour}:00 is active.`);
-        } else {
-            timeSlot.classList.add('inactive');
-            console.log(`Time slot for ${hour}:00 is inactive or data is undefined.`);
-        }
-
-        container.appendChild(timeSlot);
-    }
-}
 
 
 
