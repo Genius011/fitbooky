@@ -670,7 +670,7 @@ async function checkTrainersAvailability(trainerId, date) {
 
 
 // Function to generate time slots based on availability for a specific training type
-generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, 'personal', 'group');
+async function generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, trainingType) {
     container.innerHTML = ''; // Clear existing slots
 
     console.log(`Generating time slots from ${startHour} to ${endHour} for trainerId: ${trainerId} and date: ${selectedDay.toISOString().split('T')[0]} for training type: ${trainingType}`);
