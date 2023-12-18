@@ -472,7 +472,7 @@ document.getElementById('logout').addEventListener('click', () => {
         let currentYear = currentDate.getFullYear();
 
 
-const trainerId; // Deklarujesz zmienną na poziomie globalnym
+let trainerId; // Użyj let, jeśli zmienna ma być inicjowana później
 
 async function getCurrentUserTrainerId() {
   const auth = getAuth();
