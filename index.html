@@ -670,12 +670,12 @@ async function checkTrainersAvailability(trainerId, date) {
 
 
 // Function to generate time slots based on availability
-async function generateTimeSlots(container, startHour, endHour, selectedDay, trainerId) {
+async function generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, trainingType) {
     container.innerHTML = ''; // Clear existing slots
 
     console.log(`Generating time slots from ${startHour} to ${endHour} for trainerId: ${trainerId} and date: ${selectedDay.toISOString().split('T')[0]}`);
 
-    const availability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0]);
+    const availability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], trainingType); // Pass the trainingType parameter
     console.log(`Received availability data:`, availability);
 
     for (let hour = startHour; hour <= endHour; hour++) {
@@ -697,6 +697,7 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
         container.appendChild(timeSlot);
     }
 }
+
 
 
 
