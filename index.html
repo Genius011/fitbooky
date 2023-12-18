@@ -358,8 +358,11 @@
             <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
         </div>
         <div id="calendar" class="calendar-grid"></div>
+		<div id="timeSlotsContainer" class="calendar-grid"></div>
+
     </div>
    
+   </body>
    
   <script type="module">
     // Import the required Firebase modules
@@ -704,13 +707,11 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
     }
 }
 
+// Wywołaj funkcję generateTimeSlots dla treningu "personal"
+generateTimeSlots(document.getElementById('timeSlotsContainer'), startHour, endHour, selectedDay, trainerId, 'personal');
 
-// Generate time slots for personal training
-generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, 'personal');
-
-// Generate time slots for group training
-generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, 'group');
-
+// Wywołaj funkcję generateTimeSlots dla treningu "group"
+generateTimeSlots(document.getElementById('timeSlotsContainer'), startHour, endHour, selectedDay, trainerId, 'group');
 
 
        async function openPopup(selectedDay, availability) {
