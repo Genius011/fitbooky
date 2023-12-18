@@ -399,36 +399,46 @@ const db = getFirestore(app);
   
      
     document.addEventListener('DOMContentLoaded', function() {
+    // Inicjalizacja obiektu autoryzacji Firebase
     const auth = getAuth();
-    let currentUserId = null;  // Użyj zmiennej do przechowywania aktualnego ID użytkownika
-
+    let currentUserId = null; // Zmienna do przechowywania aktualnego ID użytkownika
     
-	
-	onAuthStateChanged(auth, async (user) => { // Make this callback async
-    if (user) {
-        currentUserId = user.uid;
-        const userRef = doc(getFirestore(), 'users', user.uid);
-        try {
-            const docSnap = await getDoc(userRef); // Use await to wait for the promise to resolve
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                // Check if the user is a trainer and show or hide the 'Panel Trenera' link
-                const trainerPanelLink = document.getElementById('trainerPanelLink');
-                trainerPanelLink.style.display = userData.isTrainer ? 'block' : 'none';
-                // Update the logout button text with the user's first name
-                const logoutButtonText = document.getElementById('logoutButtonText');
-                logoutButtonText.textContent = `Cześć ${userData.firstName}`; // Use the first name from userData
-            } else {
-                console.log("User data not found in Firestore.");
+    // Reakcja na zmiany stanu autoryzacji użytkownika
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            // Jeśli użytkownik jest zalogowany
+            currentUserId = user.uid; // Ustaw aktualne ID użytkownika
+            const userRef = doc(getFirestore(), 'users', user.uid);
+
+            try {
+                // Pobierz dane użytkownika z Firestore
+                const docSnap = await getDoc(userRef);
+                
+                if (docSnap.exists()) {
+                    // Jeśli dane użytkownika istnieją
+                    const userData = docSnap.data();
+
+                    // Sprawdź, czy użytkownik jest trenerem i dostosuj interfejs
+                    const trainerPanelLink = document.getElementById('trainerPanelLink');
+                    trainerPanelLink.style.display = userData.isTrainer ? 'block' : 'none';
+                    
+                    // Aktualizuj tekst przycisku wylogowania
+                    const logoutButtonText = document.getElementById('logoutButtonText');
+                    logoutButtonText.textContent = `Cześć ${userData.firstName}`; // Użyj imienia użytkownika z danych
+                } else {
+                    console.log("Brak danych użytkownika w Firestore.");
+                }
+            } catch (error) {
+                console.error("Błąd podczas pobierania danych użytkownika:", error);
             }
-        } catch (error) {
-            console.error("Error fetching user data:", error);
+        } else {
+            // Jeśli użytkownik nie jest zalogowany, przekieruj na stronę logowania
+            console.log("Brak zalogowanego użytkownika, przekierowanie do strony logowania");
+            window.location.href = 'login.html';
         }
-    } else {
-        console.log("No user is logged in, redirecting to login");
-        window.location.href = 'login.html';
-    }
+    });
 });
+
 
 
 document.addEventListener('click', function(event) {
