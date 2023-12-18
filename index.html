@@ -877,20 +877,31 @@ async function enableGroupTrainingSlots(popup, selectedDay, trainerId) {
 }
 
 async function isTimeSlotAvailable(date, time, trainingType) {
-  const bookingsRef = collection(db, "bookings");
-  const querySnapshot = await getDocs(query(bookingsRef, where("date", "==", date), where("time", "==", time), where("trainingType", "==", trainingType)));
-  return querySnapshot.empty; // Zwróć true jeśli nie ma rezerwacji, false w przeciwnym wypadku
+  try {
+    const db = getFirestore(); // Ensure db is properly initialized
+    const bookingsRef = collection(db, "bookings");
+
+    // Check if date, time, and trainingType are defined and not empty
+    if (!date || !time || !trainingType) {
+      throw new Error("Invalid input data.");
+    }
+
+    const querySnapshot = await getDocs(
+      query(
+        bookingsRef,
+        where("date", "==", date),
+        where("time", "==", time),
+        where("trainingType", "==", trainingType)
+      )
+    );
+
+    return querySnapshot.empty; // Return true if no matching documents found
+  } catch (error) {
+    console.error("Error checking availability:", error);
+    throw error;
+  }
 }
 
-document.getElementById('logout').addEventListener('click', () => {
-    signOut(auth).then(() => {
-        // Sign-out successful, redirect to login page
-        window.location.href = 'login.html';
-    }).catch((error) => {
-        // An error happened during sign out
-        console.error('Logout failed', error);
-    });
-});
 
 
 
