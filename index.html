@@ -635,8 +635,8 @@ async function handleDateSelection(selectedDate) {
   }
 }
 
-// Function to check trainer's availability for personal and group training
-async function checkTrainersAvailability(trainerId, date, isPersonalType) {
+// Function to check trainer's availability using a field-based query
+async function checkTrainersAvailability(trainerId, date) {
   const db = getFirestore();
   const availabilityRef = collection(db, 'availability');
   
@@ -645,30 +645,32 @@ async function checkTrainersAvailability(trainerId, date, isPersonalType) {
   const formattedDate = new Date(date).toISOString().split('T')[0]; 
   console.log(`Formatted date for querying: ${formattedDate}`);
 
-  let trainingTypeQuery;
-  if (isPersonalType) {
-    trainingTypeQuery = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate), where('trainingType', '==', 'personal'));
-  } else {
-    trainingTypeQuery = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate), where('trainingType', '==', 'group'));
-  }
-
+  const q = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate));
+  
   try {
-    const trainingSnapshot = await getDocs(trainingTypeQuery);
+    const querySnapshot = await getDocs(q);
+    console.log(`Query snapshot size: ${querySnapshot.size}`);
 
-    console.log(`Training Query snapshot size: ${trainingSnapshot.size}`);
+    if (!querySnapshot.empty) {
+      const availabilityData = querySnapshot.docs[0].data().availability;
+      console.log("Found availability data:", availabilityData);
 
-    // Get availability data
-    const availabilityData = {
-      availability: trainingSnapshot.empty ? null : trainingSnapshot.docs[0].data().availability,
-    };
+      // Ensure querySnapshot size is always 1
+      if (querySnapshot.size !== 1) {
+        console.error("Unexpected query snapshot size:", querySnapshot.size);
+        return null;
+      }
 
-    return availabilityData;
+      return availabilityData;
+    } else {
+      console.log("No matching trainer availability document found for", formattedDate, "and trainerId", trainerId);
+      return null;
+    }
   } catch (error) {
     console.error("Error getting trainer availability:", error);
     throw error;
   }
 }
-
 
 
 
