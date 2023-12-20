@@ -694,12 +694,18 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
         let hourIndex = hour - 6;
         console.log(`Checking availability for hour: ${hour}, index: ${hourIndex}`);
 
-        if (personalTrainingAvailability && personalTrainingAvailability.availability && personalTrainingAvailability.availability[hourIndex] === 1) {
-            timeSlot.classList.remove('inactive');
-            console.log(`Time slot for ${hour}:00 is active for Personal Training.`);
-        } else if (groupTrainingAvailability && groupTrainingAvailability.availability && groupTrainingAvailability.availability[hourIndex] === 1) {
-            timeSlot.classList.remove('inactive');
-            console.log(`Time slot for ${hour}:00 is active for Group Training.`);
+        if (personalTrainingAvailability && personalTrainingAvailability.availability) {
+            console.log(`Personal Training Availability Data:`, personalTrainingAvailability.availability);
+            if (personalTrainingAvailability.availability[hourIndex] === 1) {
+                timeSlot.classList.remove('inactive');
+                console.log(`Time slot for ${hour}:00 is active for Personal Training.`);
+            }
+        } else if (groupTrainingAvailability && groupTrainingAvailability.availability) {
+            console.log(`Group Training Availability Data:`, groupTrainingAvailability.availability);
+            if (groupTrainingAvailability.availability[hourIndex] === 1) {
+                timeSlot.classList.remove('inactive');
+                console.log(`Time slot for ${hour}:00 is active for Group Training.`);
+            }
         } else {
             timeSlot.classList.add('inactive');
             console.log(`Time slot for ${hour}:00 is inactive or data is undefined.`);
@@ -708,6 +714,7 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
         container.appendChild(timeSlot);
     }
 }
+
 
 
 
