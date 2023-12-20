@@ -743,15 +743,21 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
     closeBtn.onclick = () => popup.remove();
 
     personalTraining.onclick = function() {
-        selectTrainingType(personalTraining, groupTraining);
-        console.log("About to enable all time slots with availability data:", availability);
-enableAllTimeSlots(popup, availability);
+    selectTrainingType(personalTraining, groupTraining);
+    checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], true)
+        .then(availabilityData => {
+            enableAllTimeSlots(popup, availabilityData);
+        });
+};
 
-    };
-    groupTraining.onclick = function() {
-        selectTrainingType(groupTraining, personalTraining);
-        enableGroupTrainingSlots(popup, selectedDay, availability);
-    };
+groupTraining.onclick = function() {
+    selectTrainingType(groupTraining, personalTraining);
+    checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], false)
+        .then(availabilityData => {
+            enableGroupTrainingSlots(popup, selectedDay, availabilityData);
+        });
+};
+
 
     enableAllTimeSlots(popup, availability); // Enable time slots based on availability
 }
