@@ -694,10 +694,10 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
         let hourIndex = hour - 6;
         console.log(`Checking availability for hour: ${hour}, index: ${hourIndex}`);
 
-        if (personalTrainingAvailability.availability[hourIndex] === 1) {
+        if (personalTrainingAvailability && personalTrainingAvailability.availability && personalTrainingAvailability.availability[hourIndex] === 1) {
             timeSlot.classList.remove('inactive');
             console.log(`Time slot for ${hour}:00 is active for Personal Training.`);
-        } else if (groupTrainingAvailability.availability[hourIndex] === 1) {
+        } else if (groupTrainingAvailability && groupTrainingAvailability.availability && groupTrainingAvailability.availability[hourIndex] === 1) {
             timeSlot.classList.remove('inactive');
             console.log(`Time slot for ${hour}:00 is active for Group Training.`);
         } else {
