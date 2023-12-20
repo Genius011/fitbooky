@@ -740,30 +740,27 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
     closeBtn.onclick = () => popup.remove();
 
     personalTraining.onclick = async function() {
-    selectTrainingType(personalTraining, groupTraining);
-    try {
-        const personalAvailability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], true);
-        console.log("About to enable all time slots with personal training availability data:", personalAvailability);
-        enableAllTimeSlots(popup, personalAvailability);
-    } catch (error) {
-        console.error("Error fetching personal training availability:", error);
-    }
-};
+        selectTrainingType(personalTraining, groupTraining);
+        try {
+            const personalAvailability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], true);
+            console.log("About to enable all time slots with personal training availability data:", personalAvailability);
+            enableAllTimeSlots(popup, personalAvailability);
+        } catch (error) {
+            console.error("Error fetching personal training availability:", error);
+        }
+    };
 
-groupTraining.onclick = async function() {
-    selectTrainingType(groupTraining, personalTraining);
-    try {
-        const groupAvailability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], false);
-        console.log("About to enable all time slots with group training availability data:", groupAvailability);
-        enableGroupTrainingSlots(popup, selectedDay, groupAvailability);
-    } catch (error) {
-        console.error("Error fetching group training availability:", error);
-    }
-};
-
-// Usunięto wywołanie enableAllTimeSlots z poza obsługi zdarzeń onclick
-
-
+    groupTraining.onclick = async function() {
+        selectTrainingType(groupTraining, personalTraining);
+        try {
+            const groupAvailability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], false);
+            console.log("About to enable all time slots with group training availability data:", groupAvailability);
+            enableGroupTrainingSlots(popup, selectedDay, groupAvailability);
+        } catch (error) {
+            console.error("Error fetching group training availability:", error);
+        }
+    };
+}
 
 function enableAllTimeSlots(popup, availabilityData) {
     const timeSlotsContainer = popup.querySelector('.time-slots');
