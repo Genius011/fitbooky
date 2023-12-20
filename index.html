@@ -748,7 +748,7 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
     } catch (error) {
         console.error("Error fetching personal training availability:", error);
     }
-
+};
 
 groupTraining.onclick = async function() {
     selectTrainingType(groupTraining, personalTraining);
@@ -759,6 +759,10 @@ groupTraining.onclick = async function() {
     } catch (error) {
         console.error("Error fetching group training availability:", error);
     }
+};
+
+// Usunięto wywołanie enableAllTimeSlots z poza obsługi zdarzeń onclick
+
 
 
 function enableAllTimeSlots(popup, availabilityData) {
