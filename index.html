@@ -635,7 +635,7 @@ async function handleDateSelection(selectedDate) {
   }
 }
 
-// Function to check trainer's availability using a field-based query
+// Function to check trainer's availability for personal and group training
 async function checkTrainersAvailability(trainerId, date) {
   const db = getFirestore();
   const availabilityRef = collection(db, 'availability');
@@ -645,32 +645,29 @@ async function checkTrainersAvailability(trainerId, date) {
   const formattedDate = new Date(date).toISOString().split('T')[0]; 
   console.log(`Formatted date for querying: ${formattedDate}`);
 
-  const q = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate));
-  
+  const personalTrainingQuery = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate), where('trainingType', '==', 'personal'));
+  const groupTrainingQuery = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate), where('trainingType', '==', 'group'));
+
   try {
-    const querySnapshot = await getDocs(q);
-    console.log(`Query snapshot size: ${querySnapshot.size}`);
+    const personalTrainingSnapshot = await getDocs(personalTrainingQuery);
+    const groupTrainingSnapshot = await getDocs(groupTrainingQuery);
 
-    if (!querySnapshot.empty) {
-      const availabilityData = querySnapshot.docs[0].data().availability;
-      console.log("Found availability data:", availabilityData);
+    console.log(`Personal Training Query snapshot size: ${personalTrainingSnapshot.size}`);
+    console.log(`Group Training Query snapshot size: ${groupTrainingSnapshot.size}`);
 
-      // Ensure querySnapshot size is always 1
-      if (querySnapshot.size !== 1) {
-        console.error("Unexpected query snapshot size:", querySnapshot.size);
-        return null;
-      }
+    // Combine availability data from both types of training
+    const availabilityData = {
+      personal: personalTrainingSnapshot.empty ? null : personalTrainingSnapshot.docs[0].data().availability,
+      group: groupTrainingSnapshot.empty ? null : groupTrainingSnapshot.docs[0].data().availability,
+    };
 
-      return availabilityData;
-    } else {
-      console.log("No matching trainer availability document found for", formattedDate, "and trainerId", trainerId);
-      return null;
-    }
+    return availabilityData;
   } catch (error) {
     console.error("Error getting trainer availability:", error);
     throw error;
   }
 }
+
 
 
 
