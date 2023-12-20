@@ -654,6 +654,13 @@ async function checkTrainersAvailability(trainerId, date) {
     if (!querySnapshot.empty) {
       const availabilityData = querySnapshot.docs[0].data().availability;
       console.log("Found availability data:", availabilityData);
+
+      // Ensure querySnapshot size is always 1
+      if (querySnapshot.size !== 1) {
+        console.error("Unexpected query snapshot size:", querySnapshot.size);
+        return null;
+      }
+
       return availabilityData;
     } else {
       console.log("No matching trainer availability document found for", formattedDate, "and trainerId", trainerId);
@@ -664,6 +671,7 @@ async function checkTrainersAvailability(trainerId, date) {
     throw error;
   }
 }
+
 
 
 
