@@ -921,6 +921,23 @@ document.getElementById('logout').addEventListener('click', () => {
 });
 
 
+console.log("Training Query snapshot size: ", trainingSnapshot.size);
+if (!trainingSnapshot.empty) {
+  const trainingData = trainingSnapshot.docs[0].data();
+  console.log("Training Data: ", trainingData);
+  if (trainingData.availability) {
+    const availabilityData = {
+      availability: trainingData.availability,
+    };
+    return availabilityData;
+  } else {
+    console.log("Availability data is missing in the document.");
+    return null;
+  }
+} else {
+  console.log("No availability data found for the query.");
+  return null;
+}
 
 	
 </script>
