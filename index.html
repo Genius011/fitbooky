@@ -746,13 +746,11 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
     personalTraining.onclick = function() {
     selectTrainingType(personalTraining, groupTraining);
     generateTimeSlots(container, 6, 21, selectedDay.toISOString().split('T')[0], trainerId, true);
-        });
 };
 
 groupTraining.onclick = function() {
     selectTrainingType(groupTraining, personalTraining);
     generateTimeSlots(container, 6, 21, selectedDay.toISOString().split('T')[0], trainerId, false);
-        });
 };
 
 
