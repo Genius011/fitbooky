@@ -636,7 +636,7 @@ async function handleDateSelection(selectedDate) {
 }
 
 // Function to check trainer's availability for personal and group training
-async function checkTrainersAvailability(trainerId, date) {
+async function checkTrainersAvailability(trainerId, date, isPersonalType) {
   const db = getFirestore();
   const availabilityRef = collection(db, 'availability');
   
@@ -645,20 +645,21 @@ async function checkTrainersAvailability(trainerId, date) {
   const formattedDate = new Date(date).toISOString().split('T')[0]; 
   console.log(`Formatted date for querying: ${formattedDate}`);
 
-  const personalTrainingQuery = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate), where('trainingType', '==', 'personal'));
-  const groupTrainingQuery = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate), where('trainingType', '==', 'group'));
+  let trainingTypeQuery;
+  if (isPersonalType) {
+    trainingTypeQuery = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate), where('trainingType', '==', 'personal'));
+  } else {
+    trainingTypeQuery = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate), where('trainingType', '==', 'group'));
+  }
 
   try {
-    const personalTrainingSnapshot = await getDocs(personalTrainingQuery);
-    const groupTrainingSnapshot = await getDocs(groupTrainingQuery);
+    const trainingSnapshot = await getDocs(trainingTypeQuery);
 
-    console.log(`Personal Training Query snapshot size: ${personalTrainingSnapshot.size}`);
-    console.log(`Group Training Query snapshot size: ${groupTrainingSnapshot.size}`);
+    console.log(`Training Query snapshot size: ${trainingSnapshot.size}`);
 
-    // Combine availability data from both types of training
+    // Get availability data
     const availabilityData = {
-      personal: personalTrainingSnapshot.empty ? null : personalTrainingSnapshot.docs[0].data().availability,
-      group: groupTrainingSnapshot.empty ? null : groupTrainingSnapshot.docs[0].data().availability,
+      availability: trainingSnapshot.empty ? null : trainingSnapshot.docs[0].data().availability,
     };
 
     return availabilityData;
