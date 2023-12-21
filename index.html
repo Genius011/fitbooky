@@ -790,25 +790,26 @@ function enableAllTimeSlots(popup, availability) {
 
         
 
-        function enableGroupTrainingSlots(popup, selectedDay) {
-            const timeSlots = popup.querySelectorAll('.time-slot');
-            timeSlots.forEach(slot => {
-                const slotTime = slot.textContent.trim();
-                const dayOfWeek = selectedDay.getDay();
+        function enableGroupTrainingSlots(popup, selectedDay, groupAvailability) {
+    const timeSlots = popup.querySelectorAll('.time-slot');
+    timeSlots.forEach(slot => {
+        const slotHour = parseInt(slot.textContent.split(':')[0]);
+        const hourIndex = slotHour - 6; // Assuming your slots start from 6 AM
 
-                slot.classList.add('disabled');
-                slot.onclick = null;
+        slot.classList.add('inactive'); // Initially set all slots to inactive
+        slot.onclick = null;
 
-                if ((dayOfWeek === 2 || dayOfWeek === 4) && slotTime === '19:00' || 
-                    (dayOfWeek === 6 && slotTime === '10:00')) {
-                    slot.classList.remove('disabled');
-                    slot.onclick = function() {
-                        timeSlots.forEach(s => s.classList.remove('selected'));
-                        slot.classList.add('selected');
-                    };
-                }
-            });
+        // Activate slot if available for group training
+        if (groupAvailability && groupAvailability[hourIndex] === 1) {
+            slot.classList.remove('inactive');
+            slot.onclick = function() {
+                // Handle group slot selection here
+                console.log(`Group training slot at ${slot.textContent} selected.`);
+            };
         }
+    });
+}
+
 
         function selectTrainingType(selected, other) {
             selected.classList.add('selected');
