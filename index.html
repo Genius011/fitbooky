@@ -533,8 +533,6 @@ async function handleDateSelection(selectedDate) {
       // Process the availability data here
       // For example, enable or disable time slots based on the availability
       console.log(`Availability for ${formattedDate}:`, availability);
-	              enableGroupTrainingSlots(popup, selectedDate, availabilityForGroupTraining);
-
     } else {
       console.log(`No availability found for trainer on ${formattedDate}.`);
     }
@@ -669,14 +667,14 @@ async function checkTrainersAvailability(trainerId, date) {
 
 
 
-// Function to generate time slots based on availability for personal training
-async function generatePersonalTrainingTimeSlots(container, startHour, endHour, selectedDay, trainerId) {
+// Function to generate time slots based on availability
+async function generateTimeSlots(container, startHour, endHour, selectedDay, trainerId) {
     container.innerHTML = ''; // Clear existing slots
 
-    console.log(`Generating personal training time slots from ${startHour} to ${endHour} for trainerId: ${trainerId} and date: ${selectedDay.toISOString().split('T')[0]}`);
+    console.log(`Generating time slots from ${startHour} to ${endHour} for trainerId: ${trainerId} and date: ${selectedDay.toISOString().split('T')[0]}`);
 
-    const personalAvailability = await checkTrainersAvailabilityForPersonalTraining(trainerId, selectedDay.toISOString().split('T')[0]);
-    console.log(`Received personal training availability data:`, personalAvailability);
+    const availability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0]);
+    console.log(`Received availability data:`, availability);
 
     for (let hour = startHour; hour <= endHour; hour++) {
         let timeSlot = document.createElement('div');
@@ -686,47 +684,17 @@ async function generatePersonalTrainingTimeSlots(container, startHour, endHour, 
         let hourIndex = hour - 6;
         console.log(`Checking availability for hour: ${hour}, index: ${hourIndex}`);
 
-        if (personalAvailability && personalAvailability[hourIndex] === 1) {
+        if (availability && availability[hourIndex] === 1) {
             timeSlot.classList.remove('inactive');
-            console.log(`Personal training time slot for ${hour}:00 is active.`);
+            console.log(`Time slot for ${hour}:00 is active.`);
         } else {
             timeSlot.classList.add('inactive');
-            console.log(`Personal training time slot for ${hour}:00 is inactive or data is undefined.`);
+            console.log(`Time slot for ${hour}:00 is inactive or data is undefined.`);
         }
 
         container.appendChild(timeSlot);
     }
 }
-
-// Function to generate time slots based on availability for group training
-async function generateGroupTrainingTimeSlots(container, startHour, endHour, selectedDay, trainerId) {
-    container.innerHTML = ''; // Clear existing slots
-
-    console.log(`Generating group training time slots from ${startHour} to ${endHour} for trainerId: ${trainerId} and date: ${selectedDay.toISOString().split('T')[0]}`);
-
-    const groupAvailability = await checkTrainersAvailabilityForGroupTraining(trainerId, selectedDay.toISOString().split('T')[0]);
-    console.log(`Received group training availability data:`, groupAvailability);
-
-    for (let hour = startHour; hour <= endHour; hour++) {
-        let timeSlot = document.createElement('div');
-        timeSlot.className = 'time-slot';
-        timeSlot.textContent = `${hour.toString().padStart(2, '0')}:00`;
-
-        let hourIndex = hour - 6;
-        console.log(`Checking availability for hour: ${hour}, index: ${hourIndex}`);
-
-        if (groupAvailability && groupAvailability[hourIndex] === 1) {
-            timeSlot.classList.remove('inactive');
-            console.log(`Group training time slot for ${hour}:00 is active.`);
-        } else {
-            timeSlot.classList.add('inactive');
-            console.log(`Group training time slot for ${hour}:00 is inactive or data is undefined.`);
-        }
-
-        container.appendChild(timeSlot);
-    }
-}
-
 
 
 
@@ -816,54 +784,31 @@ function enableAllTimeSlots(popup, availability) {
     console.log('Time slots added:', timeSlotsContainer.children.length);
 }
 
-    
+
+
+
 
         
-    function enableGroupTrainingSlots(popup, selectedDay, availability) {
-    const timeSlotsContainer = popup.querySelector('.time-slots');
-    timeSlotsContainer.innerHTML = '';
 
-    console.log('Generating time slots with availability for group training:', availability);
+        function enableGroupTrainingSlots(popup, selectedDay) {
+            const timeSlots = popup.querySelectorAll('.time-slot');
+            timeSlots.forEach(slot => {
+                const slotTime = slot.textContent.trim();
+                const dayOfWeek = selectedDay.getDay();
 
-    // You can adjust the start and end hours as needed
-    const startHour = 6;
-    const endHour = 21;
+                slot.classList.add('disabled');
+                slot.onclick = null;
 
-    for (let hour = startHour; hour <= endHour; hour++) {
-        const hourString = hour.toString().padStart(2, '0');
-        const timeSlot = document.createElement('div');
-        timeSlot.className = 'time-slot';
-        timeSlot.textContent = `${hourString}:00`;
-
-        // Check if the hour is within the availability array bounds
-        if (hour >= startHour && hour - startHour < availability.length) {
-            const hourAvailability = availability[hour - startHour];
-
-            console.log(`Checking availability for hour ${hourString}:`, hourAvailability);
-
-            // Check if the hour is available
-            if (hourAvailability === 1) {
-                timeSlot.classList.remove('inactive');
-                timeSlot.addEventListener('click', function() {
-                    // Handle time slot selection here
-                    console.log(`Time slot ${hourString}:00 selected.`);
-                });
-            } else {
-                timeSlot.classList.add('inactive');
-                console.log(`Time slot for ${hourString}:00 should be inactive.`);
-            }
-        } else {
-            // Handle the case where the hour is outside the availability array bounds
-            timeSlot.classList.add('inactive');
-            console.log(`Time slot for ${hourString}:00 should be inactive.`);
+                if ((dayOfWeek === 2 || dayOfWeek === 4) && slotTime === '19:00' || 
+                    (dayOfWeek === 6 && slotTime === '10:00')) {
+                    slot.classList.remove('disabled');
+                    slot.onclick = function() {
+                        timeSlots.forEach(s => s.classList.remove('selected'));
+                        slot.classList.add('selected');
+                    };
+                }
+            });
         }
-
-        timeSlotsContainer.appendChild(timeSlot);
-    }
-
-    console.log('Time slots added:', timeSlotsContainer.children.length);
-}
-
 
         function selectTrainingType(selected, other) {
             selected.classList.add('selected');
