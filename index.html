@@ -663,19 +663,24 @@ async function checkTrainersAvailability(trainerId, date) {
   }
 }
 
-// Function to check group training availability
-async function checkGroupTrainingAvailability(date) {
+async function checkGroupTrainingAvailability(trainerId, date) {
   const db = getFirestore();
-  const groupAvailabilityRef = collection(db, 'groupAvailability');
+  const availabilityRef = collection(db, 'availability');
 
-  console.log(`Querying for group availability on date: ${date}`);
+  console.log(`Querying for group availability with trainerId: ${trainerId} and date: ${date}`);
 
   const formattedDate = new Date(date).toISOString().split('T')[0]; 
-  const q = query(groupAvailabilityRef, where('date', '==', formattedDate));
+  const q = query(
+    availabilityRef,
+    where('trainerId', '==', trainerId),
+    where('date', '==', formattedDate),
+    where('trainingType', '==', 'group')
+  );
   
   try {
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
+      // Assuming we have only one document per trainer per day for group training
       const availabilityData = querySnapshot.docs[0].data().availability;
       console.log("Found group availability data:", availabilityData);
       return availabilityData;
@@ -688,6 +693,7 @@ async function checkGroupTrainingAvailability(date) {
     throw error;
   }
 }
+
 
 
 
@@ -767,13 +773,19 @@ enableAllTimeSlots(popup, availability);
     };
     groupTraining.onclick = async function() {
     selectTrainingType(groupTraining, personalTraining);
-
-    // Pobieranie danych dostępności dla treningu grupowego
-    const groupAvailability = await checkGroupTrainingAvailability(selectedDay.toISOString().split('T')[0]);
+    const trainerId = 'otrzymaneTrainerId'; // Otrzymane z zalogowanego użytkownika lub wyboru w UI
+    const groupAvailability = await checkGroupTrainingAvailability(trainerId, selectedDay.toISOString().split('T')[0]);
     console.log(`Received group training availability data:`, groupAvailability);
 
-    enableGroupTrainingSlots(popup, selectedDay, groupAvailability);
+    if (groupAvailability) {
+        enableGroupTrainingSlots(popup, selectedDay, groupAvailability);
+    } else {
+        // Handle case where there is no group availability
+        console.log('No group availability found for selected day and trainer.');
+        // Możesz tutaj zaktualizować UI, aby pokazać użytkownikowi, że nie ma dostępnych slotów
+    }
 };
+
 
 
     enableAllTimeSlots(popup, availability); // Enable time slots based on availability
