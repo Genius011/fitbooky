@@ -663,6 +663,31 @@ async function checkTrainersAvailability(trainerId, date) {
   }
 }
 
+// Function to check group training availability
+async function checkGroupTrainingAvailability(date) {
+  const db = getFirestore();
+  const groupAvailabilityRef = collection(db, 'groupAvailability');
+
+  console.log(`Querying for group availability on date: ${date}`);
+
+  const formattedDate = new Date(date).toISOString().split('T')[0]; 
+  const q = query(groupAvailabilityRef, where('date', '==', formattedDate));
+  
+  try {
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      const availabilityData = querySnapshot.docs[0].data().availability;
+      console.log("Found group availability data:", availabilityData);
+      return availabilityData;
+    } else {
+      console.log("No matching group availability document found for", formattedDate);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting group availability:", error);
+    throw error;
+  }
+}
 
 
 
