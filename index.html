@@ -704,7 +704,7 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
 
 
 
-       async function openPopup(selectedDay, availability) {
+async function openPopup(selectedDay, availability, trainerId) { // Dodaj trainerId jako argument
     const popup = document.createElement('div');
     popup.className = 'popup';
     popup.innerHTML = `
