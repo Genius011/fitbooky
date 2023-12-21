@@ -1570,9 +1570,9 @@ auth.onAuthStateChanged((user) => {
 });
 
 // ZARZĄDZENIA DOSTĘPNOŚCIĄ
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
   // Funkcja do tworzenia tabeli treningów
-  function createTrainingTable(tableId, trainingType) {
+  async function createTrainingTable(tableId, trainingType) {
     const calendarBody = document.getElementById(tableId).querySelector('tbody');
     const currentDate = new Date();
     const endDate = new Date();
@@ -1590,11 +1590,20 @@ document.addEventListener('DOMContentLoaded', function () {
         input.min = '0';
         input.className = 'calendar-input'; // Dodajemy klasę do stylowania
         hourCell.appendChild(input);
+
+        // Pobierz dane z bazy dla danej daty, trenera, typu treningu i godziny
+        const data = await fetchDataFromFirebase(currentDate.toISOString().split('T')[0], loggedInUserId, trainingType, hour);
+
+        // Ustaw wartość inputa na dostępność z bazy danych lub 0, jeśli dane nie istnieją
+        input.value = data ? data.availability : 0;
       }
 
+      // Przycisk "Kopiuj"
       const copyCell = row.insertCell();
       const copyButton = document.createElement('button');
       copyButton.textContent = 'Kopiuj';
+      copyCell.appendChild(copyButton);
+
       copyButton.addEventListener('click', function () {
         // Pobierz wprowadzoną liczbę z pierwszego inputa w danym rzędzie
         const firstInput = row.querySelector('input.calendar-input');
@@ -1606,31 +1615,26 @@ document.addEventListener('DOMContentLoaded', function () {
           hourInput.value = number;
         });
       });
-      copyCell.appendChild(copyButton);
 
+      // Przycisk "Wyślij"
       const sendCell = row.insertCell();
       const sendButton = document.createElement('button');
       sendButton.textContent = 'Wyślij';
       sendCell.appendChild(sendButton);
 
-      // Przycisk OK po wysłaniu
       const okText = document.createElement('span');
       okText.textContent = 'OK';
       okText.style.color = 'green';
-      okText.style.display = 'none'; // Ukrywamy na początku
+      okText.style.display = 'none';
       sendCell.appendChild(okText);
 
-      // Dodajemy obsługę kliknięcia do przycisku Wyślij
       sendButton.addEventListener('click', async function () {
-        // Pobierz datę z komórki daty
         const date = dateCell.textContent;
-        // Pobierz ilość miejsc z komórek godzin
         const hours = [];
         row.querySelectorAll('input.calendar-input').forEach(function (hourInput) {
           hours.push(parseInt(hourInput.value, 10));
         });
 
-        // Przygotuj dane do wysłania do Firebase
         const dataToSend = {
           date: date,
           trainerId: loggedInUserId,
@@ -1639,19 +1643,15 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         try {
-          // Tutaj możesz wysłać dane do Firebase
           await sendToFirebase(dataToSend);
-
-          // Po udanym wysłaniu pokaż tekst "OK" obok przycisku
           okText.style.display = 'inline';
         } catch (error) {
           console.error('Błąd podczas wysyłania danych do Firebase:', error);
-          // Jeśli wystąpił błąd, ukryj tekst "OK"
           okText.style.display = 'none';
         }
       });
-      
-      currentDate.setDate(currentDate.getDate() + 1); // Przechodzimy do następnej daty
+
+      currentDate.setDate(currentDate.getDate() + 1);
     }
   }
 
@@ -1662,14 +1662,42 @@ document.addEventListener('DOMContentLoaded', function () {
   createTrainingTable('groupTrainingCalendar', 'group');
 });
 
-async function sendToFirebase(data) {
+async function fetchDataFromFirebase(date, trainerId, trainingType, hour) {
   try {
     const collectionRef = collection(db, 'availability'); // Zmień na odpowiednią kolekcję w Firebase
     const q = query(
       collectionRef,
+      where('date', '==', date),
+      where('trainerId', '==', trainerId),
+      where('trainingType', '==', trainingType)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      // Jeśli istnieją pasujące dokumenty, zwróć dane
+      const docData = querySnapshot.docs[0].data();
+      return { availability: docData.availability[hour - 6] };
+    } else {
+      // Jeśli nie ma pasujących dokumentów, zwróć null
+      return null;
+    }
+  } catch (error) {
+    console.error('Błąd podczas pobierania danych z Firebase:', error);
+    return null;
+  }
+}
+
+async function sendToFirebase(data) {
+  try {
+    // Ustalanie odpowiedniej kolekcji na podstawie typu treningu
+    const collectionName = data.trainingType === 'group' ? 'groupavailability' : 'availability';
+    const collectionRef = collection(db, collectionName);
+
+    const q = query(
+      collectionRef,
       where('date', '==', data.date),
-      where('trainerId', '==', data.trainerId),
-      where('trainingType', '==', data.trainingType) // Dodaj warunek dla typu treningu
+      where('trainerId', '==', data.trainerId)
     );
 
     const querySnapshot = await getDocs(q);
@@ -1689,7 +1717,6 @@ async function sendToFirebase(data) {
     throw error; // Rzucamy błąd, aby móc go obsłużyć poza funkcją sendToFirebase
   }
 }
-
 
 
 
