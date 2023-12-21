@@ -663,37 +663,6 @@ async function checkTrainersAvailability(trainerId, date) {
   }
 }
 
-async function checkGroupTrainingAvailability(trainerId, date) {
-  const db = getFirestore();
-  const availabilityRef = collection(db, 'availability');
-
-  console.log(`Querying for group availability with trainerId: ${trainerId} and date: ${date}`);
-
-  const formattedDate = new Date(date).toISOString().split('T')[0]; 
-  const q = query(
-    availabilityRef,
-    where('trainerId', '==', trainerId),
-    where('date', '==', formattedDate),
-    where('trainingType', '==', 'group')
-  );
-  
-  try {
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-      // Assuming we have only one document per trainer per day for group training
-      const availabilityData = querySnapshot.docs[0].data().availability;
-      console.log("Found group availability data:", availabilityData);
-      return availabilityData;
-    } else {
-      console.log("No matching group availability document found for", formattedDate);
-      return null;
-    }
-  } catch (error) {
-    console.error("Error getting group availability:", error);
-    throw error;
-  }
-}
-
 
 
 
@@ -771,22 +740,10 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
 enableAllTimeSlots(popup, availability);
 
     };
-    groupTraining.onclick = async function() {
-    selectTrainingType(groupTraining, personalTraining);
-    const trainerId = 'otrzymaneTrainerId'; // Otrzymane z zalogowanego użytkownika lub wyboru w UI
-    const groupAvailability = await checkGroupTrainingAvailability(trainerId, selectedDay.toISOString().split('T')[0]);
-    console.log(`Received group training availability data:`, groupAvailability);
-
-    if (groupAvailability) {
-        enableGroupTrainingSlots(popup, selectedDay, groupAvailability);
-    } else {
-        // Handle case where there is no group availability
-        console.log('No group availability found for selected day and trainer.');
-        // Możesz tutaj zaktualizować UI, aby pokazać użytkownikowi, że nie ma dostępnych slotów
-    }
-};
-
-
+    groupTraining.onclick = function() {
+        selectTrainingType(groupTraining, personalTraining);
+        enableGroupTrainingSlots(popup, selectedDay, availability);
+    };
 
     enableAllTimeSlots(popup, availability); // Enable time slots based on availability
 }
@@ -833,26 +790,25 @@ function enableAllTimeSlots(popup, availability) {
 
         
 
-function enableGroupTrainingSlots(popup, selectedDay, groupAvailability) {
-    const timeSlots = popup.querySelectorAll('.time-slot');
-    timeSlots.forEach(slot => {
-        const slotHour = parseInt(slot.textContent.split(':')[0]);
-        const hourIndex = slotHour - 6; // Assuming your slots start from 6 AM
+        function enableGroupTrainingSlots(popup, selectedDay) {
+            const timeSlots = popup.querySelectorAll('.time-slot');
+            timeSlots.forEach(slot => {
+                const slotTime = slot.textContent.trim();
+                const dayOfWeek = selectedDay.getDay();
 
-        slot.classList.add('inactive'); // Initially set all slots to inactive
-        slot.onclick = null;
+                slot.classList.add('disabled');
+                slot.onclick = null;
 
-        // Activate slot if available for group training
-        if (groupAvailability && groupAvailability[hourIndex] === 1) {
-            slot.classList.remove('inactive');
-            slot.onclick = function() {
-                // Handle group slot selection here
-                console.log(`Group training slot at ${slot.textContent} selected.`);
-            };
+                if ((dayOfWeek === 2 || dayOfWeek === 4) && slotTime === '19:00' || 
+                    (dayOfWeek === 6 && slotTime === '10:00')) {
+                    slot.classList.remove('disabled');
+                    slot.onclick = function() {
+                        timeSlots.forEach(s => s.classList.remove('selected'));
+                        slot.classList.add('selected');
+                    };
+                }
+            });
         }
-    });
-}
-
 
         function selectTrainingType(selected, other) {
             selected.classList.add('selected');
