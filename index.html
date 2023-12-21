@@ -633,28 +633,17 @@ async function handleDateSelection(selectedDate) {
   }
 }
 
-// Funkcja do sprawdzania dostępności trenerów dla treningów personalnych i grupowych
-async function checkTrainersAvailability(trainerId, date, trainingType) {
-  // Sprawdź czy żaden z argumentów nie jest niezdefiniowany
-  if (typeof trainerId === 'undefined' || typeof date === 'undefined' || typeof trainingType === 'undefined') {
-    throw new Error('One or more required arguments are undefined.');
-  }
-
+// Function to check trainer's availability using a field-based query
+async function checkTrainersAvailability(trainerId, date) {
   const db = getFirestore();
   const availabilityRef = collection(db, 'availability');
   
-  console.log(`Querying for ${trainingType} availability with trainerId: ${trainerId} and date: ${date}`);
-  
+  console.log(`Querying for availability with trainerId: ${trainerId} and date: ${date}`);
+
   const formattedDate = new Date(date).toISOString().split('T')[0]; 
   console.log(`Formatted date for querying: ${formattedDate}`);
-  
-  // Dodaj filtr dla typu treningu
-  const q = query(
-    availabilityRef, 
-    where('trainerId', '==', trainerId), 
-    where('date', '==', formattedDate),
-    where('trainingType', '==', trainingType) // Dodano filtr dla typu treningu
-  );
+
+  const q = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate));
   
   try {
     const querySnapshot = await getDocs(q);
@@ -662,14 +651,14 @@ async function checkTrainersAvailability(trainerId, date, trainingType) {
 
     if (!querySnapshot.empty) {
       const availabilityData = querySnapshot.docs[0].data().availability;
-      console.log(`Found ${trainingType} availability data:`, availabilityData);
+      console.log("Found availability data:", availabilityData);
       return availabilityData;
     } else {
-      console.log(`No matching ${trainingType} trainer availability document found for`, formattedDate, "and trainerId", trainerId);
+      console.log("No matching trainer availability document found for", formattedDate, "and trainerId", trainerId);
       return null;
     }
   } catch (error) {
-    console.error(`Error getting ${trainingType} trainer availability:`, error);
+    console.error("Error getting trainer availability:", error);
     throw error;
   }
 }
@@ -678,23 +667,21 @@ async function checkTrainersAvailability(trainerId, date, trainingType) {
 
 
 
-
-// Function to generate time slots based on availability for a specific training type
-async function generateTimeSlots(container, startHour, endHour, selectedDay, trainerId, trainingType) {
+// Function to generate time slots based on availability
+async function generateTimeSlots(container, startHour, endHour, selectedDay, trainerId) {
     container.innerHTML = ''; // Clear existing slots
 
-    console.log(`Generating time slots from ${startHour} to ${endHour} for trainerId: ${trainerId}, trainingType: ${trainingType}, and date: ${selectedDay.toISOString().split('T')[0]}`);
+    console.log(`Generating time slots from ${startHour} to ${endHour} for trainerId: ${trainerId} and date: ${selectedDay.toISOString().split('T')[0]}`);
 
-    // Pass trainingType to checkTrainersAvailability to fetch the correct availability
-    const availability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], trainingType);
-    console.log(`Received ${trainingType} availability data:`, availability);
+    const availability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0]);
+    console.log(`Received availability data:`, availability);
 
     for (let hour = startHour; hour <= endHour; hour++) {
         let timeSlot = document.createElement('div');
         timeSlot.className = 'time-slot';
         timeSlot.textContent = `${hour.toString().padStart(2, '0')}:00`;
 
-        let hourIndex = hour - startHour; // Adjust index based on startHour
+        let hourIndex = hour - 6;
         console.log(`Checking availability for hour: ${hour}, index: ${hourIndex}`);
 
         if (availability && availability[hourIndex] === 1) {
@@ -751,15 +738,11 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
         selectTrainingType(personalTraining, groupTraining);
         console.log("About to enable all time slots with availability data:", availability);
 enableAllTimeSlots(popup, availability);
-    generateTimeSlots(timeSlotsContainer, 6, 21, selectedDay, trainerId, 'personal');
-
 
     };
     groupTraining.onclick = function() {
         selectTrainingType(groupTraining, personalTraining);
         enableGroupTrainingSlots(popup, selectedDay, availability);
-		    generateTimeSlots(timeSlotsContainer, 6, 21, selectedDay, trainerId, 'group');
-
     };
 
     enableAllTimeSlots(popup, availability); // Enable time slots based on availability
