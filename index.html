@@ -742,7 +742,7 @@ async function openPopup(selectedDay, availability, trainerId) { // Dodaj traine
     personalTraining.onclick = function() {
     selectTrainingType(personalTraining, groupTraining);
     console.log("Włączanie slotów czasowych dla treningów personalnych");
-generateTimeSlots(popup.querySelector('.time-slots'), 6, 21, selectedDay, trainerId, 'group');
+    generateTimeSlots(popup.querySelector('.time-slots'), 6, 21, selectedDay, trainerId, 'personal');
 };
 
 groupTraining.onclick = function() {
