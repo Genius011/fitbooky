@@ -635,6 +635,11 @@ async function handleDateSelection(selectedDate) {
 
 // Funkcja do sprawdzania dostępności trenerów dla treningów personalnych i grupowych
 async function checkTrainersAvailability(trainerId, date, trainingType) {
+  // Sprawdź czy żaden z argumentów nie jest niezdefiniowany
+  if (typeof trainerId === 'undefined' || typeof date === 'undefined' || typeof trainingType === 'undefined') {
+    throw new Error('One or more required arguments are undefined.');
+  }
+
   const db = getFirestore();
   const availabilityRef = collection(db, 'availability');
   
