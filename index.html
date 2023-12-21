@@ -634,11 +634,13 @@ async function handleDateSelection(selectedDate) {
 }
 
 // Function to check trainer's availability using a field-based query
-async function checkTrainersAvailability(trainerId, date) {
+async function checkTrainersAvailability(trainerId, date, trainingType) {
   const db = getFirestore();
-  const availabilityRef = collection(db, 'availability');
+  // Wybór odpowiedniej kolekcji w zależności od typu treningu
+  const collectionName = trainingType === 'group' ? 'groupavailability' : 'availability';
+  const availabilityRef = collection(db, collectionName);
   
-  console.log(`Querying for availability with trainerId: ${trainerId} and date: ${date}`);
+  console.log(`Querying for availability with trainerId: ${trainerId}, date: ${date}, and type: ${trainingType}`);
 
   const formattedDate = new Date(date).toISOString().split('T')[0]; 
   console.log(`Formatted date for querying: ${formattedDate}`);
@@ -673,7 +675,9 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
 
     console.log(`Generating time slots from ${startHour} to ${endHour} for trainerId: ${trainerId} and date: ${selectedDay.toISOString().split('T')[0]}`);
 
-    const availability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0]);
+const availability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], 'personal');
+const groupAvailability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], 'group');
+
     console.log(`Received availability data:`, availability);
 
     for (let hour = startHour; hour <= endHour; hour++) {
