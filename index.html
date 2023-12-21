@@ -740,15 +740,17 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
     closeBtn.onclick = () => popup.remove();
 
     personalTraining.onclick = function() {
-        selectTrainingType(personalTraining, groupTraining);
-        console.log("About to enable all time slots with availability data:", availability);
-enableAllTimeSlots(popup, availability);
+    selectTrainingType(personalTraining, groupTraining);
+    console.log("Włączanie slotów czasowych dla treningów personalnych");
+    generateTimeSlots(popup.querySelector('.time-slots'), 6, 21, selectedDay, trainerId, 'personal');
+};
 
-    };
-    groupTraining.onclick = function() {
-        selectTrainingType(groupTraining, personalTraining);
-        enableGroupTrainingSlots(popup, selectedDay, availability);
-    };
+groupTraining.onclick = function() {
+    selectTrainingType(groupTraining, personalTraining);
+    console.log("Włączanie slotów czasowych dla treningów grupowych");
+    generateTimeSlots(popup.querySelector('.time-slots'), 6, 21, selectedDay, trainerId, 'group');
+};
+
 
     enableAllTimeSlots(popup, availability); // Enable time slots based on availability
 }
