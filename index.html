@@ -634,30 +634,29 @@ async function handleDateSelection(selectedDate) {
 }
 
 // Function to check trainer's availability using a field-based query
-async function checkTrainersAvailability(trainerId, date, isPersonalType) {
+async function checkTrainersAvailability(trainerId, date) {
   const db = getFirestore();
   const availabilityRef = collection(db, 'availability');
-
+  
   console.log(`Querying for availability with trainerId: ${trainerId} and date: ${date}`);
 
   const formattedDate = new Date(date).toISOString().split('T')[0]; 
   console.log(`Formatted date for querying: ${formattedDate}`);
 
-  let trainingType = isPersonalType ? 'personal' : 'group';
-  let trainingTypeQuery = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate), where('trainingType', '==', trainingType));
-
+  const q = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate));
+  
   try {
-    const trainingSnapshot = await getDocs(trainingTypeQuery);
+    const querySnapshot = await getDocs(q);
+    console.log(`Query snapshot size: ${querySnapshot.size}`);
 
-    console.log(`Training Query snapshot size: ${trainingSnapshot.size}`);
-
-    if (trainingSnapshot.empty) {
-      return { availability: null };
+    if (!querySnapshot.empty) {
+      const availabilityData = querySnapshot.docs[0].data().availability;
+      console.log("Found availability data:", availabilityData);
+      return availabilityData;
+    } else {
+      console.log("No matching trainer availability document found for", formattedDate, "and trainerId", trainerId);
+      return null;
     }
-
-    let availabilityData = trainingSnapshot.docs.map(doc => doc.data());
-    // Zakładając, że każdy dokument zawiera pole 'availability' jako tablicę
-    return { availability: availabilityData[0].availability };
   } catch (error) {
     console.error("Error getting trainer availability:", error);
     throw error;
@@ -700,7 +699,7 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
 
 
 
-       async function openPopup(selectedDay, trainerId) {  // Zmieniam parametr availability na trainerId
+       async function openPopup(selectedDay, availability) {
     const popup = document.createElement('div');
     popup.className = 'popup';
     popup.innerHTML = `
@@ -731,34 +730,22 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
     });
 
     const closeBtn = popup.querySelector('.close-btn');
-    closeBtn.onclick = () => popup.remove();
-
     const personalTraining = popup.querySelector('.training-type[data-type="personal"]');
     const groupTraining = popup.querySelector('.training-type[data-type="group"]');
+    closeBtn.onclick = () => popup.remove();
 
-    personalTraining.onclick = async function() {
+    personalTraining.onclick = function() {
         selectTrainingType(personalTraining, groupTraining);
-        try {
-            const personalAvailability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], true);
-            enableAllTimeSlots(popup, personalAvailability);
-        } catch (error) {
-            console.error("Error fetching personal training availability:", error);
-        }
-    };
+        console.log("About to enable all time slots with availability data:", availability);
+enableAllTimeSlots(popup, availability);
 
-    groupTraining.onclick = async function() {
+    };
+    groupTraining.onclick = function() {
         selectTrainingType(groupTraining, personalTraining);
-        try {
-            const groupAvailability = await checkTrainersAvailability(trainerId, selectedDay.toISOString().split('T')[0], false);
-            enableGroupTrainingSlots(popup, selectedDay, groupAvailability);
-        } catch (error) {
-            console.error("Error fetching group training availability:", error);
-        }
+        enableGroupTrainingSlots(popup, selectedDay, availability);
     };
 
-    // Inicjuj przedziały czasowe dla personalnych treningów domyślnie, jeśli jest to pożądane
-    // W przeciwnym razie usunąć poniższe wywołanie
-    personalTraining.click(); 
+    enableAllTimeSlots(popup, availability); // Enable time slots based on availability
 }
 
 function enableAllTimeSlots(popup, availability) {
