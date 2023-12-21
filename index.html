@@ -633,24 +633,20 @@ async function handleDateSelection(selectedDate) {
   }
 }
 
+// Function to check trainer's availability using a field-based query
 async function checkTrainersAvailability(trainerId, date, trainingType) {
-  // Dodanie sprawdzenia, czy parametry są zdefiniowane
-  if (!trainerId || !date || !trainingType) {
-    console.error('Missing parameter(s) in checkTrainersAvailability: trainerId, date, or trainingType is undefined');
-    return null;
-  }
-
   const db = getFirestore();
+  // Wybór odpowiedniej kolekcji w zależności od typu treningu
   const collectionName = trainingType === 'group' ? 'groupavailability' : 'availability';
   const availabilityRef = collection(db, collectionName);
-
+  
   console.log(`Querying for availability with trainerId: ${trainerId}, date: ${date}, and type: ${trainingType}`);
 
-  const formattedDate = new Date(date).toISOString().split('T')[0];
+  const formattedDate = new Date(date).toISOString().split('T')[0]; 
   console.log(`Formatted date for querying: ${formattedDate}`);
 
   const q = query(availabilityRef, where('trainerId', '==', trainerId), where('date', '==', formattedDate));
-
+  
   try {
     const querySnapshot = await getDocs(q);
     console.log(`Query snapshot size: ${querySnapshot.size}`);
@@ -668,7 +664,6 @@ async function checkTrainersAvailability(trainerId, date, trainingType) {
     throw error;
   }
 }
-
 
 
 
