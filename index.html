@@ -765,10 +765,16 @@ async function generateTimeSlots(container, startHour, endHour, selectedDay, tra
 enableAllTimeSlots(popup, availability);
 
     };
-    groupTraining.onclick = function() {
-        selectTrainingType(groupTraining, personalTraining);
-        enableGroupTrainingSlots(popup, selectedDay, availability);
-    };
+    groupTraining.onclick = async function() {
+    selectTrainingType(groupTraining, personalTraining);
+
+    // Pobieranie danych dostępności dla treningu grupowego
+    const groupAvailability = await checkGroupTrainingAvailability(selectedDay.toISOString().split('T')[0]);
+    console.log(`Received group training availability data:`, groupAvailability);
+
+    enableGroupTrainingSlots(popup, selectedDay, groupAvailability);
+};
+
 
     enableAllTimeSlots(popup, availability); // Enable time slots based on availability
 }
@@ -815,7 +821,7 @@ function enableAllTimeSlots(popup, availability) {
 
         
 
-        function enableGroupTrainingSlots(popup, selectedDay, groupAvailability) {
+function enableGroupTrainingSlots(popup, selectedDay, groupAvailability) {
     const timeSlots = popup.querySelectorAll('.time-slot');
     timeSlots.forEach(slot => {
         const slotHour = parseInt(slot.textContent.split(':')[0]);
